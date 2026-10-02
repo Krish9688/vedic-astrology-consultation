@@ -1,0 +1,60 @@
+# Public, synthetic-data-only checks. No birth data, books, graph or private benchmark exist in this repository.
+name: ci
+on: [push, pull_request]
+permissions:
+  contents: read
+  pull-requests: read   # gitleaks-action lists a PR's commits on pull_request events
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Secret scan (full history)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Privacy and copyright check
+        run: python3 tools/privacy_check.py
+      - name: Version consistency (plugin, engine, skill)
+        run: python3 tools/check_versions.py
+      - name: Plugin and marketplace validation (official validator)
+        run: |
+          npx -y @anthropic-ai/claude-code@2.1.288 plugin validate --strict .
+          npx -y @anthropic-ai/claude-code@2.1.288 plugin validate --strict plugins/astrology-consultation
+      - name: Lint
+        run: uvx ruff check .
+      - name: Engine, interface and property tests (synthetic charts)
+        run: |
+          uv venv .venv
+          uv pip install --python .venv/bin/python -e "plugins/astrology-consultation/engine[mcp,api]" pytest hypothesis httpx jinja2
+          .venv/bin/python -m pytest
+          .venv/bin/astro doctor
+      - name: Plugin launcher bootstraps the engine and serves MCP
+        run: |
+          export CLAUDE_PLUGIN_ROOT="$PWD/plugins/astrology-consultation" CLAUDE_PLUGIN_DATA="$RUNNER_TEMP/plugin-data"
+          plugins/astrology-consultation/scripts/astro doctor
+          .venv/bin/python tools/mcp_smoke.py "$CLAUDE_PLUGIN_ROOT/scripts/astro"
+      - name: Skill self-tests
+        working-directory: plugins/astrology-consultation/skills/astrology-consultation/scripts
+        run: |
+          python3 chart_facts.py --selftest
+          python3 varshaphal.py --selftest
+          python3 vocab.py
+          python3 life_lint.py --selftest
+          python3 render_report.py --selftest
+      - name: Report rendering (Jinja2 + WeasyPrint)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libpango-1.0-0 libpangoft2-1.0-0
+          uv venv .venv-report
+          uv pip install --python .venv-report/bin/python jinja2 weasyprint
+          .venv-report/bin/python plugins/astrology-consultation/skills/astrology-consultation/scripts/render_report.py \
+            plugins/astrology-consultation/skills/astrology-consultation/assets/report/example-synthetic.json --out dist
+          test -s dist/example-synthetic.pdf
+      - name: Package validation
+        run: python3 tools/check_package.py plugins/astrology-consultation/skills/astrology-consultation

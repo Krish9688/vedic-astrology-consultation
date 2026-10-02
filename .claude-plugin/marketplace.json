@@ -1,0 +1,17 @@
+{
+  "name": "vedic-astrology",
+  "owner": {
+    "name": "vedic-astrology-consultation project",
+    "url": "https://github.com/Krish9688/vedic-astrology-consultation"
+  },
+  "description": "Vedic astrology for Claude: a careful consultation skill and a private local calculation engine.",
+  "plugins": [
+    {
+      "name": "astrology-consultation",
+      "source": "./plugins/astrology-consultation",
+      "description": "Life-first Vedic astrology consultations and reports, backed by a local Swiss Ephemeris engine (dashas, vargas, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity) over MCP. Private by default.",
+      "category": "lifestyle",
+      "tags": ["astrology", "vedic", "jyotish", "mcp", "local-first"]
+    }
+  ]
+}

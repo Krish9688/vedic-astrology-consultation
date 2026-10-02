@@ -1,0 +1,7 @@
+{"_note": "FICTIONAL test native B: 22/08/1988 16:40 +05:30, 19.08N 72.88E. Calculated with VedAstro (Lahiri) 2026-09-24. Lagna is 27°59'56\" Sagittarius (2°00' before Capricorn).",
+ "asc": {"sign": "Sagittarius", "deg": 27.999},
+ "planets": {"Su": {"sign": "Leo", "deg": 5.869}, "Mo": {"sign": "Scorpio", "deg": 27.924},
+             "Ma": {"sign": "Pisces", "deg": 17.644}, "Me": {"sign": "Leo", "deg": 23.368},
+             "Ju": {"sign": "Taurus", "deg": 10.676}, "Ve": {"sign": "Gemini", "deg": 20.104},
+             "Sa": {"sign": "Sagittarius", "deg": 2.279}, "Ra": {"sign": "Aquarius", "deg": 21.053},
+             "Ke": {"sign": "Leo", "deg": 21.053}}}

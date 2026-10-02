@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ r.title }}</title>
+<style>{{ css|safe }}</style>
+</head>
+<body{% if r.report_type == "compact" %} class="compact"{% endif %}>
+<section class="cover">
+  <div class="kind">{{ type_name }}</div>
+  <h1>{{ r.title }}</h1>
+  {% if r.subtitle %}<div class="sub">{{ r.subtitle }}</div>{% endif %}
+  <div class="rule"></div>
+  <dl>
+    <dt>Prepared for</dt><dd>{{ r.prepared_for }}</dd>
+    <dt>Prepared on</dt><dd>{{ r.prepared_on }}</dd>
+    {% if r.birth %}{% if r.birth.date %}<dt>Birth data</dt><dd>{{ r.birth.date }}{% if r.birth.time %}, {{ r.birth.time }}{% endif %}{% if r.birth.place %}, {{ r.birth.place }}{% endif %}</dd>{% endif %}
+    {% if r.birth.time_reliability or r.birth.time_source %}<dt>Birth time</dt><dd>{{ r.birth.time_source or "" }}{% if r.birth.time_reliability %} ({{ r.birth.time_reliability }}){% endif %}</dd>{% endif %}{% endif %}
+    {% if r.engine and r.engine.calculation %}<dt>Calculated with</dt><dd>{{ r.engine.calculation }}{% if r.engine.cross_check %}; checked against {{ r.engine.cross_check }}{% endif %}</dd>{% endif %}
+  </dl>
+  <p class="foot">A traditional Vedic astrological interpretation using documented methods. It describes tendencies and
+  timing within that tradition; it is not a guarantee, and it is not medical, legal or financial advice.</p>
+</section>
+
+<h2 id="summary">The short version</h2>
+<p class="headline">{{ r.summary.headline }}</p>
+<ul class="keypoints">
+{% for k in r.summary.key_points %}
+  <li>{{ k.text }}<span class="meta"><span class="grade {{ k.confidence }}">{{ k.confidence }}</span>{% if k.window %} · {{ k.window }}{% endif %}{% if k.section %} · see <a href="#{{ k.section }}">{{ section_titles.get(k.section, k.section) }}</a>{% endif %}</span></li>
+{% endfor %}
+</ul>
+
+{% if r.report_type != "compact" or r.how_to_read %}<h3>How to read this report</h3>
+<p>{{ r.how_to_read or default_how_to_read }}</p>{% endif %}
+{% if r.sections|length > 3 %}
+<ol class="toc">{% for s in r.sections %}<li><a href="#{{ s.id }}">{{ s.title }}</a></li>{% endfor %}{% if r.timeline %}<li><a href="#timeline">Timeline</a></li>{% endif %}<li><a href="#uncertain">What is uncertain</a></li>{% if appendix %}<li><a href="#appendix">Technical appendix</a></li>{% endif %}</ol>
+{% endif %}
+
+{% for s in r.sections %}
+<h2 id="{{ s.id }}">{{ s.title }}</h2>
+{% if s.intro %}<p>{{ s.intro }}</p>{% endif %}
+{% if s.text %}{% for para in s.text.split("\n\n") %}<p>{{ para }}</p>{% endfor %}{% endif %}
+{% for u in s.units or [] %}
+<div class="unit">
+  <div class="theme">{{ u.theme }}</div>
+  <dl>
+    <dt>What it means</dt><dd>{{ u.meaning }}</dd>
+    {% if u.manifestation %}<dt>Likely form</dt><dd>{{ u.manifestation }}</dd>{% endif %}
+    {% if u.timing %}<dt>Timing</dt><dd>{{ u.timing }}</dd>{% endif %}
+    {% if u.nuance %}<dt>Nuance</dt><dd>{{ u.nuance }}</dd>{% endif %}
+    {% if u.counter %}<dt>Against it</dt><dd class="counter">{{ u.counter }}</dd>{% endif %}
+    {% if u.watch %}<dt>What to watch</dt><dd>{{ u.watch }}</dd>{% endif %}
+  </dl>
+  {% if u.confidence %}<div class="conf">{% for k in ["event", "timing", "manifestation"] %}{% if u.confidence[k] %}<span>{{ {"event": "That it happens", "timing": "When", "manifestation": "In what form"}[k] }}: <span class="grade {{ u.confidence[k] }}">{{ u.confidence[k] }}</span></span>{% endif %}{% endfor %}</div>{% endif %}
+</div>
+{% endfor %}
+{% endfor %}
+
+{% if tl %}
+<h2 id="timeline">Timeline</h2>
+<div class="timeline">
+  <div class="tl-row tl-scale"><div class="tl-name"></div><div class="tl-track">{% for y in tl.years %}<span style="left: {{ y.x }}%">{{ y.label }}</span>{% endfor %}</div></div>
+  {% for b in tl.bars %}
+  <div class="tl-row"><div class="tl-name">{{ b.label }}</div><div class="tl-track"><div class="tl-bar {{ b.kind }} {{ b.cut }}" style="left: {{ b.x }}%; width: {{ b.w }}%"></div></div></div>
+  {% endfor %}
+</div>
+<p class="tl-legend">Key:<span class="tl-bar chapter tl-key"></span>calculated period<span class="tl-bar window tl-key"></span>interpretive window<span class="tl-bar pressure tl-key"></span>pressure period<span class="tl-bar watch tl-key"></span>something to watch. Edges are approximate; a dashed end means the period continues beyond the chart.</p>
+<table><thead><tr><th>When</th><th>What</th><th>Why this period</th></tr></thead><tbody>
+{% for t in r.timeline %}<tr><td>{{ t.start }} – {{ t.end }}</td><td>{{ t.label }}</td><td>{{ t.basis or "" }}</td></tr>{% endfor %}
+</tbody></table>
+{% endif %}
+
+{% if r.watch_list %}
+<h2 id="watch">What to watch for</h2>
+<table><thead><tr><th>When</th><th>Sign</th><th>What it would mean</th></tr></thead><tbody>
+{% for w in r.watch_list %}<tr><td>{{ w.when or "" }}</td><td>{{ w.sign }}</td><td>{{ w.meaning }}</td></tr>{% endfor %}
+</tbody></table>
+{% endif %}
+
+<h2 id="uncertain">What is uncertain</h2>
+{% set u = r.uncertainty or {} %}
+{% if u.birth_time %}<p><strong>Birth time.</strong> {{ u.birth_time }}</p>{% endif %}
+{% if u.contradictions %}<p><strong>Where the chart argues both ways.</strong></p><ul>{% for c in u.contradictions %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
+{% if u.engine_differences %}<p><strong>Calculation differences.</strong></p><ul>{% for c in u.engine_differences %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
+{% if u.not_assessed %}<p><strong>Not assessed.</strong></p><ul>{% for c in u.not_assessed %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
+{% if not (u.birth_time or u.contradictions or u.engine_differences or u.not_assessed) %}<p>No specific uncertainties were recorded beyond the general limits stated on the cover.</p>{% endif %}
+
+{% if r.practical_summary %}
+<h2 id="practical">In practice</h2>
+<div class="callout"><ul>{% for p in r.practical_summary %}<li>{{ p }}</li>{% endfor %}</ul></div>
+{% endif %}
+
+{% if appendix and (r.report_type != "compact" or r.appendix) %}
+<section class="appendix">
+<h2 id="appendix">Technical appendix</h2>
+{% if bases %}<h3>Why each conclusion</h3>
+<table><thead><tr><th>Conclusion</th><th>Chart basis</th></tr></thead><tbody>
+{% for b in bases %}<tr><td>{{ b.theme }}</td><td>{{ b.basis }}</td></tr>{% endfor %}
+</tbody></table>{% endif %}
+{% set a = r.appendix or {} %}
+{% if a.positions %}<h3>Positions</h3><table><thead><tr>{% for k in a.positions[0].keys() %}<th>{{ k|capitalize }}</th>{% endfor %}</tr></thead><tbody>
+{% for p in a.positions %}<tr>{% for v in p.values() %}<td>{{ v }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>{% endif %}
+{% if a.periods %}<h3>Periods</h3><table><thead><tr>{% for k in a.periods[0].keys() %}<th>{{ k|capitalize }}</th>{% endfor %}</tr></thead><tbody>
+{% for p in a.periods %}<tr>{% for v in p.values() %}<td>{{ v }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>{% endif %}
+{% if a.method %}<h3>Method</h3><p>{{ a.method }}</p>{% endif %}
+{% if r.engine and r.engine.notes %}<ul>{% for n in r.engine.notes %}<li>{{ n }}</li>{% endfor %}</ul>{% endif %}
+{% if a.sources %}<h3>Sources</h3><ul>{% for s in a.sources %}<li>{{ s }}</li>{% endfor %}</ul>{% endif %}
+</section>
+{% endif %}
+</body>
+</html>

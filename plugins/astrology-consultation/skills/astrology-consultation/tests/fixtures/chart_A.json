@@ -1,0 +1,7 @@
+{"_note": "FICTIONAL test native A: 14/03/1994 07:25 +05:30, 28.61N 77.21E. Calculated with VedAstro (Lahiri) 2026-09-24. Retrograde flags not fetched.",
+ "asc": {"sign": "Pisces", "deg": 16.783},
+ "planets": {"Su": {"sign": "Aquarius", "deg": 29.478}, "Mo": {"sign": "Pisces", "deg": 19.169},
+             "Ma": {"sign": "Aquarius", "deg": 11.427}, "Me": {"sign": "Aquarius", "deg": 2.409},
+             "Ju": {"sign": "Libra", "deg": 20.590}, "Ve": {"sign": "Pisces", "deg": 13.033},
+             "Sa": {"sign": "Aquarius", "deg": 11.513}, "Ra": {"sign": "Scorpio", "deg": 3.499},
+             "Ke": {"sign": "Taurus", "deg": 3.499}}}

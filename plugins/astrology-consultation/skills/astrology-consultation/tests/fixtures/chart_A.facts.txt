@@ -1,0 +1,43 @@
+# Parashari D1 (whole-sign)  ascendant Pisces 16.783°
+Moon phase: waxing, 20° from Sun (dim: near new Moon — weigh as weak). Natural malefics here: Ke, Ma, Me, Ra, Sa, Su. Node aspects omitted (school-dependent).
+- Sun: Aquarius 29.478° H12; no sign dignity; enemy's sign; dispositor Saturn (H12); owns H6; with Ma,Me,Sa; aspected by Ju; D9 Gemini, D10 Scorpio
+- Moon: Pisces 19.169° H1; no sign dignity; neutral's sign; dispositor Jupiter (H8); owns H5; with Ve; D9 Sagittarius, D10 Taurus
+- Mars: Aquarius 11.427° H12; no sign dignity; neutral's sign; dispositor Saturn (H12); owns H2,9; with Su,Me,Sa; aspected by Ju; D9 Capricorn, D10 Taurus
+- Mercury: Aquarius 2.409° H12; no sign dignity; neutral's sign; dispositor Saturn (H12); owns H4,7; with Su,Ma,Sa; aspected by Ju; D9 Libra, D10 Aquarius
+- Jupiter: Libra 20.59° H8; no sign dignity; enemy's sign; dispositor Venus (H1); owns H1,10; D9 Aries, D10 Aries
+- Venus: Pisces 13.033° H1; EXALTED; neutral's sign; dispositor Jupiter (H8); owns H3,8; with Mo; D9 Libra, D10 Pisces
+- Saturn: Aquarius 11.513° H12; own sign; dispositor Saturn (H12); owns H11,12; with Su,Ma,Me; aspected by Ju; D9 Capricorn, D10 Taurus
+- Rahu: Scorpio 3.499° H9; no sign dignity; dispositor Mars (H12); aspected by Sa; D9 Leo, D10 Leo
+- Ketu: Taurus 3.499° H3; no sign dignity; dispositor Venus (H1); aspected by Ma; D9 Aquarius, D10 Aquarius
+
+# Houses: occupants | aspects | lord placement | Phaladeepika XV.1/XV.6 strength tests (LOL p282-288)
+- H1 Pisces: occ Mo,Ve | asp — | lord Jupiter in H8 | malefics 4/8/12 from it: Su,Ma,Me,Sa; malefics 5/9 from it: Ra; lord in dusthana H8
+- H2 Aries: occ — | asp Ju,Sa | lord Mars in H12 | malefics 4/8/12 from it: Ra; lord in dusthana H12
+- H3 Taurus: occ Ke | asp Ma | lord Venus in H1
+- H4 Gemini: occ — | asp Ju | lord Mercury in H12 | malefics 4/8/12 from it: Ke; malefics 5/9 from it: Su,Ma,Me,Sa; lord in dusthana H12
+- H5 Cancer: occ — | asp — | lord Moon in H1 | malefics 4/8/12 from it: Su,Ma,Me,Sa; malefics 5/9 from it: Ra
+- H6 Leo: occ — | asp Su,Ma,Me,Sa | lord Sun in H12 | malefics 4/8/12 from it: Ra; lord in dusthana H12; lord occupies/aspects own house
+- H7 Virgo: occ — | asp Mo,Ma,Ve | lord Mercury in H12 | malefics 5/9 from it: Ke; lord in dusthana H12
+- H8 Libra: occ Ju | asp — | lord Venus in H1 | malefics 4/8/12 from it: Ke; malefics 5/9 from it: Su,Ma,Me,Sa
+- H9 Scorpio: occ Ra | asp Sa | lord Mars in H12 | malefics 4/8/12 from it: Su,Ma,Me,Sa; lord in dusthana H12
+- H10 Sagittarius: occ — | asp — | lord Jupiter in H8 | malefics 4/8/12 from it: Ra; lord in dusthana H8
+- H11 Capricorn: occ — | asp — | lord Saturn in H12 | malefics 5/9 from it: Ke
+- H12 Aquarius: occ Su,Ma,Me,Sa | asp Ju | lord Saturn in H12 | malefics 4/8/12 from it: Ke; lord occupies/aspects own house
+
+Dispositor chains: Su→Sa→Sa; Mo→Ju→Ve→Ju; Ma→Sa→Sa; Me→Sa→Sa; Ju→Ve→Ju; Ve→Ju→Ve; Sa→Sa; Ra→Ma→Sa→Sa; Ke→Ve→Ju→Ve. Final dispositor(s) in own sign: Sa
+
+# Lal Kitab fixed-Aries chart (whole-sign houses from lagna (KB B2 note)); signs dropped, house N = Kalpurush sign N
+  H1:Mo+Ve  H2:—  H3:Ke  H4:—  H5:—  H6:—  H7:—  H8:Ju  H9:Ra  H10:—  H11:—  H12:Su+Ma+Me+Sa
+  Empty houses: 2, 4, 5, 6, 7, 10, 11
+- Sun H12: SLEEPING? 7th from it (H6) empty (B7 p44, R14); with LK-enemies Sa; with LK-friends Ma; rival? sits in Ju's pakka ghar; Ju not in Su's (B7 p43); rival? sits in Ra's pakka ghar; Ra not in Su's (B7 p43)
+- Moon H1: SLEEPING? 7th from it (H7) empty (B7 p44, R14); rival? sits in Su's pakka ghar; Su not in Mo's (B7 p43); LK aspect → H7
+- Mars H12: SLEEPING? 7th from it (H6) empty (B7 p44, R14); with LK-enemies Me; with LK-friends Su; rival? sits in Ra's pakka ghar; Ra not in Ma's (B7 p43)
+- Mercury H12: LK-debilitated (B4); SLEEPING? 7th from it (H6) empty (B7 p44, R14); with LK-friends Su; rival? sits in Ju's pakka ghar; Ju not in Me's (B7 p43); rival? sits in Ra's pakka ghar; Ra not in Me's (B7 p43)
+- Jupiter H8: SLEEPING? 7th from it (H2) empty (B7 p44, R14); 'sinful' placement (B7 p41); ALLY with Ma: exchange of pakka houses (B7 p42); ALLY with Sa: exchange of pakka houses (B7 p42); LK aspect → H2
+- Venus H1: SLEEPING? 7th from it (H7) empty (B7 p44, R14); with LK-enemies Mo; rival? sits in Su's pakka ghar; Su not in Ve's (B7 p43); LK aspect → H7
+- Saturn H12: SLEEPING? 7th from it (H6) empty (B7 p44, R14); with LK-enemies Su,Ma; with LK-friends Me; rival? sits in Ra's pakka ghar; Ra not in Sa's (B7 p43)
+- Rahu H9: node dignity ⚠️X3/X4: table-set debil, chapter-set debil; rival? sits in Ju's pakka ghar; Ju not in Ra's (B7 p43)
+- Ketu H3: node dignity ⚠️X3/X4: table-set debil, chapter-set none; rival? sits in Ma's pakka ghar; Ma not in Ke's (B7 p43); LK aspect → H9,11 ❓
+  Mangalik by house (B9, a [VED] rule reproduced by the author).
+  Rin (debt) signatures: check KB B12 against this house map; judge debts from the natal chart only.
+  Rows 9-12 of the LK aspect table are missing in source (R10); never fill them from Parashari aspects.

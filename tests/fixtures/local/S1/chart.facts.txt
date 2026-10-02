@@ -1,0 +1,42 @@
+# Parashari D1 (whole-sign)  ascendant Taurus 26.6477°
+Moon phase: waxing, 120° from Sun. Natural malefics here: Ke, Ma, Me, Ra, Sa, Su. Node aspects omitted (school-dependent).
+- Sun: Pisces 0.3149° H11; no sign dignity; friend's sign; dispositor Jupiter (H4); owns H4; with Me; aspected by Sa; D9 Cancer, D10 Scorpio
+- Moon: Cancer 0.4074° H3; own sign; dispositor Moon (H3); owns H3; aspected by Ma,Sa; D9 Cancer VARGOTTAMA, D10 Pisces
+- Mars: Capricorn 25.6509° H9; EXALTED; neutral's sign; dispositor Saturn (H9); owns H7,12; with Sa; aspected by Mo; D9 Leo, D10 Taurus
+- Mercury: Pisces 17.0746° H11; DEBILITATED; neutral's sign; dispositor Jupiter (H4); owns H2,5; with Su; aspected by Sa; D9 Sagittarius, D10 Aries
+- Jupiter: Leo 14.0869° H4; no sign dignity; friend's sign; dispositor Sun (H11); owns H8,11; aspected by Ma,Ve; D9 Leo VARGOTTAMA, D10 Sagittarius
+- Venus: Aquarius 6.7471° H10; no sign dignity; friend's sign; dispositor Saturn (H9); owns H1,6; aspected by Ju; D9 Sagittarius, D10 Aries
+- Saturn: Capricorn 20.5325° H9; own sign; dispositor Saturn (H9); owns H9,10; with Ma; aspected by Mo; D9 Cancer, D10 Pisces
+- Rahu: Sagittarius 12.1668° H8; no sign dignity; dispositor Jupiter (H4); aspected by Ju; D9 Cancer, D10 Aries
+- Ketu: Gemini 12.1668° H2; no sign dignity; dispositor Mercury (H11); D9 Capricorn, D10 Libra
+
+# Houses: occupants | aspects | lord placement | Phaladeepika XV.1/XV.6 strength tests (LOL p282-288)
+- H1 Taurus: occ — | asp — | lord Venus in H10 | malefics 4/8/12 from it: Ra; malefics 5/9 from it: Ma,Sa
+- H2 Gemini: occ Ke | asp — | lord Mercury in H11 | malefics 4/8/12 from it: Ma,Sa
+- H3 Cancer: occ Mo | asp Ma,Sa | lord Moon in H3 | malefics 4/8/12 from it: Ke; malefics 5/9 from it: Su,Me; lord occupies/aspects own house
+- H4 Leo: occ Ju | asp Ma,Ve | lord Sun in H11 | malefics 4/8/12 from it: Su,Me; malefics 5/9 from it: Ra
+- H5 Virgo: occ — | asp Su,Me | lord Mercury in H11 | malefics 4/8/12 from it: Ra; malefics 5/9 from it: Ma,Sa; lord occupies/aspects own house
+- H6 Libra: occ — | asp Sa | lord Venus in H10 | malefics 4/8/12 from it: Ma,Sa; malefics 5/9 from it: Ke
+- H7 Scorpio: occ — | asp — | lord Mars in H9 | malefics 4/8/12 from it: Ke; malefics 5/9 from it: Su,Me
+- H8 Sagittarius: occ Ra | asp Ju | lord Jupiter in H4 | malefics 4/8/12 from it: Su,Me; lord occupies/aspects own house
+- H9 Capricorn: occ Ma,Sa | asp Mo | lord Saturn in H9 | malefics 4/8/12 from it: Ra; lord occupies/aspects own house
+- H10 Aquarius: occ Ve | asp Ju | lord Saturn in H9 | HEMMED by malefics; malefics 4/8/12 from it: Ma,Sa; malefics 5/9 from it: Ke
+- H11 Pisces: occ Su,Me | asp Sa | lord Jupiter in H4 | malefics 4/8/12 from it: Ke
+- H12 Aries: occ — | asp Ma,Ju | lord Mars in H9 | malefics 4/8/12 from it: Su,Me; malefics 5/9 from it: Ra; lord occupies/aspects own house
+
+Dispositor chains: Su→Ju→Su; Mo→Mo; Ma→Sa→Sa; Me→Ju→Su→Ju; Ju→Su→Ju; Ve→Sa→Sa; Sa→Sa; Ra→Ju→Su→Ju; Ke→Me→Ju→Su→Ju. Final dispositor(s) in own sign: Mo, Sa
+
+# Lal Kitab fixed-Aries chart (whole-sign houses from lagna (KB B2 note)); signs dropped, house N = Kalpurush sign N
+  H1:—  H2:Ke  H3:Mo  H4:Ju  H5:—  H6:—  H7:—  H8:Ra  H9:Ma+Sa  H10:Ve  H11:Su+Me  H12:—
+  Empty houses: 1, 5, 6, 7, 12
+- Sun H11: SLEEPING? 7th from it (H5) empty (B7 p44, R14)
+- Moon H3: 'sinful' placement (B7 p41); rival? sits in Ma's pakka ghar; Ma not in Mo's (B7 p43); LK aspect → H9,11 ❓
+- Mars H9: 'sinful' placement (B7 p41); rival? sits in Ju's pakka ghar; Ju not in Ma's (B7 p43)
+- Mercury H11: SLEEPING? 7th from it (H5) empty (B7 p44, R14); with LK-friends Su; 'sinful' placement (B7 p41)
+- Jupiter H4: LK-exalted (B4); rival? sits in Mo's pakka ghar; Mo not in Ju's (B7 p43); LK aspect → H10
+- Venus H10: rival? sits in Sa's pakka ghar; Sa not in Ve's (B7 p43)
+- Saturn H9: with LK-enemies Ma; rival? sits in Ju's pakka ghar; Ju not in Sa's (B7 p43)
+- Rahu H8: node dignity ⚠️X3/X4: table-set none, chapter-set debil; rival? sits in Ma's pakka ghar; Ma not in Ra's (B7 p43); rival? sits in Sa's pakka ghar; Sa not in Ra's (B7 p43); LK aspect → H2
+- Ketu H2: rival? sits in Ju's pakka ghar; Ju not in Ke's (B7 p43); LK aspect → H6
+  Rin (debt) signatures: check KB B12 against this house map; judge debts from the natal chart only.
+  Rows 9-12 of the LK aspect table are missing in source (R10); never fill them from Parashari aspects.

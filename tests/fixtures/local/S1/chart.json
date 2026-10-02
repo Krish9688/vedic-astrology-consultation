@@ -1,0 +1,45 @@
+{
+ "_note": "Calculated locally: Swiss Ephemeris 2.10.03 (pyswisseph, local), Lahiri 23.7481\u00b0, mean nodes; birth 1992-03-14 09:40 UTC+0.0",
+ "asc": {
+  "sign": "Taurus",
+  "deg": 26.6477
+ },
+ "planets": {
+  "Su": {
+   "sign": "Pisces",
+   "deg": 0.3149
+  },
+  "Mo": {
+   "sign": "Cancer",
+   "deg": 0.4074
+  },
+  "Ma": {
+   "sign": "Capricorn",
+   "deg": 25.6509
+  },
+  "Me": {
+   "sign": "Pisces",
+   "deg": 17.0746
+  },
+  "Ju": {
+   "sign": "Leo",
+   "deg": 14.0869
+  },
+  "Ve": {
+   "sign": "Aquarius",
+   "deg": 6.7471
+  },
+  "Sa": {
+   "sign": "Capricorn",
+   "deg": 20.5325
+  },
+  "Ra": {
+   "sign": "Sagittarius",
+   "deg": 12.1668
+  },
+  "Ke": {
+   "sign": "Gemini",
+   "deg": 12.1668
+  }
+ }
+}

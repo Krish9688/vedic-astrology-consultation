@@ -1,0 +1,8 @@
+{
+ "id": "raman-1918",
+ "description": "Worked example chart from B. V. Raman, Graha and Bhava Balas (public example; not a private person's data in this project). Expected Drik Bala values as published there and quoted in the PyJHora source (jhora/horoscope/chart/strength.py, AGPL-3.0).",
+ "birth": {"date": "1918-10-16", "time": "14:22:16", "tz": 5.5, "lat": 13.0, "lon": 77.5833333},
+ "ayanamsa": "RAMAN",
+ "expected": {"drik_virupas": {"Su": 15.86, "Mo": -21.73, "Ma": 0.95, "Me": 15.64, "Ju": -16.04, "Ve": 18.47, "Sa": 7.21}},
+ "tolerance": 0.05
+}

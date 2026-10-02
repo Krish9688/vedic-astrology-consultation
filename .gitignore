@@ -1,0 +1,18 @@
+.venv*/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.DS_Store
+dist/
+build/
+*.egg-info/
+# never commit personal or library data
+private/
+index/
+text/
+graphify-out/
+*.pdf
+.env
+.env.*

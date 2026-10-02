@@ -1,0 +1,116 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "Structured Report Model (astrology-consultation v3.4)",
+ "description": "What the consultant writes after the workbench; scripts/render_report.py turns it into HTML/PDF. Client prose lives in summary, sections, timeline, watch_list and practical_summary; chart facts belong in appendix. See references/reports.md.",
+ "type": "object",
+ "required": ["report_type", "title", "prepared_for", "prepared_on", "summary", "sections"],
+ "properties": {
+  "report_type": {"enum": ["complete-life", "career", "relationship", "marriage", "dasha", "12-month", "relocation", "compact"]},
+  "title": {"type": "string"},
+  "subtitle": {"type": "string"},
+  "prepared_for": {"type": "string", "description": "first name or initials only"},
+  "prepared_on": {"type": "string", "format": "date"},
+  "birth": {
+   "type": "object",
+   "properties": {
+    "date": {"type": "string"}, "time": {"type": "string"}, "place": {"type": "string"},
+    "time_source": {"type": "string"}, "time_reliability": {"type": "string"}
+   }
+  },
+  "engine": {
+   "type": "object",
+   "properties": {"calculation": {"type": "string"}, "cross_check": {"type": "string"}, "notes": {"type": "array", "items": {"type": "string"}}}
+  },
+  "summary": {
+   "type": "object",
+   "required": ["headline", "key_points"],
+   "properties": {
+    "headline": {"type": "string", "description": "the report in one or two sentences"},
+    "key_points": {
+     "type": "array", "minItems": 1, "maxItems": 7,
+     "items": {
+      "type": "object", "required": ["text", "confidence"],
+      "properties": {
+       "text": {"type": "string"},
+       "confidence": {"$ref": "#/$defs/grade"},
+       "window": {"type": "string"},
+       "section": {"type": "string", "description": "id of the section that argues it"}
+      }
+     }
+    }
+   }
+  },
+  "how_to_read": {"type": "string"},
+  "sections": {
+   "type": "array", "minItems": 1,
+   "items": {
+    "type": "object", "required": ["id", "title"],
+    "properties": {
+     "id": {"type": "string"},
+     "title": {"type": "string"},
+     "intro": {"type": "string"},
+     "units": {"type": "array", "items": {"$ref": "#/$defs/unit"}},
+     "text": {"type": "string", "description": "free prose for sections that are not life units (e.g. current chapter)"}
+    }
+   }
+  },
+  "timeline": {
+   "type": "array",
+   "items": {
+    "type": "object", "required": ["start", "end", "label", "kind"],
+    "properties": {
+     "start": {"type": "string", "description": "YYYY-MM or YYYY-MM-DD"},
+     "end": {"type": "string"},
+     "label": {"type": "string"},
+     "kind": {"enum": ["chapter", "window", "pressure", "watch"]},
+     "basis": {"type": "string", "description": "the layer that produces it, in plain words"}
+    }
+   }
+  },
+  "watch_list": {
+   "type": "array",
+   "items": {"type": "object", "required": ["sign", "meaning"], "properties": {"when": {"type": "string"}, "sign": {"type": "string"}, "meaning": {"type": "string"}}}
+  },
+  "uncertainty": {
+   "type": "object",
+   "properties": {
+    "birth_time": {"type": "string"},
+    "engine_differences": {"type": "array", "items": {"type": "string"}},
+    "contradictions": {"type": "array", "items": {"type": "string"}},
+    "not_assessed": {"type": "array", "items": {"type": "string"}}
+   }
+  },
+  "practical_summary": {"type": "array", "items": {"type": "string"}},
+  "appendix": {
+   "type": "object",
+   "properties": {
+    "positions": {"type": "array", "items": {"type": "object"}},
+    "periods": {"type": "array", "items": {"type": "object"}},
+    "method": {"type": "string"},
+    "sources": {"type": "array", "items": {"type": "string"}}
+   }
+  }
+ },
+ "$defs": {
+  "grade": {"enum": ["Strong", "Moderate", "Weak", "Contradictory", "Unknown"]},
+  "unit": {
+   "type": "object",
+   "required": ["theme", "meaning"],
+   "description": "One life point: theme → meaning → manifestation → timing → nuance → counter → watch (communication.md §1a)",
+   "properties": {
+    "theme": {"type": "string"},
+    "meaning": {"type": "string"},
+    "manifestation": {"type": "string"},
+    "timing": {"type": "string"},
+    "nuance": {"type": "string"},
+    "counter": {"type": "string"},
+    "watch": {"type": "string"},
+    "confidence": {
+     "type": "object",
+     "properties": {"event": {"$ref": "#/$defs/grade"}, "timing": {"$ref": "#/$defs/grade"}, "manifestation": {"$ref": "#/$defs/grade"}}
+    },
+    "basis": {"type": "string", "description": "the chart relationships behind it — shown only in the appendix"}
+   }
+  }
+ }
+}

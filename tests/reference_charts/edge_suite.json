@@ -1,0 +1,470 @@
+{
+ "built_with": "3.5.0",
+ "ephemeris": "Swiss Ephemeris data files",
+ "charts": [
+  {
+   "id": "normal",
+   "category": "normal chart",
+   "date": "1985-07-20",
+   "time": "20:00:00",
+   "tz": 5.5,
+   "lat": 28.61,
+   "lon": 77.21,
+   "check": "baseline",
+   "golden": {
+    "asc": 286.9704,
+    "moon": 126.93,
+    "sun": 94.1551,
+    "first_md": "Ke",
+    "first_md_end": "1988-11-29",
+    "moon_nak": "Magha",
+    "moon_pada": 3,
+    "d9_asc": "Gemini",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "moon-sign-before",
+   "category": "near sign boundary",
+   "date": "2001-05-12",
+   "time": "20:02:08",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "Moon sign differs between before/after",
+   "golden": {
+    "asc": 213.0876,
+    "moon": 269.9959,
+    "sun": 28.2698,
+    "first_md": "Su",
+    "first_md_end": "2005-11-12",
+    "moon_nak": "UttaraAshadha",
+    "moon_pada": 1,
+    "d9_asc": "Cancer",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "moon-sign-after",
+   "category": "near sign boundary",
+   "date": "2001-05-12",
+   "time": "20:03:08",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "Moon sign differs between before/after",
+   "golden": {
+    "asc": 213.2672,
+    "moon": 270.0042,
+    "sun": 28.2705,
+    "first_md": "Su",
+    "first_md_end": "2005-11-10",
+    "moon_nak": "UttaraAshadha",
+    "moon_pada": 2,
+    "d9_asc": "Cancer",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "moon-nak-before",
+   "category": "near nakshatra boundary",
+   "date": "2001-05-11",
+   "time": "11:06:45",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "Moon nakshatra and first mahadasha lord differ; balance near full / near zero",
+   "golden": {
+    "asc": 118.1401,
+    "moon": 253.3291,
+    "sun": 26.9454,
+    "first_md": "Ke",
+    "first_md_end": "2001-05-12",
+    "moon_nak": "Mula",
+    "moon_pada": 4,
+    "d9_asc": "Pisces",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "moon-nak-after",
+   "category": "near nakshatra boundary",
+   "date": "2001-05-11",
+   "time": "11:07:45",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "Moon nakshatra and first mahadasha lord differ; balance near full / near zero",
+   "golden": {
+    "asc": 118.3151,
+    "moon": 253.3376,
+    "sun": 26.9461,
+    "first_md": "Ve",
+    "first_md_end": "2021-05-09",
+    "moon_nak": "PurvaAshadha",
+    "moon_pada": 1,
+    "d9_asc": "Pisces",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "moon-pada-before",
+   "category": "near pada boundary",
+   "date": "2001-05-10",
+   "time": "15:47:16",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "Moon pada and D9 sign differ",
+   "golden": {
+    "asc": 166.8478,
+    "moon": 243.329,
+    "sun": 26.1678,
+    "first_md": "Ke",
+    "first_md_end": "2006-08-11",
+    "moon_nak": "Mula",
+    "moon_pada": 1,
+    "d9_asc": "Gemini",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "moon-pada-after",
+   "category": "near pada boundary",
+   "date": "2001-05-10",
+   "time": "15:48:16",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "Moon pada and D9 sign differ",
+   "golden": {
+    "asc": 167.0243,
+    "moon": 243.3377,
+    "sun": 26.1684,
+    "first_md": "Ke",
+    "first_md_end": "2006-08-09",
+    "moon_nak": "Mula",
+    "moon_pada": 2,
+    "d9_asc": "Gemini",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "asc-sign-before",
+   "category": "near ascendant boundary",
+   "date": "1999-03-03",
+   "time": "06:12:58",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "ascendant sign differs; sensitivity reports a change within 1 minute",
+   "golden": {
+    "asc": 299.76,
+    "moon": 149.7024,
+    "sun": 318.3708,
+    "first_md": "Su",
+    "first_md_end": "2003-10-20",
+    "moon_nak": "UttaraPhalguni",
+    "moon_pada": 1,
+    "d9_asc": "Virgo",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "asc-sign-after",
+   "category": "near ascendant boundary",
+   "date": "1999-03-03",
+   "time": "06:13:58",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "ascendant sign differs; sensitivity reports a change within 1 minute",
+   "golden": {
+    "asc": 300.2518,
+    "moon": 149.7112,
+    "sun": 318.3715,
+    "first_md": "Su",
+    "first_md_end": "2003-10-19",
+    "moon_nak": "UttaraPhalguni",
+    "moon_pada": 1,
+    "d9_asc": "Libra",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "d9-lagna-before",
+   "category": "birth time causing varga change",
+   "date": "1999-03-03",
+   "time": "10:01:41",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "D9 lagna differs while the D1 ascendant sign is the same",
+   "golden": {
+    "asc": 49.86,
+    "moon": 151.7003,
+    "sun": 318.5301,
+    "first_md": "Su",
+    "first_md_end": "2002-11-26",
+    "moon_nak": "UttaraPhalguni",
+    "moon_pada": 2,
+    "d9_asc": "Gemini",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "d9-lagna-after",
+   "category": "birth time causing varga change",
+   "date": "1999-03-03",
+   "time": "10:02:41",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "D9 lagna differs while the D1 ascendant sign is the same",
+   "golden": {
+    "asc": 50.1488,
+    "moon": 151.7091,
+    "sun": 318.5308,
+    "first_md": "Su",
+    "first_md_end": "2002-11-25",
+    "moon_nak": "UttaraPhalguni",
+    "moon_pada": 2,
+    "d9_asc": "Cancer",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "polar-day",
+   "category": "high latitude",
+   "date": "1990-06-21",
+   "time": "11:00:00",
+   "tz": 1,
+   "lat": 69.65,
+   "lon": 18.96,
+   "check": "no sunrise/sunset: polar fallback flag",
+   "golden": {
+    "asc": 150.3998,
+    "moon": 46.783,
+    "sun": 66.0518,
+    "first_md": "Mo",
+    "first_md_end": "1995-05-20",
+    "moon_nak": "Rohini",
+    "moon_pada": 3,
+    "d9_asc": "Capricorn",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "polar-night",
+   "category": "high latitude",
+   "date": "1990-12-21",
+   "time": "12:00:00",
+   "tz": 1,
+   "lat": 78.22,
+   "lon": 15.65,
+   "check": "no sunrise/sunset: polar fallback flag",
+   "golden": {
+    "asc": 335.8525,
+    "moon": 292.4529,
+    "sun": 245.5809,
+    "first_md": "Mo",
+    "first_md_end": "1991-08-19",
+    "moon_nak": "Shravana",
+    "moon_pada": 4,
+    "d9_asc": "Leo",
+    "me_retro": true
+   }
+  },
+  {
+   "id": "midnight-before",
+   "category": "near midnight",
+   "date": "2003-01-14",
+   "time": "23:59:30",
+   "tz": 5.5,
+   "lat": 28.61,
+   "lon": 77.21,
+   "check": "weekday lord identical either side of civil midnight",
+   "golden": {
+    "asc": 172.2819,
+    "moon": 46.4865,
+    "sun": 270.2774,
+    "first_md": "Mo",
+    "first_md_end": "2008-03-04",
+    "moon_nak": "Rohini",
+    "moon_pada": 2,
+    "d9_asc": "Cancer",
+    "me_retro": true
+   }
+  },
+  {
+   "id": "midnight-after",
+   "category": "near midnight",
+   "date": "2003-01-15",
+   "time": "00:00:30",
+   "tz": 5.5,
+   "lat": 28.61,
+   "lon": 77.21,
+   "check": "weekday lord identical either side of civil midnight",
+   "golden": {
+    "asc": 172.5015,
+    "moon": 46.4951,
+    "sun": 270.2782,
+    "first_md": "Mo",
+    "first_md_end": "2008-03-02",
+    "moon_nak": "Rohini",
+    "moon_pada": 2,
+    "d9_asc": "Cancer",
+    "me_retro": true
+   }
+  },
+  {
+   "id": "pre-sunrise",
+   "category": "before sunrise",
+   "date": "2003-01-15",
+   "time": "04:30:00",
+   "tz": 5.5,
+   "lat": 28.61,
+   "lon": 77.21,
+   "check": "weekday lord = previous civil day's (Hindu day from sunrise)",
+   "civil_weekday": "Wednesday",
+   "expected_vara": "Ma",
+   "golden": {
+    "asc": 230.5494,
+    "moon": 48.8103,
+    "sun": 270.4687,
+    "first_md": "Mo",
+    "first_md_end": "2006-06-07",
+    "moon_nak": "Rohini",
+    "moon_pada": 3,
+    "d9_asc": "Capricorn",
+    "me_retro": true
+   }
+  },
+  {
+   "id": "leap-2024",
+   "category": "leap year",
+   "date": "2024-02-29",
+   "time": "11:45:00",
+   "tz": 5.5,
+   "lat": 28.61,
+   "lon": 77.21,
+   "check": "29 February computes",
+   "golden": {
+    "asc": 49.7279,
+    "moon": 187.3559,
+    "sun": 315.9537,
+    "first_md": "Ra",
+    "first_md_end": "2041-03-26",
+    "moon_nak": "Swati",
+    "moon_pada": 1,
+    "d9_asc": "Gemini",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "leap-2000",
+   "category": "leap year",
+   "date": "2000-02-29",
+   "time": "23:50:00",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "29 February 2000 (century leap year)",
+   "golden": {
+    "asc": 202.7715,
+    "moon": 257.5165,
+    "sun": 316.8453,
+    "first_md": "Ve",
+    "first_md_end": "2013-11-21",
+    "moon_nak": "PurvaAshadha",
+    "moon_pada": 2,
+    "d9_asc": "Aries",
+    "me_retro": true
+   }
+  },
+  {
+   "id": "me-station-before",
+   "category": "retrograde transition",
+   "date": "2005-03-19",
+   "time": "12:14:24",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "Mercury retrograde flag differs",
+   "golden": {
+    "asc": 93.0976,
+    "moon": 83.6824,
+    "sun": 335.0652,
+    "first_md": "Ju",
+    "first_md_end": "2016-10-17",
+    "moon_nak": "Punarvasu",
+    "moon_pada": 2,
+    "d9_asc": "Cancer",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "me-station-after",
+   "category": "retrograde transition",
+   "date": "2005-03-20",
+   "time": "12:14:24",
+   "tz": 0,
+   "lat": 51.5,
+   "lon": -0.12,
+   "check": "Mercury retrograde flag differs",
+   "golden": {
+    "asc": 93.8183,
+    "moon": 95.5531,
+    "sun": 336.0588,
+    "first_md": "Sa",
+    "first_md_end": "2021-01-19",
+    "moon_nak": "Pushya",
+    "moon_pada": 1,
+    "d9_asc": "Leo",
+    "me_retro": true
+   }
+  },
+  {
+   "id": "dasha-edge-before",
+   "category": "dasha boundary",
+   "date": "2010-08-02",
+   "time": "02:00:03",
+   "tz": 5.5,
+   "lat": 28.61,
+   "lon": 77.21,
+   "check": "first mahadasha lord changes; balance ≈ full period after the edge",
+   "golden": {
+    "asc": 55.3801,
+    "moon": 359.9958,
+    "sun": 105.4708,
+    "first_md": "Me",
+    "first_md_end": "2010-08-04",
+    "moon_nak": "Revati",
+    "moon_pada": 4,
+    "d9_asc": "Leo",
+    "me_retro": false
+   }
+  },
+  {
+   "id": "dasha-edge-after",
+   "category": "dasha boundary",
+   "date": "2010-08-02",
+   "time": "02:01:03",
+   "tz": 5.5,
+   "lat": 28.61,
+   "lon": 77.21,
+   "check": "first mahadasha lord changes; balance ≈ full period after the edge",
+   "golden": {
+    "asc": 55.6232,
+    "moon": 0.0042,
+    "sun": 105.4715,
+    "first_md": "Ke",
+    "first_md_end": "2017-08-01",
+    "moon_nak": "Ashwini",
+    "moon_pada": 1,
+    "d9_asc": "Leo",
+    "me_retro": false
+   }
+  }
+ ]
+}

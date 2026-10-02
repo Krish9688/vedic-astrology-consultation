@@ -1,0 +1,521 @@
+{
+ "$defs": {
+  "Agreement": {
+   "properties": {
+    "kind": {
+     "title": "Kind",
+     "type": "string"
+    },
+    "key": {
+     "title": "Key",
+     "type": "string"
+    },
+    "a": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "A"
+    },
+    "b": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "B"
+    },
+    "delta": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Delta"
+    },
+    "verdict": {
+     "enum": [
+      "match",
+      "within tolerance",
+      "differs",
+      "non-comparable"
+     ],
+     "title": "Verdict",
+     "type": "string"
+    },
+    "note": {
+     "default": "",
+     "title": "Note",
+     "type": "string"
+    }
+   },
+   "required": [
+    "kind",
+    "key",
+    "verdict"
+   ],
+   "title": "Agreement",
+   "type": "object"
+  },
+  "Birth": {
+   "properties": {
+    "date": {
+     "format": "date",
+     "title": "Date",
+     "type": "string"
+    },
+    "time": {
+     "format": "time",
+     "title": "Time",
+     "type": "string"
+    },
+    "utc_offset_hours": {
+     "maximum": 14,
+     "minimum": -14,
+     "title": "Utc Offset Hours",
+     "type": "number"
+    },
+    "lat": {
+     "maximum": 90,
+     "minimum": -90,
+     "title": "Lat",
+     "type": "number"
+    },
+    "lon": {
+     "maximum": 180,
+     "minimum": -180,
+     "title": "Lon",
+     "type": "number"
+    },
+    "time_source": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Time Source"
+    }
+   },
+   "required": [
+    "date",
+    "time",
+    "utc_offset_hours",
+    "lat",
+    "lon"
+   ],
+   "title": "Birth",
+   "type": "object"
+  },
+  "Body": {
+   "properties": {
+    "lon": {
+     "exclusiveMaximum": 360,
+     "minimum": 0,
+     "title": "Lon",
+     "type": "number"
+    },
+    "sign": {
+     "enum": [
+      "Aries",
+      "Taurus",
+      "Gemini",
+      "Cancer",
+      "Leo",
+      "Virgo",
+      "Libra",
+      "Scorpio",
+      "Sagittarius",
+      "Capricorn",
+      "Aquarius",
+      "Pisces"
+     ],
+     "title": "Sign",
+     "type": "string"
+    },
+    "deg": {
+     "exclusiveMaximum": 30,
+     "minimum": 0,
+     "title": "Deg",
+     "type": "number"
+    },
+    "nakshatra": {
+     "title": "Nakshatra",
+     "type": "string"
+    },
+    "pada": {
+     "maximum": 4,
+     "minimum": 1,
+     "title": "Pada",
+     "type": "integer"
+    },
+    "retro": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Retro"
+    },
+    "vargas": {
+     "additionalProperties": {
+      "enum": [
+       "Aries",
+       "Taurus",
+       "Gemini",
+       "Cancer",
+       "Leo",
+       "Virgo",
+       "Libra",
+       "Scorpio",
+       "Sagittarius",
+       "Capricorn",
+       "Aquarius",
+       "Pisces"
+      ],
+      "type": "string"
+     },
+     "default": {},
+     "title": "Vargas",
+     "type": "object"
+    }
+   },
+   "required": [
+    "lon",
+    "sign",
+    "deg",
+    "nakshatra",
+    "pada"
+   ],
+   "title": "Body",
+   "type": "object"
+  },
+  "Period": {
+   "properties": {
+    "lord": {
+     "enum": [
+      "Su",
+      "Mo",
+      "Ma",
+      "Me",
+      "Ju",
+      "Ve",
+      "Sa",
+      "Ra",
+      "Ke"
+     ],
+     "title": "Lord",
+     "type": "string"
+    },
+    "start": {
+     "format": "date",
+     "title": "Start",
+     "type": "string"
+    },
+    "end": {
+     "format": "date",
+     "title": "End",
+     "type": "string"
+    },
+    "sub": {
+     "default": [],
+     "items": {
+      "$ref": "#/$defs/Period"
+     },
+     "title": "Sub",
+     "type": "array"
+    },
+    "clipped": {
+     "default": false,
+     "title": "Clipped",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "lord",
+    "start",
+    "end"
+   ],
+   "title": "Period",
+   "type": "object"
+  },
+  "Provenance": {
+   "properties": {
+    "engine": {
+     "title": "Engine",
+     "type": "string"
+    },
+    "engine_version": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Engine Version"
+    },
+    "network": {
+     "enum": [
+      "local",
+      "cloud:api.vedastro.org"
+     ],
+     "title": "Network",
+     "type": "string"
+    },
+    "ayanamsa": {
+     "default": "Lahiri",
+     "title": "Ayanamsa",
+     "type": "string"
+    },
+    "ayanamsa_deg": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Ayanamsa Deg"
+    },
+    "nodes": {
+     "default": "unknown",
+     "enum": [
+      "mean",
+      "true",
+      "unknown"
+     ],
+     "title": "Nodes",
+     "type": "string"
+    },
+    "dasha_year_days": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Dasha Year Days"
+    },
+    "house_system": {
+     "default": "whole sign",
+     "title": "House System",
+     "type": "string"
+    },
+    "varga_notes": {
+     "additionalProperties": {
+      "type": "string"
+     },
+     "default": {},
+     "title": "Varga Notes",
+     "type": "object"
+    }
+   },
+   "required": [
+    "engine",
+    "network"
+   ],
+   "title": "Provenance",
+   "type": "object"
+  },
+  "TransitBody": {
+   "properties": {
+    "sign": {
+     "enum": [
+      "Aries",
+      "Taurus",
+      "Gemini",
+      "Cancer",
+      "Leo",
+      "Virgo",
+      "Libra",
+      "Scorpio",
+      "Sagittarius",
+      "Capricorn",
+      "Aquarius",
+      "Pisces"
+     ],
+     "title": "Sign",
+     "type": "string"
+    },
+    "deg": {
+     "title": "Deg",
+     "type": "number"
+    },
+    "retro": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Retro"
+    },
+    "house_from_lagna": {
+     "maximum": 12,
+     "minimum": 1,
+     "title": "House From Lagna",
+     "type": "integer"
+    },
+    "house_from_moon": {
+     "maximum": 12,
+     "minimum": 1,
+     "title": "House From Moon",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "sign",
+    "deg",
+    "house_from_lagna",
+    "house_from_moon"
+   ],
+   "title": "TransitBody",
+   "type": "object"
+  },
+  "Transits": {
+   "properties": {
+    "on": {
+     "format": "date",
+     "title": "On",
+     "type": "string"
+    },
+    "bodies": {
+     "additionalProperties": {
+      "$ref": "#/$defs/TransitBody"
+     },
+     "title": "Bodies",
+     "type": "object"
+    }
+   },
+   "required": [
+    "on",
+    "bodies"
+   ],
+   "title": "Transits",
+   "type": "object"
+  }
+ },
+ "description": "ChartFacts from the preferred (local) engine plus the cross-check against a second engine.",
+ "properties": {
+  "schema_version": {
+   "default": "1.0",
+   "title": "Schema Version",
+   "type": "string"
+  },
+  "birth": {
+   "$ref": "#/$defs/Birth"
+  },
+  "provenance": {
+   "$ref": "#/$defs/Provenance"
+  },
+  "bodies": {
+   "additionalProperties": {
+    "$ref": "#/$defs/Body"
+   },
+   "title": "Bodies",
+   "type": "object"
+  },
+  "vimshottari": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Period"
+   },
+   "title": "Vimshottari",
+   "type": "array"
+  },
+  "transits": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Transits"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null
+  },
+  "ingresses": {
+   "default": [],
+   "items": {
+    "additionalProperties": true,
+    "type": "object"
+   },
+   "title": "Ingresses",
+   "type": "array"
+  },
+  "shadbala_rupas": {
+   "additionalProperties": {
+    "type": "number"
+   },
+   "default": {},
+   "title": "Shadbala Rupas",
+   "type": "object"
+  },
+  "flags": {
+   "default": [],
+   "items": {
+    "type": "string"
+   },
+   "title": "Flags",
+   "type": "array"
+  },
+  "cross_check_engine": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "default": null,
+   "title": "Cross Check Engine"
+  },
+  "agreements": {
+   "default": [],
+   "items": {
+    "$ref": "#/$defs/Agreement"
+   },
+   "title": "Agreements",
+   "type": "array"
+  }
+ },
+ "required": [
+  "birth",
+  "provenance",
+  "bodies"
+ ],
+ "title": "ValidatedChartFacts",
+ "type": "object"
+}

@@ -1,0 +1,32 @@
+#!/bin/sh
+# Launcher for the astrology engine inside the Claude plugin. The first run builds a private Python environment in the
+# plugin's data folder (kept across plugin updates, removed on uninstall); later runs start at once. Every message goes
+# to stderr, because stdout belongs to the MCP protocol when Claude starts `astro mcp`.
+set -eu
+ROOT="${CLAUDE_PLUGIN_ROOT:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}"
+DATA="${CLAUDE_PLUGIN_DATA:-${XDG_DATA_HOME:-$HOME/.local/share}/astrology-consultation/plugin}"
+VENV="$DATA/venv"
+WANT="$(sed -n 's/^version = "\(.*\)"/\1/p' "$ROOT/engine/pyproject.toml" | head -n 1)"
+HAVE="$(cat "$VENV/.engine-version" 2>/dev/null || true)"
+if [ ! -x "$VENV/bin/astro" ] || [ "$HAVE" != "$WANT" ]; then
+    echo "astrology-consultation: preparing the local engine $WANT (first run only, needs internet once)..." >&2
+    mkdir -p "$DATA"
+    if command -v uv >/dev/null 2>&1; then
+        uv venv --quiet --allow-existing --python ">=3.11" "$VENV" >&2
+        uv pip install --quiet --python "$VENV/bin/python" "$ROOT/engine[mcp,api,report]" >&2
+    else
+        PY=""
+        for c in python3.13 python3.12 python3.11 python3; do
+            if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys; sys.exit(sys.version_info < (3, 11))'; then
+                PY="$c"; break
+            fi
+        done
+        [ -n "$PY" ] || { echo "astrology-consultation needs Python 3.11 or newer, or uv (https://docs.astral.sh/uv/)" >&2; exit 1; }
+        "$PY" -m venv "$VENV" >&2
+        "$VENV/bin/python" -m pip install --quiet "$ROOT/engine[mcp,api,report]" >&2
+    fi
+    printf '%s\n' "$WANT" > "$VENV/.engine-version"
+fi
+ASTRO_SKILL_DIR="$ROOT/skills/astrology-consultation"
+export ASTRO_SKILL_DIR
+exec "$VENV/bin/astro" "$@"

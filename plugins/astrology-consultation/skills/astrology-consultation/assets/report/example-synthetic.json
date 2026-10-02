@@ -1,0 +1,93 @@
+{
+ "report_type": "career",
+ "title": "Career and direction, 2026–2029",
+ "subtitle": "A worked example on a synthetic chart — not a real person",
+ "prepared_for": "S. (synthetic example)",
+ "prepared_on": "2026-09-27",
+ "birth": {"date": "14 March 1992", "time": "09:40", "place": "London (synthetic)", "time_source": "invented for testing", "time_reliability": "treated as exact"},
+ "engine": {"calculation": "local Swiss Ephemeris (Lahiri, mean nodes, whole-sign houses)", "cross_check": "VedAstro (cloud)",
+            "notes": ["VedAstro counts dasha years as 360 days, so its period dates run earlier than the local engine's; the local dates are used here."]},
+ "summary": {
+  "headline": "Work is the strongest area of this chart: authority built slowly through skill and trust. The next two years shift the emphasis from proving yourself to building a stable base, with a clearer step up from late 2026.",
+  "key_points": [
+   {"text": "A career built on competence and responsibility rather than luck; recognition arrives later than effort but it lasts.", "confidence": "Strong", "section": "pattern"},
+   {"text": "From October 2026 the chapter turns toward consolidation — a settled role, property or a home base may matter as much as a title.", "confidence": "Moderate", "window": "Oct 2026 – Jan 2029", "section": "next"},
+   {"text": "The most concrete opening for a step up falls from mid-2027 into 2028.", "confidence": "Moderate", "window": "mid-2027 – 2028", "section": "next"},
+   {"text": "Money follows work steadily; income is better supported than windfalls or speculation.", "confidence": "Moderate", "section": "money"}
+  ]
+ },
+ "sections": [
+  {"id": "pattern", "title": "Your working pattern",
+   "units": [
+    {"theme": "Authority earned through skill, not given by position",
+     "meaning": "You do best where competence is visible and responsibility grows with it. Structures, long projects and people who depend on your judgement bring out the best in you.",
+     "manifestation": "Most likely a professional or institutional path — management, law, engineering, public service or anything with standards and seniority — rather than a quick entrepreneurial run.",
+     "nuance": "The drive is strong, but it is paired with caution: you tend to prepare longer than others would.",
+     "counter": "Your communication and money-planning side is weaker than your work drive; decisions about pay and negotiation may lag behind your actual value.",
+     "watch": "When you are handed responsibility before the title, that is the pattern working, not being ignored.",
+     "confidence": {"event": "Strong", "manifestation": "Moderate"},
+     "basis": "Saturn, which rules both the 9th and 10th houses for a Taurus ascendant, sits in its own sign with exalted Mars; the ascendant lord Venus occupies the 10th, aspected by Jupiter."}
+   ]},
+  {"id": "chapter", "title": "The chapter you are in",
+   "text": "You are in a long chapter (mid-2014 to late 2031) that favours learning, trade in ideas, and income through networks and groups. Its first half was about finding footing; the sub-period that ends in early October 2026 has been restless, with more change of direction than you probably wanted.\n\nThe next sub-period, from October 2026 to January 2029, keeps the same backdrop but changes the tone: less scattering, more building. It is a period for choosing one base and deepening it."},
+  {"id": "next", "title": "The next two years",
+   "units": [
+    {"theme": "From proving yourself to building a base",
+     "meaning": "The coming period rewards consolidation: a role you can grow into, a place you can settle, commitments that compound.",
+     "manifestation": "A move to a steadier employer or a more permanent position is likelier than a dramatic career change; a home or property decision may run alongside.",
+     "timing": "The chapter opens in October 2026; the sharper stretch is mid-2027 to 2028, when the long period and the slow transits point at the same part of the chart.",
+     "nuance": "Growth here is steady rather than sudden; the gains show over two years, not two months.",
+     "counter": "The same period carries some hidden costs — expenses, relocation logistics or a stretch of work behind the scenes — especially while Saturn crosses your twelfth sector from mid-2027.",
+     "watch": "An offer or reorganisation between mid-2027 and mid-2028 that gives you more responsibility and a more permanent footing.",
+     "confidence": {"event": "Moderate", "timing": "Moderate", "manifestation": "Weak"},
+     "basis": "Mercury–Jupiter sub-period 2026-10-03 → 2029-01-07 (local engine); Jupiter rules the 11th and occupies the 4th. Jupiter enters Leo (4th) on 2026-10-31, returns to Cancer 2027-01-24, re-enters Leo 2027-06-26. Saturn enters Aries (12th) 2027-06-03, returns 2027-10-20, re-enters 2028-02-23."}
+   ]},
+  {"id": "money", "title": "Money",
+   "units": [
+    {"theme": "Income tracks effort; windfalls are not the story",
+     "meaning": "Earnings grow with responsibility and through networks, clients or institutions rather than through luck.",
+     "manifestation": "Better-paid roles, consulting on the side, or income from a group or organisation you belong to.",
+     "counter": "Savings discipline is the weaker link; plan for the relocation and household costs that the next period brings.",
+     "watch": "Whether the 2027–28 step up comes with a clear pay change — if not, negotiate it rather than waiting.",
+     "confidence": {"event": "Moderate", "manifestation": "Moderate"},
+     "basis": "Sun and debilitated Mercury (2nd and 5th lord) in the 11th; 11th lord Jupiter in the 4th, vargottama."}
+   ]}
+ ],
+ "timeline": [
+  {"start": "2014-09", "end": "2031-09", "label": "Long chapter: learning, networks", "kind": "chapter", "basis": "Mercury major period"},
+  {"start": "2024-03", "end": "2026-10", "label": "Restless sub-period", "kind": "chapter", "basis": "Mercury–Rahu"},
+  {"start": "2026-10", "end": "2029-01", "label": "Building a base", "kind": "chapter", "basis": "Mercury–Jupiter"},
+  {"start": "2027-06", "end": "2028-06", "label": "Step up most likely", "kind": "window", "basis": "sub-period lord and Jupiter's return to the 4th agree"},
+  {"start": "2027-06", "end": "2028-12", "label": "Hidden costs and logistics", "kind": "pressure", "basis": "Saturn crossing the 12th"}
+ ],
+ "watch_list": [
+  {"when": "Oct 2026 – early 2027", "sign": "A settling decision: role, place or both", "meaning": "The consolidation chapter has started"},
+  {"when": "mid-2027 – mid-2028", "sign": "More responsibility with a more permanent footing", "meaning": "The main window is working; if nothing comes, treat 2027–28 as preparation"}
+ ],
+ "uncertainty": {
+  "birth_time": "The ascendant is late in Taurus (about 27°); a birth about 14 minutes later (calculated) would make it Gemini and change every house. The dasha dates do not depend on this.",
+  "engine_differences": ["VedAstro's 360-day years put the October 2026 sub-period change in April 2026; the local engine's sidereal years are used here."],
+  "not_assessed": ["Health, family and relationships are outside the scope of this report."]
+ },
+ "practical_summary": [
+  "Treat October 2026 onwards as a time to choose one base and deepen it.",
+  "Prepare for a step up from mid-2027: make your responsibility visible and ask for the title to match.",
+  "Budget for the logistics that come with growth in 2027–28."
+ ],
+ "appendix": {
+  "positions": [
+   {"body": "Ascendant", "sign": "Taurus", "degree": "26°39′", "nakshatra": "Mrigashira 1"},
+   {"body": "Saturn", "sign": "Capricorn", "degree": "20°32′", "nakshatra": "Shravana 4"},
+   {"body": "Mars", "sign": "Capricorn", "degree": "25°39′", "nakshatra": "Dhanishtha 1"},
+   {"body": "Venus", "sign": "Aquarius", "degree": "6°45′", "nakshatra": "Shatabhisha 1"},
+   {"body": "Jupiter", "sign": "Leo", "degree": "14°05′", "nakshatra": "Purva Phalguni 1"}
+  ],
+  "periods": [
+   {"level": "Major", "lord": "Mercury", "start": "2014-09-17", "end": "2031-09-18"},
+   {"level": "Sub", "lord": "Rahu", "start": "2024-03-15", "end": "2026-10-03"},
+   {"level": "Sub", "lord": "Jupiter", "start": "2026-10-03", "end": "2029-01-07"}
+  ],
+  "method": "Parashari, whole-sign houses from the sidereal ascendant; Vimshottari with 365.256-day years; transit sign changes calculated, not estimated.",
+  "sources": ["Yogakaraka for Taurus ascendant (Saturn as 9th and 10th lord): standard Parashari doctrine; see the skill's source index for page references."]
+ }
+}

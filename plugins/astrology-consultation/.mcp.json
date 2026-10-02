@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "astrology": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/scripts/astro",
+      "args": ["mcp"]
+    }
+  }
+}

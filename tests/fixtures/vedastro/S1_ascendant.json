@@ -1,0 +1,17 @@
+{
+ "request": {
+  "birth": "09:40 14/03/1992 +00:00",
+  "lat": 51.5,
+  "lon": -0.12,
+  "label": "Synthetic S1 (not a real person)",
+  "ayanamsa": "LAHIRI",
+  "source": "api.vedastro.org via vedastro-local MCP, 2026-09-27"
+ },
+ "GetAscendantLongitude": {
+  "TotalDegrees": "56.646388888888886"
+ },
+ "HouseLongitude_House1": "Begin:35.6917, Middle:56.6464, End:65.6919",
+ "AyanamsaDegree": {
+  "TotalDegrees": "23.752777777777776"
+ }
+}

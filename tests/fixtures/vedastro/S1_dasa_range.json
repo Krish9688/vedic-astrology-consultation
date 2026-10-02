@@ -1,0 +1,273 @@
+{
+ "request": {
+  "birth": "09:40 14/03/1992 +00:00",
+  "lat": 51.5,
+  "lon": -0.12,
+  "label": "Synthetic S1 (not a real person)",
+  "ayanamsa": "LAHIRI",
+  "source": "api.vedastro.org via vedastro-local MCP, 2026-09-27",
+  "range": "14/03/1992\u201331/12/2040 (edges clipped by VedAstro)",
+  "levels": 2
+ },
+ "payload": {
+  "DasaAtRange": {
+   "Jupiter": {
+    "Type": "Dasa",
+    "Lord": "Jupiter",
+    "Start": "00:00 14/03/1992 +00:00",
+    "End": "00:00 30/08/1995 +00:00",
+    "SubDasas": {
+     "Moon": {
+      "Type": "Bhukti",
+      "Lord": "Moon",
+      "ParentLord": "Jupiter",
+      "Start": "00:00 14/03/1992 +00:00",
+      "End": "00:00 17/05/1992 +00:00"
+     },
+     "Mars": {
+      "Type": "Bhukti",
+      "Lord": "Mars",
+      "ParentLord": "Jupiter",
+      "Start": "00:00 18/05/1992 +00:00",
+      "End": "00:00 18/04/1993 +00:00"
+     },
+     "Rahu": {
+      "Type": "Bhukti",
+      "Lord": "Rahu",
+      "ParentLord": "Jupiter",
+      "Start": "00:00 19/04/1993 +00:00",
+      "End": "00:00 30/08/1995 +00:00"
+     }
+    }
+   },
+   "Saturn": {
+    "Type": "Dasa",
+    "Lord": "Saturn",
+    "Start": "00:00 31/08/1995 +00:00",
+    "End": "00:00 22/05/2014 +00:00",
+    "SubDasas": {
+     "Saturn": {
+      "Type": "Bhukti",
+      "Lord": "Saturn",
+      "ParentLord": "Saturn",
+      "Start": "00:00 31/08/1995 +00:00",
+      "End": "00:00 17/08/1998 +00:00"
+     },
+     "Mercury": {
+      "Type": "Bhukti",
+      "Lord": "Mercury",
+      "ParentLord": "Saturn",
+      "Start": "00:00 18/08/1998 +00:00",
+      "End": "00:00 12/04/2001 +00:00"
+     },
+     "Ketu": {
+      "Type": "Bhukti",
+      "Lord": "Ketu",
+      "ParentLord": "Saturn",
+      "Start": "00:00 13/04/2001 +00:00",
+      "End": "00:00 16/05/2002 +00:00"
+     },
+     "Venus": {
+      "Type": "Bhukti",
+      "Lord": "Venus",
+      "ParentLord": "Saturn",
+      "Start": "00:00 17/05/2002 +00:00",
+      "End": "00:00 29/06/2005 +00:00"
+     },
+     "Sun": {
+      "Type": "Bhukti",
+      "Lord": "Sun",
+      "ParentLord": "Saturn",
+      "Start": "00:00 30/06/2005 +00:00",
+      "End": "00:00 06/06/2006 +00:00"
+     },
+     "Moon": {
+      "Type": "Bhukti",
+      "Lord": "Moon",
+      "ParentLord": "Saturn",
+      "Start": "00:00 07/06/2006 +00:00",
+      "End": "00:00 28/12/2007 +00:00"
+     },
+     "Mars": {
+      "Type": "Bhukti",
+      "Lord": "Mars",
+      "ParentLord": "Saturn",
+      "Start": "00:00 29/12/2007 +00:00",
+      "End": "00:00 30/01/2009 +00:00"
+     },
+     "Rahu": {
+      "Type": "Bhukti",
+      "Lord": "Rahu",
+      "ParentLord": "Saturn",
+      "Start": "00:00 31/01/2009 +00:00",
+      "End": "00:00 22/11/2011 +00:00"
+     },
+     "Jupiter": {
+      "Type": "Bhukti",
+      "Lord": "Jupiter",
+      "ParentLord": "Saturn",
+      "Start": "00:00 23/11/2011 +00:00",
+      "End": "00:00 22/05/2014 +00:00"
+     }
+    }
+   },
+   "Mercury": {
+    "Type": "Dasa",
+    "Lord": "Mercury",
+    "Start": "00:00 23/05/2014 +00:00",
+    "End": "00:00 22/02/2031 +00:00",
+    "SubDasas": {
+     "Mercury": {
+      "Type": "Bhukti",
+      "Lord": "Mercury",
+      "ParentLord": "Mercury",
+      "Start": "00:00 23/05/2014 +00:00",
+      "End": "00:00 05/10/2016 +00:00"
+     },
+     "Ketu": {
+      "Type": "Bhukti",
+      "Lord": "Ketu",
+      "ParentLord": "Mercury",
+      "Start": "00:00 06/10/2016 +00:00",
+      "End": "00:00 27/09/2017 +00:00"
+     },
+     "Venus": {
+      "Type": "Bhukti",
+      "Lord": "Venus",
+      "ParentLord": "Mercury",
+      "Start": "00:00 28/09/2017 +00:00",
+      "End": "00:00 13/07/2020 +00:00"
+     },
+     "Sun": {
+      "Type": "Bhukti",
+      "Lord": "Sun",
+      "ParentLord": "Mercury",
+      "Start": "00:00 14/07/2020 +00:00",
+      "End": "00:00 15/05/2021 +00:00"
+     },
+     "Moon": {
+      "Type": "Bhukti",
+      "Lord": "Moon",
+      "ParentLord": "Mercury",
+      "Start": "00:00 16/05/2021 +00:00",
+      "End": "00:00 07/10/2022 +00:00"
+     },
+     "Mars": {
+      "Type": "Bhukti",
+      "Lord": "Mars",
+      "ParentLord": "Mercury",
+      "Start": "00:00 08/10/2022 +00:00",
+      "End": "00:00 29/09/2023 +00:00"
+     },
+     "Rahu": {
+      "Type": "Bhukti",
+      "Lord": "Rahu",
+      "ParentLord": "Mercury",
+      "Start": "00:00 30/09/2023 +00:00",
+      "End": "00:00 04/04/2026 +00:00"
+     },
+     "Jupiter": {
+      "Type": "Bhukti",
+      "Lord": "Jupiter",
+      "ParentLord": "Mercury",
+      "Start": "00:00 05/04/2026 +00:00",
+      "End": "00:00 28/06/2028 +00:00"
+     },
+     "Saturn": {
+      "Type": "Bhukti",
+      "Lord": "Saturn",
+      "ParentLord": "Mercury",
+      "Start": "00:00 29/06/2028 +00:00",
+      "End": "00:00 22/02/2031 +00:00"
+     }
+    }
+   },
+   "Ketu": {
+    "Type": "Dasa",
+    "Lord": "Ketu",
+    "Start": "00:00 23/02/2031 +00:00",
+    "End": "00:00 16/01/2038 +00:00",
+    "SubDasas": {
+     "Ketu": {
+      "Type": "Bhukti",
+      "Lord": "Ketu",
+      "ParentLord": "Ketu",
+      "Start": "00:00 23/02/2031 +00:00",
+      "End": "00:00 19/07/2031 +00:00"
+     },
+     "Venus": {
+      "Type": "Bhukti",
+      "Lord": "Venus",
+      "ParentLord": "Ketu",
+      "Start": "00:00 20/07/2031 +00:00",
+      "End": "00:00 11/09/2032 +00:00"
+     },
+     "Sun": {
+      "Type": "Bhukti",
+      "Lord": "Sun",
+      "ParentLord": "Ketu",
+      "Start": "00:00 12/09/2032 +00:00",
+      "End": "00:00 15/01/2033 +00:00"
+     },
+     "Moon": {
+      "Type": "Bhukti",
+      "Lord": "Moon",
+      "ParentLord": "Ketu",
+      "Start": "00:00 16/01/2033 +00:00",
+      "End": "00:00 13/08/2033 +00:00"
+     },
+     "Mars": {
+      "Type": "Bhukti",
+      "Lord": "Mars",
+      "ParentLord": "Ketu",
+      "Start": "00:00 14/08/2033 +00:00",
+      "End": "00:00 07/01/2034 +00:00"
+     },
+     "Rahu": {
+      "Type": "Bhukti",
+      "Lord": "Rahu",
+      "ParentLord": "Ketu",
+      "Start": "00:00 08/01/2034 +00:00",
+      "End": "00:00 20/01/2035 +00:00"
+     },
+     "Jupiter": {
+      "Type": "Bhukti",
+      "Lord": "Jupiter",
+      "ParentLord": "Ketu",
+      "Start": "00:00 21/01/2035 +00:00",
+      "End": "00:00 22/12/2035 +00:00"
+     },
+     "Saturn": {
+      "Type": "Bhukti",
+      "Lord": "Saturn",
+      "ParentLord": "Ketu",
+      "Start": "00:00 23/12/2035 +00:00",
+      "End": "00:00 24/01/2037 +00:00"
+     },
+     "Mercury": {
+      "Type": "Bhukti",
+      "Lord": "Mercury",
+      "ParentLord": "Ketu",
+      "Start": "00:00 25/01/2037 +00:00",
+      "End": "00:00 16/01/2038 +00:00"
+     }
+    }
+   },
+   "Venus": {
+    "Type": "Dasa",
+    "Lord": "Venus",
+    "Start": "00:00 17/01/2038 +00:00",
+    "End": "00:00 31/12/2040 +00:00",
+    "SubDasas": {
+     "Venus": {
+      "Type": "Bhukti",
+      "Lord": "Venus",
+      "ParentLord": "Venus",
+      "Start": "00:00 17/01/2038 +00:00",
+      "End": "00:00 31/12/2040 +00:00"
+     }
+    }
+   }
+  }
+ }
+}

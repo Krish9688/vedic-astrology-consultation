@@ -1,0 +1,41 @@
+{
+ "request": {
+  "birth": "09:40 14/03/1992 +00:00",
+  "lat": 51.5,
+  "lon": -0.12,
+  "label": "Synthetic S1 (not a real person)",
+  "ayanamsa": "LAHIRI",
+  "source": "api.vedastro.org via vedastro-local MCP, 2026-09-27"
+ },
+ "payload": {
+  "PlanetShadbalaPinda": [
+   {
+    "Sun": "420.42"
+   },
+   {
+    "Moon": "487.44"
+   },
+   {
+    "Mars": "320.55"
+   },
+   {
+    "Mercury": "427.8"
+   },
+   {
+    "Jupiter": "575.97"
+   },
+   {
+    "Venus": "362.56"
+   },
+   {
+    "Saturn": "423.27"
+   },
+   {
+    "Rahu": "575.97"
+   },
+   {
+    "Ketu": "427.8"
+   }
+  ]
+ }
+}
