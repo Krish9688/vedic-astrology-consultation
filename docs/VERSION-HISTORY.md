@@ -2,8 +2,8 @@
 
 The complete lineage of the skill, reconstructed on 2026-09-27 from the preserved packages, their manifests, backup
 archives, release and implementation reports, test logs and file timestamps. **This project was not under git before
-2026-10-01**: every version up to v3.3 predates the repository (v3.4 is its first commit), and no historical commits
-were manufactured. Packages are
+2026-10-01**: every package up to v3.4 predates the repository (v3.4's source is its first commit, three minutes after
+its package was built; v3.5 was developed in it), and no historical commits were manufactured. Packages are
 preserved unchanged in `releases/previous/` (machine-readable records in `releases/manifests/v*.json`, with SHA-256
 computed from the files themselves).
 
@@ -25,6 +25,7 @@ one day and released the next, both are given. No date below is a guess; where e
 | v3.3 | astrology-consultation | built and installed 2026-09-27 00:07 (work 09-25/26) | archived | `astrology-consultation-v3.3.skill` | 265ba20d051fa1cc | all 18 books source-mapped; local calculation engine |
 | v3.4 | astrology-consultation | 2026-10-01 (development from 2026-09-27) | previous stable | `astrology-consultation-v3.4.skill` | 2e038b2d92d29a0f | life-first writing, three output modes, report system, normalized calculation layer |
 | v3.5 | astrology-consultation | 2026-10-03 | **current stable** | `astrology-consultation-v3.5.skill` | 01a33c976195b20f | local strength/Jaimini/sensitivity engine, full ephemeris, MCP/REST/CLI service, curated disputes |
+| 3.5.0 (public plugin) | astrology-consultation | 2026-10-03 | **current public release** | `astrology-consultation-3.5.0.skill` | a2f8a42fe3b6d794 | v3.5 as a Claude marketplace plugin; portable library lookup; no Lal Kitab knowledge base |
 
 Also preserved: the first v3.2 build (installed 10:44, replaced at 10:58 after page-checking citations to the newly
 added books) as `releases/previous/astrology-consultation-v3.2-first-build-2026-09-25_1044.tgz`, and a 2026-09-21
@@ -158,8 +159,10 @@ re-zip of v2.1 whose contents are identical to v2.1 (`…-v2.1-repack-2026-09-21
   benchmark; seven comparison verdicts; the vendor-neutral `astro` service (MCP, REST, CLI, privacy modes, install.sh);
   a consent-gated prediction log; contradiction register section F; renderer timeline/compact fixes; a SAFETY check that
   blocks fertility and death statements.
-- **Date evidence:** round 9 benchmark, regression and fixes on 2026-10-02; build and install 2026-10-02 17:33
-  (`release_skill.py`; backup `installed-before-2026-10-02_173324`).
+- **Date evidence:** round 9 benchmark, regression and fixes on 2026-10-02 (unpublished candidate rc1 built 17:33);
+  final validation, rebuild and install 2026-10-03 03:18 (`release_skill.py`; backup
+  `installed-before-2026-10-03_031853`); source committed three minutes later as `4dd3a54` (skill files identical,
+  verified) — v3.5 is the first version developed inside the repository.
 - **Faults found and fixed:** the Sun's required Shadbala (5 → 6.5 rupas, BPHS p299); a parenthood age and child window in
   a complete-life answer; "just reaches" for a 0.99 Shadbala ratio; one-page summaries rendering at 5–7 pages; two
   register rows misdescribing *Light on Life* (p89, p291); planetary war without BPHS's Venus rule; the arudha variant
@@ -168,9 +171,14 @@ re-zip of v2.1 whose contents are identical to v2.1 (`…-v2.1-repack-2026-09-21
   vs v3.3 3/4, 233–227; relationship/marriage re-tests after fixes 128–137 then 141–139 (parity); 85 automated tests
   incl. 22 edge-case reference charts; offline run; clean install; children-safety prompts; private-chart tests
   (main session, not blind). Final validation also fixed a polar-latitude crash, the data-folder permissions and
-  added Jupiter/Saturn oppositions. Promotion rule: new capability, no regression in reasoning.
-- **Known limitations:** the private-chart benchmark items were not run (the environment's safety classifier blocked
-  the answerers); no Chara/Yogini/Narayana dasha; no time-zone database; licensing undecided, repository private.
+  added Jupiter/Saturn oppositions. 85 automated tests at the release commit. Promotion rule: new capability, no
+  regression in reasoning.
+- **Known limitations:** private-chart tests ran in the main session, not blind (subagent answerers were blocked);
+  no Chara/Yogini/Narayana dasha; no time-zone database.
+- **Distribution (3.5.0, same day):** published as a Claude plugin marketplace in a new public repository
+  (`Krish9688/vedic-astrology-consultation`) under the split licence; the plugin's skill is the v3.5 skill plus a
+  portable library lookup (`paths.py`) and without the Lal Kitab knowledge base (package
+  `astrology-consultation-3.5.0.skill`). See CHANGELOG [3.5.0] and docs/MARKETPLACE.md.
 
 ## v3.4 (2026-10-01; previous stable)
 

@@ -1,8 +1,37 @@
 # Changelog
 
-Every version up to v3.3 predates this git repository (created 2026-10-01; v3.4 is its first commit); dates come from the evidence listed in
+Every version up to v3.4 predates this git repository as a package (created 2026-10-01; v3.4's source is its first commit, made three minutes after the v3.4 package was built; v3.5 was developed in it); dates come from the evidence listed in
 [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md). For important changes this log records what existed before, what
 problem was observed, what exposed it, what changed, why that solution, and how it was validated.
+
+## [3.5.0] — 2026-10-03 — Claude marketplace plugin and public repository
+
+Same skill method and engine as v3.5; this entry is about distribution.
+
+### Added
+- **Claude plugin marketplace** `vedic-astrology` with the plugin `astrology-consultation` (public repository
+  `Krish9688/vedic-astrology-consultation`): the consultation skill, `/astrology-consultation:setup` and `:doctor`,
+  and the local engine served over MCP by `scripts/astro`, which builds a private Python environment in the plugin's
+  data folder on first use. One shared core: the plugin contains the engine source; no second engine.
+  *Validated:* `claude plugin validate --strict` (marketplace and plugin); new-user install from GitHub in a sandboxed
+  Claude Code profile → setup → doctor (13 PASS, 0 WARN/FAIL) → `claude mcp list` Connected → MCP smoke (16 tools,
+  synthetic D9) → report HTML + PDF; update, disable/enable, rollback, uninstall with and without `--keep-data`.
+- **Two repositories**: a public distribution repository (allowlist export `tools/export_public.py --check`: privacy
+  check, Gitleaks, version consistency, official validator, tests in a fresh environment, package check) and the
+  private archive (`tools/export_repo.py --archive`: book-derived analysis, compressed graph, full release history,
+  local-only manifest with checksums). docs/MARKETPLACE.md, REPOSITORY-EDITIONS.md, PRIVATE-REPOSITORY-INVENTORY.md.
+- Split licence (owner's decision): AGPL-3.0-or-later engine, Apache-2.0 skill scripts and plugin files, CC BY 4.0 text.
+
+### Changed
+- Skill scripts find the book library through settings (`paths.py`: environment → config → standard folder → legacy
+  folder) instead of a fixed folder; the public edition says when the Lal Kitab knowledge base is absent.
+- The engine reads `ASTRO_SKILL_DIR`/`ASTRO_KNOWLEDGE_DIR` and never pins a plugin path in the settings file.
+
+### Fixed
+- Report folders are created owner-only (0700); they hold birth details. *Exposed by:* the new-user test (0755).
+- The privacy check judged scanned folders by their absolute path (a folder under `/private/tmp` failed every file);
+  paths are now relative to the scanned folder (test added).
+- The MCP smoke client now passes the environment through (the SDK drops non-default variables).
 
 ## [v3.5] — 2026-10-03
 

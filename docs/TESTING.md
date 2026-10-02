@@ -148,3 +148,28 @@ tests in the main session (not blind; see the private evaluation). Automated tes
 
 Gitleaks over full history → privacy check → Ruff → calculation tests → skill self-tests → report rendering with
 WeasyPrint → package check. Synthetic data only; no books, graph or personal data exist in the repository.
+
+## 8. Marketplace installation (3.5.0, 2026-10-03)
+
+Run twice on a sandboxed profile (`HOME` and `CLAUDE_CONFIG_DIR` pointing at empty folders; synthetic chart S1 only):
+first from a local directory marketplace (the export), then from GitHub (`Krish9688/vedic-astrology-consultation`).
+
+| Step | Result |
+|---|---|
+| `claude plugin validate --strict` marketplace and plugin | passed (Claude Code 2.1.202 locally; 2.1.288 via npx without sign-in, as in CI) |
+| `claude plugin marketplace add Krish9688/vedic-astrology-consultation` | "Successfully added marketplace: vedic-astrology" |
+| `claude plugin install astrology-consultation@vedic-astrology` | installed 3.5.0, user scope, enabled; details: 3 skills, MCP server `astrology`, ~250 always-on tokens |
+| setup (what `/astrology-consultation:setup` runs) | engine environment built in the plugin data folder, ephemeris downloaded and verified, settings in private mode — 14.5 s |
+| doctor | 13 PASS, 5 OPTIONAL (books, graph, Graphify, books folder, VedAstro), 0 WARN, 0 FAIL |
+| `claude mcp list` | `plugin:astrology-consultation:astrology` ✔ Connected, launched from the plugin cache |
+| MCP smoke through the installed launcher | 16 tools; synthetic D9 ascendant Leo; `prepare_consultation` routes 5 skill files incl. the career topic file |
+| `astro report` on the synthetic example | HTML + PDF; report folder created 0700 |
+| update 3.5.0 → newer (local marketplace) | updated; engine environment kept, not rebuilt; restart required |
+| disable / enable | server removed / Connected again |
+| rollback | reverting the marketplace rolled the plugin back to 3.5.0 |
+| uninstall `--keep-data`, reinstall, uninstall | environment kept and reused; then deleted; settings, ephemeris and reports kept by design |
+
+Found and fixed during these runs: report folder created 0755 (now 0700, test); privacy check matched the scanned
+folder's own absolute path (now relative, test); the MCP smoke client dropped the plugin variables (now forwards the
+environment). Not run: a live model turn calling the tools (the CLI was not signed in) and the claude.ai/desktop
+GUI flow — both left to the user, with the exact steps in MARKETPLACE.md.

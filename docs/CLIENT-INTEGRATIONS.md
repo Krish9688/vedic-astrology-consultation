@@ -8,7 +8,7 @@ files (`skill://` resources) and report rendering.
 Install first: `./install.sh` (or `uv pip install -e ".[mcp,api]"` then `astro setup && astro doctor`). Below,
 `ASTRO` means the absolute path printed by the installer, e.g. `/path/to/repo/.venv/bin/astro`.
 
-## Compatibility matrix (release validation, 2026-10-03)
+## Compatibility matrix (release validation, 2026-10-03; marketplace rows added for 3.5.0)
 
 Statuses: **TESTED** (run end to end here) · **CONFIGURED BUT NOT TESTED** (the client accepted the configuration;
 tool calls not run) · **USER ACTION REQUIRED** (needs your sign-in, approval or a change to your own app settings) ·
@@ -20,7 +20,9 @@ All tests used synthetic charts only.
 | Generic MCP client (Python SDK 2.2) | via `skill://` resources | stdio + Streamable HTTP | — | yes (local) | yes | `create_report` | **TESTED** — stdio in CI; HTTP with/without bearer token |
 | REST client (curl, httpx) | — | — | `/api/v1` | `/consultation` lists files | yes | `/report` | **TESTED** — health, chart, consultation, OpenAPI; empty server log |
 | CLI (`astro`) | — | `astro mcp` | `astro serve` | `astro sources/search` | yes | `astro report` | **TESTED** — incl. clean install (install.sh) |
-| Claude Code (CLI/desktop) | installed (`~/.claude/skills`) | stdio | — | yes | yes | yes (renderer) | **USER ACTION REQUIRED** — a project `.mcp.json` was discovered by `claude mcp list` and held at "Pending approval"; approve it, or `claude mcp add`; tool calls not run here |
+| **Claude Code — marketplace plugin** (recommended) | bundled | stdio, started by the plugin | — | with your own books | yes | yes | **TESTED** (2026-10-03, sandboxed new-user profile, plugin installed from GitHub): marketplace add → install → setup → doctor 13 PASS / 0 WARN / 0 FAIL → `claude mcp list` Connected → MCP smoke through the installed launcher (16 tools, synthetic D9, consultation context) → report HTML + PDF; update, disable/enable, rollback, uninstall. A live model turn calling the tools: **USER ACTION REQUIRED** (the CLI on the test machine was not signed in) — see docs/MARKETPLACE.md |
+| Claude desktop app / claude.ai — marketplace plugin | bundled | Cowork on your computer only; not in web chat | — | — | Cowork only | layout only in chat | **DOCUMENTED** (Customize → Plugins → Add → Add marketplace; from Anthropic's docs, not clicked through here) |
+| Claude Code — manual MCP setup | installed (`~/.claude/skills`) | stdio | — | yes | yes | yes (renderer) | **USER ACTION REQUIRED** — a project `.mcp.json` was discovered by `claude mcp list` and held at "Pending approval"; approve it, or `claude mcp add`; tool calls not run here |
 | Claude Desktop / Cowork | upload the `.skill` | stdio (config file) | — | no (cloud) | via MCP only | layout only | **USER ACTION REQUIRED** — add the server to `claude_desktop_config.json` and restart. Your current config holds `vedastro-local`, which sends birth data to api.vedastro.org |
 | ChatGPT desktop (Codex surface) / Codex CLI | `~/.agents/skills` | stdio (`~/.codex/config.toml`) | — | yes | yes | yes | **CONFIGURED BUT NOT TESTED** — the CLI bundled with ChatGPT 26.928 (codex-cli 0.159) accepted the server in an isolated `CODEX_HOME` (`codex mcp list/get`); tool calls need your signed-in app (**USER ACTION REQUIRED**) |
 | ChatGPT on the web | — | remote HTTPS only | — | — | — | — | **NOT RECOMMENDED** — would need a public tunnel exposing birth data |
@@ -47,6 +49,8 @@ astrology skills side by side would both trigger, so replace rather than add:
    `mv ~/.agents/skills-disabled/vedic-prediction-synthesis ~/.agents/skills/`.
 
 ## Claude
+
+**Easiest: the marketplace plugin** — see [MARKETPLACE.md](MARKETPLACE.md). Manual setup:
 
 **Claude Code**
 ```bash
