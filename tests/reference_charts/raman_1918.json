@@ -4,5 +4,5 @@
  "birth": {"date": "1918-10-16", "time": "14:22:16", "tz": 5.5, "lat": 13.0, "lon": 77.5833333},
  "ayanamsa": "RAMAN",
  "expected": {"drik_virupas": {"Su": 15.86, "Mo": -21.73, "Ma": 0.95, "Me": 15.64, "Ju": -16.04, "Ve": 18.47, "Sa": 7.21}},
- "tolerance": 0.05
+ "tolerance": 0.02
 }

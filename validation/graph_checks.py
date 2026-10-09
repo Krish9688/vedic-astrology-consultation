@@ -32,6 +32,13 @@ agree = [c for c in cons if str(a(c).get("classification", "")).startswith("fals
 check(sum(e["relation"] == "CONTRADICTS" for e in g["links"]) == len(cons) - len(agree),
       f"one CONTRADICTS edge per dispute ({len(agree)} curated false positives have none)")
 check(not any(e["relation"] in ("SAME_AS", "MERGED") for e in g["links"]), "no automatic merges of rules")
+size = {b["id"]: b["pages"] for b in cat["books"]}
+outside = [n["id"] for n in rules for p in a(n).get("pages", [])
+           if p.split()[0] in size and not 1 <= int(p.split()[1].lstrip("p").split("–")[0]) <= size[p.split()[0]]]
+check(not outside, f"no rule cites a page beyond its book {outside[:3]}")
+empty = [c["id"] for c in cons for e in out[c["id"]] if e["relation"] == "HAS_POSITION"
+         and not str(a(N[e["target"]]).get("text", "")).strip(" —-")]
+check(not empty, f"every dispute position has text {empty[:3]}")
 for b in cat["books"]:
     h = hashlib.sha256(open(os.path.join(cat["library_root"], b["file"]), "rb").read()).hexdigest()
     check(h == b["sha256"], f"book file unchanged: {b['id']}")

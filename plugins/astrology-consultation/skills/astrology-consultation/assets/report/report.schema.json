@@ -40,6 +40,7 @@
     }
    }
   },
+  "spine": {"type": "string", "description": "complete-life: the one central tension every life area expresses (reports.md)"},
   "how_to_read": {"type": "string"},
   "sections": {
    "type": "array", "minItems": 1,
@@ -50,7 +51,7 @@
      "title": {"type": "string"},
      "intro": {"type": "string"},
      "units": {"type": "array", "items": {"$ref": "#/$defs/unit"}},
-     "text": {"type": "string", "description": "free prose for sections that are not life units (e.g. current chapter)"}
+     "text": {"type": "string", "description": "free prose for sections that are not life units (e.g. current chapter)"}, "expresses": {"type": "array", "items": {"type": "string"}, "description": "complete-life: which strand of the spine this area expresses"}
     }
    }
   },

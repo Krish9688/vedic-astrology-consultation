@@ -47,7 +47,7 @@ fertility questions belong with a medical professional. `life_lint.py` and the r
   5th) is read as bad for children by LOL [LOL p421] — contested for Venus by Raman [HJH2 p65].
 - Prasna Marga grades natal obstruction: some factors present → children after effort/remedies; all present → denial
   [PM2 XVIII.38, XIX.26, XIX.32]. Use this *grading idea*, not the curse attributions.
-- Timing: periods of the lagna lord, 5th lord, Jupiter, their navamsa lords, the 7th lord, and planets in/aspecting the
+- Timing (doctrine only, for source questions — never applied to the person; see the output rule above): periods of the lagna lord, 5th lord, Jupiter, their navamsa lords, the 7th lord, and planets in/aspecting the
   5th [PM2 XIX.83]; both dasha and bhukti lords should touch the 5th, its lord or Jupiter [LOL p355]; Jupiter transits
   over the 5th lord's sign/navamsa sign from lagna, Moon or Jupiter [PM2 XIX.84].
 - Adoption, step-children, students or creative "offspring" are legitimate alternative expressions of the 5th.

@@ -13,7 +13,10 @@ chart.json (degrees optional; without degrees D9/D10/combustion/Moon phase are s
   }
 Houses are whole-sign from the ascendant sign (Parashari baseline; also the KB B2 default for Lal Kitab).
 """
-import json, sys
+import json, os, sys
+
+KB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "lal-kitab",
+                       "LalKitab_Shrimali_Knowledge_Base_v2.2.md")
 
 SIGNS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
 SIGN_LORD = ["Ma", "Ve", "Me", "Mo", "Su", "Me", "Ve", "Ma", "Ju", "Sa", "Sa", "Ju"]
@@ -155,6 +158,9 @@ def facts(chart):
     lk_occ = {h: [p for p in lk if lk[p] == h] for h in range(1, 13)}
     src = "supplied lk_houses override" if chart.get("lk_houses") else "whole-sign houses from lagna (KB B2 note)"
     W(f"\n# Lal Kitab fixed-Aries chart ({src}); signs dropped, house N = Kalpurush sign N")
+    if not os.path.exists(KB_FILE):
+        W("  KB not installed (public edition): the flags below come from built-in tables only — no house delineations,"
+          " KB section citations or Lal Kitab remedies (lal-kitab-method.md, top).")
     W("  " + "  ".join(f"H{h}:{'+'.join(lk_occ[h]) or '—'}" for h in range(1, 13)))
     W(f"  Empty houses: {', '.join(str(h) for h in range(1, 13) if not lk_occ[h])}")
     for p in [q for q in ALL if q in lk]:

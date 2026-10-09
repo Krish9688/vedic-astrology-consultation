@@ -4,6 +4,42 @@ Every version up to v3.4 predates this git repository as a package (created 2026
 [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md). For important changes this log records what existed before, what
 problem was observed, what exposed it, what changed, why that solution, and how it was validated.
 
+## [3.6.0] — 2026-10-10 — correctness, security and packaging (method kept at v3.5)
+
+Plugin, engine and skill all 3.6.0 / v3.6. Validation per item: the private repository's
+`.project-council/TEST-EVIDENCE.md` (E-001 … E-015). Packages: public `astrology-consultation-3.6.0.skill`
+(2c8df547…), private `astrology-consultation-v3.6.skill` (2bb3c941…), both reproducible.
+
+### Method (decided by blind benchmarks)
+- The consultation and report method stays as in v3.5. Two blind rounds on fresh synthetic charts (S3, S4; fresh
+  question writers, answerers and graders) preferred v3.5's method to the candidate's revisions (33 items to 20), so
+  only corrections, safety rules, public-edition handling and pointers to new engine outputs were kept.
+
+### Changed (behaviour users see)
+- `compare_engines live=true` / `astro compare --live` now also needs `consent=true` / `--consent` (the person agreed).
+- Settings are type-checked: a wrong type (e.g. `allow_remote = "false"`) stops the engine with a clear message.
+- Over a network, library lookup and the Lal Kitab knowledge base are refused unless `share_library_remotely = true`.
+- The plugin no longer installs the REST extra (FastAPI); `astro serve` in the plugin needs `pip install fastapi uvicorn`.
+- Report window restatement is a warning, not a refusal.
+- The Lal Kitab Varshaphal table is no longer in the public edition (rights unconfirmed); `varshaphal.py` says so.
+- Engine: Shadbala year/month lords, ayana bala range, single rounding, node co-lord advancement, Ketu retrograde,
+  retrograde flag passed to combustion, zero-minute sensitivity; polar/pre-1582 flags; out-of-range dates refused.
+
+### Added
+- Transit sign-aspect windows (Jupiter and Saturn) and `derived_facts` in `prepare_consultation` (MCP, REST, CLI).
+- Renderer: a refusal of window codes (W1, P1) in client text, and no "checked against
+  None" on the cover; child-timing and longevity safety lint over the whole report model (a heuristic
+  backstop, checked against adversarial sentences; the method rules in SKILL.md stay the real guard).
+- Edge-case suite (hemispheres, negative/fractional offsets, DST, date line, outside 1800–2399) and published goldens
+  (PVR arudha, BPHS uchcha, sensitivity oracle).
+
+### Fixed
+- MCP `skill://` resources now serve nested method files (3.5.0 served only `SKILL.md`).
+- Security: DNS-rebinding guard on the local REST API, constant-time token checks, typed config, owner-only config and
+  VedAstro batch files, atomic ephemeris download, user queries never parsed as script options.
+- Plugin launcher: reinstalls the engine when its code changes, one builder at a time, no unused REST extra.
+- `install.sh` can be re-run; public export refuses a foreign folder and checks a reviewed file manifest.
+
 ## [3.5.0] — 2026-10-03 — Claude marketplace plugin and public repository
 
 Same skill method and engine as v3.5; this entry is about distribution.
@@ -59,7 +95,7 @@ Same skill method and engine as v3.5; this entry is about distribution.
   positives, 12 translation, 9 compatible, 6 context, 1 printing error — the last five checked against page images);
   18 that change readings added to
   the register; the graph carries the classes (182 disputes).
-- docs/CLIENT-INTEGRATIONS.md, docs/LICENSING.md (recommendation; repository stays private until the owner decides).
+- docs/CLIENT-INTEGRATIONS.md, docs/LICENSING.md (recommendation at the time; superseded the same day — split licence decided and public repository created, see [3.5.0]).
 
 ### Changed
 - Report renderer: timelines zoom to the interpreted window (clipped chapters marked); compact layout for summaries;

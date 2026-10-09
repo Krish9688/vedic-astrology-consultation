@@ -6,7 +6,7 @@ synthetic charts, or for a real chart with that person's consent. The place labe
 name or city. The server loads its own API key; this script never reads it. Every request is logged
 (<out>/calls.jsonl: tool, arguments, time, ok) so the external exposure is auditable.
 
-usage: python3 tools/vedastro_batch.py --date DD/MM/YYYY --time HH:MM --tz +05:30 --lat L --lon L --out DIR
+usage: python3 -m astro.vedastro_batch --date DD/MM/YYYY --time HH:MM --tz +05:30 --lat L --lon L --out DIR
                                        [--check-date DD/MM/YYYY] [--years 100]
 """
 import argparse
@@ -24,8 +24,8 @@ BALA = ["PlanetSthanaBala", "PlanetDigBala", "PlanetKalaBala", "PlanetChestaBala
 
 
 class Client:
-    def __init__(self, log_path):
-        self.p = subprocess.Popen(["node", SERVER], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+    def __init__(self, log_path, server=SERVER):
+        self.p = subprocess.Popen(["node", server], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                   stderr=subprocess.DEVNULL, text=True, bufsize=1)
         self.n = 0
         self.log = open(log_path, "a")
@@ -66,12 +66,14 @@ def main():
     ap.add_argument("--lon", type=float, required=True)
     ap.add_argument("--check-date")
     ap.add_argument("--years", type=int, default=100)
+    ap.add_argument("--server", default=SERVER, help="VedAstro MCP server.mjs (config: vedastro_server)")
     ap.add_argument("--only-houses", action="store_true", help="fetch only the house data (one call)")
     a = ap.parse_args()
-    os.makedirs(a.out, exist_ok=True)
+    os.umask(0o077)                                   # calls.jsonl holds birth data: owner-only
+    os.makedirs(a.out, mode=0o700, exist_ok=True)
     birth = {"use_profile": False, "birth_date": a.date, "birth_time": a.time, "timezone": a.tz,
              "latitude": a.lat, "longitude": a.lon, "location_name": "chart"}
-    c = Client(os.path.join(a.out, "calls.jsonl"))
+    c = Client(os.path.join(a.out, "calls.jsonl"), a.server)
     save = lambda name, obj: json.dump(obj, open(os.path.join(a.out, name), "w"), indent=1)
     try:
         if a.only_houses:

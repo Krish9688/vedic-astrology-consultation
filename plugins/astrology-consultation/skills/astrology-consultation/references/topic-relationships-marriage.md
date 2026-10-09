@@ -15,11 +15,11 @@ marriage logic or a marriage question with 5th-house logic alone:
 | Level | Primary (Parashari) | Supporting | Other schools (own note) |
 |---|---|---|---|
 | Attraction, infatuation | Venus, Moon, 5th and its lord | Rahu contacts (compulsive pull); Venus/Mars transits over natal Venus/Moon | — |
-| Dating, romance | 5th + 11th (desire fulfilled); 5th lord's period | planets in/aspecting the 5th | KP 5-11; Jaimini A7 |
+| Dating, romance | 5th + 11th (desire fulfilled); 5th lord's period | planets in/aspecting the 5th | Jaimini A7 (KP 5-11 needs KP cusps — not available here) |
 | Emotional bond | Moon; 4th (heart); 4th from the 7th | Moon–Venus links in D9 | — |
 | Serious, committed | 7th, its lord, Venus; D9 7th and its lord | 2nd (family), 11th (fulfilment) joining | Jaimini DK |
-| Engagement, marriage | 7th + 2nd + 11th in the same period; D9 support | slow transits on the network | KP 2-7-11; Jaimini UL and 2nd from UL |
-| Separation, strain | 12th and 6th from the 7th's view (6th, 12th), 8th from 7th (2nd) afflicted | malefics on the network in D9 | KP 1-6-10-12 |
+| Engagement, marriage | 7th + 2nd + 11th in the same period; D9 support | slow transits on the network | Jaimini UL and 2nd from UL (KP 2-7-11 not available here) |
+| Separation, strain | 12th and 6th from the 7th's view (6th, 12th), 8th from 7th (2nd) afflicted | malefics on the network in D9 | (KP 1-6-10-12 not available here) |
 | Short-lived bond | 5th/7th active **without** 2nd/11th or D9 support | movable signs, fast transits | — |
 
 Houses: romance and dating lean on the 5th; formal commitment on the 7th and 2nd (family addition) and 11th
@@ -86,7 +86,7 @@ Raman: consult the navamsa only after the rasi is satisfactory — if D1 itself 
 (Raman): remarriage after divorce or death, or a significant second relationship [PM2 p27, p64–65]. Only mention when
 asked and when several signatures repeat.
 
-**Kuja dosha**: not in the authoritative texts, very common, many cancellations (both partners have it; Mars own/
+**Kuja dosha**: disputed (LOL: non-authoritative; BPHS: a narrower classical form — CR-N04), very common, many cancellations (both partners have it; Mars own/
 exalted; Moon–Mars; after ~28–30; certain signs) [LOL p329–331; HJH2 p70]. Never present it as a marriage verdict.
 Raman's matching table penalises the woman's chart more — do not reproduce that asymmetry as advice.
 

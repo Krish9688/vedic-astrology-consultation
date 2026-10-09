@@ -19,8 +19,10 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Privacy and copyright check
+      - name: Generic privacy check (home paths, e-mails, blocked files; personal terms are checked locally before export)
         run: python3 tools/privacy_check.py
+      - name: Documentation links (no broken relative links)
+        run: python3 tools/check_links.py
       - name: Version consistency (plugin, engine, skill)
         run: python3 tools/check_versions.py
       - name: Plugin and marketplace validation (official validator)
@@ -28,13 +30,19 @@ jobs:
           npx -y @anthropic-ai/claude-code@2.1.288 plugin validate --strict .
           npx -y @anthropic-ai/claude-code@2.1.288 plugin validate --strict plugins/astrology-consultation
       - name: Lint
-        run: uvx ruff check .
+        run: uvx ruff@0.16.9 check .
       - name: Engine, interface and property tests (synthetic charts)
         run: |
           uv venv .venv
           uv pip install --python .venv/bin/python -e "plugins/astrology-consultation/engine[mcp,api]" pytest hypothesis httpx jinja2
           .venv/bin/python -m pytest
           .venv/bin/astro doctor
+      - name: Same tests on the Swiss Ephemeris data files (downloaded and checksum-verified, council H-14)
+        run: |
+          .venv/bin/astro setup --ephemeris
+          .venv/bin/astro doctor | tee doctor.txt
+          grep -q "PASS *Swiss Ephemeris files and checksums" doctor.txt
+          .venv/bin/python -m pytest -q
       - name: Plugin launcher bootstraps the engine and serves MCP
         run: |
           export CLAUDE_PLUGIN_ROOT="$PWD/plugins/astrology-consultation" CLAUDE_PLUGIN_DATA="$RUNNER_TEMP/plugin-data"

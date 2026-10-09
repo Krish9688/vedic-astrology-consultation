@@ -17,4 +17,4 @@ Hindu day starts at sunrise), 29 February 2024 and 2000, a Mercury station, and 
 (dasha boundary). Tested in `tests/test_reference_suite.py` (properties + golden positions).
 Independent check (2026-10-02): PyJHora 4.8.7 with Lahiri agrees on all 20 charts it can compute (Moon nakshatra, pada,
 ascendant sign, D9 lagna, first mahadasha lord, weekday lord); it fails on the two polar charts.
-No real person's chart is used anywhere in this folder.
+No private person's chart is used anywhere in this folder; `raman_1918.json` is a published, unnamed book example.

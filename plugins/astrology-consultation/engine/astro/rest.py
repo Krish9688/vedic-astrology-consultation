@@ -4,9 +4,10 @@ anything else needs `allow_remote = true` and `api_token` (bearer auth on every 
 """
 from __future__ import annotations
 
+import hmac
 from typing import Optional
 
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from . import config, service as S
@@ -24,6 +25,7 @@ class VargaRequest(ChartRequest):
 class CompareRequest(ChartRequest):
     vedastro_dir: Optional[str] = None
     live: bool = False
+    consent: bool = False
 
 
 class ConsultationRequest(ChartRequest):
@@ -35,9 +37,11 @@ class ReportRequest(BaseModel):
     name: str = "report"
 
 
-def _auth(authorization: Optional[str] = Header(default=None)):
+def _auth(request: Request, authorization: Optional[str] = Header(default=None)):
+    if request.url.path == "/api/v1/source":   # AGPL section 13: the source offer is visible without a token
+        return
     token = config.load().api_token
-    if token and authorization != f"Bearer {token}":
+    if token and not hmac.compare_digest((authorization or "").encode(), f"Bearer {token}".encode()):
         raise HTTPException(status_code=401, detail="unauthorized")
 
 
@@ -51,12 +55,17 @@ def _wrap(fn):
     try:
         return fn()
     except (ValueError, PermissionError, FileNotFoundError) as e:
-        raise HTTPException(status_code=400, detail=str(e)) from None
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @app.get("/api/v1/health")
 def health():
     return {"ok": True}
+
+
+@app.get("/api/v1/source")
+def source():
+    return {"version": S.VERSION, **S.source_offer()}
 
 
 @app.get("/api/v1/version")
@@ -111,7 +120,7 @@ def sensitivity(r: ChartRequest):
 
 @app.post("/api/v1/compare")
 def compare(r: CompareRequest):
-    return _wrap(lambda: S.compare_engines(r.birth, r.vedastro_dir, r.live))
+    return _wrap(lambda: S.compare_engines(r.birth, r.vedastro_dir, r.live, r.consent))
 
 
 @app.post("/api/v1/consultation")
@@ -128,5 +137,13 @@ def main(host: str = "127.0.0.1", port: int = 8766):
     s = config.load()
     if host not in ("127.0.0.1", "localhost", "::1") and not (s.allow_remote and s.api_token):
         raise SystemExit("refusing to listen beyond localhost: set allow_remote = true and api_token in the config")
+    import sys
     import uvicorn
-    uvicorn.run(app, host=host, port=port, log_level="warning", access_log=False)
+    if host not in ("127.0.0.1", "localhost", "::1"):
+        S.REMOTE = True
+        print(S.SOURCE_NOTICE + " Source: " + S.source_offer()["source"], file=sys.stderr)
+    served = app
+    if host in ("127.0.0.1", "localhost", "::1"):   # DNS-rebinding guard: a web page cannot reach us under its own name
+        from starlette.middleware.trustedhost import TrustedHostMiddleware
+        served = TrustedHostMiddleware(app, allowed_hosts=["127.0.0.1", "localhost", "::1", "[::1]", "host.docker.internal"])
+    uvicorn.run(served, host=host, port=port, log_level="warning", access_log=False)

@@ -8,9 +8,9 @@ on your own computer.
 
 | Component | Where it runs | Notes |
 |---|---|---|
-| Skill `astrology-consultation` | Claude Code, Cowork, claude.ai chat | the consultation and report method |
-| Local MCP server `astrology` (16 tools) | Claude Code; Cowork sessions on your computer | started by `scripts/astro`; not available in web chat |
-| Commands `/astrology-consultation:setup`, `/astrology-consultation:doctor` | Claude Code, Cowork | first-time setup and health check |
+| Skill `astrology-consultation` | Claude Code; Cowork and claude.ai chat (documented, not yet verified) | the consultation and report method |
+| Local MCP server `astrology` (16 tools) | Claude Code; Cowork (expected, not yet verified) | started by `scripts/astro`; not available in web chat |
+| Commands `/astrology-consultation:setup`, `/astrology-consultation:doctor` | Claude Code; Cowork (not yet verified) | first-time setup and health check |
 
 The engine's Python environment is created on first use in the plugin's data folder (`~/.claude/plugins/data/…`),
 kept across plugin updates and removed when you uninstall. Swiss Ephemeris files go to
@@ -18,7 +18,8 @@ kept across plugin updates and removed when you uninstall. Swiss Ephemeris files
 
 ## First run
 
-1. `/astrology-consultation:setup` — builds the local engine (needs Python 3.11+ or `uv`, and internet once),
+1. `/astrology-consultation:setup` (macOS or Linux; on Windows use WSL 2) — builds the local engine (needs Python
+   3.11+ or `uv`, and internet once),
    downloads the ephemeris files, runs the health check.
 2. `/reload-plugins` (or start a new session) so the astrology tools connect.
 3. Ask: "Calculate my chart" (give date, time, UTC offset and coordinates), "Give me a career consultation",

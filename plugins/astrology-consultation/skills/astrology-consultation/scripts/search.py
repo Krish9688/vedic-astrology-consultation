@@ -2,10 +2,10 @@
 # usage: python3 search.py "seventh lord" [--src HJH2,PD] [-n 8] [--page SRC:N]
 #   query uses SQLite FTS5 syntax: words AND-ed, "exact phrase", a OR b, NEAR(a b, 10), prefix*
 #   --page SRC:N prints the full text of one page (to read context around a hit)
-import argparse, os, sqlite3, sys
+import argparse, os, re, sqlite3, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from paths import knowledge_file  # noqa: E402
+from paths import fts_terms, knowledge_file  # noqa: E402
 DB = knowledge_file("ASTRO_LIBRARY_DB", os.path.join("index", "library.sqlite"))
 
 ap = argparse.ArgumentParser()
@@ -35,6 +35,8 @@ if not a.query:
 
 sql = "select src, page, printed, snippet(pages, 3, '[', ']', ' … ', 40) from pages where pages match ?"
 args = [a.query]
+if re.fullmatch(r"[A-Za-z\s]+", a.query):   # plain words: add transliteration variants (vimshottari ~ vimsottari)
+    args = [" AND ".join(fts_terms(a.query, ()))]
 if a.src:
     ids = a.src.split(",")
     sql += f" and src in ({','.join('?' * len(ids))})"

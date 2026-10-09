@@ -65,7 +65,8 @@ Classify each relevant chart:
 
 The engine's sensitivity grid gives the evidence: a varga lagna classed robust, or whose first change lies beyond the
 stated time uncertainty, is *Stable*; one that changes inside it is *Partly stable* at best (planet signs may still
-hold — check them separately).
+hold — check them separately). A varga lagna not in the grid (D2, D3, D4, D7, D16, D20, D24, D27, D30, D40, D45) is
+*Untested*; and when the time uncertainty exceeds ±15′, *robust* only means "no change within ±15′".
 
 An untested varga can be discussed as a **conditional interpretation of supplied nominal facts**, but it must not increase confidence as though stability were established. State that condition before relying on its meaning, not only at the end. If nominal D9/D10 mapping is wrong, quarantine that supplied position; corrected arithmetic does not certify the rest of the chart.
 

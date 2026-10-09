@@ -25,7 +25,8 @@ the owner's machine unless the owner explicitly decides otherwise.
 | `research` | as hybrid | the AI client may also use public web research tools; chart data is still never sent to them |
 
 The MCP and REST servers bind to 127.0.0.1; listening elsewhere needs `allow_remote = true` **and** an `api_token`
-(bearer auth on every request). No access logs are written and birth data is never logged. `skill://` resources and
+(bearer auth on every request). No access logs are written and birth data is never logged, except the hybrid-mode audit log `calls.jsonl` of
+live VedAstro calls in the private data folder (delete `data_dir/vedastro/` to remove it). `skill://` resources and
 report paths are confined to their folders; only skill documents can be read. CLI input comes from a JSON file, so
 birth details stay out of shell history. An AI client that connects to the service still sees what it is sent —
 choosing the client (local model, ChatGPT, Claude…) is a separate privacy decision.
@@ -34,7 +35,7 @@ choosing the client (local model, ChatGPT, Claude…) is a separate privacy deci
 
 | Service | Receives | When |
 |---|---|---|
-| **VedAstro** (`api.vedastro.org`, via the `vedastro-local` MCP, `tools/vedastro_batch.py` or `astro compare --live` in hybrid mode) | birth date, time, UTC offset, coordinates and a place label (not a name) | only with the person's consent, per chart; the local engine is preferred. The MCP's default `profile.json` holds personal data: every call passes `use_profile=false` |
+| **VedAstro** (`api.vedastro.org`, via the `vedastro-local` MCP, `python -m astro.vedastro_batch` or `astro compare --live` in hybrid mode) | birth date, time, UTC offset, coordinates and a place label (not a name) | only with the person's consent, per chart (`compare --live` refuses without `consent=true` / `--consent`); the local engine is preferred. The MCP's default `profile.json` holds personal data: every call passes `use_profile=false` |
 | Agent Reach (Exa search, Jina Reader, YouTube) | public research queries only | never chart data or names |
 | Hugging Face | nothing about the project — Docling downloads its models once | on first Docling use |
 | GitHub | only the allowlisted, scanned repository files | on push |

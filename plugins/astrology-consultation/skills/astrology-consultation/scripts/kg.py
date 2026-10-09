@@ -17,7 +17,11 @@ from collections import defaultdict
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import vocab
 
-from paths import knowledge_file
+from paths import VARIANTS, fts_terms, knowledge_file  # noqa: F401 (fts_terms re-exported)
+
+STOPWORDS = set("what which when where why does have that this with from into about there their them they will would "
+                "should could chart horoscope person native planet planets house houses considered make makes "
+                "given give each other more most some than then also only".split())
 GRAPH = knowledge_file("ASTRO_KG", os.path.join("graphify-out", "graph.json"))
 TIER_ORDER = {"classical": 0, "traditional": 1, "modern": 2, "synthesis": 3, "experimental": 4}
 
@@ -103,14 +107,28 @@ def search_rules(N, out, inc, query, src=None, tier=None, system=None, text=None
         system = "Jaimini"
     ents = ents - {"technique:jaimini"} if system else ents  # a named system filters; it is not a required term
     seeds = ents | {f"house:{h}" for h, _ in houses} or topics
-    cand = None
-    for s in seeds:
-        rs = {e["source"] for e in inc[s] if e["relation"] == "APPLIES_TO" and e["source"].startswith("rule:")}
-        cand = rs if cand is None else cand & rs
+    sets = [{e["source"] for e in inc[s] if e["relation"] == "APPLIES_TO" and e["source"].startswith("rule:")}
+            for s in seeds]
+    cand = set.intersection(*sets) if sets else set()
+    strict = bool(cand)
+    if not strict and len(sets) > 1:
+        cand = set().union(*sets)   # no rule applies to every term: rank rules by how many terms they apply to
+    if not seeds:   # no vocabulary term recognised (e.g. "gandanta", "stammer"): rank rules by the question's words
+        words = [w for w in re.findall(r"[a-z]{4,}", query.lower()) if w not in STOPWORDS]
+        alts = [{w} | {w.replace(a, b) for a, b in VARIANTS if a in w} for w in words]
+        scored = {}
+        for rid, n in N.items():
+            if rid.startswith("rule:"):
+                t = (attrs(n).get("text", "") + " " + (attrs(n).get("heading") or "")).lower()
+                k = sum(any(v in t for v in alt) for alt in alts)
+                if alts and k >= max(1, (len(alts) + 1) // 2):
+                    scored[rid] = k
+        sets = [{r for r, k in scored.items() if k >= i} for i in range(1, len(alts) + 1)]
+        cand = set(scored)
     hits = []
-    for rid in cand or ():
+    for rid in cand:
         at = attrs(N[rid])
-        if not rule_matches(rid, ents, houses, out):
+        if strict and not rule_matches(rid, ents, houses, out):
             continue
         if src and at.get("source") not in src.split(","):
             continue
@@ -124,7 +142,8 @@ def search_rules(N, out, inc, query, src=None, tier=None, system=None, text=None
         window = focus(at.get("text", ""), ents, houses)
         h_ents, h_houses, _ = parse(at.get("heading") or "")
         in_section = bool(ents or houses) and ents <= h_ents and all(any(n == h for n, _ in h_houses) for h, _ in houses)
-        hits.append((0 if in_section else 1, min(window // 40, 5), -topic_hits, window,
+        matched = sum(rid in s for s in sets)
+        hits.append((-matched, 0 if in_section else 1, min(window // 40, 5), -topic_hits, window,
                      TIER_ORDER.get(at.get("tier"), 9), at.get("source", ""), rid))
     hits.sort()
     return seeds, topics, hits
@@ -218,7 +237,7 @@ def cmd_sources(a, N, out, inc):
             for p in sorted(pos, key=lambda p: attrs(p).get("side", "")):
                 print(f"  {attrs(p).get('side')}: {attrs(p).get('text', '')[:a.width]}")
     db = os.environ.get("ASTRO_LIBRARY_DB") or os.path.join(os.path.dirname(GRAPH), "..", "index", "library.sqlite")
-    words = [w for w in re.findall(r"[A-Za-z]{3,}", a.query.lower()) if w not in ("the", "and", "for", "with", "from", "its")]
+    words = fts_terms(a.query)
     if os.path.exists(db) and words:
         import sqlite3
         c = sqlite3.connect(f"file:{db}?mode=ro", uri=True)

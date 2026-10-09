@@ -13,6 +13,7 @@ Checks, personal (terms read from an untracked local file, never stored in the r
     e.g. a birth date, birth time + place, a name. Missing file → personal checks skipped (as in CI).
 Exit 1 on any finding.
 """
+import gzip
 import os
 import re
 import subprocess
@@ -28,8 +29,10 @@ HOME = re.compile(r"/(?:Users|home)/(?!runner\b|<)[A-Za-z0-9._-]+/")
 EMAIL = re.compile(r"\b[A-Za-z0-9._%+-]+@(?!example\.|anthropic\.com|users\.noreply\.github\.com)[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
 MAX = 5 * 1024 * 1024
 PACKAGE_EXT = {".skill", ".zip", ".tgz"}
-ARCHIVE_OK = re.compile(r"(^|/)(knowledge/chapters/|knowledge/extraction\.json\.gz$|sourcemaps/)")
-TEXT_EXT = {".md", ".py", ".json", ".txt", ".toml", ".yaml", ".yml", ".j2", ".css", ".html", ".cfg", ".sh", ".swift", ""}
+ARCHIVE_OK = re.compile(r"(^|/)(knowledge/chapters/|knowledge/extraction\.json\.gz$|sourcemaps/|"
+                        r"archive/skill-test-results/[^/]+(/[^/]+)?\.md$)")
+TEXT_EXT = {".md", ".py", ".json", ".txt", ".toml", ".yaml", ".yml", ".j2", ".css", ".html", ".cfg", ".sh", ".swift", ".csv",
+            ".log", ""}
 
 
 def files(args):
@@ -45,7 +48,7 @@ def files(args):
                 out.append((a, a))
         return out
     r = subprocess.run(["git", "ls-files", "--cached", "--others", "--exclude-standard"], capture_output=True, text=True)
-    return [(f, f) for f in r.stdout.splitlines() if f]
+    return [(f, f) for f in r.stdout.splitlines() if f and os.path.exists(f)]   # deleted-but-tracked files are not published
 
 
 def members(f):
@@ -103,6 +106,13 @@ def check(paths, archive=False):
                 # historical packages are kept byte-identical; pre-v3.4 ones embed the owner's library path, which is
                 # acceptable in the private archive (and why they are never published) — personal terms still fail
                 bad += scan_text(f"{rel}!{name}", data.decode("utf-8", "ignore"), T, paths=False)
+            continue
+        if ext == ".gz" and not rel.endswith(".tar.gz"):     # compressed graph/extraction: same checks as text
+            try:
+                with gzip.open(f, "rt", encoding="utf-8") as g:
+                    bad += scan_text(rel, g.read(), T)
+            except (OSError, UnicodeDecodeError, EOFError):
+                bad.append(f"{rel}: unreadable .gz")
             continue
         if ext not in TEXT_EXT:
             continue

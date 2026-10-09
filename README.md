@@ -7,8 +7,9 @@ engine that runs on your own computer.
 
 | | |
 |---|---|
-| **Version** | 3.5.0 (2026-10-03) — plugin, engine and skill share one version |
+| **Version** | 3.6.0 (2026-10-10) — plugin, engine and skill share one version |
 | **Install** | Claude plugin marketplace (below), or the standalone engine for any MCP client |
+| **Platforms** | macOS and Linux. Windows: use WSL 2 (works as Linux; not tested by the project). Native Windows is not supported. |
 | **Privacy** | private by default: calculation is local, nothing is sent anywhere |
 | **Traditions** | Parashari (primary); Jaimini and Lal Kitab as separate, labelled systems |
 | **Licence** | AGPL-3.0-or-later (engine) · Apache-2.0 (skill scripts, plugin files) · CC BY 4.0 (method text, docs) — [LICENSE](LICENSE) |
@@ -20,7 +21,8 @@ engine that runs on your own computer.
 ## Install in Claude
 
 **Claude desktop app or claude.ai:** **Customize → Plugins → Add → Add marketplace**, enter
-`Krish9688/vedic-astrology-consultation`, then install **Astrology Consultation (Vedic)**.
+`Krish9688/vedic-astrology-consultation`, then install **Astrology Consultation (Vedic)** (from Anthropic's
+documentation; not yet verified by this project).
 
 **Claude Code:**
 ```bash
@@ -41,9 +43,12 @@ Python 3.11+ or [uv](https://docs.astral.sh/uv/) and internet once), then `/relo
 
 | What you get | Claude Code | Cowork (on your computer) | claude.ai chat |
 |---|---|---|---|
-| Consultation skill (method, timing, safety, report layout) | yes | yes | yes |
-| Local engine: 16 MCP tools (chart, vargas, dashas, transits, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity, reports) | yes | yes | no — chat can't run programs on your computer; give it positions instead |
-| `setup` / `doctor` commands | yes | yes | no |
+| Consultation skill (method, timing, safety, report layout) | yes | expected; not yet verified | documented |
+| Local engine: 16 MCP tools (chart, vargas, dashas, transits, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity, reports) | yes¹ | expected; not yet verified | no — chat can't run programs on your computer; give it positions instead |
+| `setup` / `doctor` commands | yes¹ | expected; not yet verified | no |
+
+¹ Tested on macOS with the Claude Code CLI: install from GitHub, the engine steps behind setup/doctor, MCP connected,
+tool calls from a test client. A signed-in model turn calling the tools has not been recorded yet.
 
 Updating, disabling, rolling back, uninstalling, where files live and troubleshooting:
 **[docs/MARKETPLACE.md](docs/MARKETPLACE.md)**.
@@ -107,7 +112,11 @@ echo '{"date": "1992-03-14", "time": "09:40", "tz": 0, "lat": 51.5, "lon": -0.12
 
 - **private** mode (default): all calculation local. The optional VedAstro cross-check (sends birth date, time, UTC
   offset and coordinates to `api.vedastro.org`) works only after you choose **hybrid** mode; it is never required.
-- The MCP and REST servers bind to 127.0.0.1. Remote use needs both `allow_remote = true` and an `api_token`.
+- The MCP and REST servers bind to 127.0.0.1. Remote use needs both `allow_remote = true` and an `api_token`. If you
+  let other people use the service over a network and you changed the code, AGPL-3.0 §13 requires you to offer them
+  your modified source; set `source_url` in the config, and the service advertises it through `get_engine_info`,
+  `/api/v1/version` and the token-free `/api/v1/source`. Library lookup (excerpts of your own books) is not served to
+  remote clients unless you set `share_library_remotely = true`.
 - No access logs; birth details are not logged. Predictions are logged only with explicit consent.
 - This repository contains no personal data: every chart in tests and examples is synthetic.
 
@@ -129,8 +138,9 @@ tests, reference charts incl. polar and boundary cases, MCP/REST/CLI security te
 with an MCP smoke test, skill self-tests, a PDF report render and a package check.
 
 The marketplace flow — add marketplace → install → setup → doctor → MCP connected → synthetic chart → consultation
-context → report, plus update, disable/enable, rollback and uninstall — was tested on a clean, sandboxed Claude Code
-profile on 2026-10-03. What was and wasn't tested for each client: [docs/CLIENT-INTEGRATIONS.md](docs/CLIENT-INTEGRATIONS.md);
+context → report — was tested from GitHub on a clean, sandboxed Claude Code profile on 2026-10-03 (macOS; the engine,
+launcher and MCP also run in Linux CI). Update, disable/enable, rollback and uninstall were tested with a local copy of
+the marketplace. What was and wasn't tested for each client: [docs/CLIENT-INTEGRATIONS.md](docs/CLIENT-INTEGRATIONS.md);
 method and results: [docs/TESTING.md](docs/TESTING.md).
 
 ## Limitations
@@ -138,12 +148,19 @@ method and results: [docs/TESTING.md](docs/TESTING.md).
 - Grades describe agreement within the tradition, not probabilities.
 - No time-zone database: give the UTC offset at birth, including daylight saving.
 - Not yet implemented: Chara/Yogini/Narayana dashas, ishta/kashta phala, bhava bala.
+- Native Windows is not supported: the plugin's engine launcher is a POSIX shell script. On Windows, run Claude Code
+  inside WSL 2.
 - claude.ai chat cannot reach the local engine; ChatGPT on the web would need a public tunnel (not recommended).
 - Ascendant- and divisional-chart claims are only as good as the birth time; the engine reports the tolerance.
+- First run needs Python 3.11+ or uv and internet once (engine environment and ephemeris download).
+- Remote mode has no TLS of its own: put it behind an SSH tunnel or a TLS reverse proxy.
+- Consent for live VedAstro checks is a flag the AI client sets; the software cannot verify that the person agreed.
+- Adding books (`astro add-book`) needs the full repository, not the plugin.
+- The prediction log has only been exercised with synthetic records.
 
 ## Version history
 
-The skill has evolved since v1.1 (2026-09-06); v3.5.0 is the first version published here. Full history:
+The skill has evolved since v1.1 (2026-09-06); v3.5.0 was the first version published here; 3.6.0 is the second. Full history:
 [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md) · [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing and security

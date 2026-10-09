@@ -34,7 +34,7 @@ def test_drik_bala_matches_raman_published_example():
     finally:
         swe.set_sid_mode(swe.SIDM_LAHIRI)
     for p, want in ref["expected"]["drik_virupas"].items():
-        assert abs(got[p]["virupas"]["drik"] - want) <= ref["tolerance"], (p, got[p]["virupas"]["drik"], want)
+        assert abs(got[p]["virupas"]["drik"] - want) <= ref["tolerance"] + 1e-9, (p, got[p]["virupas"]["drik"], want)
 
 
 @given(moment, lat, lon)
@@ -56,6 +56,7 @@ def test_shadbala_components_stay_in_range(t, la, lo):
         assert 0 <= v["virupas"]["cheshta"] <= 120, p          # Moon's (paksha, doubled) can reach 120
         assert v["virupas"]["naisargika"] == S.NAISARGIKA[p]
         assert 14 <= d["saptavargaja"] <= 315
+        assert 0 <= d["ayana"] <= (120 if p == "Su" else 60), (p, d["ayana"])   # A-4
 
 
 @pytest.mark.parametrize("a,b", [(3.3, 356.9), (356.9, 3.3), (10.0, 20.0), (179.0, 181.0)])
@@ -97,3 +98,55 @@ def test_required_rupas_bphs():
     from astro.calc.strength import REQUIRED_RUPAS
     # BPHS ch. 27 (Santhanam p299): 390, 360, 300, 420, 390, 330, 300 virupas for Sun … Saturn
     assert [REQUIRED_RUPAS[p] * 60 for p in ("Su", "Mo", "Ma", "Me", "Ju", "Ve", "Sa")] == [390, 360, 300, 420, 390, 330, 300]
+
+
+def test_arudhas_match_pvr_example_29():
+    """D4: P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach, Example 29 (printed pp.87–88): all twelve
+    arudha padas of Chart 1 — both exceptions (1st/7th → 10th) and the Mars/Ketu and Saturn/Rahu co-lord choices.
+    Arudhas depend only on sign placements; the nodes' signs are placed where they do not affect the published counts."""
+    from astro.calc.jaimini import arudhas
+    signs = dict(Asc=5, Su=11, Mo=2, Ma=0, Me=11, Ju=0, Ve=11, Sa=0, Ra=3, Ke=9)   # Vi lagna; Pi; Ge; Ar; Cn/Cp
+    c = {"bodies": {p: {"lon": s * 30 + 10.0} for p, s in signs.items()}}
+    want = dict(A1="Gemini", A2="Leo", A3="Virgo", A4="Leo", A5="Aries", A6="Gemini", A7="Taurus", A8="Capricorn",
+                A9="Capricorn", A10="Virgo", A11="Taurus", A12="Libra")
+    assert {k: E.SIGNS[v] for k, v in arudhas(c).items()} == want
+
+
+def test_uchcha_bala_matches_bphs_worked_example():
+    """D3: BPHS ch. 27 (Santhanam, printed p.264): Sun at 12°15′ Pisces → uchcha bala 50.75 virupas."""
+    t = dt.datetime(1992, 3, 14, 9, 40)
+    c = chart(t, 51.5, -0.12)
+    c["bodies"]["Su"]["lon"] = 330 + 12.25
+    assert S.shadbala(c, t, 51.5, -0.12, 0)["planets"]["Su"]["detail"]["uchcha"] == 50.75
+
+
+def _minutes_to_change(ut, lat, lon, span, sign_of):
+    """Exact minutes (earlier, later) until sign_of(ascendant) changes, by bisection (the ascendant moves monotonically)."""
+    asc = lambda m: E.asc(E.jd_of(ut + dt.timedelta(minutes=m)), lat, lon)
+    base = sign_of(asc(0))
+    out = []
+    for direction in (-1, 1):
+        if sign_of(asc(direction * span)) == base:
+            out.append(None)
+            continue
+        a, b = 0.0, float(span)
+        for _ in range(30):
+            m = (a + b) / 2
+            a, b = (a, m) if sign_of(asc(direction * m)) != base else (m, b)
+        out.append(b)
+    return out
+
+
+@settings(max_examples=40, deadline=None)
+@given(moment, st.floats(-60, 60), st.floats(-179, 179))
+def test_sensitivity_classes_match_exact_change_times(t, la, lo):
+    """D5 oracle: the grid's class for the ascendant sign and the D9 lagna equals the class implied by the exactly
+    bisected time to the nearest change (very high ≤1′ < high ≤5′ < moderate ≤15′ < robust)."""
+    g = SENS.grid(t.date().isoformat(), t.strftime("%H:%M:%S"), 0, la, lo, on="2030-01-01")
+    for factor, sign_of in (("ascendant sign", lambda a: int(a // 30)), ("D9 lagna", lambda a: int(a // (10 / 3)))):
+        near = [m for m in _minutes_to_change(t, la, lo, 15, sign_of) if m is not None]
+        d = min(near, default=None)
+        if d is not None and min(abs(d - x) for x in (0.5, 1, 2, 5, 10, 15)) < 0.01:
+            continue                                   # exactly on a sampled offset: either class is defensible
+        want = "robust" if d is None else "moderate" if d > 5 else "high" if d > 1 else "very high"
+        assert g["classes"][factor] == want, (factor, d, g["classes"][factor])

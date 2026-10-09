@@ -22,8 +22,8 @@ server log); `install.sh` with a sandboxed home folder.
 
 ## 2. Knowledge
 
-`validation/graph_checks.py` (27 checks incl. every book's SHA-256), `validation/retrieval_eval.py` (gold-page recall,
-16/17 questions), `validation/citation_test.py` (20 sampled rules per book, cited page contains the rule's words:
+`validation/graph_checks.py` (27 checks incl. every book's SHA-256), `validation/retrieval_eval.py` (gold-page recall: curated set 16/17;
+blind 24-question set from council member C: full text 16/24, hybrid 17/24, graph 9/24), `validation/citation_test.py` (20 sampled rules per book, cited page contains the rule's words:
 19–20/20), `tools/kg/validate_map.py` (every source-map part before promotion). Docling benchmark:
 `validation/docling/README.md`.
 
@@ -111,7 +111,8 @@ point, regression unchanged.
 
 ## 5a. v3.5 benchmark (round 9, 2026-10-02)
 
-New synthetic chart **S2** (invented; not used in any skill example; kept private until the round ended), data from the
+New synthetic chart **S2** (invented; not used in any skill example; kept private until the round ended — it then
+became the development set for the round-9 fixes, so later S2 re-tests are not holdout evidence), data from the
 v3.5 local engine (Shadbala, Ashtakavarga, Jaimini, sensitivity grid included). Answerers ran one at a time; four blind
 graders. All eight report types (career, relationship, marriage, dasha, 12-month, relocation, complete life, compact)
 plus consultations on birth-time sensitivity, strength, timing across engines and career.
@@ -173,3 +174,27 @@ Found and fixed during these runs: report folder created 0755 (now 0700, test); 
 folder's own absolute path (now relative, test); the MCP smoke client dropped the plugin variables (now forwards the
 environment). Not run: a live model turn calling the tools (the CLI was not signed in) and the claude.ai/desktop
 GUI flow — both left to the user, with the exact steps in MARKETPLACE.md.
+
+## 5b. 3.6 benchmarks (rounds 10–12, 2026-10-07 to 10-09)
+
+Fresh synthetic chart per round (S3, S4, S5), 27 items (4 reports, 23 consultations over 20 life areas, safety
+probes), questions and expectations written by a fresh agent that saw only the chart data, skills frozen before the
+round, fresh answerers one at a time, three blind graders, keys stored separately.
+
+| Round | Compared | Wins | Scores |
+|---|---|---|---|
+| 10 (S3) | candidate method vs v3.5 | 11–16 | 1488–1498 |
+| 11 (S4) | candidate after report fixes vs v3.5 | 9–17 (1 tie) | 1429–1463 |
+| 12 (S5) | 3.6 hybrid (v3.5 method + corrections) vs v3.5 | 17–10 | 1472–1472 |
+
+Reading: the method revisions of this cycle were not better than v3.5 and were dropped; the released method equals
+v3.5 plus corrections and safety rules, at parity or better. Shared gap in every round: Lal Kitab annual charts quoted
+without naming the table.
+
+## Contamination rules (council H-13)
+
+- **S1** (1992-03-14 09:40, London) is the bundled worked example (`assets/report/example-synthetic.json`,
+  `references/examples.md`): fine for engine, interface and rendering tests; never evidence about reasoning quality.
+- **S2** drove the round-9 fixes and re-tests: a development set from 2026-10-02 on.
+- **S3** (round 10, 2026-10-07): questions written by a fresh agent that saw only the chart data; skills snapshotted
+  before the round; answerers and graders are fresh agents; stored outside both repositories until grading ends.

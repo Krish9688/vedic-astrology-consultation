@@ -42,6 +42,8 @@ def add(chart_id, category, prediction, window_start=None, window_end=None, conf
     for w in (window_start, window_end):
         if w and not YM.match(w):
             raise ValueError("windows are YYYY-MM")
+    if not chart_id:
+        raise ValueError("chart_id is required (an opaque label such as K1)")
     if re.search(r"\d{4}-\d{2}-\d{2}|\d{1,2}:\d{2}", chart_id):
         raise ValueError("chart_id must be an opaque label, not birth data")
     c = _db(db)
@@ -61,7 +63,7 @@ def evaluate(pid, outcome, evaluation, outcome_date=None, db=None):
     c = _db(db)
     row = c.execute("SELECT evaluation FROM predictions WHERE id=?", (pid,)).fetchone()
     if row is None:
-        raise KeyError(pid)
+        raise ValueError(f"no prediction {pid}")
     if row[0] is not None:
         raise PermissionError("already evaluated — the first evaluation stands (add a note instead of rewriting)")
     c.execute("UPDATE predictions SET outcome=?, outcome_date=?, evaluation=? WHERE id=?",

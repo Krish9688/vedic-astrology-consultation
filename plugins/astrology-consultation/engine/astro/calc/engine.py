@@ -26,7 +26,7 @@ PL = [("Su", swe.SUN), ("Mo", swe.MOON), ("Ma", swe.MARS), ("Me", swe.MERCURY), 
 YEAR = {"sidereal": 365.256363, "365.25": 365.25, "360": 360.0}
 VARGAS = [1, 2, 3, 4, 7, 9, 10, 12, 16, 20, 24, 27, 30, 40, 45, 60]
 EPS = 1e-9  # in units of a division (≈1e-8°): absorbs float error at exact boundaries
-ENGINE_VERSION = "3.5.0"
+ENGINE_VERSION = "3.6.0"
 
 # Parashari varga rules as implemented (BPHS ch. 6–7). Other engines' variants are recorded in compare.py notes.
 VARGA_METHODS = {
@@ -94,7 +94,7 @@ def positions(jd, node="mean"):
         out[n] = {"lon": lon, "speed": spd, "retro": spd < 0}
     lon, spd = lon_of(jd, swe.MEAN_NODE if node == "mean" else swe.TRUE_NODE, f)
     out["Ra"] = {"lon": lon, "speed": spd, "retro": spd < 0}   # mean node: always; true node: usually
-    out["Ke"] = {"lon": (lon + 180) % 360, "speed": spd, "retro": True}
+    out["Ke"] = {"lon": (lon + 180) % 360, "speed": spd, "retro": spd < 0}   # Ketu moves with Rahu
     return out
 
 
@@ -201,8 +201,9 @@ def vimshottari(moon, birth_ut, ylen, levels=3):
     return mds
 
 
-def ingresses(t0, months, node):
-    """Sign changes of Jupiter, Saturn and the nodes between t0 and t0+months (bisection to ~1 hour)."""
+def ingresses(t0, months, node, tz=0):
+    """Sign changes of Jupiter, Saturn and the nodes between t0 and t0+months (bisection to ~1 minute; date = local
+    date of the change, using the birth UTC offset, like the dasha dates)."""
     out = []
     end = t0 + dt.timedelta(days=30.44 * months)
     for n in ("Ju", "Sa", "Ra"):
@@ -214,10 +215,11 @@ def ingresses(t0, months, node):
             s2 = sign(t2)
             if s2 != s:
                 a, bb = t, t2
-                while (bb - a) > dt.timedelta(hours=1):
+                while (bb - a) > dt.timedelta(minutes=1):
                     m = a + (bb - a) / 2
                     (a, bb) = (a, m) if sign(m) != s else (m, bb)
-                out.append({"planet": n, "date": bb.date().isoformat(), "from": SIGNS[s], "to": SIGNS[s2]})
+                local = a + (bb - a) / 2 + dt.timedelta(hours=tz)
+                out.append({"planet": n, "date": local.date().isoformat(), "from": SIGNS[s], "to": SIGNS[s2]})
                 s = s2
             t = t2
     return sorted(out, key=lambda r: r["date"])
@@ -247,9 +249,9 @@ def sensitivity(ut, lat, lon, moon_lon, window_min=180):
 CONTACT_ANGLES = {"Ju": (0, 180), "Sa": (0, 180), "Ra": (0,), "Ke": (0,)}   # nodes: the axis already covers 180°
 
 
-def contacts(t0, months, natal, node="mean"):
+def contacts(t0, months, natal, node="mean", tz=0):
     """Exact conjunctions (and, for Jupiter and Saturn, oppositions) of transiting slow planets with natal points,
-    including retrograde repeats, by bisection."""
+    including retrograde repeats, by bisection to ~10 minutes; date = local date (birth UTC offset)."""
     end = t0 + dt.timedelta(days=30.44 * months)
     out = []
     for tp, angles in CONTACT_ANGLES.items():
@@ -265,14 +267,41 @@ def contacts(t0, months, natal, node="mean"):
                     d2 = diff(t2)
                     if (d < 0) != (d2 < 0) and abs(d - d2) < 90:
                         a, b = t, t2
-                        while (b - a) > dt.timedelta(hours=6):
+                        while (b - a) > dt.timedelta(minutes=10):
                             m = a + (b - a) / 2
                             (a, b) = (a, m) if (diff(m) < 0) != (d < 0) else (m, b)
-                        out.append({"date": b.date().isoformat(), "transit": tp, "natal": npn,
+                        local = a + (b - a) / 2 + dt.timedelta(hours=tz)
+                        out.append({"date": local.date().isoformat(), "transit": tp, "natal": npn,
                                     "aspect": "opposition" if ang else "conjunction",
                                     "direction": "direct" if d < d2 else "retrograde"})
                     t, d = t2, d2
     return sorted(out, key=lambda r: r["date"])
+
+
+TRANSIT_ASPECTS = {"Ju": (5, 7, 9), "Sa": (3, 7, 10)}   # whole-sign graha drishti, counting the occupied sign as 1
+TRANSIT_ASPECTS_NOTE = ("Parashari gochara, whole-sign graha drishti: the sign occupied plus Jupiter's 5th/7th/9th and "
+                        "Saturn's 3rd/7th/10th, as houses from the lagna and from the Moon (one contact counted from "
+                        "both frames is one). Jupiter touches 4 of 12 signs at any time: a trigger inside a period "
+                        "already chosen, never a promise. Not for the Lal Kitab note.")
+
+
+def transit_sign_aspects(t0, months, ingress_rows, T, asc_i, moon_i, tz=0):
+    """For transiting Jupiter and Saturn, each stay in a sign between t0 and t0+months (from the ingress list) with the
+    houses it occupies and aspects, counted from the lagna and from the Moon."""
+    start = (t0 + dt.timedelta(hours=tz)).date().isoformat()
+    end = (t0 + dt.timedelta(days=30.44 * months, hours=tz)).date().isoformat()
+    out = []
+    for p, asp in TRANSIT_ASPECTS.items():
+        s, frm = int(T[p]["lon"] // 30), start
+        for r in [r for r in ingress_rows if r["planet"] == p] + [{"date": end, "to": None}]:
+            signs = [s] + [(s + k - 1) % 12 for k in asp]
+            out.append({"planet": p, "from": frm, "to": r["date"], "sign": SIGNS[s],
+                        "houses_from_lagna": [(x - asc_i) % 12 + 1 for x in signs],
+                        "houses_from_moon": [(x - moon_i) % 12 + 1 for x in signs]})
+            if r["to"] is None:
+                break
+            s, frm = SIGNS.index(r["to"]), r["date"]
+    return out
 
 
 def compute(date, time, tz, lat, lon, node="mean", year="sidereal", on=None, months=36, extras=True):
@@ -286,9 +315,9 @@ def compute(date, time, tz, lat, lon, node="mean", year="sidereal", on=None, mon
     P = {"Asc": {"lon": A, "speed": None, "retro": False}, **P}
     bodies = {}
     for n, p in P.items():
-        L = p["lon"]
+        L = round(p["lon"], 4) % 360          # round once: sign, degree, nakshatra and vargas all follow from it
         nk, pada, _ = nak(L)
-        bodies[n] = {"sign": SIGNS[int(L // 30)], "deg": round(L % 30, 4), "lon": round(L, 4), "retro": p["retro"],
+        bodies[n] = {"sign": SIGNS[int(L // 30)], "deg": round(L % 30, 4), "lon": L, "retro": p["retro"],
                      "speed": None if p["speed"] is None else round(p["speed"], 5),
                      "nakshatra": nk, "pada": pada, "vargas": {f"D{v}": SIGNS[varga(L, v)] for v in VARGAS}}
     ylen = YEAR[year]
@@ -307,13 +336,20 @@ def compute(date, time, tz, lat, lon, node="mean", year="sidereal", on=None, mon
             "dasha_year_days": ylen, "houses": "whole sign from the sidereal ascendant; Sripati bhavas in 'bhavas'",
             "birth_local": f"{date} {time} UTC{tz:+}", "lat": lat, "lon": lon, "transit_date": on,
             "transit_time": "12:00 local (birth UTC offset)", "vargas": "Parashari rules, engine.VARGA_METHODS",
-            "computed_at_utc": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+            "computed_at_utc": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "flags": [f for f, on_ in (
+                ("polar latitude (|lat| > 66.5°): Sripati bhavas degenerate and the ascendant is unstable", abs(lat) > 66.5),
+                ("date before 1582: proleptic Gregorian calendar assumed (convert Julian-calendar records first)",
+                 int(date[:4]) < 1582)) if on_]}
     out = {"meta": meta, "bodies": bodies, "mc": round(MC, 4), "bhavas": bhavas(jd, lat, lon),
            "vimshottari": ser(dasha), "transits": transits}
     if extras:
-        out["ingresses"] = ingresses(t_on, months, node)
+        out["ingresses"] = ingresses(t_on, months, node, tz)
         out["birth_time_sensitivity_minutes"] = sensitivity(ut, lat, lon, P["Mo"]["lon"])
-        out["slow_contacts"] = contacts(t_on, months, {n: p["lon"] for n, p in P.items() if n not in ("Ra", "Ke")}, node)
+        out["slow_contacts"] = contacts(t_on, months, {n: p["lon"] for n, p in P.items() if n not in ("Ra", "Ke")},
+                                        node, tz)
+        out["transit_sign_aspects"] = transit_sign_aspects(t_on, months, out["ingresses"], T, asc_i, moon_i, tz)
+        meta["transit_aspects"] = TRANSIT_ASPECTS_NOTE
     return out
 
 
@@ -346,7 +382,8 @@ def render_md(c):
               *(f"- {r['date']}: {r['transit']} {'opposite' if r.get('aspect') == 'opposition' else 'over'} natal {r['natal']} ({r['direction']})"
                 for r in c["slow_contacts"]),
               "", "## Birth-time sensitivity (minutes earlier / later before each factor changes; — = not within 3 h)", "",
-              *(f"- {k}: {v['earlier'] or '—'} earlier / {v['later'] or '—'} later"
+              *(f"- {k}: {'—' if v['earlier'] is None else v['earlier']} earlier / "
+                f"{'—' if v['later'] is None else v['later']} later"
                 for k, v in c["birth_time_sensitivity_minutes"].items())]
     if "shadbala" in c:
         sb, comp = c["shadbala"], ("sthana", "dig", "kala", "cheshta", "naisargika", "drik")
@@ -382,7 +419,8 @@ def chart_facts_input(c):
     m = c["meta"]
     return {"_note": f"Calculated locally: {m['engine']}, {m['ayanamsa']}, {m['nodes']} nodes; birth {m['birth_local']}",
             "asc": {"sign": c["bodies"]["Asc"]["sign"], "deg": c["bodies"]["Asc"]["deg"]},
-            "planets": {n: {"sign": b["sign"], "deg": b["deg"]} for n, b in c["bodies"].items() if n != "Asc"}}
+            "planets": {n: {"sign": b["sign"], "deg": b["deg"], "retro": b["retro"]}
+                        for n, b in c["bodies"].items() if n != "Asc"}}
 
 
 def write_outputs(c, out_dir):

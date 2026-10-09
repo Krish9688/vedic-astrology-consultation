@@ -4,7 +4,8 @@
 |---|---|
 | Marketplace | `vedic-astrology` — repository `Krish9688/vedic-astrology-consultation` |
 | Plugin | `astrology-consultation` (install id `astrology-consultation@vedic-astrology`) |
-| Version | 3.5.0 (plugin = engine = skill) |
+| Version | 3.6.0 (plugin = engine = skill) |
+| Platforms | macOS (full flow tested) · Linux (engine, launcher and MCP tested in CI) · Windows: WSL 2 only, untested · native Windows: unsupported |
 | Default privacy mode | **private** — every calculation runs on your computer; nothing is sent anywhere |
 
 Steps marked **tested** were run end to end on a clean, sandboxed Claude Code profile (2026-10-03, synthetic charts
@@ -30,15 +31,15 @@ claude plugin install astrology-consultation@vedic-astrology
 ```
 Inside a session: `/plugin marketplace add Krish9688/vedic-astrology-consultation`, then
 `/plugin install astrology-consultation@vedic-astrology` (choose a scope), then `/reload-plugins`. On Claude Code
-v2.1.275+ one command does both: `/plugin install astrology-consultation --marketplace Krish9688/vedic-astrology-consultation`.
+v2.1.275+ one command does both (documented): `/plugin install astrology-consultation --marketplace Krish9688/vedic-astrology-consultation`.
 
 ## 2. What gets installed
 
 | Component | Works in | Notes |
 |---|---|---|
-| Skill `astrology-consultation` | Claude Code, Cowork, claude.ai chat | the consultation, timing, safety and report method |
-| Local MCP server `astrology` (16 tools: chart, vargas, dashas, transits, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity, consultation context, reports, source lookup) | Claude Code; Cowork sessions on your own computer | started by the plugin's `scripts/astro`; **not available in web chat**, which cannot run programs on your computer |
-| `/astrology-consultation:setup`, `/astrology-consultation:doctor` | Claude Code, Cowork | first-time setup and health check |
+| Skill `astrology-consultation` | Claude Code; Cowork and claude.ai chat (documented, not yet verified) | the consultation, timing, safety and report method |
+| Local MCP server `astrology` (16 tools: chart, vargas, dashas, transits, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity, consultation context, reports, source lookup) | Claude Code; Cowork (expected, not yet verified) | started by the plugin's `scripts/astro`; **not available in web chat**, which cannot run programs on your computer |
+| `/astrology-consultation:setup`, `/astrology-consultation:doctor` | Claude Code; Cowork (not yet verified) | first-time setup and health check |
 
 Tested: `claude plugin details` lists the three skills and the MCP server; about 250 tokens stay loaded in every
 session, the rest loads only when you ask an astrology question.
@@ -46,7 +47,7 @@ session, the rest loads only when you ask an astrology question.
 Nothing personal ships with the plugin: no charts, no birth details, no books, no book-derived text. Tests and the
 worked report example use synthetic charts.
 
-## 3. First-time setup (tested)
+## 3. First-time setup (engine steps tested; the slash commands themselves need a signed-in session)
 
 1. Run `/astrology-consultation:setup`. It:
    - builds a private Python environment for the engine in the plugin's data folder — needs **Python 3.11+ or
@@ -89,7 +90,7 @@ consultation works and says that source lookup is unavailable.
 
 ## 7. Update, disable, roll back, uninstall
 
-| Action | Terminal (tested) | GUI (documented) |
+| Action | Terminal (tested with a local copy of the marketplace) | GUI (documented) |
 |---|---|---|
 | Update | `claude plugin marketplace update vedic-astrology`, then `claude plugin update astrology-consultation@vedic-astrology`, then restart or `/reload-plugins` | Customize → Plugins → **Check for updates** / **Sync automatically**; Code: `/plugin` → Installed → **Update now** |
 | Auto-update | off by default for third-party marketplaces; `/plugin` → Marketplaces → **Enable auto-update** | **Sync automatically** |
@@ -97,8 +98,8 @@ consultation works and says that source lookup is unavailable.
 | Roll back | `claude plugin marketplace remove vedic-astrology`, then `claude plugin marketplace add Krish9688/vedic-astrology-consultation#v3.5.0` (any release tag), then install again | — |
 | Uninstall | `claude plugin uninstall astrology-consultation@vedic-astrology` (`--keep-data` keeps the engine environment) | **Remove** |
 
-Tested on a sandboxed profile: update 3.5.0 → newer kept the engine environment (no rebuild; it rebuilds only when the
-engine version changes); disable removed the astrology server, enable restored it; reverting the marketplace rolled
+Tested on a sandboxed profile: update 3.5.0 → newer kept the engine environment (no rebuild; from 3.6.0 it rebuilds when
+the engine version or the engine code changes); disable removed the astrology server, enable restored it; reverting the marketplace rolled
 3.5.x back to 3.5.0; uninstall with `--keep-data` kept the environment and reinstall reused it; plain uninstall deleted
 it. Removing a marketplace uninstalls its plugins.
 
@@ -116,7 +117,7 @@ Reports in `~/Documents/astrology-reports` are left for you to keep or delete.
 | Astrology tools missing after setup | `/reload-plugins` or a new session; `claude mcp list` should show `plugin:astrology-consultation:astrology … ✔ Connected` |
 | Tools missing in claude.ai chat | expected: web chat can't run the local engine; the skill still reasons from positions you supply |
 | doctor: ephemeris checksum mismatch | rerun `/astrology-consultation:setup` (bad files are deleted, never used) |
-| PDF report not produced (HTML only) | WeasyPrint needs system libraries; on macOS `brew install pango` |
+| PDF report not produced (HTML only) | WeasyPrint needs system libraries; on macOS `brew install pango`; Debian/Ubuntu `sudo apt install libpango-1.0-0 libpangoft2-1.0-0` |
 | First tool call slow | the engine environment is built on first use; later starts are immediate |
 | Download blocked by a proxy | run setup once on an open network; afterwards everything works offline |
 | Plugin errors on load | `/plugin` → **Errors** tab; see Anthropic's [plugin troubleshooting](https://code.claude.com/docs/en/plugins/troubleshooting) |

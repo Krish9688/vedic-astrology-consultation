@@ -10,8 +10,10 @@ data or a calculation tool (with the privacy disclosure in [inputs.md](inputs.md
 Research behind this: `docs/ASTROLOGER-CONSULTATION-RESEARCH.md` (R2). Keep **promise** ("the chart can deliver X")
 and **activation** ("X is foregrounded now") as separate statements in every answer.
 
-**Step 0 — precision budget.** Every dasha date moves by about **n × m ÷ 4 days**, where m is the birth-time error in
-minutes and n the full length (years) of the dasha running at birth [R2-TP1; PVR]. The ayanamsa and year-length
+**Step 0 — precision budget.** Every dasha date moves by about **n × 365.25 × v ÷ 800 days per minute** of birth-time
+error, where n is the full length (years) of the dasha running at birth and v the Moon's speed in arcminutes per minute
+of time (≈0.5–0.6; so roughly n ÷ 4 days per minute, e.g. 5 days for Venus) [R2-TP1; PVR]. The engine's sensitivity grid
+gives the exact figure. The ayanamsa and year-length
 convention move dates too; name the ones the data used — VedAstro uses 360-day years and runs ~4 months
 earlier than JHora/Swiss-Ephemeris sidereal-solar years for a person in their early twenties (inputs.md).
 
@@ -39,7 +41,7 @@ hindsight [LOL p354; R2-TP1].
    point is **one episode**; a station within a few degrees of a key point marks its peak. Transits show *when*, not
    *which way* — direction comes from the natal roles [R2-TP3, TP5].
 6. **Secondary confirmation**, each counted once: a pre-chosen Jaimini sign dasha variant; the Tajika year lord or
-   muntha lord being the AD lord or a network planet; Lal Kitab varshaphal in its own note. Disagreement is reported.
+   muntha lord (only from a supplied or calculated return chart) being the AD lord or a network planet; Lal Kitab varshaphal in its own note. Disagreement is reported.
 7. **Supporting only** (quality or fine placement, never occurrence): Ashtakavarga bindus of the transiting planet
    (quality: easy vs strained), double transit on the network (true most of the time — label it), eclipses/nodal
    contacts ("sensitised for about six months", not a timer), PD inside an earned band [R2-TP7–TP9].
@@ -130,7 +132,7 @@ dates by hand when a calculated table exists. Periods nest: check containment an
 - **Month-level**: a good bhukti fruits when the Sun enters the bhukti lord's exaltation sign, or Jupiter transits
   there; a bad one when the Sun transits its debility/enemy sign [PD XX.38] — LOL tested it and found it close but not
   exact [LOL p361–362]. Sun/Mars act early in a sign, Jupiter/Venus mid, Saturn/Moon late [BJ XXII.6; PD XXVI.25].
-- **Jupiter–Saturn**: Jupiter's houses (occupied and aspected) improve, Saturn's suffer unless in own/exaltation,
+- **Jupiter–Saturn** (houses occupied and aspected: the engine's `transit_sign_aspects`, from lagna and Moon): Jupiter's houses improve, Saturn's suffer unless in own/exaltation,
   scaled by natal strength; in long bhuktis good results start in the year transit Jupiter stimulates the natal dasha
   and bhukti lords, bad ones when Saturn does [LOL p364–365] ("binary method"). K. N. Rao's double-transit practice
   (both contacting the event network) is a modern extension not in this library; label it if used.
@@ -171,9 +173,8 @@ conclusions in the Lal Kitab evidence note; compare with the Parashari window on
 8. Say what would move the window: a verified transit date, a different age convention, a birth-time correction.
 
 Report shape: "The main window is late 2027 to mid-2028. That is Venus–Jupiter: Venus is the 7th lord's dispositor and
-Jupiter aspects the 7th; transit Jupiter crosses the 7th lord's navamsa sign in the same months; and the Lal Kitab
-annual chart for that age-year places Venus in the 7th. Before that, Saturn's bhukti looks like preparation and delay
-rather than the event."
+Jupiter aspects the 7th; transit Jupiter crosses the 7th lord's navamsa sign in the same months. Before that, Saturn's bhukti looks like preparation and delay
+rather than the event. Separately, in Lal Kitab, the annual chart for that age-year places Venus in the 7th."
 
 ## 7. Temporal modes (carried over from v2.2)
 

@@ -8,6 +8,7 @@ Ashtakavarga uses the BPHS benefic-point (bindu) tables; reductions (shodhana) a
 from __future__ import annotations
 
 import datetime as dt
+import math
 
 import swisseph as swe
 
@@ -30,7 +31,14 @@ VARGA_POINTS = {"moolatrikona": 45, "own": 30, "great friend": 20, "friend": 15,
                 "great enemy": 2}
 HORA_CYCLE = ["Su", "Ve", "Me", "Mo", "Sa", "Ju", "Ma"]          # Chaldean order of planetary hours
 WEEKDAY_LORD = ["Mo", "Ma", "Me", "Ju", "Ve", "Sa", "Su"]        # Python weekday() 0 = Monday
-KALI_EPOCH_JD = 588465.5                                          # Kali Yuga epoch, midnight 17/18 Feb 3102 BCE
+BURGESS_1860 = 714404108573   # days from Creation to 1 Jan 1860 (Burgess, Surya Siddhanta), as used in BPHS ch. 27
+
+
+def ahargana_from_creation(date):
+    """Days from Creation to the civil date (inclusive), the count BPHS's abda/masa formulas assume. Santhanam's worked
+    example (BPHS ch. 27, printed p.271): 1 Jun 1984 → abbreviated 65295 ≡ this count (mod 2520) → year lord Jupiter,
+    month lord Venus, and the count mod 7 = 6 = Friday."""
+    return BURGESS_1860 + (date - dt.date(1860, 1, 1)).days
 
 SHADBALA_CONVENTIONS = {
     "saptavargaja": "D1, D2 (Parashari hora), D3, D7, D9, D12, D30; points 45/30/20/15/10/4/2 (BPHS, Raman); "
@@ -42,10 +50,10 @@ SHADBALA_CONVENTIONS = {
               "Sun, Mars or Saturn",
     "tribhaga": "day and night each split into three equal parts from actual sunrise/sunset (Sun's disc centre, with "
                 "refraction); in polar day/night 06:00 and 18:00 local apparent time (flag polar_sunrise_fallback)",
-    "abda_masa": "Raman's Ahargana from the Kali Yuga epoch (JD 588465.5); year lord (q×3+1) mod 7, month lord "
+    "abda_masa": "Ahargana from Creation (Burgess: 714,404,108,573 days to 1 Jan 1860, BPHS ch. 27) of the civil date of the local sunrise; year lord (q×3+1) mod 7, month lord "
                  "(q×2+1) mod 7, counted from Sunday",
     "vara_hora": "Hindu day from sunrise; equal 60-minute horas from sunrise in Chaldean order",
-    "ayana": "(24° ± declination) × 1.25 with true declination; Sun doubled",
+    "ayana": "(24° ± kranti) × 1.25 (Raman), kranti of the ecliptic point (BPHS bhuja method; Santhanam's note variant 23°27′ × 1.2793 not used); Sun doubled",
     "cheshta": "Sun = ayana bala, Moon = paksha bala (Raman); others cheshta kendra = sighrochcha − mean of madhya "
                "and spashta, the mean taken circularly (a plain average breaks when the two straddle 0° Aries — "
                "PyJHora and VedAstro both show this on test chart S2); modern mean elements (J2000)",
@@ -187,12 +195,16 @@ def shadbala(c, ut, lat, lon, tz):
     y, m, d, _ = swe.revjul(r1 + tz / 24)
     vara = WEEKDAY_LORD[dt.date(y, m, d).weekday()]
     hora = HORA_CYCLE[(HORA_CYCLE.index(vara) + int((jd - r1) * 24)) % 7]
-    ahargana = int(r1 + tz / 24 + 0.5 - KALI_EPOCH_JD)
+    ahargana = ahargana_from_creation(dt.date(y, m, d))
     sunday_order = ["Su", "Mo", "Ma", "Me", "Ju", "Ve", "Sa"]
     abda = sunday_order[(((ahargana // 360) * 3 + 1) % 7 - 1) % 7]
     masa = sunday_order[(((ahargana // 30) * 2 + 1) % 7 - 1) % 7]
     amvh = {p: 15 * (p == abda) + 30 * (p == masa) + 45 * (p == vara) + 60 * (p == hora) for p in SEVEN}
-    decl = {p: E.declination(jd, b) for p, b in E.PL}
+    # kranti of the planet's ecliptic point (tropical longitude, latitude ignored), as BPHS derives it from the bhuja —
+    # bounded by the obliquity, so ayana stays within 0–60 (true declination can exceed 24° and push it out of range)
+    eps = math.radians(swe.calc_ut(jd, swe.ECL_NUT)[0][0])
+    decl = {p: math.degrees(math.asin(math.sin(eps) * math.sin(math.radians(swe.calc_ut(jd, b, swe.FLG_SWIEPH)[0][0]))))
+            for p, b in E.PL}
     ayana = {}
     for p in SEVEN:
         dd = abs(decl[p]) if p == "Me" else (-decl[p] if p in ("Mo", "Sa") else decl[p])

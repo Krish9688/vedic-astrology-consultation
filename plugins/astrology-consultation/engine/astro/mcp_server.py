@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import datetime as dt
 import functools
+import hmac
 from typing import Optional
 
 from mcp.server.mcpserver import MCPServer
@@ -18,10 +19,10 @@ from . import config, service as S
 
 INSTRUCTIONS = (
     "Vedic astrology service; all calculation is local and returns facts only. For a consultation call "
-    "prepare_consultation, read the skill:// files it lists, then answer life-first: meaning in the person's life, "
+    "prepare_consultation, read each file it lists as skill://<path>, then answer life-first: meaning in the person's life, "
     "likely form, timing, counter-factor, what to watch. Never invent positions or dates; treat 'high'/'very high' "
     "birth-time sensitivity as uncertain. compare_engines live=true sends birth data to VedAstro and is refused "
-    "unless the user chose hybrid mode.")
+    "unless hybrid mode is set; pass consent=true only after the person agrees.")
 
 
 mcp = MCPServer(name="astrology-consultation", version=S.VERSION, instructions=INSTRUCTIONS)
@@ -36,7 +37,7 @@ def tool(description):
             try:
                 return fn(*a, **kw)
             except (ValueError, PermissionError, FileNotFoundError) as e:
-                raise ToolError(str(e)) from None
+                raise ToolError(str(e)) from e   # keeping the cause lets mcp log field names only
         return mcp.tool(description=description)(run)
     return deco
 
@@ -113,10 +114,10 @@ def get_birth_time_sensitivity(date: dt.date, time: str, tz: float, lat: float, 
 
 @tool("Compare the local engine with VedAstro. Without `live` it uses no network (a previously "
                       "fetched folder inside the data directory). live=true sends date, time, offset and "
-                      "coordinates to api.vedastro.org and is refused unless privacy mode is hybrid.")
+                      "coordinates to api.vedastro.org and is refused unless privacy mode is hybrid and consent=true (the person agreed).")
 def compare_engines(date: dt.date, time: str, tz: float, lat: float, lon: float,
-                    vedastro_dir: Optional[str] = None, live: bool = False) -> dict:
-    return S.compare_engines(_b(date, time, tz, lat, lon), vedastro_dir=vedastro_dir, live=live)
+                    vedastro_dir: Optional[str] = None, live: bool = False, consent: bool = False) -> dict:
+    return S.compare_engines(_b(date, time, tz, lat, lon), vedastro_dir=vedastro_dir, live=live, consent=consent)
 
 
 # --- knowledge --------------------------------------------------------------------------------------------------
@@ -137,7 +138,7 @@ def analyze_question(question: str) -> dict:
 
 
 @tool("Prepare a consultation: routed skill files, calculated facts with provenance and "
-                      "sensitivity classes. Read the listed skill:// files, then answer.")
+                      "sensitivity classes. Read each listed path as skill://<path>, then answer.")
 def prepare_consultation(question: str, date: dt.date, time: str, tz: float, lat: float, lon: float,
                          on: Optional[dt.date] = None) -> dict:
     return S.consultation_context(question, _b(date, time, tz, lat, lon), _o(on))
@@ -149,7 +150,7 @@ def create_report(model: dict, name: str = "report") -> dict:
     return S.create_report(model, name)
 
 
-@mcp.resource("skill://{path}", description="A document of the astrology-consultation skill (SKILL.md, "
+@mcp.resource("skill://{+path}", description="A document of the astrology-consultation skill (SKILL.md, "
                                              "references/*.md, assets/report/*). Read-only.")
 def skill_document(path: str) -> str:
     return S.skill_file(path)
@@ -170,7 +171,11 @@ def main(http: bool = False, host: str = "127.0.0.1", port: int = 8765):
     s = config.load()
     if host not in ("127.0.0.1", "localhost", "::1") and not (s.allow_remote and s.api_token):
         raise SystemExit("refusing to listen beyond localhost: set allow_remote = true and api_token in the config")
+    import sys
     import uvicorn
+    if host not in ("127.0.0.1", "localhost", "::1"):
+        S.REMOTE = True
+        print(S.SOURCE_NOTICE + " Source: " + S.source_offer()["source"], file=sys.stderr)
     app = mcp.streamable_http_app(host=host)
     if s.api_token:
         app.add_middleware(_BearerAuth, token=s.api_token)
@@ -184,7 +189,7 @@ class _BearerAuth:
     async def __call__(self, scope, receive, send):
         if scope["type"] == "http":
             auth = dict(scope.get("headers") or []).get(b"authorization", b"").decode()
-            if auth != f"Bearer {self.token}":
+            if not hmac.compare_digest(auth.encode(), f"Bearer {self.token}".encode()):
                 await send({"type": "http.response.start", "status": 401, "headers": [(b"content-type", b"text/plain")]})
                 await send({"type": "http.response.body", "body": b"unauthorized"})
                 return

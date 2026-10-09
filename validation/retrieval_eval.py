@@ -2,7 +2,7 @@
 # Gold pages come from the contradiction register and source-map headings (written from reading the books),
 # not from the graph code. Metric: share of gold pages found in the top-K pages each method returns.
 # usage: python3 validation/retrieval_eval.py   → prints a table and writes validation/retrieval_eval.md
-import os, re, sqlite3, sys
+import os, sqlite3, sys
 
 WS = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(WS, "astrology-prediction", "scripts"))
@@ -32,7 +32,7 @@ STOP = set("the a an of in and or to its is as by for from with when all own hou
 
 
 def fts_pages(db, q):
-    words = [w for w in re.findall(r"[A-Za-z]+", q.lower()) if w not in STOP and len(w) > 2]
+    words = kg.fts_terms(q, STOP)
     out = []
     for expr in (" AND ".join(words), " OR ".join(words)):  # strict first, then relaxed; keep order
         try:
@@ -65,13 +65,12 @@ def graph_pages(N, out, inc, q):
 
 
 def hybrid(a, b):
-    """Interleave graph and full-text results (graph first), dropping repeats."""
-    out = []
-    for pair in zip(a + [None] * K, b + [None] * K):
-        for p in pair:
-            if p and p not in out:
-                out.append(p)
-    return out[:K]
+    """Reciprocal-rank fusion of graph and full-text results (no list is favoured by position)."""
+    score = {}
+    for lst in (a, b):
+        for i, p in enumerate(lst):
+            score[p] = score.get(p, 0) + 1 / (60 + i)
+    return sorted(score, key=lambda p: -score[p])[:K]
 
 
 def main():

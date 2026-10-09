@@ -79,6 +79,8 @@ def _citations_segment(text, default_src):
         if m.group(4):
             pages += [int(x) for x in re.findall(r"\d+", m.group(4))]
         for i, p in enumerate(pages):
+            if src in BOOKS and not 1 <= p <= BOOKS[src]["pages"]:
+                continue   # a page beyond the book is another book's page quoted in the text (e.g. "Jatakaparijata p. 534")
             out.append((src, p, m.group(5).strip() if (m.group(5) and i == 0) else None))
     return out
 

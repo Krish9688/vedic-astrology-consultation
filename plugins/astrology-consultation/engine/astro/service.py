@@ -21,14 +21,27 @@ from pydantic import BaseModel, Field, field_validator
 from . import config
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
-VERSION = "3.5.0"
+VERSION = "3.6.0"
+SOURCE_URL = "https://github.com/Krish9688/vedic-astrology-consultation"
+SOURCE_NOTICE = ("This service is free software under the GNU Affero General Public License v3 or later, with NO "
+                 "WARRANTY. The Corresponding Source of the version running here is available at the 'source' URL. "
+                 "If you run a modified version for other people over a network, set source_url in the config to "
+                 "your modified source (AGPL-3.0 section 13).")
+THIRD_PARTY = "Swiss Ephemeris © Astrodienst AG (AGPL-3.0); pyswisseph"
+REMOTE = False   # set by the HTTP servers when they listen beyond localhost
 SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
-TOPICS = {  # question → the skill's topic reference (SKILL.md routing table)
-    "relationships-marriage": r"marri|spouse|wife|husband|partner|relationship|love|romance|dating|girlfriend|boyfriend",
-    "career-money": r"career|job|work|business|promotion|income|money|financ|wealth|debt|salary",
-    "home-family-children": r"home|house|property|mother|father|parent|sibling|brother|sister|child|famil|friend",
-    "travel-education-health-life": r"abroad|foreign|travel|relocat|move|study|education|degree|health|wellbeing|"
-                                    r"spiritual|year ahead|next year|12 months",
+TOPICS = {  # question → the skill's topic reference (SKILL.md routing table); word starts, so "remove" ≠ "move"
+    "relationships-marriage": r"\bmarr(?:y|ie|ia)|\bwed|\bspouse|\bwife|\bhusband|(?<!business )\bpartner|"
+                              r"\brelationship|\blove\b|\bromance|\bdating|\bgirlfriend|\bboyfriend|\bmy ex\b|\bbreak ?up",
+    "career-money": r"\bcareer|\bjob|\bwork|\bbusiness|\bpromotion|\bincome|\bmoney|\bfinanc|\bwealth|\bdebt|"
+                    r"\bsalary|\bboss|\bcompany|\binvest",
+    "home-family-children": r"\bhome|\bhouse\b|\bproperty|\bflat\b|\bapartment|\bmother|\bfather|\bparent|\bsibling|"
+                            r"\bbrother|\bsister|\bchild|\bkids?\b|\bbab(?:y|ies)|\bpregnan|\bconceiv|\bson\b|"
+                            r"\bdaughter|\bfamil|\bfriend",
+    "travel-education-health-life": r"\babroad|\bforeign|\btravel|\brelocat|\bmov(?:e|ing)\b|\bstud(?:y|ies)|"
+                                    r"\beducation|\bdegree|\buniversity|\bcollege|\bexam|\bschool|\bhealth|"
+                                    r"\billness|\bill\b|\bsick|\bdisease|\bsurgery|\bwellbeing|\bspiritual|"
+                                    r"\byear ahead|\bnext year|\b12 months",
 }
 
 
@@ -36,10 +49,17 @@ class BirthInput(BaseModel):
     date: dt.date
     time: str = Field(pattern=r"^\d{1,2}:\d{2}(:\d{2})?$")
     tz: float = Field(ge=-14, le=14, description="UTC offset in hours at the birth moment (include daylight saving)")
-    lat: float = Field(ge=-90, le=90)
+    lat: float = Field(ge=-89.9, le=89.9, description="the ascendant is undefined at the poles")
     lon: float = Field(ge=-180, le=180)
     label: Optional[str] = Field(default=None, max_length=64)
     time_source: Optional[str] = Field(default=None, max_length=120)
+
+    @field_validator("date")
+    @classmethod
+    def _range(cls, v):
+        if not 2 <= v.year <= 2999:
+            raise ValueError("dates must lie between the years 2 and 2999 (Moshier outside 1800-2399)")
+        return v
 
     @field_validator("time")
     @classmethod
@@ -67,9 +87,17 @@ def _args(b: BirthInput, o: Options):
         node=o.node, year=o.year, on=(o.on or dt.date.today()).isoformat(), months=o.months)
 
 
+def source_offer(s=None) -> dict:
+    """AGPL-3.0 section 13: where network users get the Corresponding Source."""
+    s = s or config.load()
+    return {"license": "AGPL-3.0-or-later", "source": s.source_url or f"{SOURCE_URL}/tree/v{VERSION}",
+            "source_notice": SOURCE_NOTICE, "third_party": THIRD_PARTY}
+
+
 def engine_info() -> dict:
     s = config.load()
     return {"service": "astrology-consultation", "version": VERSION, "engine": engine.ENGINE_VERSION,
+            **source_offer(s),
             **engine.ephemeris_info(), "ayanamsa": "Lahiri (default)", "privacy_mode": s.mode,
             "external_calculation_allowed": s.external_allowed,
             "knowledge_available": bool(s.knowledge_dir), "skill_available": bool(s.skill_dir),
@@ -132,7 +160,8 @@ def birth_time_sensitivity(b: BirthInput, o: Options = DEFAULTS) -> dict:
     return g | {"table_markdown": sensitivity.render(g)}
 
 
-def compare_engines(b: BirthInput, vedastro_dir: Optional[str] = None, live: bool = False) -> dict:
+def compare_engines(b: BirthInput, vedastro_dir: Optional[str] = None, live: bool = False,
+                    consent: bool = False) -> dict:
     """Local vs VedAstro. `vedastro_dir`: previously fetched raw results inside the data folder (no network).
     `live`: call VedAstro now — only in hybrid/research mode; sends date, time, offset and coordinates."""
     from .calc.adapters import from_local
@@ -142,10 +171,13 @@ def compare_engines(b: BirthInput, vedastro_dir: Optional[str] = None, live: boo
     if live:
         if not s.external_allowed:
             raise PermissionError("live VedAstro comparison needs privacy mode 'hybrid' (astro setup)")
+        if not consent:   # PRIVACY.md: VedAstro is called only with the person's consent, per chart
+            raise PermissionError("live VedAstro sends this person's birth data to api.vedastro.org; it needs their "
+                                  "consent (consent=true, or --consent on the command line)")
         vedastro_dir = os.path.join(s.data_dir, "vedastro", dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
         off = f"{'+' if b.tz >= 0 else '-'}{int(abs(b.tz)):02d}:{int(round(abs(b.tz) % 1 * 60)):02d}"
         subprocess.run([sys.executable, "-m", "astro.vedastro_batch", "--date", b.date.strftime("%d/%m/%Y"), "--time", b.time[:5],
-                        "--tz", off, "--lat", str(b.lat), "--lon", str(b.lon), "--out", vedastro_dir], check=True)
+                        "--tz", off, "--lat", str(b.lat), "--lon", str(b.lon), "--out", vedastro_dir, "--server", s.vedastro_server], check=True, timeout=600)
     if not vedastro_dir:
         return {"engines": ["local"], "note": "no second engine supplied"}
     vedastro_dir = _inside(vedastro_dir, s.data_dir)
@@ -164,27 +196,44 @@ def _run_skill_script(name, *args):
         env.setdefault("ASTRO_LIBRARY_DB", os.path.join(s.knowledge_dir, "index", "library.sqlite"))
     r = subprocess.run([sys.executable, os.path.join(s.skill_dir, "scripts", name), *args], capture_output=True,
                        text=True, env=env, timeout=120)
-    return (r.stdout or r.stderr).strip()
+    if r.returncode != 0:   # pass the script's own one-line message, never a traceback or a local path
+        msg = r.stderr.strip()
+        if not msg or "Traceback" in msg:
+            msg = f"{name} failed (exit {r.returncode}); run it locally to see why"
+        raise ValueError(re.sub(r"(?:~|/)[^\s'\"]*/[^\s'\"]*", "<path>", msg))
+    return r.stdout.strip()
+
+
+def _library_gate():
+    """Excerpts of the user's own books are for the user: not served to other people over a network unless the owner
+    explicitly opts in (share_library_remotely = true)."""
+    if REMOTE and not config.load().share_library_remotely:
+        raise PermissionError("library lookup is not served to remote clients (set share_library_remotely = true "
+                              "only if you are entitled to share these excerpts)")
 
 
 def search_sources(query: str, sources: Optional[str] = None) -> str:
     """Full-text search of the user's own local library (page-cited). Needs a configured knowledge folder."""
+    _library_gate()
     if not config.load().knowledge_dir:
         return "No local library configured — add your own books with `astro add-book` (see docs/ADD-A-BOOK.md)."
-    return _run_skill_script("search.py", query[:300], *(["--src", sources] if sources else []))
+    return _run_skill_script("search.py", *(["--src", sources] if sources else []), "--", query[:300])
 
 
 def rule_sources(rule: str) -> str:
     """Which books support or dispute a rule (knowledge graph), with pages and tiers."""
+    _library_gate()
     if not config.load().knowledge_dir:
         return "No knowledge graph configured — retrieval is unavailable; reason from the skill's references."
-    return _run_skill_script("kg.py", "sources", rule[:300])
+    return _run_skill_script("kg.py", "sources", "--", rule[:300])
 
 
 def skill_file(rel: str) -> str:
     """Read one file of the skill (SKILL.md, references/*.md, assets/report/*) — nothing outside the skill folder."""
     s = config.load()
     path = _inside(os.path.join(s.skill_dir, rel), s.skill_dir)
+    if "/data/lal-kitab/" in path.replace(os.sep, "/"):   # book-derived KB: same rule as library excerpts (H-10)
+        _library_gate()
     if not re.search(r"\.(md|json|css|j2)$", path):
         raise PermissionError("only skill documents can be read")
     return open(path, encoding="utf-8").read()
@@ -216,11 +265,25 @@ def consultation_context(question: str, b: BirthInput, o: Options = DEFAULTS) ->
              "shadbala_rupas": {p: v["total_rupas"] for p, v in c["shadbala"]["planets"].items()},
              "sav_by_house": c["ashtakavarga"]["sav_by_house"], "jaimini": {k: c["jaimini"][k] for k in
                                                                              ("arudha_lagna", "upapada", "karakamsa")},
-             "sensitivity_classes": c["sensitivity_grid"]["classes"]}
-    return {"analysis": analyze_question(question), "facts": facts,
+             "sensitivity_classes": c["sensitivity_grid"]["classes"],
+             "transit_sign_aspects": c["transit_sign_aspects"], "transit_aspects_note": c["meta"]["transit_aspects"]}
+    return {"analysis": analyze_question(question), "facts": facts, "derived_facts": _derived_facts(c),
             "instructions": "Follow the loaded skill files: answer life-first (communication.md §1a), grade "
                             "evidence, keep systems separate, never invent positions or dates beyond these facts, "
                             "and treat 'high'/'very high' sensitivity factors as uncertain."}
+
+
+def _derived_facts(c):
+    """The skill's chart_facts.py output (houses, lordships, graha drishti, combustion, D9/D10, dispositors, PD XV tests,
+    Lal Kitab flags) — one implementation, owned by the skill with its conventions named — so clients without a shell
+    get the same derived facts."""
+    path = os.path.join(config.load().skill_dir, "scripts", "chart_facts.py")
+    if not os.path.exists(path):
+        return "unavailable: the skill's scripts/chart_facts.py was not found"
+    spec = importlib.util.spec_from_file_location("chart_facts", path)
+    cf = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cf)
+    return cf.facts(engine.chart_facts_input(c))
 
 
 def create_report(model: dict, name: str = "report") -> dict:
@@ -251,5 +314,5 @@ def _inside(path, root):
         raise FileNotFoundError("folder not configured (astro setup)")
     rp, rr = os.path.realpath(path), os.path.realpath(root)
     if os.path.commonpath([rp, rr]) != rr:
-        raise PermissionError(f"path outside the allowed folder: {root}")
+        raise PermissionError("path outside the allowed folder")
     return rp

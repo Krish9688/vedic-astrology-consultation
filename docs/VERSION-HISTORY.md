@@ -24,8 +24,10 @@ one day and released the next, both are given. No date below is a guess; where e
 | v3.2 | astrology-consultation | 2026-09-25 | archived | `astrology-consultation-v3.2.skill` | 89fb35dc962c0ffc | consultation-reasoning layer |
 | v3.3 | astrology-consultation | built and installed 2026-09-27 00:07 (work 09-25/26) | archived | `astrology-consultation-v3.3.skill` | 265ba20d051fa1cc | all 18 books source-mapped; local calculation engine |
 | v3.4 | astrology-consultation | 2026-10-01 (development from 2026-09-27) | previous stable | `astrology-consultation-v3.4.skill` | 2e038b2d92d29a0f | life-first writing, three output modes, report system, normalized calculation layer |
-| v3.5 | astrology-consultation | 2026-10-03 | **current stable** | `astrology-consultation-v3.5.skill` | 01a33c976195b20f | local strength/Jaimini/sensitivity engine, full ephemeris, MCP/REST/CLI service, curated disputes |
-| 3.5.0 (public plugin) | astrology-consultation | 2026-10-03 | **current public release** | `astrology-consultation-3.5.0.skill` | a2f8a42fe3b6d794 | v3.5 as a Claude marketplace plugin; portable library lookup; no Lal Kitab knowledge base |
+| v3.5 | astrology-consultation | 2026-10-03 | previous stable | `astrology-consultation-v3.5.skill` | 01a33c976195b20f | local strength/Jaimini/sensitivity engine, full ephemeris, MCP/REST/CLI service, curated disputes |
+| 3.5.0 (public plugin) | astrology-consultation | 2026-10-03 | previous public release | `astrology-consultation-3.5.0.skill` | a2f8a42fe3b6d794 | v3.5 as a Claude marketplace plugin; portable library lookup; no Lal Kitab knowledge base |
+| v3.6 | astrology-consultation | 2026-10-10 | **current stable** | `astrology-consultation-v3.6.skill` | 2bb3c9410e0cbd4f | engine/security/packaging fixes; method kept at v3.5 after three blind rounds |
+| 3.6.0 (public plugin) | astrology-consultation | 2026-10-10 | **current public release** | `astrology-consultation-3.6.0.skill` | 2c8df547c5c11cc5 | as v3.6 without the Lal Kitab KB and Varshaphal table; licence inside the package |
 
 Also preserved: the first v3.2 build (installed 10:44, replaced at 10:58 after page-checking citations to the newly
 added books) as `releases/previous/astrology-consultation-v3.2-first-build-2026-09-25_1044.tgz`, and a 2026-09-21
@@ -123,7 +125,7 @@ re-zip of v2.1 whose contents are identical to v2.1 (`…-v2.1-repack-2026-09-21
   (unexplained narrow windows, over-graded promise, loose precision, dropped counter-evidence); re-test 6/6 (297–248).
 - **Superseded by** v3.3.
 
-## v3.3 (built and installed 2026-09-27; previous stable)
+## v3.3 (built and installed 2026-09-27; archived)
 
 - **Date evidence:** knowledge work and tests 2026-09-25/26 (source-map logs, benchmark rounds 3–5); round 6 and the
   build/install on 2026-09-27 at 00:07 (`release_skill.py` output; backup `installed-before-2026-09-27_000748`).
@@ -148,6 +150,28 @@ re-zip of v2.1 whose contents are identical to v2.1 (`…-v2.1-repack-2026-09-21
 - **Known limitations:** 125 automatic disputes await curation; Claude Chat/Cowork cannot reach the local search,
   graph or engine; the local engine uses the Moshier fallback ephemeris; `kg.py`/`search.py` defaults contain an
   absolute home path (fixed in v3.4); answers still open many sentences with a planet or house.
+
+## v3.4 (2026-10-01; previous stable)
+
+- **Why:** answers still lead with chart facts ("Your Mars is…") rather than with what they mean for the person;
+  there was no professional report format; calculation engines were compared by hand; the project had no repository,
+  no secret scanning and no CI.
+- **Changes so far:** three output modes (consultation, deep consultation, professional report); the life-first unit
+  (theme → meaning → likely form → timing → nuance → counter-factor → what to watch); `life_lint.py`; a Structured
+  Report Model rendered by Jinja2 and WeasyPrint in the cream-and-green system; research into professional report
+  practice; a normalized `ChartFacts` schema with engine adapters and an astrology-aware comparator; property-based
+  calculation tests (which found and fixed an exact-boundary bug); an opt-in Docling ingestion step; a benchmark
+  database; privacy/secret checks, pre-commit and CI.
+- **Date evidence:** development and blind round 7 on 2026-09-27; round 8, regression and the build/install on
+  2026-10-01 03:28 (`release_skill.py`; backup `installed-before-2026-10-01_032857`).
+- **Faults found by the blind round and fixed:** a "matched JHora" claim for a chart JHora was never run on; the
+  current period not named when asked about; report sources citing the skill's own files; "again" for a transit
+  contact with no earlier pass; relationship and marriage windows merged; Lal Kitab asides that changed nothing.
+- **Testing:** round 7 (28 questions, 25 categories + deep consultation + 2 reports) 22/28, 1543–1424; round 8 after
+  fixes 3/4, 224–217; regression 8/8; calculation tests 22/22. Promotion rule met: better overall, no category
+  regressed beyond a point.
+- **Known limitations:** 125 automatic disputes uncurated; long reports can repeat themselves; Chat/Cowork lack local
+  search, graph and engine; one benchmark item (R01) was contaminated by the bundled example and is reported apart.
 
 ## v3.5 (2026-10-03; current stable)
 
@@ -179,25 +203,3 @@ re-zip of v2.1 whose contents are identical to v2.1 (`…-v2.1-repack-2026-09-21
   (`Krish9688/vedic-astrology-consultation`) under the split licence; the plugin's skill is the v3.5 skill plus a
   portable library lookup (`paths.py`) and without the Lal Kitab knowledge base (package
   `astrology-consultation-3.5.0.skill`). See CHANGELOG [3.5.0] and docs/MARKETPLACE.md.
-
-## v3.4 (2026-10-01; previous stable)
-
-- **Why:** answers still lead with chart facts ("Your Mars is…") rather than with what they mean for the person;
-  there was no professional report format; calculation engines were compared by hand; the project had no repository,
-  no secret scanning and no CI.
-- **Changes so far:** three output modes (consultation, deep consultation, professional report); the life-first unit
-  (theme → meaning → likely form → timing → nuance → counter-factor → what to watch); `life_lint.py`; a Structured
-  Report Model rendered by Jinja2 and WeasyPrint in the cream-and-green system; research into professional report
-  practice; a normalized `ChartFacts` schema with engine adapters and an astrology-aware comparator; property-based
-  calculation tests (which found and fixed an exact-boundary bug); an opt-in Docling ingestion step; a benchmark
-  database; privacy/secret checks, pre-commit and CI.
-- **Date evidence:** development and blind round 7 on 2026-09-27; round 8, regression and the build/install on
-  2026-10-01 03:28 (`release_skill.py`; backup `installed-before-2026-10-01_032857`).
-- **Faults found by the blind round and fixed:** a "matched JHora" claim for a chart JHora was never run on; the
-  current period not named when asked about; report sources citing the skill's own files; "again" for a transit
-  contact with no earlier pass; relationship and marriage windows merged; Lal Kitab asides that changed nothing.
-- **Testing:** round 7 (28 questions, 25 categories + deep consultation + 2 reports) 22/28, 1543–1424; round 8 after
-  fixes 3/4, 224–217; regression 8/8; calculation tests 22/22. Promotion rule met: better overall, no category
-  regressed beyond a point.
-- **Known limitations:** 125 automatic disputes uncurated; long reports can repeat themselves; Chat/Cowork lack local
-  search, graph and engine; one benchmark item (R01) was contaminated by the bundled example and is reported apart.

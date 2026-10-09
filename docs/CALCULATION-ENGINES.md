@@ -14,7 +14,7 @@ birth data ─► local engine (astro.calc, Swiss Ephemeris, private) ─► ada
 | Engine | Where it runs | Conventions | Role |
 |---|---|---|---|
 | **Local** — `astro.calc` (v3.5.0) on pyswisseph 2.10.3.2 / Swiss Ephemeris 2.10.03 | on the machine; nothing leaves it | Lahiri; mean nodes (true optional); whole-sign houses + Sripati bhavas; 16 Parashari vargas; Vimshottari with 365.256363-day years (365.25 and 360 optional); local Shadbala, Ashtakavarga, Jaimini factors, birth-time sensitivity grid | preferred calculator; every interface (MCP, REST, CLI) uses it |
-| **VedAstro** — `tools/vedastro_batch.py` / `vedastro-local` MCP | **sends date, time, offset and coordinates to `api.vedastro.org`** (never a name; label "chart") | Lahiri; mean nodes; 360-day dasha years; variant D2/D7/D30; see §5 | independent cross-check; each call logged to `calls.jsonl` |
+| **VedAstro** — `python -m astro.vedastro_batch` / `vedastro-local` MCP | **sends date, time, offset and coordinates to `api.vedastro.org`** (never a name; label "chart") | Lahiri; mean nodes; 360-day dasha years; variant D2/D7/D30; see §5 | independent cross-check; each call logged to `calls.jsonl` |
 | **PyJHora 4.8.7** | local, separate `.venv-pyjhora` (AGPL — kept out of the package) | default ayanamsa TRUE_PUSHYA: call `set_ayanamsa_mode("LAHIRI")` | third opinion for Shadbala |
 
 The VedAstro MCP defaults to a personal `profile.json`; every call must pass `use_profile=false`.
@@ -68,11 +68,15 @@ mainly for the true node and exact-boundary charts. CI runs on Moshier; local ru
   Variants met elsewhere: other D2 schemes (VedAstro's D2 is not the Parashari hora), VedAstro's D7 for even signs,
   VedAstro's D30 (sometimes the other sign of the same lord). The local engine keeps the Parashari rule; the
   comparator labels the others *methodology*.
-- **Vimshottari** to pratyantar; transits, slow-planet ingresses and exact Jupiter/Saturn/node contacts.
+- **Vimshottari** to pratyantar; transits, slow-planet ingresses and exact Jupiter/Saturn/node contacts (dates are the
+  local date of the change, like dasha dates); `transit_sign_aspects` — for transiting Jupiter and Saturn, each stay in
+  a sign with the houses occupied and aspected (whole-sign graha drishti, Ju 5/7/9, Sa 3/7/10), from the lagna and the
+  Moon. Combustion, natal graha drishti and the other derived facts come from the skill's `chart_facts.py` (one
+  implementation, conventions named) and are returned by `prepare_consultation` as `derived_facts`.
 - **Shadbala** (`strength.py`, BPHS ch. 27 as worked by B. V. Raman) — conventions in `SHADBALA_CONVENTIONS`:
   saptavargaja 45/30/20/15/10/4/2 over D1/D2/D3/D7/D9/D12/D30; dig from the ascendant/MC; natonnata from local
-  apparent time; tribhaga from actual sunrise/sunset; abda/masa via Raman's Ahargana from the Kali epoch (JD 588465.5);
-  ayana (24° ± declination)×1.25; Sun's cheshta = ayana, Moon's = paksha (Raman); others' cheshta kendra with a
+  apparent time; tribhaga from actual sunrise/sunset; abda/masa via the Ahargana from Creation (Burgess's 714,404,108,573 days to 1 Jan 1860, as BPHS ch. 27 prescribes; golden test: BPHS's 1 Jun 1984 example → Jupiter/Venus — v3.5 used a Kali-epoch count with the Creation formula and gave wrong lords);
+  ayana (24° ± kranti)×1.25 with the kranti of the ecliptic point (BPHS bhuja method; v3.5 used true declination, which can leave 0–60); Sun's cheshta = ayana, Moon's = paksha (Raman); others' cheshta kendra with a
   **circular** mean; yuddha; drik on Raman's curve with the special-aspect additions (Mars +15, Jupiter +30,
   Saturn +45, capped at 60). Golden test: Raman's published 1918 example, drik bala for all seven planets within 0.02.
 - **Ashtakavarga** — BPHS bindu tables; bhinnashtakavarga per planet and sarvashtakavarga by sign and house
@@ -114,7 +118,7 @@ difference:
 **Results (v3.5).**
 - *S1* (synthetic, 14 Mar 1992 09:40 UT, 51.5N 0.12W): positions match or within tolerance; no sign/nakshatra/pada
   flips; vargas agree except the D2/D7/D30 variants; dasha lords agree, dates differ by year length only.
-- *S2* (second synthetic chart, details withheld until the v3.5 benchmark ends) and one private real chart (never
+- *S2* (second synthetic chart, used for the round-9 benchmark; kept private; it was the development set for the round-9 fixes, so it is no longer a holdout — 3.6.0 is judged on a fresh chart S3) and one private real chart (never
   published): **0 unresolved**. S2: positions 9 match + 1 within tolerance; vargas 125 match, 19 methodology;
   bhavas 24/24; Ashtakavarga all 84 cells; arudhas 7 match, 5 methodology; Shadbala components 48 same-rule matches,
   43 methodology. With the local engine set to 360-day years, the private chart's dashas match VedAstro at all three
@@ -138,7 +142,15 @@ Vimshottari structure; time-zone shifts; nodes opposite. `tests/test_reference.p
 agreement, schema rejection, sensitivity, slow contacts. `tests/test_strength.py`: Raman 1918 drik golden
 (`tests/reference_charts/`), Ashtakavarga totals property, Shadbala component ranges, circular mean across 0° Aries,
 karaka/arudha properties, S1 sensitivity classes. `tests/test_service.py`: the MCP/REST/CLI interfaces and their
-privacy guards. All on synthetic or published charts.
+privacy guards. `tests/test_edge_cases.py`: invariants for western longitudes and negative offsets, DST, +05:45, +09:30,
+southern hemisphere, equator, date line, the ephemeris-file range edge, outer-planet stations and node sign boundaries.
+`tests/test_regressions.py`: one test per defect found in the 2026-10-03 review. All on synthetic or published charts.
+
+**Time-lord convention (Shadbala vara, hora, abda, masa).** They are taken from the civil date of the local sunrise at
+the UTC offset given. Positions, houses and dashas depend only on the instant and place (the edge-case suite restates
+each test instant in UT and across the date line and requires identical results), but the time lords can change when the
+same instant is given with a different civil offset — e.g. a date-line island restated from +14 to −10. Give the offset
+that was legally in force at the birth place.
 
 ## 7. Limits
 

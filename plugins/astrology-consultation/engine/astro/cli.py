@@ -19,6 +19,7 @@ import os
 import shutil
 import subprocess
 import sys
+import urllib.request
 
 from . import config, predictions, service as S
 
@@ -92,7 +93,8 @@ def doctor():
         add("WARN", "remote access", "allow_remote is set but no api_token — servers will refuse to listen remotely")
     for path, want, name in ((config.CONFIG_PATH, 0o600, "config file permissions"),
                              (s.data_dir, 0o700, "data folder permissions"),
-                             (os.path.join(s.data_dir, "predictions.sqlite"), 0o600, "prediction log permissions")):
+                             (os.path.join(s.data_dir, "predictions.sqlite"), 0o600, "prediction log permissions"),
+                             (s.reports_dir, 0o700, "reports folder permissions")):
         if os.path.exists(path):
             mode = os.stat(path).st_mode & 0o777
             add("PASS" if mode & ~want == 0 else "WARN", name, f"{oct(mode)} (want {oct(want)} or stricter)")
@@ -120,17 +122,26 @@ def setup(a):
         os.makedirs(d, exist_ok=True)
         base = "https://raw.githubusercontent.com/aloistr/swisseph/master/ephe/"
         for f, sha in EPHE_SHA256.items():
-            path = os.path.join(d, f)
-            subprocess.run(["curl", "-fsSL", "-o", path, base + f], check=True)
-            if hashlib.sha256(open(path, "rb").read()).hexdigest() != sha:
-                os.remove(path)
-                raise SystemExit(f"{f}: checksum mismatch — file removed; the engine keeps using its built-in fallback")
+            path, part = os.path.join(d, f), os.path.join(d, f + ".part")   # verified, then moved: never a truncated file
+            try:
+                urllib.request.urlretrieve(base + f, part)
+                ok = hashlib.sha256(open(part, "rb").read()).hexdigest() == sha
+            except OSError as e:
+                ok, why = False, f"download failed ({e})"
+            else:
+                why = "checksum mismatch"
+            if not ok:
+                if os.path.exists(part):
+                    os.remove(part)
+                raise SystemExit(f"{f}: {why} — nothing installed; the engine keeps using its built-in fallback")
+            os.replace(part, path)
         print(f"Swiss Ephemeris files → {d} (source: github.com/aloistr/swisseph, official)")
     print("MCP client config examples: docs/CLIENT-INTEGRATIONS.md")
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(prog="astro", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(prog="astro", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 epilog=S.SOURCE_NOTICE + f" Source: {S.SOURCE_URL}. Uses {S.THIRD_PARTY}.")
     sub = ap.add_subparsers(dest="cmd", required=True)
     for name in ("chart", "positions", "dasha", "transits", "strength", "jaimini", "sensitivity", "compare", "varga"):
         p = sub.add_parser(name)
@@ -146,6 +157,7 @@ def main(argv=None):
         if name == "compare":
             p.add_argument("--vedastro-dir")
             p.add_argument("--live", action="store_true")
+            p.add_argument("--consent", action="store_true", help="the person agreed to their birth data going to VedAstro")
     p = sub.add_parser("consult")
     p.add_argument("question")
     p.add_argument("input")
@@ -242,7 +254,7 @@ def main(argv=None):
                                                                      "ashtakavarga": S.ashtakavarga(b)},
           "jaimini": lambda: S.jaimini_factors(b), "sensitivity": lambda: S.birth_time_sensitivity(b, o),
           "varga": lambda: S.divisional_chart(b, a.d),
-          "compare": lambda: S.compare_engines(b, a.vedastro_dir, a.live)}[a.cmd]
+          "compare": lambda: S.compare_engines(b, a.vedastro_dir, a.live, a.consent)}[a.cmd]
     return _print(fn(), md_key="table_markdown", md=a.md)
 
 
@@ -250,7 +262,7 @@ def entry():
     """Console-script entry: refusals and bad input print one line instead of a traceback."""
     try:
         return main() or 0
-    except (ValueError, PermissionError, FileNotFoundError) as e:
+    except (ValueError, PermissionError, FileNotFoundError, KeyError) as e:
         print(f"astro: {e}", file=sys.stderr)
         return 2
 

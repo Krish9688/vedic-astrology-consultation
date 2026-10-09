@@ -6,14 +6,29 @@ set -eu
 ROOT="${CLAUDE_PLUGIN_ROOT:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}"
 DATA="${CLAUDE_PLUGIN_DATA:-${XDG_DATA_HOME:-$HOME/.local/share}/astrology-consultation/plugin}"
 VENV="$DATA/venv"
-WANT="$(sed -n 's/^version = "\(.*\)"/\1/p' "$ROOT/engine/pyproject.toml" | head -n 1)"
+VER="$(sed -n 's/^version = "\(.*\)"/\1/p' "$ROOT/engine/pyproject.toml" | head -n 1)"
+# version + checksum of the engine code: changed code is reinstalled even if someone forgot to bump the version
+WANT="$VER $(cat "$ROOT/engine/pyproject.toml" "$ROOT"/engine/astro/*.py "$ROOT"/engine/astro/*/*.py 2>/dev/null | cksum | cut -d' ' -f1)"
 HAVE="$(cat "$VENV/.engine-version" 2>/dev/null || true)"
 if [ ! -x "$VENV/bin/astro" ] || [ "$HAVE" != "$WANT" ]; then
-    echo "astrology-consultation: preparing the local engine $WANT (first run only, needs internet once)..." >&2
     mkdir -p "$DATA"
+    n=0   # one builder at a time (Claude may start the MCP server while setup runs); mkdir is atomic, needs no flock
+    until mkdir "$DATA/.lock" 2>/dev/null; do
+        if [ -n "$(find "$DATA/.lock" -maxdepth 0 -mmin +10 2>/dev/null)" ]; then   # a crashed builder's lock
+            rmdir "$DATA/.lock" 2>/dev/null; continue
+        fi
+        n=$((n + 1)); [ "$n" -lt 240 ] || { echo "astrology-consultation: another setup is still running ($DATA/.lock)" >&2; exit 1; }
+        sleep 1
+    done
+    LOCKED=1
+    trap 'rmdir "$DATA/.lock" 2>/dev/null' EXIT INT TERM
+    HAVE="$(cat "$VENV/.engine-version" 2>/dev/null || true)"
+fi
+if [ ! -x "$VENV/bin/astro" ] || [ "$HAVE" != "$WANT" ]; then
+    echo "astrology-consultation: preparing the local engine $VER (first run only, needs internet once)..." >&2
     if command -v uv >/dev/null 2>&1; then
         uv venv --quiet --allow-existing --python ">=3.11" "$VENV" >&2
-        uv pip install --quiet --python "$VENV/bin/python" "$ROOT/engine[mcp,api,report]" >&2
+        uv pip install --quiet --python "$VENV/bin/python" "$ROOT/engine[mcp,report]" >&2
     else
         PY=""
         for c in python3.13 python3.12 python3.11 python3; do
@@ -23,9 +38,13 @@ if [ ! -x "$VENV/bin/astro" ] || [ "$HAVE" != "$WANT" ]; then
         done
         [ -n "$PY" ] || { echo "astrology-consultation needs Python 3.11 or newer, or uv (https://docs.astral.sh/uv/)" >&2; exit 1; }
         "$PY" -m venv "$VENV" >&2
-        "$VENV/bin/python" -m pip install --quiet "$ROOT/engine[mcp,api,report]" >&2
+        "$VENV/bin/python" -m pip install --quiet "$ROOT/engine[mcp,report]" >&2
     fi
     printf '%s\n' "$WANT" > "$VENV/.engine-version"
+fi
+if [ -n "${LOCKED:-}" ]; then   # only the launcher that took the lock releases it
+    rmdir "$DATA/.lock" 2>/dev/null || true
+    trap - EXIT INT TERM
 fi
 ASTRO_SKILL_DIR="$ROOT/skills/astrology-consultation"
 export ASTRO_SKILL_DIR

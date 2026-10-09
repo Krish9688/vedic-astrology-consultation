@@ -20,13 +20,13 @@ All tests used synthetic charts only.
 | Generic MCP client (Python SDK 2.2) | via `skill://` resources | stdio + Streamable HTTP | — | yes (local) | yes | `create_report` | **TESTED** — stdio in CI; HTTP with/without bearer token |
 | REST client (curl, httpx) | — | — | `/api/v1` | `/consultation` lists files | yes | `/report` | **TESTED** — health, chart, consultation, OpenAPI; empty server log |
 | CLI (`astro`) | — | `astro mcp` | `astro serve` | `astro sources/search` | yes | `astro report` | **TESTED** — incl. clean install (install.sh) |
-| **Claude Code — marketplace plugin** (recommended) | bundled | stdio, started by the plugin | — | with your own books | yes | yes | **TESTED** (2026-10-03, sandboxed new-user profile, plugin installed from GitHub): marketplace add → install → setup → doctor 13 PASS / 0 WARN / 0 FAIL → `claude mcp list` Connected → MCP smoke through the installed launcher (16 tools, synthetic D9, consultation context) → report HTML + PDF; update, disable/enable, rollback, uninstall. A live model turn calling the tools: **USER ACTION REQUIRED** (the CLI on the test machine was not signed in) — see docs/MARKETPLACE.md |
-| Claude desktop app / claude.ai — marketplace plugin | bundled | Cowork on your computer only; not in web chat | — | — | Cowork only | layout only in chat | **DOCUMENTED** (Customize → Plugins → Add → Add marketplace; from Anthropic's docs, not clicked through here) |
-| Claude Code — manual MCP setup | installed (`~/.claude/skills`) | stdio | — | yes | yes | yes (renderer) | **USER ACTION REQUIRED** — a project `.mcp.json` was discovered by `claude mcp list` and held at "Pending approval"; approve it, or `claude mcp add`; tool calls not run here |
+| **Claude Code — marketplace plugin** (recommended) | bundled | stdio, started by the plugin | — | with your own books | yes | yes | **TESTED** (2026-10-03, sandboxed new-user profile, plugin installed from GitHub): marketplace add → install → setup → doctor 13 PASS / 0 WARN / 0 FAIL → `claude mcp list` Connected → MCP smoke through the installed launcher (16 tools, synthetic D9, consultation context) → report HTML + PDF (macOS). Update, disable/enable, rollback, uninstall: tested with a local copy of the marketplace only. A live model turn calling the tools: **USER ACTION REQUIRED** (the CLI on the test machine was not signed in) — see docs/MARKETPLACE.md |
+| Claude desktop app / claude.ai — marketplace plugin | bundled | Cowork on your computer only; not in web chat | — | — | Cowork only | layout only in chat | **DOCUMENTED, not yet verified** (Customize → Plugins → Add → Add marketplace; from Anthropic's docs). Cowork runs in a sandbox; whether the local engine connects there is unconfirmed |
+| Claude Code — manual MCP setup | installed (`~/.claude/skills`) | stdio | — | yes | yes | yes (renderer) | **DOCUMENTED** — `claude mcp add astrology --scope user -- <ASTRO> mcp` (below); superseded by the marketplace plugin. (An earlier project `.mcp.json` test reached "Pending approval"; that test project no longer exists.) |
 | Claude Desktop / Cowork | upload the `.skill` | stdio (config file) | — | no (cloud) | via MCP only | layout only | **USER ACTION REQUIRED** — add the server to `claude_desktop_config.json` and restart. Your current config holds `vedastro-local`, which sends birth data to api.vedastro.org |
-| ChatGPT desktop (Codex surface) / Codex CLI | `~/.agents/skills` | stdio (`~/.codex/config.toml`) | — | yes | yes | yes | **CONFIGURED BUT NOT TESTED** — the CLI bundled with ChatGPT 26.928 (codex-cli 0.159) accepted the server in an isolated `CODEX_HOME` (`codex mcp list/get`); tool calls need your signed-in app (**USER ACTION REQUIRED**) |
+| ChatGPT desktop (Codex surface) / Codex CLI | `~/.agents/skills` | stdio (`~/.codex/config.toml`) | — | yes | yes | yes | **CONFIGURED BUT NOT TESTED** — the CLI bundled with ChatGPT 26.928 (codex-cli 0.159) accepted the server in an isolated `CODEX_HOME` (`codex mcp list/get`); tool calls need your signed-in app (**USER ACTION REQUIRED**). The owner's config has VedAstro's remote server (mcp.vedastro.org) set to `enabled = false` (2026-10-07); enable it only for an explicit, consented run |
 | ChatGPT on the web | — | remote HTTPS only | — | — | — | — | **NOT RECOMMENDED** — would need a public tunnel exposing birth data |
-| Cursor | — | stdio | — | yes | yes | — | **DOCUMENTED** (not installed) |
+| Cursor | — | stdio | — | yes | yes | — | **DOCUMENTED** — standard stdio config; not installed or tested |
 | Open WebUI | — | Streamable HTTP | or REST | yes | yes | — | **DOCUMENTED** (not installed) |
 
 The MCP server's `instructions` are 459 characters, inside the 512 characters Codex reads first.
@@ -47,6 +47,10 @@ astrology skills side by side would both trigger, so replace rather than add:
    Taurus.
 4. **Rollback:** remove `~/.agents/skills/astrology-consultation` and the `[mcp_servers.astrology]` block, then
    `mv ~/.agents/skills-disabled/vedic-prediction-synthesis ~/.agents/skills/`.
+
+The same v2.1 skill is also uploaded to your claude.ai account, which syncs it into the Claude app, Cowork and Claude
+Code (`anthropic-skills:vedic-prediction-synthesis`). Turn it off in claude.ai → Settings → Capabilities → Skills
+before testing v3.5 there, or two astrology skills compete.
 
 ## Claude
 

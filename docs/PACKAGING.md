@@ -23,7 +23,7 @@ Installed copies: Claude Code `~/.claude/skills/astrology-consultation/` (from `
 package in `releases/`. The package is checked by `check_package.py`: no books, no book-derived text beyond the
 skill's own references, no personal data.
 
-## 2. Public distributable repository
+## 2. Public distributable repository (historical: the single-repository export used before 2026-10-03)
 
 Built only by `tools/export_repo.py` (an **allowlist** — files not listed are never copied). `--public` additionally
 removes the Lal Kitab knowledge base. Every export is then checked by `tools/privacy_check.py` (personal terms kept

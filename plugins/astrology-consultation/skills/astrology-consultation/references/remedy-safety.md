@@ -43,7 +43,8 @@ substitute and not what the book says. Examples: instead of ivory — a small el
 support for elephant-conservation charities; instead of milk to snakes — donating milk to children or a temple; instead
 of floating oil — donating oil to someone in need; instead of the 52-day separation — nothing (maternal–infant contact
 is never to be restricted); instead of prolonged fasts — a simple act of charity on the planet's weekday. Never invent a
-new "Lal Kitab remedy".
+new "Lal Kitab remedy" — and never recall one from memory: if the Lal Kitab knowledge base is not installed, give no
+specific Lal Kitab remedy beyond those quoted in this file or by the user, and say the remedy tables are not installed.
 
 ## 4. Deterministic content never to present as forecast (KB C5)
 

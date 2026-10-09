@@ -23,6 +23,8 @@ async def main(cmd, args):
         print(f"server {init.server_info.name} {init.server_info.version}: {len(tools)} tools; D9 ascendant {d9}; "
               f"consultation routes {len(files)} skill files")
         assert d9 == "Leo" and "calculate_birth_chart" in tools and "references/topic-career-money.md" in files
+        doc = await s.read_resource("skill://references/topic-career-money.md")   # listed files must be readable
+        assert len(doc.contents[0].text) > 500
 
 
 if __name__ == "__main__":

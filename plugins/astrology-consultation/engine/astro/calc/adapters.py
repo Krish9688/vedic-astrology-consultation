@@ -77,7 +77,7 @@ def _va_date(s):  # "00:00 30/08/1995 +00:00" → local calendar date as VedAstr
 def from_vedastro(planet_data: dict, ascendant: dict, dasa_range: dict | None = None,
                   shadbala: dict | None = None, birth: Birth | None = None, ashtakavarga: dict | None = None,
                   shadbala_components: dict | None = None, house_data: dict | None = None) -> ChartFacts:
-    """Raw vedastro-local MCP results (tools/vedastro_batch.py files) → ChartFacts."""
+    """Raw vedastro-local MCP results (astro.vedastro_batch output files) → ChartFacts."""
     bodies, flags, notes = {}, [], {}
     for e in planet_data["payload"]["AllPlanetData"]:
         (name, v), = e.items()
@@ -109,7 +109,7 @@ def from_vedastro(planet_data: dict, ascendant: dict, dasa_range: dict | None = 
         tm, dd, off = req["StdTime"].split()
         h, mnt = off.split(":")
         birth = Birth(date=dt.datetime.strptime(dd, "%d/%m/%Y").date(), time=tm,
-                      utc_offset_hours=int(h) + (1 if int(h) >= 0 else -1) * int(mnt) / 60,
+                      utc_offset_hours=(-1 if off.startswith("-") else 1) * (abs(int(h)) + int(mnt) / 60),
                       lat=req["Location"]["Latitude"], lon=req["Location"]["Longitude"])
     def nest(rows, depth):
         out = []

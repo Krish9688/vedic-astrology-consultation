@@ -97,6 +97,12 @@ if __name__ == "__main__":
     ap.add_argument("--convention", choices=["running", "completed"])
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
+    if not os.path.exists(CSV):   # public edition: the table is not distributed (rights unconfirmed)
+        if a.selftest:
+            print("selftest skipped: the Varshaphal table is not included in this edition")
+            sys.exit(0)
+        sys.exit("The Lal Kitab Varshaphal table is not included in this edition (rights unconfirmed). Say so to the "
+                 "user; do not reconstruct the table from memory.")
     if a.selftest:
         selftest(); sys.exit()
     if not a.natal:

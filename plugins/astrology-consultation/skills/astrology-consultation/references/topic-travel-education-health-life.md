@@ -76,6 +76,5 @@ Build it in layers and keep them labelled:
    planets reach annual H1 (they act first on their natal house), where Ketu falls (travel), and illness markers only as
    the book's symbolism [KB B17].
 3. **Converge by theme**: pick the two or three life areas where layers agree; give windows by dasha/bhukti and transit
-   months; state disagreements. Month rule in Lal Kitab (house 1 = birth month) is ambiguous (R42) — say so rather than
-   convert it to exact dates.
+   months; state disagreements. Lal Kitab month rule: follow timing.md §8 item 8 (LK1952's fuller rule, CR-L06); do not convert it to exact dates.
 4. Do not fill every month; a year usually has one or two real themes.

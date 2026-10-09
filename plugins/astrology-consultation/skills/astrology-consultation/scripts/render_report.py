@@ -113,23 +113,52 @@ def checks(r):
         facts = sum(1 for line in txt.splitlines() if FACT.search(line))
         if facts > BUDGET["report"]:
             warns.append(f"[{s['id']}] {facts} chart-fact lines — move detail to the appendix")
-    # one timing framework per report (reports.md): a window restated in ≥4 sections belongs in "Main windows"
-    seen = {}
-    for s in r["sections"]:
-        for w in set(re.findall(r"\b(?:January|February|March|April|May|June|July|August|September|October|November|"
-                                r"December|20\d\d)[^.;]{0,25}?(?:–|-| to )\s?(?:[A-Z][a-z]+ )?20\d\d\b",
-                                report_text({"sections": [s]}))):
-            seen[w] = seen.get(w, 0) + 1
+    # one timing framework per report (reports.md): a window's dates appear in at most three places
+    MON = r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
+    MOD = r"(?:the (?:end|start|beginning) of |early |mid-?|late )?"
+    SEP = r"\s?(?:–|-|—| to | until | through )\s?"
+    WIN = re.compile(rf"\b{MOD}{MON}\.?(?: 20\d\d)?{SEP}{MOD}{MON}\.? 20\d\d\b"      # late January to June 2027
+                     rf"|\b{MOD}(?:{MON}\.? )?20\d\d{SEP}{MOD}(?:{MON}\.? )?20\d\d\b", re.I)  # 2027 – mid-2028
+    places = [k.get("text", "") + " " + k.get("window", "") for k in r["summary"]["key_points"]]
+    places += [report_text({"sections": [s]}) for s in r["sections"] if s["id"] != "windows"]
+    places += r.get("practical_summary", []) + [w.get("when", "") + " " + w.get("meaning", "") for w in r.get("watch_list", [])]
+    def key(text):   # "late January to June 2027" and "January–June 2027" are the same window
+        ms = [m.lower()[:3] for m in re.findall(MON, text, re.I)]
+        ys = re.findall(r"20\d\d", text)
+        return (ms[0] if len(ms) == 2 else "", ys[0], ms[-1] if ms else "", ys[-1])
+    seen, label = {}, {}
+    for p in places:
+        for m in {key(m.group()): m.group() for m in WIN.finditer(p)}.items():
+            seen[m[0]] = seen.get(m[0], 0) + 1
+            label.setdefault(m[0], m[1])
+    seen = {label[k]: n for k, n in seen.items()}
     for w, n in seen.items():
-        if n >= 4:
-            warns.append(f"window '{w}' is restated in {n} sections — explain it once under Main windows and refer to it")
+        if n > 3:
+            warns.append(f"window '{w}' is restated in {n} places — give its dates under Main windows, then name it in words "
+                        "and refer to it by name")
+    codes = sorted({m.group() for m in re.finditer(r"\b(?:W\d{1,2}|P\d)\b", report_text(r))})   # H9 etc. are houses
+    if codes:   # round 10: coded windows in client text cost every report comparison
+        errs.append(f"window codes in client text ({', '.join(codes)}) — use plain names and dates")
     res = lint(report_text(r), "report")
     errs += [i for i in res["issues"] if i.startswith("SAFETY")]
+    # safety covers every string in the model — appendix, timeline labels, watch list, practical summary too
+    rest = lint("\n".join(_strings({k: v for k, v in r.items() if k not in ("summary", "sections")})), "report")
+    errs += [i for i in rest["issues"] if i.startswith("SAFETY") and i not in errs]
     warns += [f"life-first: {i}" for i in res["issues"] if not i.startswith("SAFETY")]
     cites = re.findall(r"\bp\.?\s?\d{1,4}\b|\bsl\.\s?\d+", report_text(r))
     if cites:
         warns.append(f"page/verse references in client text ({', '.join(cites[:4])}) — keep them in appendix.sources")
     return errs, warns
+
+
+def _strings(x):
+    if isinstance(x, str):
+        return [x]
+    if isinstance(x, dict):
+        return [s for v in x.values() for s in _strings(v)]
+    if isinstance(x, list):
+        return [s for v in x for s in _strings(v)]
+    return []
 
 
 def render(r, out_dir, base):
@@ -151,7 +180,8 @@ def render(r, out_dir, base):
     except Exception:  # ImportError, or missing system libraries (pango) on this machine
         return hp, None
     pp = os.path.join(out_dir, base + ".pdf")
-    HTML(string=html, base_url=ASSETS).write_pdf(pp)
+    doc = HTML(string=html, base_url=ASSETS).render()
+    doc.write_pdf(pp)
     return hp, pp
 
 
@@ -196,11 +226,17 @@ def selftest():
     assert all(0 <= b["x"] <= 100 and b["x"] + b["w"] <= 101 for b in tl["bars"]), tl
     rep = json.loads(json.dumps(ex))
     rep["sections"] = [dict(rep["sections"][0], id=f"s{i}", text="The step up comes in March 2027 – June 2028.") for i in range(4)]
-    assert any("restated in 4 sections" in w for w in checks(rep)[1]), checks(rep)[1]
+    assert any("restated in" in e for e in checks(rep)[1]) and not any("restated in" in e for e in checks(rep)[0])
+    rep["sections"] = rep["sections"][:3]
+    assert not any("restated in" in e for e in checks(rep)[1]), checks(rep)[1]
     long = [{"kind": "chapter", "label": "c", "start": "2024-04", "end": "2049-04"},
             {"kind": "window", "label": "w", "start": "2027-02", "end": "2027-07"}]
     z = timeline(long)
     assert z["years"][0]["label"] == 2026 and z["bars"][0]["cut"] == "cut-l cut-r" and z["bars"][1]["w"] > 5, z
+    coded = json.loads(json.dumps(ex)); coded["summary"]["key_points"][0]["text"] += " See W2."
+    assert any("window codes" in e for e in checks(coded)[0]) and not any("window codes" in e for e in checks(ex)[0])
+    leak = dict(ex, appendix=dict(ex.get("appendix") or {}, sources=["fewer children (PD XII.3)"]))
+    assert any(e.startswith("SAFETY") for e in checks(leak)[0]), "appendix safety"
     print(f"selftest ok ({len(warns)} advisory warnings on the example)")
 
 

@@ -16,7 +16,7 @@ each book live in `_skill_workspace/sourcemaps/` (development material, not load
 | LOL | Light on Life | H. de Fouw & R. Svoboda, 1996 | Modern Parashari teaching (+ Jaimini notes), 8 case charts | Clean | PDF p; printed = PDF − 28 |
 | LKS | Lal Kitab (English) | Pt. Radhakrishna Shrimali, Diamond 2013 | Modern Lal Kitab popularisation; mixes Vedic rules | Clean | PDF p (no printed pages) |
 | KB | LalKitab_Shrimali_Knowledge_Base_v2.2 | derived from LKS, audited v2–v2.2 | Lal Kitab (tagged LK/VED/AUTH/MIXED) | — | Section id + LKS PDF page |
-| VT | LalKitab_Varshaphal_Table_v2.2.csv | Shrimali + LK1952 reconciliation | Lal Kitab annual table | — | age_year row |
+| VT | LalKitab_Varshaphal_Table_v2.2.csv (private edition only) | Shrimali + LK1952 reconciliation | Lal Kitab annual table | — | age_year row |
 | LK1952 | Lal Kitab 1952 | Pt. Roop Chand Joshi; Hindi re-typeset of the Urdu original by V. Nagpal | Primary Lal Kitab (transliteration, not facsimile) | Glyph-broken layer; local Hindi OCR | PDF p + edition page ("पेज नंबर"), ≈ PDF − 21 early |
 | BPHS | Brihat Parasara Hora Sastra, Vols 1–2 | Parasara, tr. R. Santhanam (Ranjan) | Classical Parashari (verse + translator notes) | PDF text layer (Sanskrit garbled; English readable) | PDF p; cite ch./sloka |
 | JSR | A Course on Jaimini's Upadesa Sutra, Vol. 1 | Sanjay Rath (translation + commentary) | Jaimini (SJC) | PDF text | PDF p; cite sutra no. |
@@ -63,9 +63,9 @@ Mark each claim as **source statement**, **inference**, **synthesis** or **exter
 printed), verse, section, tier and the date and method of extraction. Tiers:
 **classical** (verse or root text: PD, BJ, PM2 verses, LK1952), **traditional** (translator/commentator notes),
 **modern** (Raman, LOL, Shrimali), **synthesis** (reader notes, this skill's inferences). Rules are paraphrases made
-from full reads of each book, so confirm wording with `search.py --page` before quoting. In a measured test the graph +
-full-text combination found the right source pages for 16 of 17 questions against 9 of 17 for full-text search alone
-(`_skill_workspace/validation/retrieval_eval.md`).
+from full reads of each book, so confirm wording with `search.py --page` before quoting. On a blind set of 24 questions the
+graph + full-text combination found a right page for 17, full-text search alone for 16: use the graph for disputes and
+cross-book context, not as a better page finder (an earlier curated 16-of-17 figure overstated it).
 
 ## 4. Retrieving passages (local, private)
 

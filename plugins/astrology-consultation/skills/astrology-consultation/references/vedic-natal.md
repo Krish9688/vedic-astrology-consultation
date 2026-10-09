@@ -137,8 +137,8 @@ planets are weak, cancelled or never get their period.
   [LOL p313–314]. Place matters: a raja yoga in the 12th is not fully enjoyed, in the 6th suffers bhanga, 12th from the
   Moon carries seeds of fall [HJH2 p357–366]. Yogas raise the *degree* of success, not the *type* of career
   [HJH2 p288]. Mutual periods of Saturn and Venus are said to break raja yogas [HJH2 p364].
-- **Pancha mahapurusha:** Mars/Mercury/Jupiter/Venus/Saturn in own or exaltation sign in a kendra (PD also allows
-  kona per LOL); qualifies only with a strong dispositor; graded by repetition from three lagnas [LOL p311–313].
+- **Pancha mahapurusha:** Mars/Mercury/Jupiter/Venus/Saturn in own or exaltation sign in a kendra (default: kendra only, CR-X05; PD also
+  allows kona per LOL); qualifies only with a strong dispositor; graded by repetition from three lagnas [LOL p311–313].
 - **Gaja Kesari / Adhi / Amala / Budhaditya / Chandra-Mangala / Lakshmi / Saraswati / Viparita:** use the definitions
   in LOL ch. 10 [LOL p318–327]; Budhaditya works only when configured with lagna or 5th and both planets are strong
   [LOL p319]; Viparita needs at least two dusthana lords in other dusthanas and often comes through a mishap
@@ -146,7 +146,7 @@ planets are weak, cancelled or never get their period.
 - **Kemadruma** (no planets 2nd/12th from the Moon) is said to neutralise good yogas [HPA p59]; benefics in upachayas
   from lagna or Moon override it [BJ XIII.9].
 - **Neechabhanga** moderates debility; it does not guarantee effortless success. Verify the specific clause used.
-- **Kuja dosha** is not in the authoritative texts; it is extremely common; cancels when both partners have it, when
+- **Kuja dosha** is disputed: LOL calls it non-authoritative, BPHS gives a narrower classical form (CR-N04); it is extremely common; cancels when both partners have it, when
   Mars is own/exalted (disputed), with Moon–Mars, and fades after ~28–30 [LOL p329–331]. Never a verdict on a marriage.
 - **Kala Sarpa** is not classical, has no agreed effect and no known cancellation [LOL p331–333]; mention only if asked,
   as a disputed modern combination.

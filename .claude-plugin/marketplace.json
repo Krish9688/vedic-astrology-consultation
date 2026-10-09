@@ -9,7 +9,7 @@
     {
       "name": "astrology-consultation",
       "source": "./plugins/astrology-consultation",
-      "description": "Life-first Vedic astrology consultations and reports, backed by a local Swiss Ephemeris engine (dashas, vargas, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity) over MCP. Private by default.",
+      "description": "Life-first Vedic astrology consultations and reports, backed by a local Swiss Ephemeris engine (dashas, vargas, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity) over MCP. Private by default. macOS and Linux; Windows via WSL 2.",
       "category": "lifestyle",
       "tags": ["astrology", "vedic", "jyotish", "mcp", "local-first"]
     }

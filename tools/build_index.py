@@ -12,13 +12,19 @@ _CAT = json.load(open(os.path.join(HERE, "..", "knowledge", "catalog.json"), enc
 SOURCES = {b["id"]: (b["text_file"], b["author"] + (f" (tr. {b['translator']})" if b.get("translator") else ""),
                      b["title"], f"{b['system']} ({b['tier']})", b["text_layer"]) for b in _CAT["books"]}
 PRINTED = re.compile(r"पेज नंबर\s*(\d+)")
+# OCR'd ordinals with l/I for 1 ("l2th", "llth", "lst" — about 950 in BPHS's text layer) break house-number searches
+ORDINAL = re.compile(r"\b(?=[0-9lI]*[lI])[0-9lI]{1,2}(?:st|nd|rd|th)\b")
+
+
+def normalise(text):
+    return ORDINAL.sub(lambda m: m.group().replace("l", "1").replace("I", "1"), text)
 
 
 def pages(src):
     for line in open(os.path.join(TEXT, SOURCES[src][0]), encoding="utf-8"):
         r = json.loads(line)
         m = PRINTED.search(r["text"])
-        yield src, r["page"], (m.group(1) if m else None), r["text"]
+        yield src, r["page"], (m.group(1) if m else None), normalise(r["text"])
 
 
 def build():

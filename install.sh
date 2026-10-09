@@ -9,7 +9,7 @@ cd "$(dirname "$0")"
 command -v uv >/dev/null 2>&1 || { echo "uv is required: https://docs.astral.sh/uv/getting-started/installation/"; exit 1; }
 extras="mcp,api"
 [ "${1:-}" = "--all" ] && extras="all"
-uv venv -q .venv
+uv venv -q --allow-existing .venv
 uv pip install -q --python .venv/bin/python -e "plugins/astrology-consultation/engine[${extras}]" jinja2
 .venv/bin/astro setup --skill-dir "$PWD/plugins/astrology-consultation/skills/astrology-consultation" --ephemeris
 .venv/bin/astro doctor

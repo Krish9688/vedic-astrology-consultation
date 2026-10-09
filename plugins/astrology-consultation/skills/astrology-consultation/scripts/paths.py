@@ -2,6 +2,7 @@
 file (~/.config/astrology-consultation/config.toml, written by `astro setup --knowledge-dir`), then the standard data
 folder. Nothing here is bundled with the skill; without a library the scripts say retrieval is unavailable."""
 import os
+import re
 import tomllib
 
 LEGACY = os.path.expanduser("~/Documents/Astrology Books/_skill_workspace")   # the original author's layout
@@ -24,3 +25,18 @@ def knowledge_file(env, rel):
         if os.path.exists(os.path.join(r, rel)):
             return os.path.join(r, rel)
     return os.path.join(roots[0], rel)
+
+
+VARIANTS = [("sh", "s"), ("aa", "a"), ("ee", "i"), ("oo", "u")]   # common transliteration spellings
+
+
+def fts_terms(query, stop=("the", "and", "for", "with", "from", "its")):
+    """Words of a question as FTS5 terms; a word with transliteration variants becomes (word OR variant ...),
+    e.g. vimshottari → (vimshottari OR vimsottari)."""
+    terms = []
+    for w in re.findall(r"[A-Za-z]{3,}", query.lower()):
+        if w in stop:
+            continue
+        alts = {w} | {w.replace(a, b) for a, b in VARIANTS if a in w}
+        terms.append(w if len(alts) == 1 else "(" + " OR ".join(sorted(alts)) + ")")
+    return terms

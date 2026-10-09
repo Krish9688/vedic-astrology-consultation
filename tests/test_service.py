@@ -1,7 +1,11 @@
 # The portable interfaces (service, REST, MCP, CLI) and their privacy/security guards — synthetic chart S1 only
 import asyncio
 import json
+import os
+import socket
+import subprocess
 import sys
+import time
 
 import pytest
 
@@ -14,6 +18,7 @@ S1 = dict(date="1992-03-14", time="09:40", tz=0, lat=51.5, lon=-0.12)
 def isolated_config(tmp_path, monkeypatch):
     """Every test gets its own config file and data folder; the user's real settings are never read."""
     monkeypatch.setattr(config, "CONFIG_PATH", str(tmp_path / "config.toml"))
+    monkeypatch.setattr(S, "REMOTE", False)                     # a server test may have flipped it
     (tmp_path / "config.toml").write_text(f'data_dir = "{tmp_path / "data"}"\nreports_dir = "{tmp_path / "reports"}"\n')
     return tmp_path
 
@@ -144,16 +149,110 @@ def test_mcp_stdio_roundtrip(isolated_config):
             assert not res.is_error and json.loads(res.content[0].text)["signs"]["Asc"] == "Leo"
             res = await s.call_tool("compare_engines", S1 | {"live": True})
             assert res.is_error and "hybrid" in res.content[0].text
-            with pytest.raises(Exception):
-                await s.read_resource("skill://../../etc/passwd")
+            doc = await s.read_resource("skill://references/timing.md")          # nested files must be readable (E-1)
+            assert len(doc.contents[0].text) > 1000
+            for bad in ("skill://../../etc/passwd", "skill://references/../../astro/service.py"):
+                with pytest.raises(Exception, match="(?i)unknown resource|outside|not allowed|invalid|only skill"):
+                    await s.read_resource(bad)
     asyncio.run(run())
+
+
+def _example_model():
+    return json.load(open(f"{config.load().skill_dir}/assets/report/example-synthetic.json"))
+
+
+def test_mcp_create_report_tool(isolated_config):
+    """The real MCP tool (not only the service function) writes the report into an owner-only folder."""
+    from mcp import ClientSession, StdioServerParameters
+    from mcp.client.stdio import stdio_client
+
+    async def run():
+        p = StdioServerParameters(command=sys.executable, args=["-m", "astro.cli", "mcp"], cwd=config.PROJECT,
+                                  env={"ASTRO_CONFIG": str(isolated_config / "config.toml"), "PATH": ""})
+        async with stdio_client(p) as (r, w), ClientSession(r, w) as s:
+            await s.initialize()
+            res = await s.call_tool("create_report", {"model": _example_model(), "name": "mcp-synthetic"})
+            out = json.loads(res.content[0].text)
+            assert not res.is_error and out["ok"] and os.path.exists(out["html"])
+            bad = await s.call_tool("create_report", {"model": _example_model(), "name": "../escape"})
+            assert bad.is_error
+    asyncio.run(run())
+    assert (isolated_config / "reports").stat().st_mode & 0o777 == 0o700
+
+
+# --- HTTP MCP: a real server process on a free localhost port ---------------------------------------------------------
+def _free_port():
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        return s.getsockname()[1]
+
+
+def test_http_mcp_bearer_token(isolated_config):
+    import httpx
+    from mcp import ClientSession
+    from mcp.client.streamable_http import create_mcp_http_client, streamable_http_client
+    set_config(isolated_config, api_token="t0ken")
+    port = _free_port()
+    url = f"http://127.0.0.1:{port}/mcp"
+    proc = subprocess.Popen([sys.executable, "-m", "astro.cli", "mcp", "--http", "--port", str(port)],
+                            cwd=config.PROJECT, env=dict(os.environ, ASTRO_CONFIG=str(isolated_config / "config.toml")),
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    try:
+        for _ in range(100):
+            try:
+                socket.create_connection(("127.0.0.1", port), timeout=0.2).close()
+                break
+            except OSError:
+                time.sleep(0.1)
+        assert httpx.post(url, json={}).status_code == 401
+        assert httpx.post(url, json={}, headers={"Authorization": "Bearer wrong"}).status_code == 401
+
+        async def run():
+            client = create_mcp_http_client(headers={"Authorization": "Bearer t0ken"})
+            async with streamable_http_client(url, http_client=client) as streams, \
+                    ClientSession(streams[0], streams[1]) as s:
+                await s.initialize()
+                res = await s.call_tool("get_divisional_chart", S1 | {"division": 9})
+                assert json.loads(res.content[0].text)["signs"]["Asc"] == "Leo"
+        asyncio.run(run())
+    finally:
+        proc.terminate()
+        proc.wait(10)
+
+
+@pytest.mark.parametrize("mod", ["astro.rest", "astro.mcp_server"])
+def test_listen_host_rules(mod, tmp_path, monkeypatch):
+    """Default is localhost; another address only with allow_remote AND a token; no access log either way."""
+    import importlib
+    import uvicorn
+    m = importlib.import_module(mod)
+    kw = {"http": True} if mod.endswith("mcp_server") else {}
+    seen = []
+    monkeypatch.setattr(uvicorn, "run", lambda app, **k: seen.append(k))
+    m.main(**kw)
+    set_config(tmp_path, allow_remote=True, api_token="t0ken")
+    m.main(host="0.0.0.0", **kw)
+    assert [s["host"] for s in seen] == ["127.0.0.1", "0.0.0.0"] and not any(s.get("access_log") for s in seen)
+
+
+def test_rest_report_and_remaining_endpoints(isolated_config):
+    from fastapi.testclient import TestClient
+    from astro.rest import app
+    c = TestClient(app)
+    r = c.post("/api/v1/report", json={"model": _example_model(), "name": "rest-synthetic"})
+    assert r.status_code == 200 and r.json()["ok"] and os.path.exists(r.json()["html"])
+    assert (isolated_config / "reports").stat().st_mode & 0o777 == 0o700
+    assert c.post("/api/v1/report", json={"model": _example_model(), "name": "../x"}).status_code == 400
+    assert c.get("/api/v1/version").status_code == 200
+    for ep in ("positions", "dasha", "transits", "shadbala", "ashtakavarga", "jaimini", "sensitivity", "chart"):
+        assert c.post(f"/api/v1/{ep}", json={"birth": S1}).status_code == 200, ep
 
 
 # --- CLI ---------------------------------------------------------------------------------------------------------
 def test_setup_rejects_tampered_ephemeris(tmp_path, monkeypatch):
-    """A download whose SHA-256 differs from the pinned value is deleted, not used (no network: curl is faked)."""
+    """A download whose SHA-256 differs from the pinned value is deleted, not used (no network: the download is faked)."""
     monkeypatch.setenv("HOME", str(tmp_path))
-    monkeypatch.setattr(cli.subprocess, "run", lambda cmd, check: open(cmd[cmd.index("-o") + 1], "wb").write(b"x"))
+    monkeypatch.setattr(cli.urllib.request, "urlretrieve", lambda url, path: open(path, "wb").write(b"x"))
     with pytest.raises(SystemExit, match="checksum mismatch"):
         cli.main(["setup", "--ephemeris"])
     assert not list((tmp_path / ".local/share/astrology-consultation/ephe").iterdir())
@@ -193,3 +292,121 @@ def test_env_skill_dir_wins_and_is_not_written(tmp_path, monkeypatch):
     assert config.load().skill_dir == str(skill)
     path = config.write(config.load())
     assert not any(ln.startswith("skill_dir") for ln in open(path))   # a plugin path moves on update: never pinned
+
+
+# --- council E regressions -------------------------------------------------------------------------------------------
+def test_rest_rejects_foreign_host_header(monkeypatch):
+    """DNS rebinding: a localhost server answers only to localhost names (E-5)."""
+    from fastapi.testclient import TestClient
+    from starlette.middleware.trustedhost import TrustedHostMiddleware
+    from astro import rest
+    app = TrustedHostMiddleware(rest.app, allowed_hosts=["127.0.0.1", "localhost", "::1", "[::1]", "host.docker.internal"])
+    c = TestClient(app, base_url="http://127.0.0.1")
+    assert c.get("/api/v1/health").status_code == 200
+    assert c.get("/api/v1/health", headers={"host": "evil.example"}).status_code == 400
+    captured = {}
+    monkeypatch.setattr("uvicorn.run", lambda app, **kw: captured.setdefault("app", app))
+    rest.main()
+    assert isinstance(captured["app"], TrustedHostMiddleware)
+
+
+def test_config_types_are_checked(tmp_path):
+    """allow_remote = "false" must not switch remote listening on (E-7)."""
+    set_config(tmp_path, allow_remote="false")
+    with pytest.raises(ValueError, match="allow_remote"):
+        config.load()
+
+
+def test_config_file_is_created_owner_only(tmp_path):
+    (tmp_path / "config.toml").unlink()
+    config.write(config.Settings(data_dir=str(tmp_path / "data")))
+    assert (tmp_path / "config.toml").stat().st_mode & 0o777 == 0o600
+
+
+def test_year_one_is_a_clean_refusal():
+    with pytest.raises(ValueError, match="between the years"):
+        S.BirthInput(date="0001-01-01", time="12:00", tz=0, lat=0, lon=0)
+
+
+def test_prediction_errors_are_clean(tmp_path):
+    with pytest.raises(ValueError, match="chart_id"):
+        predictions.add(None, "career", "x", None, None, "Moderate", synthetic=True, db=str(tmp_path / "p.db"))
+    with pytest.raises(ValueError, match="no prediction"):
+        predictions.evaluate(99999, "x", "hit", db=str(tmp_path / "p.db"))
+
+
+def test_search_query_is_never_an_option():
+    """A query beginning with '--' is searched for, not parsed as a flag (E-19)."""
+    if not config.load().knowledge_dir:
+        pytest.skip("no local library")
+    try:
+        out = S.search_sources("--help")
+    except ValueError as e:
+        out = str(e)
+    assert "usage:" not in out and "Traceback" not in out
+
+
+# --- council G regressions -------------------------------------------------------------------------------------------
+def test_source_offer_is_advertised_without_a_token(tmp_path):
+    """AGPL-3.0 section 13 (C4): network users can see where the source is, even when a token guards everything else."""
+    from fastapi.testclient import TestClient
+    from astro.rest import app
+    info = S.engine_info()
+    assert info["license"] == "AGPL-3.0-or-later" and info["source"].startswith("https://")
+    set_config(tmp_path, api_token="t0ken")
+    c = TestClient(app)
+    r = c.get("/api/v1/source")
+    assert r.status_code == 200 and r.json()["source"].startswith("https://")
+    assert c.get("/api/v1/version").status_code == 401
+
+
+def test_source_url_override(tmp_path):
+    set_config(tmp_path, source_url="https://example.org/fork")
+    assert S.engine_info()["source"] == "https://example.org/fork"
+
+
+def test_live_vedastro_needs_consent(tmp_path):
+    """G-10: hybrid mode alone is not enough; the person's consent is required, as PRIVACY.md promises."""
+    set_config(tmp_path, mode="hybrid")
+    with pytest.raises(PermissionError, match="consent"):
+        S.compare_engines(S.BirthInput(**S1), live=True)
+
+
+def test_library_not_served_remotely(tmp_path, monkeypatch):
+    """G-6: book excerpts are not handed to remote clients unless the owner opts in."""
+    monkeypatch.setattr(S, "REMOTE", True)
+    for fn in (S.search_sources, S.rule_sources):
+        with pytest.raises(PermissionError, match="remote"):
+            fn("navamsa")
+    set_config(tmp_path, share_library_remotely=True)
+    S.rule_sources("navamsa")   # allowed after opting in (may say the graph is absent)
+
+
+# --- council H regressions -------------------------------------------------------------------------------------------
+def test_source_url_survives_setup(tmp_path):
+    """H-5: `astro setup` rewrites the config; a modified deployment's source_url must not be lost."""
+    set_config(tmp_path, source_url="https://example.org/fork")
+    config.write(config.load())
+    assert config.load().source_url == "https://example.org/fork" and S.engine_info()["source"] == "https://example.org/fork"
+
+
+@pytest.mark.parametrize("q,topic", [("When will I marry?", "relationships-marriage"),
+                                     ("When will I get pregnant?", "home-family-children"),
+                                     ("Should I have kids?", "home-family-children"),
+                                     ("Will this illness pass?", "travel-education-health-life"),
+                                     ("Should I remove my business partner?", "career-money")])
+def test_question_routing(q, topic):
+    """H-8: MCP-only clients depend on this routing; ordinary phrasings must reach the right method file."""
+    t = S.analyze_question(q)["topics"]
+    assert topic in t and not (q.endswith("partner?") and "relationships-marriage" in t)
+
+
+def test_lal_kitab_kb_not_served_remotely(monkeypatch):
+    """H-10: the book-derived KB follows the same remote rule as library excerpts."""
+    kb = os.path.join(config.load().skill_dir, "data", "lal-kitab")
+    files = [f for f in os.listdir(kb) if f.endswith(".md")] if os.path.isdir(kb) else []
+    if not files:
+        pytest.skip("public edition: no Lal Kitab KB")
+    monkeypatch.setattr(S, "REMOTE", True)
+    with pytest.raises(PermissionError, match="remote"):
+        S.skill_file(f"data/lal-kitab/{files[0]}")

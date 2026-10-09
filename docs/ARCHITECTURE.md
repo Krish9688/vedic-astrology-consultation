@@ -65,7 +65,7 @@ Astrology Books/                         the owner's library (books; never publi
 ```
 
 The git repository (`~/Documents/astrology-consultation`) is generated from this workspace by
-`tools/export_repo.py` (allowlist + sanitisation) — see [RELEASE-PROCESS.md](RELEASE-PROCESS.md).
+`tools/export_repo.py` (allowlist + sanitisation) — see RELEASE-PROCESS.md (private development docs) and [REPOSITORY-EDITIONS.md](REPOSITORY-EDITIONS.md).
 
 ## Why the skill is split into many files
 
@@ -76,5 +76,5 @@ Reports add reports.md and the renderer. Progressive loading keeps answers fast 
 ## Environments
 
 One Python environment per responsibility (calculation/tests, knowledge graph, reports, Docling) — see
-[TOOLING-INVENTORY.md](TOOLING-INVENTORY.md). The skill's own scripts use only the standard library (plus Jinja2 to
+TOOLING-INVENTORY.md (private development docs). The skill's own scripts use only the standard library (plus Jinja2 to
 render reports), so they run in Claude Chat/Cowork too; the local engine, index and graph exist only on the owner's Mac.

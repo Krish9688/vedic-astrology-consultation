@@ -25,7 +25,8 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
 ## Systems and sources
 
 - [ ] Lal Kitab and Parashari evidence are separately labelled; no Lal Kitab house read with sign lordship or vice versa.
-- [ ] Lal Kitab rules checked against KB Part 0 status; ⚠️ items name the version used; ❓ items flagged; LK1952 vs
+- [ ] Lal Kitab rules checked against KB Part 0 status (if the KB is not installed: no KB citations, no B8 delineations,
+      no remedies, LK note at most Weak — lal-kitab-method.md top); ⚠️ items name the version used; ❓ items flagged; LK1952 vs
       Shrimali differences named when decisive.
 - [ ] Varshaphal: RECOMMENDED columns only; age convention stated or both shown; years 67/99/104 both readings; year 17
       flagged; month rule treated as ambiguous.
@@ -102,8 +103,8 @@ from confirming; reversed period dates must be caught; a diagnosis/death/guarant
   person.
 - [ ] **Birth-time sensitivity is calculated** (how many minutes until the ascendant or a decisive varga changes) —
   quote the engine's sensitivity table; if the data has none, say the margin is approximate and how it was estimated.
-- [ ] **Transit contact dates** (a slow planet crossing a natal point) come from the engine's contact list, not from
-  average motion.
+- [ ] **Transit contact dates** (a slow planet crossing a natal point) come from the engine's contact list, and Jupiter/
+  Saturn houses "occupied and aspected" from its `transit_sign_aspects` windows — not from average motion or hand counting.
 - [ ] Report: `render_report.py` passed; the short version, sections, timeline and watch list agree on events,
   windows and grades; every unit has a counter-factor and, if timed, a sign to watch; page/verse references only in
   the appendix; nothing personal saved inside the skill folder.

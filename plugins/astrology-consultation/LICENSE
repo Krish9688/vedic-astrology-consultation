@@ -1,0 +1,23 @@
+This repository uses three licences, chosen by component (see docs/LICENSING-DECISION.md):
+
+- Engine and service — plugins/astrology-consultation/engine/ (the `astro` package), tools/, tests/, validation/:
+  GNU Affero General Public License v3.0 or later (LICENSES/AGPL-3.0-or-later.txt). Required because the engine links
+  the Swiss Ephemeris (pyswisseph), which is AGPL-3.0.
+- Skill scripts, report templates and plugin integration files — plugins/astrology-consultation/skills/
+  astrology-consultation/scripts/, assets/, plugins/astrology-consultation/{scripts,commands,.claude-plugin,.mcp.json},
+  .claude-plugin/: Apache License 2.0 (LICENSES/Apache-2.0.txt).
+- Method text and documentation — SKILL.md, references/, README files, docs/: Creative Commons Attribution 4.0
+  International (LICENSES/CC-BY-4.0.txt).
+
+- Any other file in this repository: Apache-2.0 for code and configuration, CC BY 4.0 for text and data, except
+  the third-party material below.
+
+Not covered by any of these: tests/fixtures/vedastro/* (output of the VedAstro API, kept as test data, the property
+of its authors). Short quotations and paraphrases of the astrology books cited in the references remain
+the property of their authors and publishers. No book, extracted book text or book index is distributed here.
+
+Third-party: Swiss Ephemeris © Astrodienst AG, used under AGPL-3.0 through pyswisseph (also available under the Swiss
+Ephemeris Professional Licence); its data files are downloaded by `astro setup --ephemeris` from the official
+repository and are not redistributed here.
+
+Copyright the vedic-astrology-consultation project contributors.

@@ -28,17 +28,45 @@ project's synthesis, with short page references), synthetic test data and biblio
 "Metadata only" = the entry in `knowledge/catalog.json`: title, author, translator, edition, language, system, tier,
 page convention, page count, expected file name and SHA-256 fingerprint.
 
+## 1a. Public-domain research (2026-10-03; no change in treatment)
+
+| ID | Publication | United States | India (author's life + 60 years) | Treatment |
+|---|---|---|---|---|
+| BJ | N. Chidambaram Iyer, 1905 | public domain (published before 1931) | translator's death year not verified | still not redistributed (no need) |
+| JP2 | V. Subrahmanya Sastri, Mysore 1933 | not yet: a 1933 foreign publication stays protected until 1 Jan 2029 (95 years) | Sastri's death year not found in public sources checked (his output spans 1915–1950s) | restricted |
+| PD | V. Subrahmanya Sastri, 2nd ed. 1950 | protected until 2046 | as above | restricted |
+
+Sources checked: Internet Archive catalogue entries for both Sastri translations and a Sri Jagannatha Jyotish article on
+the translator (no dates of birth/death). Scans being online is not evidence of public-domain status. Nothing changes:
+no book or book text is published whatever its status.
+
 ## 2. Derived material
 
 | Material | Nature | Published? |
 |---|---|---|
 | `text/*.jsonl`, `index/library.sqlite` | full page text | never |
-| `sourcemaps/<book>_part*.md` | detailed page-by-page paraphrase of each book | never (only the method briefs `BRIEF*.md` and `STATUS.md`) |
-| `knowledge/extraction.json`, `graphify-out/` | 10,444 paraphrased rules with pages | never |
+| `sourcemaps/<book>_part*.md` | detailed page-by-page paraphrase of each book | not public; kept in the owner's **private** archive repository (REPOSITORY-EDITIONS.md) |
+| `knowledge/extraction.json`, `graphify-out/` | 10,444 paraphrased rules with pages | not public; gzip-compressed copies in the **private** archive repository |
 | Skill `references/*.md` | the project's own synthesis; short paraphrases with page references | yes (in the skill and repository) |
-| Skill `data/lal-kitab/` (Shrimali KB v2.2, audit, Varshaphal table) | a detailed derivative of a copyrighted book, validated against it | in the **private** repository and the skill package for the owner's use; `export_repo.py --public` leaves it out. Review with the rights holder before any public release |
+| Skill `data/lal-kitab/` Shrimali KB v2.2 and its audit (`*.md`) | a detailed derivative of a copyrighted book, validated against it | in the **private** repository and the owner's skill package only; the public export leaves them out. Review with the rights holder before any public release |
+| Skill `data/lal-kitab/LalKitab_Varshaphal_Table_v2.2.csv` | a factual house-permutation table from the 1952 edition (pp221–222) with page references and audit columns | was published in 3.5.0 (repository and `.skill`); **dropped from the public edition from 3.6.0** by the owner's decision (2026-10-07) pending rights confirmation; private edition only. `varshaphal.py` says the table is not included |
 
 Quotations in the skill stay under ~15 words; the rest is paraphrase.
+
+## 2a. Quotation review (recorded 2026-10-03)
+
+Scope: every file the public plugin ships (`SKILL.md`, `references/*.md`, `assets/report/*.json`). Method: extract
+every quoted passage (straight or curly quotes, ≥ 3 characters); a passage counts as a possible book quotation when a
+book ID or page reference (`BPHS`, `PD`, `p184`, …) appears within 120 characters.
+
+| Result | Count |
+|---|---|
+| Quoted passages of 10+ words | 68 — all the project's own example, template or instruction text (no book reference nearby) |
+| Book-adjacent quotations | 137: 1 word 44 · 2 words 41 · 3 words 15 · 4 words 11 · 5 words 9 · 6 words 7 · 7 words 8 · 8 words 2 |
+| Longest book-adjacent quotation | 8 words (e.g. "in no case is a literal application desirable") |
+
+All quotations are within the "under ~15 words, attributed" rule; the rest of the skill's book material is
+paraphrase with page references. Re-run before each public release (the method above, or ask Claude to repeat it).
 
 ## 3. Using your own copies
 
@@ -49,7 +77,8 @@ convention. Without the books, the skill still runs: search and graph lookups re
 
 ## 4. Code licences
 
-The repository has no licence file yet (all rights reserved by default) — the owner decides; analysis and
-recommendation in [LICENSING.md](LICENSING.md). Dependencies: Swiss
+Split licence, decided 2026-10-03 ([LICENSING-DECISION.md](LICENSING-DECISION.md)): AGPL-3.0-or-later for the engine,
+service and tools; Apache-2.0 for the skill scripts, templates and plugin files; CC BY 4.0 for the method text and
+documentation. Book quotations and paraphrases are not relicensed. Dependencies: Swiss
 Ephemeris/pyswisseph and PyMuPDF are AGPL-3.0 (or commercial); Graphify Apache-2.0; Docling, Pydantic, Ruff, Gitleaks,
 pre-commit MIT; Jinja2, WeasyPrint BSD-3; Hypothesis MPL-2.0.

@@ -1,5 +1,14 @@
 # Lal Kitab method
 
+> **If `data/lal-kitab/LalKitab_Shrimali_Knowledge_Base_v2.2.md` is not installed** (the public edition leaves it out
+> for copyright reasons — check whether the file exists before relying on it):
+> 1. Use only the flags `scripts/chart_facts.py` prints, the rules restated in this file and timing.md §8, and the
+>    Varshaphal table (`scripts/varshaphal.py`).
+> 2. Cite no KB section or page, and give no planet-in-house ("B8") delineation — those rules are not available.
+> 3. Give no specific Lal Kitab remedy beyond those quoted in remedy-safety.md or by the person.
+> 4. Grade any Lal Kitab note at most Weak (one mechanism, unconfirmed).
+> 5. Tell the person that the detailed Lal Kitab house rules are not installed in this edition.
+
 Lal Kitab is its own system. Its evidence note is built without sign lordship, graha drishti, vargas, Vimshottari or
 Tajika; it is compared with the Parashari note only at the convergence step ([synthesis-method.md](synthesis-method.md)
 §4.4).
@@ -9,7 +18,7 @@ Tajika; it is compared with the Parashari note only at the convergence step ([sy
 | Source | Standing | Use |
 |---|---|---|
 | **KB** — `data/lal-kitab/LalKitab_Shrimali_Knowledge_Base_v2.2.md` (from Shrimali's English book, audited v2–v2.2) | Working reference; faithful to *Shrimali*, not verified against the Urdu original | Default rulebook. Check Part 0 status (✅ ⚠️ ❓ 🔎) and system tags ([LK]/[VED]/[AUTH]/[MIXED]) before using any rule |
-| **VT** — `data/lal-kitab/LalKitab_Varshaphal_Table_v2.2.csv` | Reconciled annual table | RECOMMENDED columns only, via `scripts/varshaphal.py` |
+| **VT** — `data/lal-kitab/LalKitab_Varshaphal_Table_v2.2.csv` (private edition only) | Reconciled annual table | RECOMMENDED columns only, via `scripts/varshaphal.py`; when you quote an annual chart, say it comes from this table, which age-year you used (running or completed) and that the other convention gives a different chart — never an annual chart without its table (round 10) |
 | **Audit** — `data/lal-kitab/LalKitab_Validation_Audit_Report_v2.2.md` | Evidence limits | Read §7–10 when a Varshaphal or source-fidelity question arises |
 | **LK1952** — Hindi re-typeset of the 1952 Urdu book (library index, `--src LK1952`) | The primary Lal Kitab text in the library, but a transliteration with its own errors | Confirms, extends or disputes KB rules; its doctrines below are cited by PDF page and edition page |
 

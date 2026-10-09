@@ -1,8 +1,8 @@
 {
   "name": "astrology-consultation",
   "displayName": "Astrology Consultation (Vedic)",
-  "version": "3.5.0",
-  "description": "Careful, source-aware Vedic astrology consultations and reports, backed by a private local calculation engine (Swiss Ephemeris, dashas, divisional charts, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity) that runs on your own computer.",
+  "version": "3.6.0",
+  "description": "Careful, source-aware Vedic astrology consultations and reports, backed by a private local calculation engine (Swiss Ephemeris, dashas, divisional charts, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity) that runs on your own computer. macOS and Linux (Windows via WSL 2).",
   "author": {
     "name": "vedic-astrology-consultation project",
     "url": "https://github.com/Krish9688/vedic-astrology-consultation"

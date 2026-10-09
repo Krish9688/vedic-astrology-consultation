@@ -29,7 +29,8 @@ def _lord(sign, sg, deg):
     a, b = lords
     if count[a] != count[b]:
         return a if count[a] > count[b] else b
-    return a if deg[a] >= deg[b] else b
+    adv = lambda p: 30 - deg[p] if p in ("Ra", "Ke") else deg[p]   # nodes advance from the end of the sign (PVR p.204)
+    return a if adv(a) >= adv(b) else b
 
 
 def karakas(c):
