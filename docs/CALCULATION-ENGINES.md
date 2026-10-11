@@ -5,7 +5,7 @@ reads only normalized facts and never an engine's own JSON.
 
 ```
 birth data ─► local engine (astro.calc, Swiss Ephemeris, private) ─► adapter ─► ChartFacts ─┐
-          └─► VedAstro (cloud, only in hybrid mode / with consent) ─► adapter ─► ChartFacts ─┴─► compare ─► ValidatedChartFacts
+          └─► another engine's normalized facts (optional, offline) ─────────► ChartFacts ─┴─► compare ─► ValidatedChartFacts
           └─► PyJHora (local, AGPL, validation only — never imported by astro)                         + comparison table
 ```
 
@@ -13,11 +13,10 @@ birth data ─► local engine (astro.calc, Swiss Ephemeris, private) ─► ada
 
 | Engine | Where it runs | Conventions | Role |
 |---|---|---|---|
-| **Local** — `astro.calc` (v3.5.0) on pyswisseph 2.10.3.2 / Swiss Ephemeris 2.10.03 | on the machine; nothing leaves it | Lahiri; mean nodes (true optional); whole-sign houses + Sripati bhavas; 16 Parashari vargas; Vimshottari with 365.256363-day years (365.25 and 360 optional); local Shadbala, Ashtakavarga, Jaimini factors, birth-time sensitivity grid | preferred calculator; every interface (MCP, REST, CLI) uses it |
-| **VedAstro** — `python -m astro.vedastro_batch` / `vedastro-local` MCP | **sends date, time, offset and coordinates to `api.vedastro.org`** (never a name; label "chart") | Lahiri; mean nodes; 360-day dasha years; variant D2/D7/D30; see §5 | independent cross-check; each call logged to `calls.jsonl` |
+| **Local** — `astro.calc` (3.6.1) on pyswisseph 2.10.3.2 / Swiss Ephemeris 2.10.03 | on the machine; nothing leaves it | Lahiri; mean nodes (true optional); whole-sign houses + Sripati bhavas; 16 Parashari vargas; Vimshottari with 365.256363-day years (365.25 and 360 optional); local Shadbala, Ashtakavarga, Jaimini factors, birth-time sensitivity grid | preferred calculator; every interface (MCP, REST, CLI) uses it |
 | **PyJHora 4.8.7** | local, separate `.venv-pyjhora` (AGPL — kept out of the package) | default ayanamsa TRUE_PUSHYA: call `set_ayanamsa_mode("LAHIRI")` | third opinion for Shadbala |
 
-The VedAstro MCP defaults to a personal `profile.json`; every call must pass `use_profile=false`.
+No engine in this project sends birth data anywhere; there is no cloud calculator.
 
 ## 2. Ephemeris
 
@@ -43,8 +42,7 @@ mainly for the true node and exact-boundary charts. CI runs on Moshier; local ru
 
 - **Positions** with speed, sign, nakshatra-pada, retrograde flag; ascendant and MC.
 - **Houses**: whole sign from the sidereal ascendant; **Sripati bhavas** — madhyas at the Porphyry trisection of the
-  ascendant–MC quadrants (Swiss Ephemeris house system `O`), sandhis at the midpoints (matches VedAstro's
-  HouseLongitude within 0.003°).
+  ascendant–MC quadrants (Swiss Ephemeris house system `O`), sandhis at the midpoints.
 - **Vargas** — the rules in `engine.VARGA_METHODS`:
 
 | D | Rule |
@@ -65,8 +63,8 @@ mainly for the true node and exact-boundary charts. CI runs on Moshier; local ru
 | D45 | movable from Aries, fixed from Leo, dual from Sagittarius |
 | D60 | from the sign, 30′ parts |
 
-  Variants met elsewhere: other D2 schemes (VedAstro's D2 is not the Parashari hora), VedAstro's D7 for even signs,
-  VedAstro's D30 (sometimes the other sign of the same lord). The local engine keeps the Parashari rule; the
+  Variants met elsewhere: other D2 schemes (not the Parashari hora), a different D7 rule for even signs, and D30
+  variants (sometimes the other sign of the same lord). The local engine keeps the Parashari rule; the
   comparator labels the others *methodology*.
 - **Vimshottari** to pratyantar; transits, slow-planet ingresses and exact Jupiter/Saturn/node contacts (dates are the
   local date of the change, like dasha dates); `transit_sign_aspects` — for transiting Jupiter and Saturn, each stay in
@@ -102,8 +100,8 @@ mainly for the true node and exact-boundary charts. CI runs on Moshier; local ru
 
 ## 5. Astrology-aware comparison
 
-`astro/calc/compare.py` (`python -m astro.calc.compare --local calc.json --vedastro DIR --out OUT`) classifies every
-difference:
+`astro/calc/compare.py` (`python -m astro.calc.compare --local calc.json --other facts.json --out OUT`) compares the
+local engine with another engine's normalized facts (offline; nothing is fetched) and classifies every difference:
 
 | Verdict | Meaning |
 |---|---|
@@ -115,24 +113,20 @@ difference:
 | unresolved | a real disagreement nobody has explained — a release blocker |
 | not comparable | quantities that are not the same thing |
 
-**Results (v3.5).**
-- *S1* (synthetic, 14 Mar 1992 09:40 UT, 51.5N 0.12W): positions match or within tolerance; no sign/nakshatra/pada
-  flips; vargas agree except the D2/D7/D30 variants; dasha lords agree, dates differ by year length only.
-- *S2* (second synthetic chart, used for the round-9 benchmark; kept private; it was the development set for the round-9 fixes, so it is no longer a holdout — 3.6.0 is judged on a fresh chart S3) and one private real chart (never
-  published): **0 unresolved**. S2: positions 9 match + 1 within tolerance; vargas 125 match, 19 methodology;
-  bhavas 24/24; Ashtakavarga all 84 cells; arudhas 7 match, 5 methodology; Shadbala components 48 same-rule matches,
-  43 methodology. With the local engine set to 360-day years, the private chart's dashas match VedAstro at all three
-  levels (13/13 MD, 118/118 AD, 1050/1050 PD within 3 days) — the year length is the only dasha difference.
+**Development cross-checks (history).** Until 3.6.0 the engine was also compared with an external cloud engine;
+that comparison was removed on 2026-10-10 (the owner's decision: the local engine must stand on its own). Its record:
+0 unresolved differences on the synthetic charts S1, S2 and one private chart; every remaining difference was a
+documented convention (dasha year length, varga variants, Shadbala sub-rules) or a defect in the other engine. The
+local engine is now validated by property tests, published worked examples (golden values), the 22-chart edge suite
+and the PyJHora cross-check below. Dasha: the balance fraction is checked against one published table value
+(N. C. Lahiri's table as reproduced by Raman) and, privately, one published chart; dasha year length and antardasha
+boundaries are checked by arithmetic only. Since VedAstro's removal no second engine cross-checks every chart.
 
-**Differences found in the other engines** (reported, not copied):
+**Differences found in PyJHora** (reported, not copied):
 
 | Engine | Finding | Verdict |
 |---|---|---|
-| VedAstro | dasha at birth on S2 starts from Venus although its own Moon nakshatra (Mula) gives Ketu | implementation |
-| VedAstro | tribhaga bala for a post-midnight, pre-sunrise birth omits Mars | implementation |
-| VedAstro | saptavargaja on a 22.5/7.5/3.75/1.875 scale; ayana capped at 60; Sun/Moon cheshta 0; abda/masa epoch | methodology |
-| VedAstro | arudhas without the BPHS 29.45 exception | methodology |
-| VedAstro, PyJHora | cheshta mean taken as a plain average — fails when mean and true longitude straddle 0° Aries (Jupiter 12.6 instead of about 47 virupas on S2) | implementation |
+| PyJHora | cheshta mean taken as a plain average — fails when mean and true longitude straddle 0° Aries (Jupiter 12.6 instead of about 47 virupas on S2) | implementation |
 | PyJHora | Saturn dig bala 73.3 virupas (exceeds the 60 maximum) | implementation |
 
 ## 6. Tests

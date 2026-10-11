@@ -50,8 +50,11 @@
      "enum": [
       "match",
       "within tolerance",
-      "differs",
-      "non-comparable"
+      "methodology",
+      "configuration",
+      "implementation",
+      "unresolved",
+      "not comparable"
      ],
      "title": "Verdict",
      "type": "string"
@@ -280,7 +283,7 @@
     "network": {
      "enum": [
       "local",
-      "cloud:api.vedastro.org"
+      "cloud"
      ],
      "title": "Network",
      "type": "string"
@@ -335,6 +338,38 @@
      },
      "default": {},
      "title": "Varga Notes",
+     "type": "object"
+    },
+    "ephemeris": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Ephemeris"
+    },
+    "computed_at": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Computed At"
+    },
+    "settings": {
+     "additionalProperties": {
+      "type": "string"
+     },
+     "default": {},
+     "title": "Settings",
      "type": "object"
     }
    },
@@ -480,6 +515,57 @@
    },
    "default": {},
    "title": "Shadbala Rupas",
+   "type": "object"
+  },
+  "shadbala_components": {
+   "additionalProperties": {
+    "additionalProperties": {
+     "type": "number"
+    },
+    "type": "object"
+   },
+   "default": {},
+   "title": "Shadbala Components",
+   "type": "object"
+  },
+  "ashtakavarga": {
+   "additionalProperties": {
+    "items": {
+     "type": "integer"
+    },
+    "type": "array"
+   },
+   "default": {},
+   "title": "Ashtakavarga",
+   "type": "object"
+  },
+  "bhavas": {
+   "default": [],
+   "items": {
+    "additionalProperties": true,
+    "type": "object"
+   },
+   "title": "Bhavas",
+   "type": "array"
+  },
+  "arudha": {
+   "additionalProperties": {
+    "type": "string"
+   },
+   "default": {},
+   "title": "Arudha",
+   "type": "object"
+  },
+  "jaimini": {
+   "additionalProperties": true,
+   "default": {},
+   "title": "Jaimini",
+   "type": "object"
+  },
+  "sensitivity": {
+   "additionalProperties": true,
+   "default": {},
+   "title": "Sensitivity",
    "type": "object"
   },
   "flags": {

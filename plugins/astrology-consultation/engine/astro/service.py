@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field, field_validator
 from . import config
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
-VERSION = "3.6.0"
+VERSION = "3.6.1"
 SOURCE_URL = "https://github.com/Krish9688/vedic-astrology-consultation"
 SOURCE_NOTICE = ("This service is free software under the GNU Affero General Public License v3 or later, with NO "
                  "WARRANTY. The Corresponding Source of the version running here is available at the 'source' URL. "
@@ -99,7 +99,6 @@ def engine_info() -> dict:
     return {"service": "astrology-consultation", "version": VERSION, "engine": engine.ENGINE_VERSION,
             **source_offer(s),
             **engine.ephemeris_info(), "ayanamsa": "Lahiri (default)", "privacy_mode": s.mode,
-            "external_calculation_allowed": s.external_allowed,
             "knowledge_available": bool(s.knowledge_dir), "skill_available": bool(s.skill_dir),
             "vargas": engine.VARGA_METHODS, "shadbala_conventions": strength.SHADBALA_CONVENTIONS,
             "jaimini_conventions": jaimini.CONVENTIONS}
@@ -158,32 +157,6 @@ def birth_time_sensitivity(b: BirthInput, o: Options = DEFAULTS) -> dict:
     a, kw = _args(b, o)
     g = sensitivity.grid(*a, on=kw["on"], year=o.year)
     return g | {"table_markdown": sensitivity.render(g)}
-
-
-def compare_engines(b: BirthInput, vedastro_dir: Optional[str] = None, live: bool = False,
-                    consent: bool = False) -> dict:
-    """Local vs VedAstro. `vedastro_dir`: previously fetched raw results inside the data folder (no network).
-    `live`: call VedAstro now — only in hybrid/research mode; sends date, time, offset and coordinates."""
-    from .calc.adapters import from_local
-    from .calc.compare import load_vedastro_dir, summary, table, validate
-    s = config.load()
-    A = from_local(calculate_chart(b))
-    if live:
-        if not s.external_allowed:
-            raise PermissionError("live VedAstro comparison needs privacy mode 'hybrid' (astro setup)")
-        if not consent:   # PRIVACY.md: VedAstro is called only with the person's consent, per chart
-            raise PermissionError("live VedAstro sends this person's birth data to api.vedastro.org; it needs their "
-                                  "consent (consent=true, or --consent on the command line)")
-        vedastro_dir = os.path.join(s.data_dir, "vedastro", dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
-        off = f"{'+' if b.tz >= 0 else '-'}{int(abs(b.tz)):02d}:{int(round(abs(b.tz) % 1 * 60)):02d}"
-        subprocess.run([sys.executable, "-m", "astro.vedastro_batch", "--date", b.date.strftime("%d/%m/%Y"), "--time", b.time[:5],
-                        "--tz", off, "--lat", str(b.lat), "--lon", str(b.lon), "--out", vedastro_dir, "--server", s.vedastro_server], check=True, timeout=600)
-    if not vedastro_dir:
-        return {"engines": ["local"], "note": "no second engine supplied"}
-    vedastro_dir = _inside(vedastro_dir, s.data_dir)
-    V = validate(A, load_vedastro_dir(vedastro_dir, birth=A.birth))
-    return {"engines": ["local", V.cross_check_engine], "summary": summary(V.agreements),
-            "unresolved": [x.model_dump() for x in V.disagreements()], "table_markdown": table(V.agreements)}
 
 
 def _run_skill_script(name, *args):
@@ -305,6 +278,9 @@ def create_report(model: dict, name: str = "report") -> dict:
         return {"ok": False, "errors": errs}
     os.makedirs(s.reports_dir, mode=0o700, exist_ok=True)      # reports hold birth details: owner-only when created
     html, pdf = rr.render(model, s.reports_dir, name)
+    for f in (html, pdf):
+        if f:
+            os.chmod(f, 0o600)      # the files hold birth details too, not only the folder (council R4)
     return {"ok": True, "warnings": warns, "html": html, "pdf": pdf}
 
 

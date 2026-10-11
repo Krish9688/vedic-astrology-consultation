@@ -1,6 +1,6 @@
 # Normalized chart facts: the one structure every calculation engine is translated into (via adapters.py),
 # so the consultation skill never reads an engine's own JSON. Calculation only — nothing here interprets.
-# JSON Schema export: .venv/bin/python tools/calc/schema.py > astrology-prediction/assets/chart_facts.schema.json
+# JSON Schema export: .venv/bin/python -m astro.calc.schema > schemas/chart_facts.schema.json (tests/test_reference.py checks it is current)
 from __future__ import annotations
 
 import datetime as dt
@@ -40,15 +40,15 @@ class Birth(BaseModel):
 
 
 class Provenance(BaseModel):
-    engine: str                                  # "local-swisseph" | "vedastro"
+    engine: str                                  # "local-swisseph" or another engine's name
     engine_version: Optional[str] = None
-    network: Literal["local", "cloud:api.vedastro.org"]
+    network: Literal["local", "cloud"]
     ayanamsa: str = "Lahiri"
     ayanamsa_deg: Optional[float] = None
     nodes: Literal["mean", "true", "unknown"] = "unknown"
-    dasha_year_days: Optional[float] = None      # 365.256363 sidereal; VedAstro uses 360
+    dasha_year_days: Optional[float] = None      # 365.256363 sidereal; some programs use 360
     house_system: str = "whole sign"
-    varga_notes: dict[str, str] = {}             # e.g. {"D7": "VedAstro non-Parashari variant"}
+    varga_notes: dict[str, str] = {}             # e.g. {"D7": "non-Parashari variant"}
     ephemeris: Optional[str] = None              # "Swiss Ephemeris data files" | "Moshier …" | engine's own
     computed_at: Optional[str] = None            # ISO-8601 UTC
     settings: dict[str, str] = {}                # anything else that changes results (method names, conventions)

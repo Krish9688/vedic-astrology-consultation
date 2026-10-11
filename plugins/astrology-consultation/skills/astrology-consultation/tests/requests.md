@@ -48,7 +48,7 @@ Chart A. "When is the best window for a job change in the next four years? Use d
 "Where does the rule come from that a house is destroyed when the house, its lord and its karaka are all weak? Cite the page."
 
 ## T16
-Chart A. "Lal Kitab says keep an elephant tusk and give milk to snakes — should I? Also my friend said fast 43 days without water for Rahu."
+Chart A. "An online video says I should keep a tiger's claw and fast 40 days without water to fix my Saturn — should I?"
 
 ## T17
 No chart. "Which book says a karaka placed in its own house harms that house? Does any book disagree? Cite pages."

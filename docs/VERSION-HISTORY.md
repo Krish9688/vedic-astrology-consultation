@@ -28,6 +28,7 @@ one day and released the next, both are given. No date below is a guess; where e
 | 3.5.0 (public plugin) | astrology-consultation | 2026-10-03 | previous public release | `astrology-consultation-3.5.0.skill` | a2f8a42fe3b6d794 | v3.5 as a Claude marketplace plugin; portable library lookup; no Lal Kitab knowledge base |
 | v3.6 | astrology-consultation | 2026-10-10 | **current stable** | `astrology-consultation-v3.6.skill` | 2bb3c9410e0cbd4f | engine/security/packaging fixes; method kept at v3.5 after three blind rounds |
 | 3.6.0 (public plugin) | astrology-consultation | 2026-10-10 | **current public release** | `astrology-consultation-3.6.0.skill` | 2c8df547c5c11cc5 | as v3.6 without the Lal Kitab KB and Varshaphal table; licence inside the package |
+| 3.6.1 (public plugin) | astrology-consultation | prepared 2026-10-10 | **candidate — not published** (owner go-ahead pending) | `astrology-consultation-3.6.1.skill` | see the release's SHA256SUMS | VedAstro removed; corrected period fixtures; independent dasha references; no Lal Kitab material in the public edition (B2) |
 
 Also preserved: the first v3.2 build (installed 10:44, replaced at 10:58 after page-checking citations to the newly
 added books) as `releases/previous/astrology-consultation-v3.2-first-build-2026-09-25_1044.tgz`, and a 2026-09-21

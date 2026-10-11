@@ -37,21 +37,6 @@ aren't reliable. Taken at face value, the D10 Saturn in debilitation suggests re
 obstacles. That fits the Saturn story, but I'd hold it loosely. So: a strong career theme, and Moderate for early or
 easy advancement. A confirmed birth time would change the second part more than the first."
 
-## E3. Two systems, one theme (Lal Kitab + Parashari)
-
-**Packet.** Parashari: 4th lord in the 12th, 12th lord in the 4th (exchange); Rahu dasha running. Lal Kitab house map:
-Moon in 12, 6th empty; Varshaphal for this age-year (running convention) moves the Moon to annual house 4.
-
-**Answer.** "Both systems point toward a change of residence, by different routes. In the Parashari chart, the fourth
-and twelfth lords exchange signs, which ties home to distance, and the running Rahu period activates the twelfth. In Lal
-Kitab, the Moon (mother and home) sits in the twelfth by nature, and this year's annual chart brings it to the fourth,
-the Moon's own pakka ghar, so home becomes the year's focus. Because each system gets there on its own grounds, I'd call
-a move or a major home change this year Strong as a theme. Whether it is abroad or simply another city is only Moderate:
-nothing else in the chart specifies a foreign country. One caution on method: I used the running-year age convention for
-the annual chart. The completed-year reading gives a different house for the Moon, so tell me which convention you
-follow."
-
----
 
 ## Earlier calibration examples (v2.2, retained)
 

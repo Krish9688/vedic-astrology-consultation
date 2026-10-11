@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Validate a skill folder (or .skill package) before release. Stdlib only, so it runs in CI and in release_skill.py.
 
-usage: python3 tools/check_package.py <skill folder | package.skill>
+usage: python3 tools/check_package.py <skill folder | package.skill> [--notes RELEASE-NOTES.md]
 Checks the Agent Skills frontmatter rules used by Anthropic's skill-creator quick_validate (kebab-case name ≤ 64,
 description ≤ 1024 without angle brackets, allowed keys), that every file SKILL.md links to exists, that no
-personal/benchmark folders are inside, and the privacy check on every text file.
+personal/benchmark folders are inside, and the privacy check on every text file. With --notes: the release notes must
+not claim that no book-derived data ships when the package carries the Lal Kitab knowledge base (data/lal-kitab/).
 """
 import os
 import re
@@ -14,7 +15,20 @@ import tempfile
 import zipfile
 
 ALLOWED = {"name", "description", "license", "allowed-tools", "metadata", "compatibility"}
-FORBIDDEN = re.compile(r"(^|/)(private|tests/results|benchmark|backups)(/|$)")
+FORBIDDEN = re.compile(r"(^|/)(private|tests/results|benchmark|backups|trash)(/|$)")
+# Tripwire, not proof: catches the usual ways of denying that book-derived material ships (AUD-01).
+_VERB = r"(?:is|are)?\s*(?:distributed|shipped|ships|included|bundled|contained|packaged|published)"
+NO_BOOK_CLAIM = re.compile(
+    r"\bno(?:thing)?\s+(?:copyrighted\s+)?(?:books?|book[- ]derived|data derived from (?:any )?books?|derived from books?)"
+    r"(?:\s+or\s+book[- ]derived)?(?:\s+(?:data|text|content|material))?\s+" + _VERB
+    + r"|\bcontains no book[- ]derived|\bno book[- ]derived (?:data|text|content|material)", re.I)
+
+
+def notes_errors(folder, notes_text):
+    """Release notes must not deny shipping book-derived material that the package contains."""
+    has_kb = os.path.isdir(os.path.join(folder, "data", "lal-kitab"))
+    m = NO_BOOK_CLAIM.search(notes_text)
+    return [f"release notes claim {m.group(0)!r} but the package ships data/lal-kitab/ (book-derived)"] if has_kb and m else []
 
 
 def frontmatter(text):
@@ -61,10 +75,11 @@ def check(folder):
 
 if __name__ == "__main__":
     target = sys.argv[1]
+    notes = sys.argv[sys.argv.index("--notes") + 1] if "--notes" in sys.argv else None
     if target.endswith(".skill"):
         tmp = tempfile.mkdtemp()
         zipfile.ZipFile(target).extractall(tmp)
         target = os.path.join(tmp, os.listdir(tmp)[0])
-    errs = check(target)
+    errs = check(target) + (notes_errors(target, open(notes, encoding="utf-8").read()) if notes else [])
     print("package ok" if not errs else "\n".join("✗ " + e for e in errs))
     sys.exit(1 if errs else 0)

@@ -4,6 +4,39 @@ Every version up to v3.4 predates this git repository as a package (created 2026
 [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md). For important changes this log records what existed before, what
 problem was observed, what exposed it, what changed, why that solution, and how it was validated.
 
+## [3.6.1] — 2026-10-10 — VedAstro removed (owner decision); corrected test fixtures
+
+Plugin and engine 3.6.1; skill text v3.6 (method unchanged). Validation: the private repository's
+`.project-council/TEST-EVIDENCE.md` (E-017 … E-029). Packaged as `astrology-consultation-3.6.1.skill`.
+
+The local engine stands on its own; nothing in the project calls an outside calculation service.
+- Removed: the `compare_engines` tool (MCP, REST `/api/v1/compare`, CLI `astro compare`), the VedAstro batch fetcher
+  and adapter, the `vedastro_server` setting, the `hybrid` privacy mode (an old setting is read as `private`), the
+  doctor's VedAstro check and all stored VedAstro output. The plugin now has 15 tools.
+- Kept: the generic comparator (`python -m astro.calc.compare --local calc.json --other facts.json`), offline only.
+- Test fixtures A/B and their period packet regenerated with the local engine (positions unchanged within 0.1′; the old
+  packet's dasha dates were wrong by up to 2½ years); test rubric dates updated; retrograde flags now included.
+- Independent dasha reference added: the dasha balance at birth is tested against one value of N. C. Lahiri's
+  published balance table (as reproduced by B. V. Raman): 6 y 0 m 14 d, engine 6 y 0 m 13.3 d. This checks the balance
+  fraction only. Published dasha boundaries (dates down to the pratyantar) are checked against a private fixture that
+  is not part of the public edition.
+- **Lal Kitab removed from the public edition** (council option B2): the public skill carries no Lal Kitab rules,
+  tables, flags, maturity ages, annual chart, remedies, knowledge-base codes or book citations. The Lal Kitab part of
+  `chart_facts.py` moved to a private-edition module; `varshaphal.py` is private-edition only; Lal Kitab sections of the
+  references are kept only in the private edition. Asked about Lal Kitab, the public skill says it is not part of this
+  edition and offers the Parashari reading. The remedy-safety file keeps a generic, project-written list of harmful
+  practices. An export gate and tests fail on any Lal Kitab-derived content in the public package. This does not
+  change what 3.5.0 and 3.6.0 contained.
+- Fixes from the 2026-10-11 council review: navamsa/dashamsa of a planet at exactly 10° or 20° (chart_facts.py) now
+  matches the engine; (private edition) Lal Kitab ally/rival flags for shared houses fixed; the
+  safety lint catches more death, diagnosis and medication-advice phrasings and no longer lets a negation in another
+  clause excuse them (it remains a phrase-list backstop); the report renderer raises an error instead of exiting
+  when jinja2 is missing; report files are owner-only (0600); SKILL.md no longer says the public edition ships the
+  Varshaphal table; private development paths removed from SKILL.md and inputs.md (development notes elsewhere
+  still name them).
+- Skill scripts answer `--help` instead of failing; the published `schemas/chart_facts.schema.json` matches the model
+  again (a test now keeps it current).
+
 ## [3.6.0] — 2026-10-10 — correctness, security and packaging (method kept at v3.5)
 
 Plugin, engine and skill all 3.6.0 / v3.6. Validation per item: the private repository's

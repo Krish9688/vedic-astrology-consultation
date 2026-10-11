@@ -105,29 +105,9 @@ over the 7th [PM2 XX.66]; Jupiter on the sign of (lagna + 7th) longitudes [HJH2 
 7th lord or Venus with the lagna lord or in kendras → early; 7th lord far from 1st and 7th → later [PM2 XX.59–62];
 "early/late" is relative to the person's society and era [HJH2 p32].
 
-## 4. Lal Kitab layer (separate evidence note)
+## 4. Lal Kitab
 
-Use natal Lal Kitab houses (whole-sign from lagna, fixed-Aries labels). KB section numbers refer to
-`data/lal-kitab/LalKitab_Shrimali_Knowledge_Base_v2.2.md`.
-
-- **House 7 logic** [KB B3 H7, p67]: the 7th aspects nothing; only house 1 aspects it, so an empty 1st leaves the 7th
-  "sleeping". The 7th follows Venus's position; Venus acts like Mercury here; Venus + Mercury together make Saturn
-  "superior" (wealth). Moon in 7 with more than two planets shifts Moon's harm to Jupiter.
-- **Karakas**: Venus (+ Mercury) for the 7th; Venus and Mercury share pakka ghar 7 [KB R03, B4].
-- **Scapegoat chain**: afflicted Saturn and afflicted Mercury pass their trouble to Venus (wife/partner) [KB B7 p48–50].
-  Read this as "strain shows up in the relationship", not as a partner's fate.
-- **Sleeping planet**: a planet with nothing in the 7th from it "acts only after marriage" (e.g. Jupiter in 1 with 7
-  empty) [KB B7 p44] — a Lal Kitab timing hint.
-- **Planet-in-house cautions with ages** (as the book states them; present as tradition, not fact): Moon in 1 —
-  marriage before 28 said to hurt parents; Moon in 7 — no marriage before 24; Sun bad in 1 with 7 empty — early
-  marriage as remedy [KB B8 p74, p81, p84]. Venus's planet-year is 25 [KB B7 p51].
-- **Stree rin (wife's debt)** signature: Sun, Rahu or Ketu in 2 (text) vs Sun/Moon/Rahu in 2/7 (summary table) — cite
-  both (X21) [KB B12 p170, p173].
-- **Mangalik** (Mars in 1/4/7/8/12) appears in Shrimali as a [VED] rule reproduced by the author, not a Lal Kitab
-  doctrine [KB B9]. The author himself criticises mechanical Mangal-dosh customs.
-- **Annual chart**: where natal 7th-house planets and Venus land in the Varshaphal for the relevant age-years
-  (`scripts/varshaphal.py`); a planet reaching annual H1 acts first on its natal house [KB B17].
-- Many B8 entries contain "death of wife", "widowhood" or infertility statements — never forecasts (KB Part C5).
+Not part of this edition ([lal-kitab-method.md](lal-kitab-method.md)).
 
 ## 5. Form questions: how they meet, who initiates, new vs past person, second marriage
 

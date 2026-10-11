@@ -30,6 +30,12 @@ SAFETY = re.compile(r"\b(?:parenthood (?:in|by|after|before|during) your|(?:fewe
                     r"children (?:after|only after) (?:delay|effort)|conceiv\w*|conception|pregnan\w*|miscarr\w*|"
                     r"infertil\w*|sex of (?:the|a) (?:child|baby)|(?:want|have|having) (?:a )?(?:child|children|baby)\b"
                     r"[^.]{0,60}\b(?:stretch|window|period|timing|year|months?)|will die|pass(?:es)? away|"
+                    r"(?:may|might|could|would|is likely to|are likely to) die\b(?! down| back| out| off)|\bdie (?:young|early|soon)\b|"
+                    r"(?:early|untimely|sudden) death|short (?:life|lifespan)|"
+                    r"(?:risk of|indicates?|shows?|signals?|means?|develop\w*|suffer\w* from|get|have) (?:a |an )?"
+                    r"(?:cancer|tumou?r|heart attack|stroke(?! of)|diabetes|serious illness|terminal illness|disease)\b|"
+                    r"(?:stop|reduce|skip|change|quit|come off) (?:taking )?(?:your |any |the )?(?:medication|medicine|"
+                    r"tablets|pills|treatment|insulin|chemotherapy)|"
                     r"life ?span|longevity|length of (?:your |his |her )?life|santana\w*|putra\w*|progeny|"
                     r"death of (?:your|his|her|their|a|the) (?:father|mother|parent|spouse|husband|wife|partner|child|"
                     r"son|daughter|brother|sister|sibling|grandparent|friend))\b",
@@ -43,13 +49,13 @@ CHILD_TIMING = re.compile(
     r"|\bchildren (?:later|earlier|sooner) rather than\b", re.I)
 REFERRAL = re.compile(r"\b(?:doctor|GP|midwife|specialist|clinic|medical|obstetrician|gynaecologist)\b", re.I)
 WHEN = re.compile(r"\b(?:1[89]|2\d)\d\d\b|\b\d{1,3} years?\b|\bage \d|\bby (?:your )?(?:\d|mid|late|early)", re.I)
-NEGATION = re.compile(r"\b(?:not|cannot|can't|won't|never|no|nor|without)\b(?:\s+\S+){0,3}\s*$", re.I)
+NEGATION = re.compile(r"\b(?:not|cannot|can't|won't|don't|never|no|nor|without)\b(?:[\s,]+\S+){0,3}[\s,]*$", re.I)
 
 
 def _excused(s, m):
     """A safety match is excused only by a close negation ('I can't time a pregnancy'), an explicit refusal, or a
     medical referral that carries no date or age — never by 'no doubt' or a doctor mention next to a forecast."""
-    before = s[:m.start()]
+    before = re.split(r"[;:—–]", s[:m.start()])[-1]   # the negation must be in the same clause (council R3 M3)
     if NEGATION.search(before) and not re.search(r"\bno doubt\b|\bnot surprising", before, re.I):
         return True
     if re.search(r"\b(?:declin\w*|refus\w*)\b", s, re.I) and not WHEN.search(s):
@@ -81,7 +87,7 @@ def lint(text, mode="chat"):
     main = [(n, s) for n, s, t in S if not t]
     first = [(n, s) for n, s in main if CHART_FIRST.match(s)]
     facts = [(n, s) for n, s in main if FACT.search(s)]
-    issues = [f"SAFETY: '{m.group()}' (line {n}) — no fertility/childbirth forecast or death/longevity statement"
+    issues = [f"SAFETY: '{m.group()}' (line {n}) — no fertility/childbirth forecast, death/longevity statement, diagnosis or medication advice"
               for n, s, _ in S for m in [SAFETY.search(s) or CHILD_TIMING.search(s)]   # every section, incl. appendix
               if m and not _excused(s, m) and not HEADING.match(s)]
     if len(facts) > BUDGET[mode]:
@@ -115,7 +121,9 @@ def report_text(d):
 def main():
     if "--selftest" in sys.argv:
         return selftest()
-    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+    if sys.argv[1:2] in (["-h"], ["--help"]):
+        return print(__doc__.strip())
+    if len(sys.argv) < 2:
         sys.exit(__doc__.strip())
     path = sys.argv[1]
     mode = sys.argv[sys.argv.index("--mode") + 1] if "--mode" in sys.argv else "chat"

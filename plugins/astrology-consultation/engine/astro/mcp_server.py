@@ -21,8 +21,7 @@ INSTRUCTIONS = (
     "Vedic astrology service; all calculation is local and returns facts only. For a consultation call "
     "prepare_consultation, read each file it lists as skill://<path>, then answer life-first: meaning in the person's life, "
     "likely form, timing, counter-factor, what to watch. Never invent positions or dates; treat 'high'/'very high' "
-    "birth-time sensitivity as uncertain. compare_engines live=true sends birth data to VedAstro and is refused "
-    "unless hybrid mode is set; pass consent=true only after the person agrees.")
+    "birth-time sensitivity as uncertain. Nothing is sent to any outside service.")
 
 
 mcp = MCPServer(name="astrology-consultation", version=S.VERSION, instructions=INSTRUCTIONS)
@@ -76,7 +75,7 @@ def get_divisional_chart(date: dt.date, time: str, tz: float, lat: float, lon: f
 
 
 @tool("Vimshottari periods (3 levels) and the periods running on `on`. year: sidereal (default), "
-                      "365.25 or 360 (VedAstro's convention).")
+                      "365.25 or 360 (a convention some programs use).")
 def get_dasha(date: dt.date, time: str, tz: float, lat: float, lon: float, on: Optional[dt.date] = None,
               year: str = "sidereal") -> dict:
     return S.dasha(_b(date, time, tz, lat, lon), _o(on, year=year))
@@ -110,14 +109,6 @@ def get_jaimini_factors(date: dt.date, time: str, tz: float, lat: float, lon: fl
 def get_birth_time_sensitivity(date: dt.date, time: str, tz: float, lat: float, lon: float,
                                on: Optional[dt.date] = None) -> dict:
     return S.birth_time_sensitivity(_b(date, time, tz, lat, lon), _o(on))
-
-
-@tool("Compare the local engine with VedAstro. Without `live` it uses no network (a previously "
-                      "fetched folder inside the data directory). live=true sends date, time, offset and "
-                      "coordinates to api.vedastro.org and is refused unless privacy mode is hybrid and consent=true (the person agreed).")
-def compare_engines(date: dt.date, time: str, tz: float, lat: float, lon: float,
-                    vedastro_dir: Optional[str] = None, live: bool = False, consent: bool = False) -> dict:
-    return S.compare_engines(_b(date, time, tz, lat, lon), vedastro_dir=vedastro_dir, live=live, consent=consent)
 
 
 # --- knowledge --------------------------------------------------------------------------------------------------

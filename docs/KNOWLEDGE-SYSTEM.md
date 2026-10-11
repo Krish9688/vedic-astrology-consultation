@@ -11,7 +11,7 @@ Your books (PDFs in Astrology Books/ — never modified; SHA-256 recorded in kno
   ↓  deterministic extraction (no LLM): rules, pages, books, entities, disputes      → knowledge/extraction.json
   ↓  Graphify: schema validation → graph build → communities → report → exports      → graphify-out/graph.json, GRAPH_REPORT.md, graph.html
   ↓  retrieval: scripts/kg.py (graph) + scripts/search.py (full text)
-Chart data from a calculation engine (supplied chart or VedAstro with consent) → scripts/chart_facts.py (derived facts)
+Chart data from a calculation engine (the local engine, or a supplied chart) → scripts/chart_facts.py (derived facts)
   ↓
 Senior-astrologer reasoning (SKILL.md → synthesis-method, topic, timing, vargas, Jaimini, Lal Kitab)
   ↓  cross-check techniques, grade convergence, look up and verify sources, show disputes

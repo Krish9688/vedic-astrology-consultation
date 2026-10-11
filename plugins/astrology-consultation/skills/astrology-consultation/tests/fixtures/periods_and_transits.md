@@ -1,18 +1,18 @@
 # Calculated packets for the two FICTIONAL test natives
 
-Source: `vedastro-local` MCP (VedAstro API, Lahiri), queried 2026-09-24 with fictional birth data only.
-Reference date for "now" in tests: 2026-09-24.
+Source: the local engine (astro 3.6.0: Swiss Ephemeris, Lahiri, mean nodes, sidereal-year dashas),
+computed 2026-10-10 with fictional birth data only. Reference date for "now" in tests: 2026-09-24.
 
 ## Native A — 14/03/1994 07:25 +05:30, 28.61 N 77.21 E (Pisces lagna 16°47′)
 
-Vimshottari (as returned; range clipped at 2024-01-01):
+Vimshottari (Venus major period 2015-01-04 → 2035-01-04; sub-periods from 2024-01-01):
 | MD | AD | Start | End |
 |---|---|---|---|
-| Venus | Mars | (before 2024) | 2024-10-08 |
-| Venus | Rahu | 2024-10-09 | 2027-09-23 |
-| Venus | Jupiter | 2027-09-24 | 2030-05-10 |
-| Venus | Saturn | 2030-05-11 | (after 2032) |
-Venus MD runs through at least 2032-12-31.
+| Venus | Rahu | 2022-03-05 | 2025-03-05 |
+| Venus | Jupiter | 2025-03-05 | 2027-11-04 |
+| Venus | Saturn | 2027-11-04 | 2031-01-04 |
+| Venus | Mercury | 2031-01-04 | 2033-11-04 |
+| Venus | Ketu | 2033-11-04 | 2035-01-04 |
 
 Transit houses counted from natal lagna (Pisces):
 | Date | Sun | Moon | Mars | Mercury | Jupiter | Venus | Saturn | Rahu | Ketu |
@@ -23,16 +23,18 @@ Transit houses counted from natal lagna (Pisces):
 
 ## Native B — 22/08/1988 16:40 +05:30, 19.08 N 72.88 E (Sagittarius lagna 27°59′56″)
 
-Vimshottari (range clipped at 2025-01-01):
+Vimshottari (Moon major period 2024-04-15 → 2034-04-16; sub-periods from 2025-01-01):
 | MD | AD | Start | End |
 |---|---|---|---|
-| Moon | Mars | (before 2025) | 2025-03-04 |
-| Moon | Rahu | 2025-03-05 | 2026-08-26 |
-| Moon | Jupiter | 2026-08-27 | 2027-12-19 |
-| Moon | Saturn | 2027-12-20 | 2029-07-11 |
-| Moon | Mercury | 2029-07-12 | 2030-12-03 |
-| Moon | Ketu | 2030-12-04 | 2031-07-01 |
-| Moon | Venus | 2031-07-02 | (after 2031) |
+| Moon | Moon | 2024-04-15 | 2025-02-13 |
+| Moon | Mars | 2025-02-13 | 2025-09-14 |
+| Moon | Rahu | 2025-09-14 | 2027-03-16 |
+| Moon | Jupiter | 2027-03-16 | 2028-07-15 |
+| Moon | Saturn | 2028-07-15 | 2030-02-14 |
+| Moon | Mercury | 2030-02-14 | 2031-07-16 |
+| Moon | Ketu | 2031-07-16 | 2032-02-14 |
+| Moon | Venus | 2032-02-14 | 2033-10-15 |
+| Moon | Sun | 2033-10-15 | 2034-04-16 |
 
 Transit houses counted from natal lagna (Sagittarius):
 | Date | Sun | Moon | Mars | Mercury | Jupiter | Venus | Saturn | Rahu | Ketu |

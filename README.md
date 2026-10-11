@@ -7,11 +7,11 @@ engine that runs on your own computer.
 
 | | |
 |---|---|
-| **Version** | 3.6.0 (2026-10-10) — plugin, engine and skill share one version |
+| **Version** | 3.6.1 (2026-10-10) — plugin, engine and skill share one version |
 | **Install** | Claude plugin marketplace (below), or the standalone engine for any MCP client |
 | **Platforms** | macOS and Linux. Windows: use WSL 2 (works as Linux; not tested by the project). Native Windows is not supported. |
 | **Privacy** | private by default: calculation is local, nothing is sent anywhere |
-| **Traditions** | Parashari (primary); Jaimini and Lal Kitab as separate, labelled systems |
+| **Traditions** | Parashari (primary); Jaimini as a separate, labelled system. Lal Kitab is not part of this edition |
 | **Licence** | AGPL-3.0-or-later (engine) · Apache-2.0 (skill scripts, plugin files) · CC BY 4.0 (method text, docs) — [LICENSE](LICENSE) |
 
 > Astrology's predictive validity is not scientifically established. The consultation describes what a tradition's
@@ -44,7 +44,7 @@ Python 3.11+ or [uv](https://docs.astral.sh/uv/) and internet once), then `/relo
 | What you get | Claude Code | Cowork (on your computer) | claude.ai chat |
 |---|---|---|---|
 | Consultation skill (method, timing, safety, report layout) | yes | expected; not yet verified | documented |
-| Local engine: 16 MCP tools (chart, vargas, dashas, transits, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity, reports) | yes¹ | expected; not yet verified | no — chat can't run programs on your computer; give it positions instead |
+| Local engine: 15 MCP tools (chart, vargas, dashas, transits, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity, reports) | yes¹ | expected; not yet verified | no — chat can't run programs on your computer; give it positions instead |
 | `setup` / `doctor` commands | yes¹ | expected; not yet verified | no |
 
 ¹ Tested on macOS with the Claude Code CLI: install from GitHub, the engine steps behind setup/doctor, MCP connected,
@@ -63,8 +63,7 @@ Updating, disabling, rolling back, uninstalling, where files live and troublesho
   answer says what each side would change.
 - **Birth-time honesty.** The engine recomputes the chart across ±0.5…15 minutes and says how much error each factor
   tolerates; unstable factors are not leaned on.
-- **Systems are not blended.** Lal Kitab uses a different house system; Jaimini has its own methods. They are argued
-  separately and compared only at the end.
+- **Systems are not blended.** Jaimini has its own methods; it is argued separately and compared only at the end.
 - **Life first.** The person asked about their life; chart facts are the evidence, not the subject.
 
 ## Architecture
@@ -110,8 +109,7 @@ echo '{"date": "1992-03-14", "time": "09:40", "tz": 0, "lat": 51.5, "lon": -0.12
 
 ## Privacy
 
-- **private** mode (default): all calculation local. The optional VedAstro cross-check (sends birth date, time, UTC
-  offset and coordinates to `api.vedastro.org`) works only after you choose **hybrid** mode; it is never required.
+- All calculation is local; no tool sends birth data anywhere (default **private** mode).
 - The MCP and REST servers bind to 127.0.0.1. Remote use needs both `allow_remote = true` and an `api_token`. If you
   let other people use the service over a network and you changed the code, AGPL-3.0 §13 requires you to offer them
   your modified source; set `source_url` in the config, and the service advertises it through `get_engine_info`,
@@ -126,8 +124,8 @@ Details: [docs/PRIVACY.md](docs/PRIVACY.md).
 
 No books, book text, index or knowledge graph are distributed here. Book search and the page-cited knowledge graph
 work with **your own** legally obtained copies ([docs/ADD-A-BOOK.md](docs/ADD-A-BOOK.md)); without them the
-consultation works and says that source lookup is unavailable. The bundled Lal Kitab material is the method note and
-the annual-chart table; the detailed Lal Kitab knowledge base is not redistributed. Per-book status:
+consultation works and says that source lookup is unavailable. This edition contains no Lal Kitab material (rules,
+tables, annual chart or remedies); asked about Lal Kitab, the assistant says so. Per-book status:
 [docs/COPYRIGHT.md](docs/COPYRIGHT.md).
 
 ## Testing
@@ -154,13 +152,12 @@ method and results: [docs/TESTING.md](docs/TESTING.md).
 - Ascendant- and divisional-chart claims are only as good as the birth time; the engine reports the tolerance.
 - First run needs Python 3.11+ or uv and internet once (engine environment and ephemeris download).
 - Remote mode has no TLS of its own: put it behind an SSH tunnel or a TLS reverse proxy.
-- Consent for live VedAstro checks is a flag the AI client sets; the software cannot verify that the person agreed.
 - Adding books (`astro add-book`) needs the full repository, not the plugin.
 - The prediction log has only been exercised with synthetic records.
 
 ## Version history
 
-The skill has evolved since v1.1 (2026-09-06); v3.5.0 was the first version published here; 3.6.0 is the second. Full history:
+The skill has evolved since v1.1 (2026-09-06); v3.5.0 was the first version published here; 3.6.0 is the second and 3.6.1 the third. Full history:
 [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md) · [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing and security

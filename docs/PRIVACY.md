@@ -20,13 +20,16 @@ the owner's machine unless the owner explicitly decides otherwise.
 
 | Mode | Calculation | External calls |
 |---|---|---|
-| `private` (default) | local only | none — `compare_engines` with `live=true` is refused |
-| `hybrid` | local, plus an optional VedAstro cross-check per call | VedAstro receives date, time, offset and coordinates (label "chart"); each call is logged to `calls.jsonl` with its arguments |
-| `research` | as hybrid | the AI client may also use public web research tools; chart data is still never sent to them |
+| `private` (default) | local only | none |
+| `research` | local only | the AI client may also use public web research tools; chart data is still never sent to them |
+
+There is no external calculation service: the former `hybrid` mode (a cloud engine cross-check) was removed on
+2026-10-10, and an old `mode = "hybrid"` setting is read as `private`. If you used hybrid mode in 3.5.0 or 3.6.0,
+its call log (`vedastro/calls.jsonl` in the engine's data folder) may still hold birth details sent to that service;
+nothing reads it any more — delete it.
 
 The MCP and REST servers bind to 127.0.0.1; listening elsewhere needs `allow_remote = true` **and** an `api_token`
-(bearer auth on every request). No access logs are written and birth data is never logged, except the hybrid-mode audit log `calls.jsonl` of
-live VedAstro calls in the private data folder (delete `data_dir/vedastro/` to remove it). `skill://` resources and
+(bearer auth on every request). No access logs are written and birth data is never logged. `skill://` resources and
 report paths are confined to their folders; only skill documents can be read. CLI input comes from a JSON file, so
 birth details stay out of shell history. An AI client that connects to the service still sees what it is sent —
 choosing the client (local model, ChatGPT, Claude…) is a separate privacy decision.
@@ -35,7 +38,6 @@ choosing the client (local model, ChatGPT, Claude…) is a separate privacy deci
 
 | Service | Receives | When |
 |---|---|---|
-| **VedAstro** (`api.vedastro.org`, via the `vedastro-local` MCP, `python -m astro.vedastro_batch` or `astro compare --live` in hybrid mode) | birth date, time, UTC offset, coordinates and a place label (not a name) | only with the person's consent, per chart (`compare --live` refuses without `consent=true` / `--consent`); the local engine is preferred. The MCP's default `profile.json` holds personal data: every call passes `use_profile=false` |
 | Agent Reach (Exa search, Jina Reader, YouTube) | public research queries only | never chart data or names |
 | Hugging Face | nothing about the project — Docling downloads its models once | on first Docling use |
 | GitHub | only the allowlisted, scanned repository files | on push |
@@ -53,8 +55,8 @@ choosing the client (local model, ChatGPT, Claude…) is a separate privacy deci
 3. **Gitleaks** — secrets in the working tree and the full git history (pre-commit and CI).
 4. **Package check** — `tools/check_package.py` refuses a skill package containing private or benchmark folders or
    failing the privacy check.
-5. **Synthetic fixtures** — every test and example uses the synthetic chart S1 or the fictional charts A/B; VedAstro
-   fixtures were fetched with synthetic data only.
+5. **Synthetic fixtures** — every test and example uses the synthetic chart S1 or the fictional charts A/B, all
+   calculated with the local engine.
 
 Findings during the 2026-09-27 audit, fixed: the local engine's usage comment contained the owner's birth data as its
 example (never packaged; replaced with S1); `kg.py`, `search.py` and `source-index.md` in the v3.3 package contain an
@@ -62,5 +64,5 @@ absolute path with the account name (no birth data) — replaced by `~`-relative
 
 ## 4. API keys
 
-The VedAstro key lives in `~/VedAstro/` (`API key.env`, `.env`). Its value was never read, printed or copied by this
-project; only variable names were listed. No key is needed for any other part of the project.
+No API key is needed for any part of the project. (The former VedAstro installation and its key file were moved to the
+macOS Trash on 2026-10-10; the key's value was never read, printed or copied by this project.)

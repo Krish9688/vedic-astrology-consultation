@@ -2,15 +2,15 @@
 
 ## Two valid starting points
 
-For this Lal Kitab edition, read `lal-kitab-method.md` before converting houses. The whole-sign calculation below is a declared **Parashari default**, not an automatic substitute for a user-supplied bhava/chalit house map or an agreed Lal Kitab natal-house source.
+The whole-sign calculation below is a declared **Parashari default**, not an automatic substitute for a user-supplied bhava/chalit house map.
 
 **Chart-first:** accept a transcribed chart, legible chart image or positions table plus relevant period data. Identify the chart format before interpreting numbers: North Indian charts fix houses; South Indian charts fix signs. Ask when a legend, digit or label is ambiguous. Confirm the transcription with the user if ambiguity would change the answer.
 
-**Birth-data-first:** date, local clock time with its uncertainty/source, birthplace and coordinates, historical time zone/DST, and calculation conventions are needed for a new chart. This package contains no ephemeris engine. If no independently verified chart is supplied, either ask for the chart/period tables, or — with the user's explicit consent for that chart — use a calculation tool that is available in the session.
+**Birth-data-first:** date, local clock time with its uncertainty/source, birthplace and coordinates, historical time zone/DST, and calculation conventions are needed for a new chart. The skill text contains no ephemeris; the plugin's local engine (`astro`, MCP server) calculates charts. If neither a verified chart nor the engine is available, either ask for the chart/period tables, or — with the user's explicit consent for that chart — use a calculation tool that is available in the session.
 
-**Calculation tools and privacy (v3).** The `vedastro-local` MCP server on this machine is a local wrapper, but it sends the birth date, time and coordinates to the external VedAstro API (`api.vedastro.org`, Lahiri ayanamsa). Before the first call for any chart, tell the user that birth data leaves the machine and get a yes. Its defaults may come from a saved `profile.json`; never rely on a default profile for someone else's chart — pass explicit coordinates and UTC offset. Report its output as calculated data with ayanamsa and source; never fill gaps it leaves. Keep calculation, retrieval and interpretation separate in the answer.
+**Calculation tools and privacy.** Use the local engine below; it runs on this machine and sends nothing anywhere. If some other calculation service is available in a session, tell the user that birth data would leave the machine and get a yes before the first call; pass explicit coordinates and UTC offset, never a saved default profile. Report any engine's output as calculated data with ayanamsa and source; never fill gaps it leaves. Keep calculation, retrieval and interpretation separate in the answer.
 
-**Deterministic helpers (local, no network):** `scripts/chart_facts.py` derives houses, lordships, aspects, dignity, combustion, D9/D10, dispositors, Phaladeepika XV tests and Lal Kitab house states from supplied positions; `scripts/varshaphal.py` does the Lal Kitab annual-table lookup. Use them instead of hand arithmetic; they never invent positions.
+**Deterministic helpers (local, no network):** `scripts/chart_facts.py` derives houses, lordships, aspects, dignity, combustion, D9/D10, dispositors and Phaladeepika XV tests from supplied positions. Use it instead of hand arithmetic; it never invents positions.
 
 ## Record only what the question needs
 
@@ -62,18 +62,13 @@ Keep sensitive data out of saved examples. Save a reading or biography only when
 
 ## Calculation engines and their conventions (re-checked 2026-10-02, v3.5)
 
-- **Local engine (preferred; private):** `astro.calc` — the `astrology-consultation` MCP server, the `astro` CLI or
-  `_skill_workspace/tools/calc/local_chart.py --full`. Swiss Ephemeris (full `.se1` files when installed, otherwise
-  Moshier — `meta.ephemeris` says which), Lahiri, mean nodes, sidereal-year dashas (365.256363 days). Checked against
-  VedAstro on two synthetic charts and one real chart with **0 unresolved differences**; every remaining difference
-  is a documented methodology or configuration choice. A check belongs to the chart it was run on: cite only the
-  comparisons in that chart's own files.
-- **VedAstro (`vedastro-local` MCP or `astro compare --live`):** sends birth date, time, offset and coordinates to
-  `api.vedastro.org` — consent per chart (hybrid mode). Its **Vimshottari uses 360-day years** (dates drift about
-  5.26 days per year of age); with the local engine set to 360 days the periods agree at all three levels, so the
-  year length is the only dasha difference. Known VedAstro defects: on at least one chart its first mahadasha
-  contradicted its own Moon nakshatra; its tribhaga bala omits Mars for some pre-sunrise births; its cheshta bala
-  breaks when mean and true longitude straddle 0° Aries.
+- **Local engine (preferred; private):** `astro.calc` — the `astrology-consultation` MCP server or the `astro` CLI. Swiss Ephemeris (full `.se1` files when installed, otherwise
+  Moshier — `meta.ephemeris` says which), Lahiri, mean nodes, sidereal-year dashas (365.256363 days). Validated
+  with property tests, published worked examples (golden values) and a 22-chart edge suite. During development it
+  was also compared with other engines; the differences found were convention choices (year length, varga variants)
+  or defects in the other engine — one engine's dasha dates were wrong by up to 2½ years.
+- **Year length:** some programs count Vimshottari years as 360 days, so their period dates run earlier (about 5.26
+  days per year of age); the local engine can produce that convention (`--year 360`) when a supplied table uses it.
 - **Dasha dates are convention-dependent** (CR-N10): always say which engine/convention produced a window.
 - **Shadbala:** use the local values (BPHS as worked by Raman; components and conventions listed in the output;
   drik bala reproduces Raman's worked example). Other engines use different sub-rules (saptavargaja scale, ayana cap,
@@ -81,8 +76,7 @@ Keep sensitive data out of saved examples. Save a reading or biography only when
   minimum" — accurate wording when strength is discussed, never "just reaches". Within about 10% either side is
   borderline. Shadbala never sets or lowers a grade on its own: promise grades come from house, lord, karaka,
   aspects and D9; a borderline ratio is at most a nuance in the appendix.
-- **Ashtakavarga:** local bhinnashtakavarga matched VedAstro cell for cell on every chart checked; SAV by house is
-  in the output.
+- **Ashtakavarga:** local bhinnashtakavarga (BPHS tables); SAV by house is in the output.
 - **Jaimini factors** (chara karakas in both schemes, arudhas with the BPHS 29.45 exception, upapada, karakamsa):
   other software may skip the arudha exception; say which rule produced an arudha. Karakas within 1′ are flagged.
 - **Birth-time sensitivity — quote, never estimate.** The grid recomputes the chart at ±0.5, 1, 2, 5, 10 and 15
@@ -93,4 +87,4 @@ Keep sensitive data out of saved examples. Save a reading or biography only when
   minute. Exact Jupiter/Saturn/node contacts and sign changes are also in the output; never derive them from average
   motion.
 - **Normalized facts:** an *unresolved* row must be mentioned where it affects the answer; *methodology* and
-  *configuration* rows (360-day years, VedAstro's D2/D7/D30 variants, Shadbala sub-rules) only as a convention note.
+  *configuration* rows (360-day years, non-Parashari D2/D7/D30 variants, Shadbala sub-rules) only as a convention note.

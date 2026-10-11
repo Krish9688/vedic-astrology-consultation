@@ -181,15 +181,11 @@ def find_contradictions(N, out, query):
     ents, houses, topics = parse(query)
     want = ents | topics | {f"house:{h}" for h, _ in houses}
     words = [w[:5] for w in re.findall(r"\w{4,}", query.lower())]  # stems: "exaltation" also matches "exalted"
-    lk_only = bool(re.search(r"lal ?kitab", query, re.I))
     found = []
     for cid, n in N.items():
         if n.get("node_type") != "Contradiction":
             continue
         pos = [N[e["target"]] for e in out[cid] if e["relation"] == "HAS_POSITION"]
-        if lk_only and not (cid.split(":")[1].startswith(("KB-", "CR-L", "CR-S"))
-                            or any(re.match(r"LK", pg) for p in pos for pg in attrs(p).get("pages", []))):
-            continue  # a Lal Kitab question gets Lal Kitab disputes only
         topic_links = {e["target"] for e in out[cid] if e["relation"] == "APPLIES_TO"}
         linked = topic_links | {e["target"] for p in pos for e in out[p["id"]] if e["relation"] == "APPLIES_TO"}
         blob = " ".join([n["label"]] + [attrs(p).get("text", "") for p in pos]).lower()

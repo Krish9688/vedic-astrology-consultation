@@ -61,7 +61,7 @@ def test_shadbala_components_stay_in_range(t, la, lo):
 
 @pytest.mark.parametrize("a,b", [(3.3, 356.9), (356.9, 3.3), (10.0, 20.0), (179.0, 181.0)])
 def test_circular_mean_never_jumps_to_the_far_side(a, b):
-    # the defect found in PyJHora/VedAstro: a plain average of 3.3° and 356.9° gives 180°
+    # the defect found in other engines: a plain average of 3.3° and 356.9° gives 180°
     avg = (a + ((b - a + 180) % 360 - 180) / 2) % 360
     assert min(abs(avg - a), 360 - abs(avg - a)) <= 90
 

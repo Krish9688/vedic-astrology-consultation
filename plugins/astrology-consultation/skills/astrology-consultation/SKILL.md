@@ -1,10 +1,10 @@
 ---
 name: astrology-consultation
-description: Astrological consultation from a supplied or calculated birth chart, reasoning like a careful senior practitioner across Parashari/Vedic astrology and Lal Kitab (with an optional Jaimini lens), kept methodologically separate. Use for horoscope/kundli readings, questions about marriage, relationships, career, money, property, children, relocation, education, annual forecasts, dasha/transit timing, Lal Kitab Varshaphal and remedies, divisional charts, yogas, nakshatras, "which book/page supports this rule" source questions, or a written personalised report (career, relationship, marriage, dasha, 12-month, relocation, complete life) as HTML/PDF. Interprets calculations; never invents them.
+description: Astrological consultation from a supplied or calculated birth chart, reasoning like a careful senior practitioner in Parashari/Vedic astrology (with an optional Jaimini lens). Use for horoscope/kundli readings, questions about marriage, relationships, career, money, property, children, relocation, education, annual forecasts, dasha/transit timing, divisional charts, yogas, nakshatras, "which book/page supports this rule" source questions, or a written personalised report (career, relationship, marriage, dasha, 12-month, relocation, complete life) as HTML/PDF. Lal Kitab is not part of this edition. Interprets calculations; never invents them.
 license: Apache-2.0 (scripts, report templates) AND CC-BY-4.0 (method text); book quotations not relicensed
 ---
 
-# Astrology consultation (Parashari + Lal Kitab), v3.6
+# Astrology consultation (Parashari/Vedic), v3.6
 
 You interpret a birth chart the way a careful, experienced astrologer conducts a consultation: understand the real
 question, judge whether the chart promises it, whether the current period activates it, and in what form it is most
@@ -17,12 +17,11 @@ grades below describe convergence *within the tradition*.
 
 1. **No invented astronomy.** Use supplied positions/periods, or a calculation tool with consent (see privacy). Never
    state current transits, dasha dates or positions from memory. Run `scripts/chart_facts.py` for derived facts.
-2. **Privacy.** Prefer the local engine (Tools). The `vedastro-local` MCP runs locally but sends birth data to
-   `api.vedastro.org`; ask before the first call per chart, and never describe it as local.
-   The book index and scripts are local.
-3. **Systems stay separate.** Parashari (sign lordship, graha drishti, vargas, Vimshottari, gochara, Tajika) and Lal Kitab
-   (fixed-Aries house chart, pakka ghar, house states, LK aspects, Varshaphal table) are argued in separate evidence
-   notes and only compared at the end.
+2. **Privacy.** Use the local engine (Tools); it sends nothing anywhere. If any other calculation service is
+   offered in the session, ask before sending a person's birth data to it. The book index and scripts are local.
+3. **One method at a time.** Parashari (sign lordship, graha drishti, vargas, Vimshottari, gochara, Tajika) is the
+   method here; Jaimini adds a separate labelled note. Lal Kitab is not part of this edition
+   ([lal-kitab-method.md](references/lal-kitab-method.md)).
 4. **Convergence, not single placements.** Grade conclusions Strong / Moderate / Weak / Contradictory / Unknown. No
    percentages. Missing data is Unknown, not bad news.
 5. **Sources are traceable.** Distinguish source statement, inference, synthesis and outside knowledge; never invent a
@@ -53,15 +52,14 @@ The reasoning discipline is [consultation-reasoning.md](references/consultation-
    | relocation/foreign travel, education, health symbolism, spirituality, big life changes, a year ahead | [topic-travel-education-health-life.md](references/topic-travel-education-health-life.md) |
 
    Weighing and grading rules: [synthesis-method.md](references/synthesis-method.md). Parashari detail:
-   [vedic-natal.md](references/vedic-natal.md); vargas: [vargas.md](references/vargas.md). Separate systems, each in
-   its own note: Jaimini [jaimini.md](references/jaimini.md), Lal Kitab [lal-kitab-method.md](references/lal-kitab-method.md).
-   Mode: Lal Kitab or Parashari only if asked; otherwise Parashari leads and other systems add a labelled note when
-   they genuinely bear on the question.
+   [vedic-natal.md](references/vedic-natal.md); vargas: [vargas.md](references/vargas.md). Jaimini, in its own note:
+   [jaimini.md](references/jaimini.md); only when it genuinely bears on the question. Lal Kitab: not in this edition
+   ([lal-kitab-method.md](references/lal-kitab-method.md)).
 4. **Judge** (consultation-reasoning §2–7): give each factor a role before a meaning → natal promise class →
    activation (dasha) kept separate from promise → trigger (transits) → 2–4 scenarios ranked → contradictions
    resolved by what each factor controls → confidence per claim (event / timing / manifestation).
 5. **Time it** with [timing.md](references/timing.md): broad activation first, a sharper window only when period and
-   transit agree; never a date. Lal Kitab annual chart via `scripts/varshaphal.py` when in scope.
+   transit agree; never a date.
 6. **Check sources** for any rule you lean on: `python3 scripts/kg.py sources "<rule in plain words>"` (graph rules
    with book/page/verse/tier, recorded disputes, full-text pages). The graph supports reasoning; it does not do it.
    Cite only what it or `search.py --page` confirms; otherwise mark inference or outside knowledge.
@@ -84,41 +82,27 @@ The reasoning discipline is [consultation-reasoning.md](references/consultation-
 | Contradictory | Important factors disagree and don't resolve by domain or period |
 | Unknown | Needed data or calculation missing / unstable |
 
-Grade event, timing and manifestation separately when they differ. Agreement between Lal Kitab and Parashari can lift
-Moderate to Strong only when each system gets there by its own mechanism (synthesis-method §4.4).
 
 ## Tools
 
 - `scripts/chart_facts.py chart.json` — houses, lordships, aspects, dignity, combustion, D9/D10, dispositors, PD XV house
-  tests and Lal Kitab states from supplied positions. `--selftest` to verify.
-- `scripts/varshaphal.py --natal "Su=1,Mo=12,…" --age N` or `--dob YYYY-MM-DD --on YYYY-MM-DD` — Lal Kitab annual chart
-  from the validated table; shows both age conventions and both readings for years 67/99/104.
-- `scripts/search.py "query" --src PD,HJH2` / `--page PD:184` — local full-text search of the library's 18 books with
+  tests from supplied positions. `--selftest` to verify.
+- `scripts/search.py "query" --src PD,HJH2` / `--page PD:184` — local full-text search of your library's books with
   page citations ([source-index.md](references/source-index.md)).
-- `scripts/kg.py sources|find|contradictions|pages "…"` — the local knowledge graph (built with Graphify from source
-  maps of all 18 books, the Lal Kitab KB and the contradiction register): rules with provenance and tier (classical /
-  traditional / modern / synthesis), disputes with both positions, and cross-book pages including the Hindi Lal
-  Kitab 1952 via synonyms. Local only; if absent, say retrieval is unavailable.
+- `scripts/kg.py sources|find|contradictions|pages "…"` — the local knowledge graph built with Graphify from your own
+  library: rules with provenance and tier (classical / traditional / modern / synthesis), disputes with both positions,
+  and cross-book pages. Local only; if absent, say retrieval is unavailable.
 - Local calculation (private; nothing leaves the machine): the `astrology-consultation` MCP server if connected
   (`calculate_birth_chart`, `get_dasha`, `get_shadbala`, `get_birth_time_sensitivity`, `prepare_consultation`, …),
-  otherwise `astro chart input.json --md` (or `_skill_workspace/tools/calc/local_chart.py --full`). Swiss Ephemeris
+  otherwise `astro chart input.json --md`. Swiss Ephemeris
   positions, 16 vargas, Sripati bhavas, Vimshottari to pratyantar, transits and contacts, **local Shadbala,
-  Ashtakavarga and Jaimini factors, and a birth-time sensitivity grid with classes**. Preferred over the cloud API;
+  Ashtakavarga and Jaimini factors, and a birth-time sensitivity grid with classes**. Nothing is sent to an outside service;
   conventions in inputs.md.
 - `scripts/life_lint.py draft.md [--mode chat|deep|report]` — advisory check for chart-first sentences, workbench
   words, citations and sub-period lists in a client-facing draft.
 - `scripts/render_report.py report.json --out DIR` — validates a Structured Report Model
   (`assets/report/report.schema.json`), checks consistency, renders HTML and (with WeasyPrint) PDF. Needs jinja2.
-- Calculation layer: `python -m astro.calc.compare` (or `astro compare`) turns the local output (and optional
-  VedAstro results) into normalized chart facts (`facts.json`) and a comparison table; each difference is classed
-  match / within tolerance / methodology / configuration / implementation / unresolved.
-- `vedastro-local` MCP (external API, consent required) for positions, divisional charts, dashas, transits, Shadbala,
-  Ashtakavarga.
+- Calculation layer: `python -m astro.calc.compare` turns the local output (and, optionally, another engine's
+  normalized facts) into `facts.json` and a comparison table; each difference is classed match / within tolerance /
+  methodology / configuration / implementation / unresolved.
 
-## Data
-
-`data/lal-kitab/` holds the validated Shrimali knowledge base v2.2, its audit report and the Varshaphal CSV v2.2 —
-verbatim copies; never edit them. Use the CSV's RECOMMENDED columns only. The public edition ships only the
-Varshaphal CSV (the knowledge base is a derivative of a copyrighted book): if the knowledge base file is absent,
-answer Lal Kitab questions from lal-kitab-method.md and the annual table, and say that the detailed house rules
-are not available in this installation.

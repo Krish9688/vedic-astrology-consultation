@@ -138,7 +138,7 @@
   {
    "id": "LK1952",
    "title": "Lal Kitab 1952",
-   "author": "Pt. Roop Chand Joshi (authorship disputed, KB R52)",
+   "author": "Pt. Roop Chand Joshi",
    "translator": "Hindi re-typeset of the Urdu original (V. Nagpal)",
    "edition": "1952 text, Hindi colour re-typeset",
    "year": "1952",
@@ -345,16 +345,6 @@
   }
  ],
  "derived": [
-  {
-   "id": "KB",
-   "title": "Lal Kitab Shrimali Knowledge Base v2.2",
-   "derived_from": "LKS",
-   "file": "_skill_workspace/astrology-prediction/data/lal-kitab/LalKitab_Shrimali_Knowledge_Base_v2.2.md",
-   "tier": "modern",
-   "system": "Lal Kitab",
-   "page_convention": "section id + LKS PDF page",
-   "sha256": "c8c30d3a7654b629101c1f9bfe1fdf103cbdd49eb57d9d86a443df61cce42c79"
-  },
   {
    "id": "CR",
    "title": "Contradiction register (skill v3)",

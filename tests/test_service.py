@@ -58,16 +58,6 @@ def test_empty_root_is_refused():
         S._inside("/etc/passwd", "")
 
 
-def test_compare_live_refused_in_private_mode():
-    with pytest.raises(PermissionError, match="hybrid"):
-        S.compare_engines(S.BirthInput(**S1), live=True)
-
-
-def test_compare_dir_must_be_inside_data_dir(tmp_path):
-    with pytest.raises(PermissionError):
-        S.compare_engines(S.BirthInput(**S1), vedastro_dir=str(tmp_path.parent))
-
-
 def test_report_name_sanitized():
     with pytest.raises(ValueError):
         S.create_report({}, "../../evil")
@@ -77,6 +67,7 @@ def test_report_folder_is_owner_only(isolated_config):
     model = json.load(open(f"{config.load().skill_dir}/assets/report/example-synthetic.json"))
     res = S.create_report(model, "synthetic")
     assert res["ok"] and (isolated_config / "reports").stat().st_mode & 0o777 == 0o700
+    assert os.stat(res["html"]).st_mode & 0o777 == 0o600                 # the report file itself is owner-only
 
 
 # --- predictions ---------------------------------------------------------------------------------------------------
@@ -108,7 +99,7 @@ def test_rest_endpoints():
     r = c.post("/api/v1/varga", json={"birth": S1, "division": 9})
     assert r.status_code == 200 and r.json()["signs"]["Asc"] == "Leo"
     assert c.post("/api/v1/varga", json={"birth": S1 | {"time": "99:00"}, "division": 9}).status_code == 422
-    assert c.post("/api/v1/compare", json={"birth": S1, "live": True}).status_code == 400
+    assert c.post("/api/v1/compare", json={"birth": S1}).status_code == 404   # engine comparison removed
 
 
 def test_rest_bearer_token(tmp_path):
@@ -147,8 +138,6 @@ def test_mcp_stdio_roundtrip(isolated_config):
             assert {"calculate_birth_chart", "prepare_consultation", "get_birth_time_sensitivity"} <= names
             res = await s.call_tool("get_divisional_chart", S1 | {"division": 9})
             assert not res.is_error and json.loads(res.content[0].text)["signs"]["Asc"] == "Leo"
-            res = await s.call_tool("compare_engines", S1 | {"live": True})
-            assert res.is_error and "hybrid" in res.content[0].text
             doc = await s.read_resource("skill://references/timing.md")          # nested files must be readable (E-1)
             assert len(doc.contents[0].text) > 1000
             for bad in ("skill://../../etc/passwd", "skill://references/../../astro/service.py"):
@@ -363,13 +352,6 @@ def test_source_offer_is_advertised_without_a_token(tmp_path):
 def test_source_url_override(tmp_path):
     set_config(tmp_path, source_url="https://example.org/fork")
     assert S.engine_info()["source"] == "https://example.org/fork"
-
-
-def test_live_vedastro_needs_consent(tmp_path):
-    """G-10: hybrid mode alone is not enough; the person's consent is required, as PRIVACY.md promises."""
-    set_config(tmp_path, mode="hybrid")
-    with pytest.raises(PermissionError, match="consent"):
-        S.compare_engines(S.BirthInput(**S1), live=True)
 
 
 def test_library_not_served_remotely(tmp_path, monkeypatch):

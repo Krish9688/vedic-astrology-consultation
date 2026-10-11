@@ -165,7 +165,7 @@ def render(r, out_dir, base):
     try:
         import jinja2
     except ImportError:
-        sys.exit("render needs jinja2 (pip install jinja2); the JSON itself was valid")
+        raise RuntimeError("render needs jinja2 (pip install jinja2); the JSON itself was valid")   # not sys.exit: callers are servers (council R3 M4)
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(ASSETS), autoescape=True)
     bases = [dict(theme=u["theme"], basis=u["basis"]) for s in r["sections"] for u in s.get("units", []) if u.get("basis")]
     html = env.get_template("template.html.j2").render(
@@ -188,6 +188,8 @@ def render(r, out_dir, base):
 def main():
     if "--selftest" in sys.argv:
         return selftest()
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+        return print(__doc__.strip())
     src = sys.argv[1]
     out = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else os.path.dirname(os.path.abspath(src))
     r = json.load(open(src, encoding="utf-8"))

@@ -3,7 +3,7 @@
 | File | Kind | What it checks |
 |---|---|---|
 | `raman_1918.json` | book example (B. V. Raman, *Graha and Bhava Balas*) | Drik Bala: aspect curve, special-aspect additions, benefic/malefic signs |
-| `../fixtures/local/S1`, `../fixtures/vedastro/S1_*` | synthetic chart S1 | positions, vargas, dashas against VedAstro |
+| `../fixtures/local/S1` | synthetic chart S1 | local reference values, sensitivity and contact exactness |
 | property tests (`test_calc_properties.py`) | synthetic boundary cases | sign/nakshatra/pada boundaries, varga identities, dasha structure, time zones |
 
 No real person's private birth data may be added here (the privacy check blocks it).

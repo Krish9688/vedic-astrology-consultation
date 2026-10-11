@@ -13,7 +13,7 @@ ASTROLOGY BOOKS → text layer / Apple Vision OCR / Docling (opt-in) → page te
                 → full-text index (SQLite FTS5) + Graphify knowledge graph (rules, disputes, provenance)
                                     │  retrieval only: kg.py, search.py
 Birth data → local engine (Swiss Ephemeris) → adapter → ChartFacts ─┐
-          └→ VedAstro (cloud, consent)      → adapter → ChartFacts ─┴→ compare → ValidatedChartFacts
+          └→ another engine's facts (optional, offline) → ChartFacts ─┴→ compare → ValidatedChartFacts
                                     ↓
                       question / report request
                                     ↓
@@ -35,8 +35,8 @@ database. Release and security: git, GitHub CLI, Gitleaks, pre-commit, GitHub Ac
 
 | Layer | Components | Does | Does not |
 |---|---|---|---|
-| Calculation | `tools/calc/` (local_chart, schema, adapters, compare); VedAstro MCP | positions, vargas, dashas, transits, sign changes, slow-planet contacts, birth-time sensitivity; cross-engine agreement | interpret |
-| Derivation | skill `scripts/chart_facts.py`, `varshaphal.py` | houses, lordships, aspects, dignity, dispositors, D9/D10, PD XV tests, Lal Kitab states and annual chart — deterministic, self-tested | calculate positions |
+| Calculation | `tools/calc/` (local_chart, schema, adapters, compare) | positions, vargas, dashas, transits, sign changes, slow-planet contacts, birth-time sensitivity; cross-engine agreement | interpret |
+| Derivation | skill `scripts/chart_facts.py` (+ private edition: `lal_kitab.py`, `varshaphal.py`) | houses, lordships, aspects, dignity, dispositors, D9/D10, PD XV tests (+ private: Lal Kitab states and annual chart) — deterministic, self-tested | calculate positions |
 | Knowledge | books → `text/` → `sourcemaps/` → `knowledge/extraction.json` → `graphify-out/graph.json`; `index/library.sqlite` | store and retrieve rules with book/page/verse/tier/school, disputes with both sides, related rules | decide predictions |
 | Research | Agent Reach; `research/` | learn from public practice | receive chart data |
 | Reasoning | skill `SKILL.md` + `references/` | the judgement: question-first, promise vs activation, scenarios, contradictions, calibrated confidence, the life-first answer | recite the chart |
@@ -53,7 +53,7 @@ Astrology Books/                         the owner's library (books; never publi
     ├── astrology-prediction/            THE SKILL (source; installed as ~/.claude/skills/astrology-consultation)
     │   ├── SKILL.md, references/ (22 files), scripts/ (stdlib), assets/report/, data/lal-kitab/, tests/
     ├── tools/                           calc/, kg/, bench/, OCR, Docling, release, export, privacy, benchmark DB
-    ├── tests/                           pytest + Hypothesis; synthetic fixtures (S1 local + VedAstro)
+    ├── tests/                           pytest + Hypothesis; synthetic fixtures (S1, charts A/B — all local)
     ├── schemas/                         chart_facts.schema.json
     ├── text/, index/, sourcemaps/, knowledge/, graphify-out/   book-derived (private)
     ├── validation/                      graph checks, retrieval and citation tests, Docling benchmark
