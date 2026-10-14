@@ -40,7 +40,7 @@ outside the repository), Gitleaks and the pre-commit hooks; CI repeats the check
 | | secrets of any kind |
 
 Verified 2026-10-03 (`export_repo.py --public` into a scratch folder): 161 files, 1.7 MB; no PDFs, SQLite files, graph,
-source-map parts, private files or ephemeris binaries (in 3.5.0/3.6.0 the skill's Lal Kitab method note still shipped);
+source-map parts, private files or ephemeris binaries (3.5.0/3.6.0 still shipped the skill's Lal Kitab rule tables and method notes, 3.5.0 also the Varshaphal table);
 privacy check 0 findings; Gitleaks clean.
 
 A public user gets: the calculation engine and service (full), the skill's Parashari method and report system (full),

@@ -94,7 +94,7 @@ consultation works and says that source lookup is unavailable.
 | Update | `claude plugin marketplace update vedic-astrology`, then `claude plugin update astrology-consultation@vedic-astrology`, then restart or `/reload-plugins` | Customize → Plugins → **Check for updates** / **Sync automatically**; Code: `/plugin` → Installed → **Update now** |
 | Auto-update | off by default for third-party marketplaces; `/plugin` → Marketplaces → **Enable auto-update** | **Sync automatically** |
 | Disable / enable | `claude plugin disable astrology-consultation@vedic-astrology` / `claude plugin enable …` | the plugin's toggle |
-| Roll back | `claude plugin marketplace remove vedic-astrology`, then `claude plugin marketplace add Krish9688/vedic-astrology-consultation#v3.5.0` (any release tag), then install again | — |
+| Roll back | `claude plugin marketplace remove vedic-astrology`, then `claude plugin marketplace add Krish9688/vedic-astrology-consultation#<release tag>`, then install again (3.5.0 and 3.6.0 still contain Lal Kitab rule tables and notes that later releases leave out) | — |
 | Uninstall | `claude plugin uninstall astrology-consultation@vedic-astrology` (`--keep-data` keeps the engine environment) | **Remove** |
 
 Tested on a sandboxed profile: update 3.5.0 → newer kept the engine environment (no rebuild; from 3.6.0 it rebuilds when

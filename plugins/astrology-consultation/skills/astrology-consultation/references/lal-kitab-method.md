@@ -1,7 +1,7 @@
 # Lal Kitab — not part of this edition
 
-This edition of the skill does not provide Lal Kitab analysis. Lal Kitab rules, tables, annual charts and remedies come
-from books whose redistribution has not been cleared, so none of them is included here.
+This edition of the skill does not provide Lal Kitab analysis: as a precaution about the redistribution status of the
+Lal Kitab books it was built from, no Lal Kitab rules, tables, annual charts or remedies are included here.
 
 When someone asks for a Lal Kitab reading, a Lal Kitab remedy or a yearly Lal Kitab chart:
 1. Say plainly that this edition does not provide Lal Kitab analysis.
