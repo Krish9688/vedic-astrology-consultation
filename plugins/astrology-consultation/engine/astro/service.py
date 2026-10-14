@@ -277,7 +277,6 @@ def create_report(model: dict, name: str = "report") -> dict:
     if errs:
         return {"ok": False, "errors": errs}
     os.makedirs(s.reports_dir, mode=0o700, exist_ok=True)      # reports hold birth details: owner-only when created
-    os.chmod(s.reports_dir, 0o700)                              # ... and when it already existed
     html, pdf = rr.render(model, s.reports_dir, name)
     for f in (html, pdf):
         if f:

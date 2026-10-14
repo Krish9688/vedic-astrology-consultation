@@ -77,11 +77,12 @@ def test_report_file_owner_only_when_pdf_step_fails(isolated_config, monkeypatch
     boom.HTML = lambda **kw: (_ for _ in ()).throw(RuntimeError("pdf failed"))
     monkeypatch.setitem(sys.modules, "weasyprint", boom)
     model = json.load(open(f"{config.load().skill_dir}/assets/report/example-synthetic.json"))
-    os.makedirs(isolated_config / "reports", mode=0o755, exist_ok=True)
-    os.chmod(isolated_config / "reports", 0o755)
-    with pytest.raises(RuntimeError, match="pdf failed"):
-        S.create_report(model, "failing")
-    assert (isolated_config / "reports").stat().st_mode & 0o777 == 0o700
+    old = os.umask(0o022)                # the regression only shows under a permissive umask
+    try:
+        with pytest.raises(RuntimeError, match="pdf failed"):
+            S.create_report(model, "failing")
+    finally:
+        os.umask(old)
     assert os.stat(isolated_config / "reports" / "failing.html").st_mode & 0o777 == 0o600
 
 

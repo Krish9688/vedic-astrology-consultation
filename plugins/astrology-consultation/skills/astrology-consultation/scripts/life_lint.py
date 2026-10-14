@@ -33,7 +33,7 @@ SAFETY = re.compile(r"\b(?:parenthood (?:in|by|after|before|during) your|(?:fewe
                     r"(?:may|might|could|would|is likely to|are likely to) die\b(?! down| back| out| off)|\bdie (?:young|early|soon)\b|"
                     r"(?:early|untimely|sudden) death|short (?:life|lifespan)|"
                     r"(?:risk of|indicates?|shows?|signals?|means?|develop\w*|suffer\w* from|get|have) (?:a |an )?"
-                    r"(?:cancer|tumou?r|heart attack|stroke(?! of)|diabetes|serious illness|terminal illness|disease)\b|"
+                    r"(?:(?-i:cancer)|tumou?r|heart attack|stroke(?! of)|diabetes|serious illness|terminal illness|disease)\b|"
                     r"(?:stop|reduce|skip|change|quit|come off) (?:taking )?(?:your |any |the )?(?:medication|medicine|"
                     r"tablets|pills|treatment|insulin|chemotherapy)|"
                     r"life ?span|longevity|length of (?:your |his |her )?life|santana\w*|putra\w*|progeny|"
