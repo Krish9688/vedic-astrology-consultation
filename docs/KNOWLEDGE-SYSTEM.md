@@ -43,7 +43,7 @@ Astrology Books/
     ├── graphify-out/             graph.json (the graph), GRAPH_REPORT.md, graph.html (+ optional wiki/, obsidian/)
     ├── text/, index/, sourcemaps/   (from v3)
     ├── tools/kg/                 extract.py, build_graph.py, add_book.py ; tools/release_skill.py
-    ├── validation/               graph_checks.py, retrieval_eval.py and generated reports
+    ├── validation/               graph_checks.py, retrieval_eval.py (private build) and generated reports
     ├── vendor/graphify/          the inspected Graphify source (commit 4c73561, v0.9.67)
     ├── .venv-graphify/           Graphify + deps (project-local)
     ├── backups/                  pre-change archives and every previous installed skill
@@ -163,7 +163,7 @@ open _skill_workspace/graphify-out/graph.html            # visual map of the 167
   (archives the installed copy to `backups/installed-before-<time>/` first, runs self-tests, builds the package).
 - **Update Graphify**: `git -C vendor/graphify pull`, read its CHANGELOG, then
   `.venv-graphify/bin/pip install --no-build-isolation --only-binary=:all: --no-binary=graphifyy ./vendor/graphify`
-  and rebuild; `graph_checks.py` and `retrieval_eval.py` must still pass.
+  and rebuild; `graph_checks.py` (and, in the private build, `retrieval_eval.py`) must still pass.
 - **Backups**: `backups/2026-09-25_pre-v3.1/` holds the v3 skill source, installed copy, package and the previous
   index. To restore v3: extract `installed-skill.tgz` into `~/.claude/skills/`. Everything derived (extraction,
   graph, index) can be regenerated from the books + source maps, so the irreplaceable items are the books, the

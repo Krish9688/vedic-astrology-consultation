@@ -77,6 +77,8 @@ def test_real_public_export_passes_the_b2_gate(tmp_path):
     kg_pub = open(os.path.join(str(tmp_path), "tools", "kg", "extract.py")).read()   # private KB parser left out
     assert "def add_kb" not in kg_pub and "KB_PATH" not in kg_pub and "def add_kb" in open(os.path.join(ROOT, "tools", "kg", "extract.py")).read()
     compile(kg_pub, "extract.py", "exec")
+    add_pub = open(os.path.join(str(tmp_path), "tools", "kg", "add_book.py")).read()   # no call to a private-only script
+    assert "retrieval_eval" not in add_pub and "validation/retrieval_eval.py" not in shipped
     ex.b2_gate(str(tmp_path))                            # sys.exit on any finding
 
 

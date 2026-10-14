@@ -22,7 +22,7 @@ server log); `install.sh` with a sandboxed home folder.
 
 ## 2. Knowledge
 
-`validation/graph_checks.py` (27 checks incl. every book's SHA-256), `validation/retrieval_eval.py` (gold-page recall: curated set 16/17;
+`validation/graph_checks.py` (27 checks incl. every book's SHA-256), `validation/retrieval_eval.py` (private build only; gold-page recall: curated set 16/17;
 blind 24-question set from council member C: full text 16/24, hybrid 17/24, graph 9/24), `validation/citation_test.py` (20 sampled rules per book, cited page contains the rule's words:
 19–20/20), `tools/kg/validate_map.py` (every source-map part before promotion). Docling benchmark:
 `validation/docling/README.md`.
