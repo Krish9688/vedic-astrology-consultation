@@ -39,7 +39,7 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
 - [ ] Confident only where the grade is Strong; clearly tentative where Weak/Unknown.
 - [ ] No death/longevity, diagnosis, fertility, infidelity, legal verdict or investment claims; classical deterministic
       statements not presented as forecasts.
-- [ ] Remedies only if asked, through remedy-safety.md; nothing ⛔; safe substitutes labelled as substitutes.
+- [ ] Remedies only if asked, through remedy-safety.md; nothing its §1 rules out; safe substitutes labelled as substitutes.
 - [ ] No claim of human experience, intuition or guaranteed outcomes.
 
 ## Regression scenarios (for testing changes to the skill)

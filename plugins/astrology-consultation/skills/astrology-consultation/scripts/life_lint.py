@@ -36,7 +36,7 @@ SAFETY = re.compile(r"\b(?:parenthood (?:in|by|after|before|during) your|(?:fewe
                     r"(?:(?-i:cancer)|tumou?r|heart attack|stroke(?! of)|diabetes|serious illness|terminal illness|disease)\b|"
                     r"(?:stop|reduce|skip|change|quit|come off) (?:taking )?(?:your |any |the )?(?:medication|medicine|"
                     r"tablets|pills|treatment|insulin|chemotherapy)|"
-                    r"life ?span|longevity|length of (?:your |his |her )?life|santana\w*|putra\w*|progeny|"
+                    r"life ?span|longevity|length of (?:your |his |her )?life|santana\w*|putra(?!karaka)\w*|progeny|"
                     r"death of (?:your|his|her|their|a|the) (?:father|mother|parent|spouse|husband|wife|partner|child|"
                     r"son|daughter|brother|sister|sibling|grandparent|friend))\b",
                     re.I)

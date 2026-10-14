@@ -164,6 +164,7 @@ def test_chart_facts_varga_matches_engine_at_exact_boundaries():
     ("Your child may die young according to this chart.", True),
     ("This placement indicates cancer in later life.", True),
     ("Your houses show Cancer rising, a protective manner.", False),   # the sign, not the illness (council 5 R5 C1)
+    ("Your Putrakaraka is Venus in the Jaimini scheme.", False),      # a Jaimini term, not a progeny forecast (R7-7)
     ("You should stop taking your medication during this period.", True),
     ("This is not medical advice; please do not stop your medication without your doctor.", False),
     ("The Moon in Cancer gives a caring nature.", False),

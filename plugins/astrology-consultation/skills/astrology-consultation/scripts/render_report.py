@@ -142,7 +142,7 @@ def checks(r):
     res = lint(report_text(r), "report")
     errs += [i for i in res["issues"] if i.startswith("SAFETY")]
     # safety covers every string in the model — appendix, timeline labels, watch list, practical summary too
-    rest = lint("\n".join(_strings({k: v for k, v in r.items() if k not in ("summary", "sections")})), "report")
+    rest = lint("\n".join(_strings(r)), "report")   # every string, incl. unit basis and section titles (council 5 R7-1)
     errs += [i for i in rest["issues"] if i.startswith("SAFETY") and i not in errs]
     warns += [f"life-first: {i}" for i in res["issues"] if not i.startswith("SAFETY")]
     cites = re.findall(r"\bp\.?\s?\d{1,4}\b|\bsl\.\s?\d+", report_text(r))

@@ -34,7 +34,7 @@ outside the repository), Gitleaks and the pre-commit hooks; CI repeats the check
 | Included | Excluded (always) |
 |---|---|
 | `astro/` engine and service, `tools/` code, tests with **synthetic** fixtures and reference charts | books, extracted page text, source maps, index, knowledge graph |
-| the skill: `SKILL.md`, `references/`, `scripts/`, report template | all Lal Kitab-derived material (public edition, from 3.6.1) |
+| the skill: `SKILL.md`, `references/`, `scripts/`, report template | Lal Kitab rules, tables, method notes, remedies, annual chart and knowledge-base content (public edition, from 3.6.1) |
 | docs, `install.sh`, `pyproject.toml`, CI | personal charts, private benchmarks, reports, the prediction log, settings |
 | `knowledge/catalog.json` (bibliographic metadata + fingerprints only, so users can ingest their own copies) | Swiss Ephemeris binaries (users fetch them with `astro setup --ephemeris`, checksum-verified) |
 | | secrets of any kind |

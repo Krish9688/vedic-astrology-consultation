@@ -86,6 +86,14 @@ def test_report_file_owner_only_when_pdf_step_fails(isolated_config, monkeypatch
     assert os.stat(isolated_config / "reports" / "failing.html").st_mode & 0o777 == 0o600
 
 
+def test_report_safety_covers_unit_basis_and_titles(isolated_config):
+    # council 5 R7-1: every printed string is checked, including the "Chart basis" column and section titles
+    model = json.load(open(f"{config.load().skill_dir}/assets/report/example-synthetic.json"))
+    unit = next(u for sec in model["sections"] for u in sec.get("units", []) if "basis" in u)
+    unit["basis"] = "The native will die young."
+    res = S.create_report(model, "unsafe-basis")
+    assert not res["ok"] and any("SAFETY" in e for e in res["errors"])
+
 # --- predictions ---------------------------------------------------------------------------------------------------
 def test_predictions_need_consent_or_synthetic(tmp_path):
     db = str(tmp_path / "p.sqlite")
