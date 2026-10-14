@@ -28,7 +28,7 @@ skill's own references, no personal data.
 Built only by `tools/export_repo.py` (an **allowlist** — files not listed are never copied). The public edition is built by
 `tools/export_public.py`, which also applies `tools/public_edition.py`: blocks marked private-edition in the skill,
 `scripts/lal_kitab.py`, `scripts/varshaphal.py` and `data/lal-kitab/` never reach it, and a B2 gate fails the export on
-any Lal Kitab rule, table, knowledge-base code or book citation (from 3.6.1). Every export is then checked by `tools/privacy_check.py` (personal terms kept
+known Lal Kitab rule tables, terms, knowledge-base codes and book citations (from 3.6.1; a pattern check backed by review, not proof of absence). Every export is then checked by `tools/privacy_check.py` (personal terms kept
 outside the repository), Gitleaks and the pre-commit hooks; CI repeats the checks.
 
 | Included | Excluded (always) |

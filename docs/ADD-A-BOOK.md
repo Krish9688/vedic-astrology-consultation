@@ -30,7 +30,7 @@ Open a few pages to check: `python3 astrology-prediction/scripts/search.py --pag
 
 This produces `sourcemaps/BPHS1.md` (or `_part1/_part2`), with one bullet per rule, each tagged
 `[CLASSICAL-VERSE] / [TRANSLATOR-NOTE] / [AUTHOR] / [LK] / [Reader note]` and ending in `— BPHS1 p<PDF> (pr <printed>)`.
-Use `BRIEF_LK1952.md` for Lal Kitab texts. *Privacy:* this step sends the book's text, a page range at a time, to the
+(The owner's private build uses a separate brief for Lal Kitab texts; it is not shipped.) *Privacy:* this step sends the book's text, a page range at a time, to the
 Claude model you are using (Anthropic). It is not uploaded anywhere else, and nothing is published. Skip it if you prefer:
 the book will then be in the full-text index and the graph's page layer, just without rule nodes.
 

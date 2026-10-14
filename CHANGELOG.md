@@ -25,7 +25,7 @@ The local engine stands on its own; nothing in the project calls an outside calc
   `chart_facts.py` moved to a private-edition module; `varshaphal.py` is private-edition only; Lal Kitab sections of the
   references are kept only in the private edition. Asked about Lal Kitab, the public skill says it is not part of this
   edition and offers the Parashari reading. The remedy-safety file keeps a generic, project-written list of harmful
-  practices. An export gate and tests fail on any Lal Kitab-derived content in the public package. This does not
+  practices. An export gate and tests fail on known Lal Kitab rule tables, terms, knowledge-base codes and book citations (a pattern check, not proof of absence). This does not
   change what 3.5.0 and 3.6.0 contained.
 - Fixes from the 2026-10-11 council review: navamsa/dashamsa of a planet at exactly 10° or 20° (chart_facts.py) now
   matches the engine; (private edition) Lal Kitab ally/rival flags for shared houses fixed; the
