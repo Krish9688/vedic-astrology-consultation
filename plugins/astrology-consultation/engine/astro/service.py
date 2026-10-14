@@ -205,7 +205,7 @@ def skill_file(rel: str) -> str:
     """Read one file of the skill (SKILL.md, references/*.md, assets/report/*) — nothing outside the skill folder."""
     s = config.load()
     path = _inside(os.path.join(s.skill_dir, rel), s.skill_dir)
-    if "/data/lal-kitab/" in path.replace(os.sep, "/"):   # book-derived KB: same rule as library excerpts (H-10)
+    if "/data/lal-kitab/" in path.replace(os.sep, "/").lower():   # book-derived KB: same rule as library excerpts (H-10); lower(): case-insensitive disks
         _library_gate()
     if not re.search(r"\.(md|json|css|j2)$", path):
         raise PermissionError("only skill documents can be read")
@@ -277,6 +277,7 @@ def create_report(model: dict, name: str = "report") -> dict:
     if errs:
         return {"ok": False, "errors": errs}
     os.makedirs(s.reports_dir, mode=0o700, exist_ok=True)      # reports hold birth details: owner-only when created
+    os.chmod(s.reports_dir, 0o700)                              # ... and when it already existed
     html, pdf = rr.render(model, s.reports_dir, name)
     for f in (html, pdf):
         if f:

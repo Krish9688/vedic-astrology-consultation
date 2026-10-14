@@ -174,15 +174,23 @@ def render(r, out_dir, base):
         appendix=bool(bases or r.get("appendix")), section_titles={s["id"]: s["title"] for s in r["sections"]})
     os.makedirs(out_dir, exist_ok=True)
     hp = os.path.join(out_dir, base + ".html")
-    open(hp, "w", encoding="utf-8").write(html)
+    with _owner_only(hp) as f:          # reports hold birth details: 0600 from the first byte, also on errors
+        f.write(html.encode("utf-8"))
     try:
         from weasyprint import HTML
     except Exception:  # ImportError, or missing system libraries (pango) on this machine
         return hp, None
     pp = os.path.join(out_dir, base + ".pdf")
     doc = HTML(string=html, base_url=ASSETS).render()
-    doc.write_pdf(pp)
+    with _owner_only(pp) as f:
+        doc.write_pdf(f)
     return hp, pp
+
+
+def _owner_only(path):
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    os.fchmod(fd, 0o600)                 # an existing file keeps its old mode otherwise
+    return os.fdopen(fd, "wb")
 
 
 def main():

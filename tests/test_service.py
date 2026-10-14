@@ -70,6 +70,21 @@ def test_report_folder_is_owner_only(isolated_config):
     assert os.stat(res["html"]).st_mode & 0o777 == 0o600                 # the report file itself is owner-only
 
 
+def test_report_file_owner_only_when_pdf_step_fails(isolated_config, monkeypatch):
+    # council 5 R4 S1: a failing PDF step must not leave a world-readable HTML report behind
+    import types
+    boom = types.ModuleType("weasyprint")
+    boom.HTML = lambda **kw: (_ for _ in ()).throw(RuntimeError("pdf failed"))
+    monkeypatch.setitem(sys.modules, "weasyprint", boom)
+    model = json.load(open(f"{config.load().skill_dir}/assets/report/example-synthetic.json"))
+    os.makedirs(isolated_config / "reports", mode=0o755, exist_ok=True)
+    os.chmod(isolated_config / "reports", 0o755)
+    with pytest.raises(RuntimeError, match="pdf failed"):
+        S.create_report(model, "failing")
+    assert (isolated_config / "reports").stat().st_mode & 0o777 == 0o700
+    assert os.stat(isolated_config / "reports" / "failing.html").st_mode & 0o777 == 0o600
+
+
 # --- predictions ---------------------------------------------------------------------------------------------------
 def test_predictions_need_consent_or_synthetic(tmp_path):
     db = str(tmp_path / "p.sqlite")
