@@ -340,6 +340,13 @@ def add_sourcemaps():
                      {"map_line": f"{f}:{ln_no}"}, heading=deepest)
 
 
+# ---------- Lal Kitab KB ----------
+def table_rows(lines, prefix):
+    for ln in lines:
+        if ln.startswith("| " + prefix):
+            yield [c.strip() for c in ln.strip().strip("|").split("|")]
+
+
 
 
 def add_contradiction(cid, topic, side_a, side_b, klass, default, path, default_src, date):
