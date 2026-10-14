@@ -12,8 +12,7 @@ This repository uses three licences, chosen by component (see docs/LICENSING-DEC
 - Any other file in this repository: Apache-2.0 for code and configuration, CC BY 4.0 for text and data, except
   the third-party material below.
 
-Not covered by any of these: tests/fixtures/vedastro/* (output of the VedAstro API, kept as test data, the property
-of its authors). Short quotations and paraphrases of the astrology books cited in the references remain
+Not covered by any of these: short quotations and paraphrases of the astrology books cited in the references remain
 the property of their authors and publishers. No book, extracted book text or book index is distributed here.
 
 Third-party: Swiss Ephemeris © Astrodienst AG, used under AGPL-3.0 through pyswisseph (also available under the Swiss

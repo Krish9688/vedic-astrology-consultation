@@ -1,6 +1,5 @@
-# Known reference values and the independent-engine cross-check on the synthetic chart S1
-# (14 Mar 1992, 09:40 UT, 51.5N 0.12W — not a real person). VedAstro fixtures were fetched once with synthetic
-# data only; no personal birth data is used anywhere in this test suite.
+# Known reference values and local-engine exactness checks on the synthetic chart S1
+# (14 Mar 1992, 09:40 UT, 51.5N 0.12W — not a real person). No personal birth data is used anywhere in this suite.
 import json
 import os
 
@@ -9,7 +8,7 @@ import swisseph as swe
 from pydantic import ValidationError
 
 from astro.calc import engine as lc
-from astro.calc.adapters import from_local, from_vedastro
+from astro.calc.adapters import from_local
 from astro.calc.compare import compare, validate
 from astro.calc.schema import ChartFacts, ValidatedChartFacts
 
@@ -23,10 +22,7 @@ def load(*p):
 
 @pytest.fixture(scope="module")
 def s1():
-    a = from_local(load("local", "S1", "calc.json"))
-    b = from_vedastro(load("vedastro", "S1_planet_data.json"), load("vedastro", "S1_ascendant.json"),
-                      load("vedastro", "S1_dasa_range.json"), load("vedastro", "S1_shadbala.json"))
-    return a, b
+    return from_local(load("local", "S1", "calc.json"))
 
 
 def test_lahiri_ayanamsa_j2000():
@@ -41,55 +37,25 @@ def test_tropical_sun_j2000():
     assert abs(x[0] - 280.37) < 0.02
 
 
-def test_engines_agree_on_positions(s1):
-    a, b = s1
-    for ag in compare(a, b):
-        if ag.kind == "position":
-            assert ag.verdict in ("match", "within tolerance"), ag
-        assert ag.kind not in ("sign", "nakshatra", "pada"), ag
-
-
-def test_only_documented_methodology_differences(s1):
-    a, b = s1
-    bad = [x for x in compare(a, b) if x.verdict == "unresolved"]
-    assert bad == [], bad
-    vargas = {x.key.split(":")[1] for x in compare(a, b) if x.kind == "varga" and x.verdict != "match"}
-    assert vargas <= {"D2", "D7", "D30"}                  # D9, D10, D12, D60 … agree exactly
-
-
-def test_dasha_lords_agree_and_year_convention_is_flagged(s1):
-    a, b = s1
-    ag = compare(a, b)
-    assert any(x.kind == "configuration" and x.key == "dasha year" for x in ag)
-    assert not [x for x in ag if x.key.startswith("sub-period order")]
-    assert [p.lord for p in b.vimshottari] == ["Ju", "Sa", "Me", "Ke", "Ve"]
-    assert [p.lord for p in a.vimshottari][:5] == ["Ju", "Sa", "Me", "Ke", "Ve"]
-
-
-def test_validated_facts_roundtrip(s1):
-    v = validate(*s1)
+def test_comparator_on_identical_charts(s1):
+    """The comparator itself: a chart compared with itself has no difference, and validated facts round-trip."""
+    ag = compare(s1, s1)
+    assert ag and all(x.verdict in ("match", "within tolerance", "not comparable") for x in ag), \
+        [x for x in ag if x.verdict not in ("match", "within tolerance", "not comparable")]
+    v = validate(s1, s1)
     again = ValidatedChartFacts.model_validate_json(v.model_dump_json())
-    assert again.cross_check_engine.startswith("vedastro")
-    assert again.provenance.network == "local"
+    assert again.provenance.network == "local" and again.disagreements() == []
 
 
 def test_schema_rejects_inconsistent_facts(s1):
-    a, _ = s1
-    d = json.loads(a.model_dump_json())
+    d = json.loads(s1.model_dump_json())
     d["bodies"]["Mo"]["sign"] = "Leo"                     # Moon is in Cancer
     with pytest.raises(ValidationError):
         ChartFacts(**d)
-    d = json.loads(a.model_dump_json())
+    d = json.loads(s1.model_dump_json())
     d["bodies"]["Ke"]["lon"] = (d["bodies"]["Ra"]["lon"] + 170) % 360
     with pytest.raises(ValidationError):
         ChartFacts(**d)
-
-
-def test_shadbala_never_compared_as_equal(s1):
-    a, b = s1
-    a.shadbala_rupas = {"Su": 7.0}
-    assert all(x.verdict == "methodology" for x in compare(a, b) if x.kind == "shadbala")
-    assert "Ra" not in b.shadbala_rupas                  # VedAstro's node values are copies, dropped
 
 
 def test_boundary_sensitivity_s1():
@@ -122,3 +88,9 @@ def test_slow_contacts_are_exact():
         d = (lc.positions(lc.jd_of(t))[c["transit"]]["lon"] - target + 180) % 360 - 180
         assert abs(d) < 0.25, c        # within a day's motion of exact
     assert all(c["aspect"] == "conjunction" for c in found if c["transit"] in ("Ra", "Ke"))
+
+
+def test_published_json_schema_is_current():
+    # AUD-10: schemas/chart_facts.schema.json had drifted from the Pydantic model (diff classes, provenance fields)
+    path = os.path.join(os.path.dirname(__file__), "..", "schemas", "chart_facts.schema.json")
+    assert json.load(open(path)) == ValidatedChartFacts.model_json_schema()

@@ -25,24 +25,26 @@ skill's own references, no personal data.
 
 ## 2. Public distributable repository (historical: the single-repository export used before 2026-10-03)
 
-Built only by `tools/export_repo.py` (an **allowlist** — files not listed are never copied). `--public` additionally
-removes the Lal Kitab knowledge base. Every export is then checked by `tools/privacy_check.py` (personal terms kept
+Built only by `tools/export_repo.py` (an **allowlist** — files not listed are never copied). The public edition is built by
+`tools/export_public.py`, which also applies `tools/public_edition.py`: blocks marked private-edition in the skill,
+`scripts/lal_kitab.py`, `scripts/varshaphal.py` and `data/lal-kitab/` never reach it, and a B2 gate fails the export on
+known Lal Kitab rule tables, terms, knowledge-base codes and book citations (from 3.6.1; a pattern check backed by review, not proof of absence). Every export is then checked by `tools/privacy_check.py` (personal terms kept
 outside the repository), Gitleaks and the pre-commit hooks; CI repeats the checks.
 
 | Included | Excluded (always) |
 |---|---|
 | `astro/` engine and service, `tools/` code, tests with **synthetic** fixtures and reference charts | books, extracted page text, source maps, index, knowledge graph |
-| the skill: `SKILL.md`, `references/`, `scripts/`, report template | the Lal Kitab KB (`--public`) |
+| the skill: `SKILL.md`, `references/`, `scripts/`, report template | Lal Kitab rules, tables, method notes, remedies, annual chart and knowledge-base content (public edition, from 3.6.1) |
 | docs, `install.sh`, `pyproject.toml`, CI | personal charts, private benchmarks, reports, the prediction log, settings |
 | `knowledge/catalog.json` (bibliographic metadata + fingerprints only, so users can ingest their own copies) | Swiss Ephemeris binaries (users fetch them with `astro setup --ephemeris`, checksum-verified) |
 | | secrets of any kind |
 
 Verified 2026-10-03 (`export_repo.py --public` into a scratch folder): 161 files, 1.7 MB; no PDFs, SQLite files, graph,
-source-map parts, private files or ephemeris binaries; the only "lal-kitab" file is the skill's own method note;
+source-map parts, private files or ephemeris binaries (3.5.0/3.6.0 still shipped the skill's Lal Kitab rule tables and method notes, 3.5.0 also the Varshaphal table);
 privacy check 0 findings; Gitleaks clean.
 
-A public user gets: the calculation engine and service (full), the skill's method and report system (full), Lal
-Kitab method notes without the knowledge base, and book search/graph only after ingesting their own books
+A public user gets: the calculation engine and service (full), the skill's Parashari method and report system (full),
+no Lal Kitab material (from 3.6.1), and book search/graph only after ingesting their own books
 (`astro add-book`).
 
 ## 3. Rules

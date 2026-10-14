@@ -9,7 +9,7 @@ on your own computer.
 | Component | Where it runs | Notes |
 |---|---|---|
 | Skill `astrology-consultation` | Claude Code; Cowork and claude.ai chat (documented, not yet verified) | the consultation and report method |
-| Local MCP server `astrology` (16 tools) | Claude Code; Cowork (expected, not yet verified) | started by `scripts/astro`; not available in web chat |
+| Local MCP server `astrology` (15 tools) | Claude Code; Cowork (expected, not yet verified) | started by `scripts/astro`; not available in web chat |
 | Commands `/astrology-consultation:setup`, `/astrology-consultation:doctor` | Claude Code; Cowork (not yet verified) | first-time setup and health check |
 
 The engine's Python environment is created on first use in the plugin's data folder (`~/.claude/plugins/data/…`),
@@ -25,8 +25,7 @@ kept across plugin updates and removed when you uninstall. Swiss Ephemeris files
 3. Ask: "Calculate my chart" (give date, time, UTC offset and coordinates), "Give me a career consultation",
    "Create my 12-month report", "Explain my current dasha".
 
-Privacy: **private mode** by default — calculation is local and nothing is sent anywhere. An optional VedAstro
-cross-check exists only in hybrid mode (`astro setup --mode hybrid`), and it is never needed.
+Privacy: calculation is local and nothing is sent anywhere.
 
 Full guide, updates, uninstalling and troubleshooting:
 [docs/MARKETPLACE.md](https://github.com/Krish9688/vedic-astrology-consultation/blob/main/docs/MARKETPLACE.md).

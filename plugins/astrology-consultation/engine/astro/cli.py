@@ -2,7 +2,7 @@
 line, so it stays out of shell history):  {"date": "1992-03-14", "time": "09:40", "tz": 0, "lat": 51.5, "lon": -0.12}
 
   astro chart input.json [--md] [--out DIR]       astro sensitivity input.json [--md]
-  astro dasha input.json [--on DATE] [--year 360] astro compare input.json [--vedastro-dir DIR | --live]
+  astro dasha input.json [--on DATE] [--year 360]
   astro varga input.json --d 9                    astro consult "Will my career change?" input.json
   astro transits input.json [--months 24]         astro report model.json [--name NAME]
   astro strength input.json                       astro sources "rule" | astro search "words"
@@ -88,7 +88,7 @@ def doctor():
     books = s.books_dir and os.path.isdir(s.books_dir)
     add("PASS" if books else "OPTIONAL", "books folder",
         f"{sum(f.lower().endswith('.pdf') for f in os.listdir(s.books_dir))} PDFs" if books else "not configured")
-    add("PASS", f"privacy mode: {s.mode}", "external calculation allowed" if s.external_allowed else "fully local")
+    add("PASS", f"privacy mode: {s.mode}", "fully local calculation")
     if s.allow_remote and not s.api_token:
         add("WARN", "remote access", "allow_remote is set but no api_token — servers will refuse to listen remotely")
     for path, want, name in ((config.CONFIG_PATH, 0o600, "config file permissions"),
@@ -98,8 +98,6 @@ def doctor():
         if os.path.exists(path):
             mode = os.stat(path).st_mode & 0o777
             add("PASS" if mode & ~want == 0 else "WARN", name, f"{oct(mode)} (want {oct(want)} or stricter)")
-    vedastro = os.path.exists(s.vedastro_server) and shutil.which("node")
-    add("PASS" if vedastro else "OPTIONAL", "VedAstro cross-check", "used only in hybrid mode")
     for level, name, detail in rows:
         print(f"{level:<8} {name}" + (f" — {detail}" if detail else ""))
     return 1 if any(r[0] == "FAIL" for r in rows) else 0
@@ -143,7 +141,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(prog="astro", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
                                  epilog=S.SOURCE_NOTICE + f" Source: {S.SOURCE_URL}. Uses {S.THIRD_PARTY}.")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("chart", "positions", "dasha", "transits", "strength", "jaimini", "sensitivity", "compare", "varga"):
+    for name in ("chart", "positions", "dasha", "transits", "strength", "jaimini", "sensitivity", "varga"):
         p = sub.add_parser(name)
         p.add_argument("input")
         p.add_argument("--on", type=dt.date.fromisoformat)
@@ -154,10 +152,6 @@ def main(argv=None):
             p.add_argument("--out")
         if name == "varga":
             p.add_argument("--d", type=int, required=True)
-        if name == "compare":
-            p.add_argument("--vedastro-dir")
-            p.add_argument("--live", action="store_true")
-            p.add_argument("--consent", action="store_true", help="the person agreed to their birth data going to VedAstro")
     p = sub.add_parser("consult")
     p.add_argument("question")
     p.add_argument("input")
@@ -183,7 +177,7 @@ def main(argv=None):
     p.add_argument("--evaluation")
     sub.add_parser("doctor")
     p = sub.add_parser("setup")
-    p.add_argument("--mode", choices=["private", "hybrid", "research"])
+    p.add_argument("--mode", choices=["private", "research"])
     for k in ("skill-dir", "knowledge-dir", "books-dir", "reports-dir"):
         p.add_argument("--" + k)
     p.add_argument("--ephemeris", action="store_true", help="download the Swiss Ephemeris data files (≈1.8 MB)")
@@ -253,8 +247,7 @@ def main(argv=None):
           "transits": lambda: S.transits(b, o), "strength": lambda: {"shadbala": S.shadbala(b),
                                                                      "ashtakavarga": S.ashtakavarga(b)},
           "jaimini": lambda: S.jaimini_factors(b), "sensitivity": lambda: S.birth_time_sensitivity(b, o),
-          "varga": lambda: S.divisional_chart(b, a.d),
-          "compare": lambda: S.compare_engines(b, a.vedastro_dir, a.live, a.consent)}[a.cmd]
+          "varga": lambda: S.divisional_chart(b, a.d)}[a.cmd]
     return _print(fn(), md_key="table_markdown", md=a.md)
 
 

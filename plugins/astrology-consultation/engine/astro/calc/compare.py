@@ -4,7 +4,7 @@ A generic object diff would call 330.3149 vs 330.3147 "different"; here differen
 astrologically. Verdicts:
   match · within tolerance · methodology (a documented rule difference) · configuration (a setting, e.g. 360-day
   years) · implementation (a known defect in one engine) · unresolved (needs investigation) · not comparable.
-usage: python -m astro.calc.compare --local OUT/calc.json [--vedastro DIR] --out OUT
+usage: python -m astro.calc.compare --local OUT/calc.json [--other FACTS.json] --out OUT
 """
 from __future__ import annotations
 
@@ -19,17 +19,17 @@ DASHA_TOL_DAYS = 3            # period boundaries within 3 days = same (rounding
 VERDICTS = ("match", "within tolerance", "methodology", "configuration", "implementation", "unresolved",
             "not comparable")
 
-# Shadbala components that follow the same rule in the local engine and VedAstro (expected to match), and the
-# documented reasons the others differ (checked on S2 and the owner's chart, 2026-10-02).
+# Shadbala components whose rule is unambiguous in BPHS (another engine should match), and the conventions on which
+# engines are known to differ — each note states the local engine's choice.
 SHADBALA_SAME_RULE = {"dig", "ojayugma", "kendradi", "drekkana", "tribhaga", "naisargika"}
 SHADBALA_NOTES = {
-    "saptavargaja": ("methodology", "local uses BPHS 27.2–4 points 45/30/20/15/10/4/2; VedAstro the 45/30/22.5/15/"
-                     "7.5/3.75/1.875 scale"),
+    "saptavargaja": ("methodology", "local uses BPHS 27.2–4 points 45/30/20/15/10/4/2; some engines use the halving "
+                     "scale 45/30/22.5/15/7.5/3.75/1.875"),
     "abda_masa_vara_hora": ("methodology", "year/month lords depend on the Ahargana epoch, which engines count "
                             "differently"),
-    "ayana": ("methodology", "declination method and cap differ (VedAstro caps at 60; local doubles the Sun per Raman)"),
-    "cheshta": ("methodology", "Sun/Moon: local uses ayana/paksha bala (Raman), VedAstro 0; others: see note on "
-                "the circular mean"),
+    "ayana": ("methodology", "declination method and cap differ between engines (local doubles the Sun per Raman)"),
+    "cheshta": ("methodology", "Sun/Moon: local uses ayana/paksha bala (Raman), some engines give 0; others: "
+                "see note on the circular mean"),
     "sthana": ("methodology", "includes saptavargaja (point scale differs)"),
     "kala": ("methodology", "includes ayana, abda/masa and paksha conventions"),
 }
@@ -79,8 +79,8 @@ def compare(a: ChartFacts, b: ChartFacts) -> list[Agreement]:
         if h in b.arudha:
             sb = b.arudha[h]
             out.append(Agreement(kind="arudha", key=h, a=sa, b=sb, verdict="match" if sa == sb else "methodology",
-                                 note="" if sa == sb else ("VedAstro gives the raw count; local applies the BPHS 29.45 exception "
-                                                           "(landing in the house or its 7th → 10th from there)")))
+                                 note="" if sa == sb else ("local applies the BPHS 29.45 exception (landing in the house or its "
+                                                           "7th → 10th from there); some engines give the raw count")))
     return out
 
 
@@ -164,15 +164,12 @@ def _shadbala(a, b):
             d = va - vb
             if abs(d) < 0.5:
                 v, note = "match", ""
-            elif k == "tribhaga" and va == 60 and vb == 0 and p != "Ju":
-                v, note = "implementation", ("VedAstro assigns no night-third lord to a birth between midnight and "
-                                             "sunrise (owner's chart, 2026-10-02); local follows the rule")
             elif k in SHADBALA_SAME_RULE:
                 v, note = "unresolved", "same rule in both engines — should match"
             else:
                 v, note = SHADBALA_NOTES.get(k, ("unresolved", ""))
                 if k == "cheshta" and p in ("Su", "Mo") and vb == 0:
-                    note = "Sun/Moon: local uses ayana/paksha bala (Raman); VedAstro gives 0"
+                    note = "Sun/Moon: local uses ayana/paksha bala (Raman); the other engine gives 0"
             out.append(Agreement(kind="shadbala", key=f"{p} {k}", a=f"{va:.2f}", b=f"{vb:.2f}", delta=f"{d:+.2f}",
                                  verdict=v, note=note))
     for p, va in a.shadbala_rupas.items():
@@ -209,16 +206,6 @@ def table(ag: list[Agreement], show_matches=False) -> str:
     return "\n".join(sm + ["", "Differences (matches and within-tolerance rows omitted):", ""] + lines)
 
 
-def load_vedastro_dir(d, birth=None):
-    import os
-
-    from .adapters import from_vedastro
-    rd = lambda n: json.load(open(os.path.join(d, n))) if os.path.exists(os.path.join(d, n)) else None
-    return from_vedastro(rd("planet_data.json"), rd("ascendant.json"), rd("dasa_range.json"), rd("shadbala.json"),
-                         birth=birth, ashtakavarga=rd("ashtakavarga.json"),
-                         shadbala_components=rd("shadbala_components.json"), house_data=rd("house_data.json"))
-
-
 if __name__ == "__main__":
     import argparse
     import os
@@ -227,13 +214,12 @@ if __name__ == "__main__":
 
     ap = argparse.ArgumentParser()
     ap.add_argument("--local", required=True)
-    ap.add_argument("--vedastro")
+    ap.add_argument("--other", help="ChartFacts JSON from another engine (astro.calc.schema)")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     A = from_local(json.load(open(a.local)))
-    if a.vedastro:
-        B = load_vedastro_dir(a.vedastro, birth=A.birth)
-        V = validate(A, B)
+    if a.other:
+        V = validate(A, ChartFacts(**json.load(open(a.other))))
         md = (f"# Engine comparison\n\nA = {A.provenance.engine} ({A.provenance.network}, {A.provenance.ephemeris}); "
               f"B = {V.cross_check_engine}\n" + table(V.agreements))
     else:

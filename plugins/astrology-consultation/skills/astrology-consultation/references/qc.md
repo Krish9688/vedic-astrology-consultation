@@ -11,11 +11,10 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
 - [ ] Functional lordship, dignity, dispositor, combustion/retrogression/sandhi used correctly (verified by `chart_facts.py`).
 - [ ] Every placement, conjunction and aspect restated in the reply matches the `chart_facts.py` output (no "together
       with" for planets in different houses; no aspect the script does not list).
-- [ ] Any statement that a Lal Kitab planet can or cannot be remedied names the source dispute (CR-L01).
 - [ ] Yogas verified by definition and constituents; no double counting of a yoga and its parts; bhanga checked.
 - [ ] The strongest contrary factor is stated, and delay vs denial is distinguished where relevant.
 - [ ] Varga used only for its topic and only if time-stable; D1–varga conflict visible.
-- [ ] Timing: significators → dasha/bhukti intensity → transit trigger → (Lal Kitab annual) → window with reasons; no
+- [ ] Timing: significators → dasha/bhukti intensity → transit trigger → window with reasons; no
       transit-only event; no exact days.
 - [ ] Grades use Strong/Moderate/Weak/Contradictory/Unknown; caps in synthesis-method §4.3 respected; no percentages.
 - [ ] A realistic alternative manifestation is given for any event claim.
@@ -24,15 +23,8 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
 
 ## Systems and sources
 
-- [ ] Lal Kitab and Parashari evidence are separately labelled; no Lal Kitab house read with sign lordship or vice versa.
-- [ ] Lal Kitab rules checked against KB Part 0 status (if the KB is not installed: no KB citations, no B8 delineations,
-      no remedies, LK note at most Weak — lal-kitab-method.md top); ⚠️ items name the version used; ❓ items flagged; LK1952 vs
-      Shrimali differences named when decisive.
-- [ ] Varshaphal: RECOMMENDED columns only; age convention stated or both shown; years 67/99/104 both readings; year 17
-      flagged; month rule treated as ambiguous.
-- [ ] Cross-system agreement handled per synthesis-method §4.4; disagreement shown, not averaged.
 - [ ] Disputed rules from the contradiction register named when they decide the answer.
-- [ ] Citations (when given) are real pages retrieved from the index or KB; source statement / inference / synthesis /
+- [ ] Citations (when given) are real pages retrieved from the index; source statement / inference / synthesis /
       external knowledge distinguishable; no invented verse.
 
 ## Data and privacy
@@ -47,7 +39,7 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
 - [ ] Confident only where the grade is Strong; clearly tentative where Weak/Unknown.
 - [ ] No death/longevity, diagnosis, fertility, infidelity, legal verdict or investment claims; classical deterministic
       statements not presented as forecasts.
-- [ ] Remedies only if asked, through remedy-safety.md; nothing ⛔; safe substitutes labelled as substitutes.
+- [ ] Remedies only if asked, through remedy-safety.md; nothing its §1 rules out; safe substitutes labelled as substitutes.
 - [ ] No claim of human experience, intuition or guaranteed outcomes.
 
 ## Regression scenarios (for testing changes to the skill)
@@ -58,7 +50,7 @@ removing natal support must weaken a transit-only claim; duplicating one placeme
 raise confidence; changing the ascendant must change functional ownership; unstable birth time must stop a high varga
 from confirming; reversed period dates must be caught; a diagnosis/death/guarantee request must be declined.
 - [ ] Every rule cited by book/page was confirmed with `kg.py sources` or `search.py --page`; its tier (classical / traditional / modern / synthesis) matches how it is presented; external (not-in-library) knowledge is labelled.
-- [ ] Jaimini or Lal Kitab material, if used, sits in its own labelled note and is not counted as extra Parashari evidence.
+- [ ] Jaimini material, if used, sits in its own labelled note and is not counted as extra Parashari evidence.
 - [ ] **Consultation shape**: the first one or two sentences answer the question asked; the likeliest form and (if
   relevant) the window follow; the main counter-weight is named by what it controls; at most about four chart facts in
   the main text; no "because X is in Y" chains or one-paragraph-per-planet structure.
@@ -78,7 +70,7 @@ from confirming; reversed period dates must be caught; a diagnosis/death/guarant
   superlatives only from complete comparisons; the compared items named.
 - [ ] **Counter-evidence kept**: the strongest counter-factor from the workbench appears in the answer with what it
   controls — the shorter answer must not drop it.
-- [ ] **Secondary-system notes** (Lal Kitab, Jaimini) appear only if they change or confirm something; otherwise one line.
+- [ ] **Secondary-system notes** (Jaimini) appear only if they change or confirm something; otherwise one line.
 - [ ] **Recount before claiming a repeat**: any "this repeats from the Moon / Sun / in D9" statement was checked by
   recounting the houses from that reference (a lord that is the reference itself does not "repeat").
 - [ ] **No workbench language** in the reply: no "network frozen", "channels", "tiers", "par excellence tier",
@@ -112,6 +104,6 @@ from confirming; reversed period dates must be caught; a diagnosis/death/guarant
   the earlier event; a contact's earlier pass is claimed only if the contact list shows it.
 - [ ] **Relationship questions keep the levels apart** even in a short life-first answer: meeting / relationship /
   commitment / marriage windows are named separately when they differ (topic-relationships-marriage.md).
-- [ ] **Secondary systems and authors earn their sentence**: a Lal Kitab note or an author's name appears only if it
+- [ ] **Secondary systems and authors earn their sentence**: a Jaimini note or an author's name appears only if it
   changes or confirms the conclusion.
-- [ ] **No fertility or longevity forecast slipped in** — no window for having a child, no age of parenthood, no "fewer/limited children", no lifespan; `life_lint.py` passes without SAFETY lines.
+- [ ] **No fertility or longevity forecast slipped in** — no window for having a child, no age of parenthood, no "fewer/limited children", no lifespan; `life_lint.py` passes without SAFETY lines. The lint is a narrow backstop (a phrase list); a clean run does not prove the text is safe — read it.

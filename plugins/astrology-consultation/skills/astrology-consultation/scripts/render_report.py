@@ -142,7 +142,7 @@ def checks(r):
     res = lint(report_text(r), "report")
     errs += [i for i in res["issues"] if i.startswith("SAFETY")]
     # safety covers every string in the model — appendix, timeline labels, watch list, practical summary too
-    rest = lint("\n".join(_strings({k: v for k, v in r.items() if k not in ("summary", "sections")})), "report")
+    rest = lint("\n".join(_strings(r)), "report")   # every string, incl. unit basis and section titles (council 5 R7-1)
     errs += [i for i in rest["issues"] if i.startswith("SAFETY") and i not in errs]
     warns += [f"life-first: {i}" for i in res["issues"] if not i.startswith("SAFETY")]
     cites = re.findall(r"\bp\.?\s?\d{1,4}\b|\bsl\.\s?\d+", report_text(r))
@@ -165,7 +165,7 @@ def render(r, out_dir, base):
     try:
         import jinja2
     except ImportError:
-        sys.exit("render needs jinja2 (pip install jinja2); the JSON itself was valid")
+        raise RuntimeError("render needs jinja2 (pip install jinja2); the JSON itself was valid")   # not sys.exit: callers are servers (council R3 M4)
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(ASSETS), autoescape=True)
     bases = [dict(theme=u["theme"], basis=u["basis"]) for s in r["sections"] for u in s.get("units", []) if u.get("basis")]
     html = env.get_template("template.html.j2").render(
@@ -174,20 +174,30 @@ def render(r, out_dir, base):
         appendix=bool(bases or r.get("appendix")), section_titles={s["id"]: s["title"] for s in r["sections"]})
     os.makedirs(out_dir, exist_ok=True)
     hp = os.path.join(out_dir, base + ".html")
-    open(hp, "w", encoding="utf-8").write(html)
+    with _owner_only(hp) as f:          # reports hold birth details: 0600 from the first byte, also on errors
+        f.write(html.encode("utf-8"))
     try:
         from weasyprint import HTML
     except Exception:  # ImportError, or missing system libraries (pango) on this machine
         return hp, None
     pp = os.path.join(out_dir, base + ".pdf")
     doc = HTML(string=html, base_url=ASSETS).render()
-    doc.write_pdf(pp)
+    with _owner_only(pp) as f:
+        doc.write_pdf(f)
     return hp, pp
+
+
+def _owner_only(path):
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    os.fchmod(fd, 0o600)                 # an existing file keeps its old mode otherwise
+    return os.fdopen(fd, "wb")
 
 
 def main():
     if "--selftest" in sys.argv:
         return selftest()
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+        return print(__doc__.strip())
     src = sys.argv[1]
     out = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else os.path.dirname(os.path.abspath(src))
     r = json.load(open(src, encoding="utf-8"))

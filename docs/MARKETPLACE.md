@@ -4,7 +4,7 @@
 |---|---|
 | Marketplace | `vedic-astrology` — repository `Krish9688/vedic-astrology-consultation` |
 | Plugin | `astrology-consultation` (install id `astrology-consultation@vedic-astrology`) |
-| Version | 3.6.0 (plugin = engine = skill) |
+| Version | 3.6.1 (plugin = engine = skill) |
 | Platforms | macOS (full flow tested) · Linux (engine, launcher and MCP tested in CI) · Windows: WSL 2 only, untested · native Windows: unsupported |
 | Default privacy mode | **private** — every calculation runs on your computer; nothing is sent anywhere |
 
@@ -38,7 +38,7 @@ v2.1.275+ one command does both (documented): `/plugin install astrology-consult
 | Component | Works in | Notes |
 |---|---|---|
 | Skill `astrology-consultation` | Claude Code; Cowork and claude.ai chat (documented, not yet verified) | the consultation, timing, safety and report method |
-| Local MCP server `astrology` (16 tools: chart, vargas, dashas, transits, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity, consultation context, reports, source lookup) | Claude Code; Cowork (expected, not yet verified) | started by the plugin's `scripts/astro`; **not available in web chat**, which cannot run programs on your computer |
+| Local MCP server `astrology` (15 tools: chart, vargas, dashas, transits, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity, consultation context, reports, source lookup) | Claude Code; Cowork (expected, not yet verified) | started by the plugin's `scripts/astro`; **not available in web chat**, which cannot run programs on your computer |
 | `/astrology-consultation:setup`, `/astrology-consultation:doctor` | Claude Code; Cowork (not yet verified) | first-time setup and health check |
 
 Tested: `claude plugin details` lists the three skills and the MCP server; about 250 tokens stay loaded in every
@@ -56,7 +56,7 @@ worked report example use synthetic charts.
    - writes settings in **private** mode and runs the health check.
 2. Run `/reload-plugins` (or start a new session) so the astrology tools connect.
 3. Optional: `/astrology-consultation:doctor` at any time. Expect PASS for the engine, ephemeris, MCP, REST, reports
-   and permissions, and OPTIONAL for books, the knowledge graph and VedAstro.
+   and permissions, and OPTIONAL for books and the knowledge graph.
 
 Then ask, for example: "Calculate my chart — born 14 March 1992, 09:40, UTC+0, London (51.5N, 0.12W)",
 "What changes in my career over the next few years?", "Create my 12-month report".
@@ -75,9 +75,8 @@ Then ask, for example: "Calculate my chart — born 14 March 1992, 09:40, UTC+0,
 
 ## 5. Privacy modes
 
-- **private** (default): local calculation only; tools that would contact a third party refuse.
-- **hybrid** (opt-in: `astro setup --mode hybrid`): also allows the optional VedAstro cross-check, which sends birth
-  date, time, UTC offset and coordinates to `api.vedastro.org`. Never required.
+- **private** (default): local calculation only; no tool sends birth data anywhere.
+- **research**: as private; the AI client may also use public web research tools (never with chart data).
 - The MCP and REST servers listen on 127.0.0.1 only. Remote access needs both `allow_remote = true` and an
   `api_token` in the settings file; without both the server refuses to start on another address.
 - No access logs; birth details are not logged. Predictions are logged only with `--consent` (or `--synthetic`).
@@ -95,7 +94,7 @@ consultation works and says that source lookup is unavailable.
 | Update | `claude plugin marketplace update vedic-astrology`, then `claude plugin update astrology-consultation@vedic-astrology`, then restart or `/reload-plugins` | Customize → Plugins → **Check for updates** / **Sync automatically**; Code: `/plugin` → Installed → **Update now** |
 | Auto-update | off by default for third-party marketplaces; `/plugin` → Marketplaces → **Enable auto-update** | **Sync automatically** |
 | Disable / enable | `claude plugin disable astrology-consultation@vedic-astrology` / `claude plugin enable …` | the plugin's toggle |
-| Roll back | `claude plugin marketplace remove vedic-astrology`, then `claude plugin marketplace add Krish9688/vedic-astrology-consultation#v3.5.0` (any release tag), then install again | — |
+| Roll back | `claude plugin marketplace remove vedic-astrology`, then `claude plugin marketplace add Krish9688/vedic-astrology-consultation#<release tag>`, then install again (3.5.0 and 3.6.0 still contain Lal Kitab rule tables and notes that later releases leave out) | — |
 | Uninstall | `claude plugin uninstall astrology-consultation@vedic-astrology` (`--keep-data` keeps the engine environment) | **Remove** |
 
 Tested on a sandboxed profile: update 3.5.0 → newer kept the engine environment (no rebuild; from 3.6.0 it rebuilds when

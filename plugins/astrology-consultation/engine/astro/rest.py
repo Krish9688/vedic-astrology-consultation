@@ -22,12 +22,6 @@ class VargaRequest(ChartRequest):
     division: int = Field(ge=1, le=60)
 
 
-class CompareRequest(ChartRequest):
-    vedastro_dir: Optional[str] = None
-    live: bool = False
-    consent: bool = False
-
-
 class ConsultationRequest(ChartRequest):
     question: str = Field(min_length=3, max_length=1000)
 
@@ -116,11 +110,6 @@ def jaimini(r: ChartRequest):
 @app.post("/api/v1/sensitivity")
 def sensitivity(r: ChartRequest):
     return _wrap(lambda: S.birth_time_sensitivity(r.birth, r.options))
-
-
-@app.post("/api/v1/compare")
-def compare(r: CompareRequest):
-    return _wrap(lambda: S.compare_engines(r.birth, r.vedastro_dir, r.live, r.consent))
 
 
 @app.post("/api/v1/consultation")

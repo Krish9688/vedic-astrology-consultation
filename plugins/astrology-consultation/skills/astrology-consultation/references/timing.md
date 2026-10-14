@@ -1,4 +1,4 @@
-# Timing engine: dashas, transits, annual charts, Lal Kitab timing
+# Timing engine: dashas, transits, annual charts
 
 Timing answers "when is the natal promise foregrounded?". It never creates a promise. Output a **window with its
 reasons** ("the strongest activation is X–Y because A, B and C converge"), graded Strong/Moderate/Weak/Contradictory/
@@ -14,8 +14,8 @@ and **activation** ("X is foregrounded now") as separate statements in every ans
 error, where n is the full length (years) of the dasha running at birth and v the Moon's speed in arcminutes per minute
 of time (≈0.5–0.6; so roughly n ÷ 4 days per minute, e.g. 5 days for Venus) [R2-TP1; PVR]. The engine's sensitivity grid
 gives the exact figure. The ayanamsa and year-length
-convention move dates too; name the ones the data used — VedAstro uses 360-day years and runs ~4 months
-earlier than JHora/Swiss-Ephemeris sidereal-solar years for a person in their early twenties (inputs.md).
+convention move dates too; name the ones the data used — 360-day years run ~4 months earlier than sidereal-solar years
+for a person in their early twenties (inputs.md).
 
 | Birth time | Usable layers | Finest window to state |
 |---|---|---|
@@ -41,7 +41,7 @@ hindsight [LOL p354; R2-TP1].
    point is **one episode**; a station within a few degrees of a key point marks its peak. Transits show *when*, not
    *which way* — direction comes from the natal roles [R2-TP3, TP5].
 6. **Secondary confirmation**, each counted once: a pre-chosen Jaimini sign dasha variant; the Tajika year lord or
-   muntha lord (only from a supplied or calculated return chart) being the AD lord or a network planet; Lal Kitab varshaphal in its own note. Disagreement is reported.
+   muntha lord (only from a supplied or calculated return chart) being the AD lord or a network planet. Disagreement is reported.
 7. **Supporting only** (quality or fine placement, never occurrence): Ashtakavarga bindus of the transiting planet
    (quality: easy vs strained), double transit on the network (true most of the time — label it), eclipses/nodal
    contacts ("sensitised for about six months", not a timer), PD inside an earned band [R2-TP7–TP9].
@@ -150,33 +150,27 @@ Raman's simplified solar-return: chart for the Sun's return to its natal longitu
 Mars 32, Mercury 40, Jupiter 48, Venus 56, Saturn 4, Rahu 5, Lagna 10 days); judge the **natal dasha and gochara
 first, then the annual chart, and combine** [HPA p128–131]. He himself calls this a snapshot and says his separate
 *Varshaphal* book is more correct (not in this library), and the return table uses an outdated year length
-[HPA p128]. Use only with a calculated return chart; never call the Lal Kitab table "Tajika" or vice versa.
+[HPA p128]. Use only with a calculated return chart.
 
-## 5. Lal Kitab timing (separate system)
-
-See the Lal Kitab section appended below (§8) for Varshaphal, planet ages, the 35-year cycle and month rules. Keep its
-conclusions in the Lal Kitab evidence note; compare with the Parashari window only at the convergence step.
-
-## 6. Building a window (short form of §0, with a worked report shape)
+## 5. Building a window (short form of §0, with a worked report shape)
 
 1. Define the event class and horizon **before** looking at dates ("formal marriage", not "relationship activity").
 2. State the natal promise and its grade (synthesis-method).
 3. List significators (§1). Find dasha–bhukti pairs inside the horizon with an intensity grade. None → say timing
    support is weak in this horizon; do not rescue it with fast transits.
 4. Inside those pairs, look for slow-transit contacts to the same network (§3). Keep the frame explicit.
-5. If in scope, add the Lal Kitab annual chart for the relevant age-years and any planet-age or cycle rule.
-6. **Converge**: the window where activation + trigger (+ annual chart) repeat the same network is the primary window.
+5. **Converge**: the window where activation + trigger repeat the same network is the primary window.
    Rank multiple windows by activation strength, confirmation and contradiction. Retrograde passes are one contact
    sequence, not three events.
-7. Widen edges for birth-time, dasha-convention and manifestation uncertainty. Do not treat a boundary date as a switch
+6. Widen edges for birth-time, dasha-convention and manifestation uncertainty. Do not treat a boundary date as a switch
    for lived experience, and never report an exact event day.
-8. Say what would move the window: a verified transit date, a different age convention, a birth-time correction.
+7. Say what would move the window: a verified transit date, a birth-time correction.
 
 Report shape: "The main window is late 2027 to mid-2028. That is Venus–Jupiter: Venus is the 7th lord's dispositor and
 Jupiter aspects the 7th; transit Jupiter crosses the 7th lord's navamsa sign in the same months. Before that, Saturn's bhukti looks like preparation and delay
-rather than the event. Separately, in Lal Kitab, the annual chart for that age-year places Venus in the 7th."
+rather than the event."
 
-## 7. Temporal modes (carried over from v2.2)
+## 6. Temporal modes (carried over from v2.2)
 
 - **Past**: if history is disclosed, call it retrospective interpretation; explain the period network at that time
   (not today's transits). For blind testing, record windows before seeing events; misses stay misses.
@@ -191,48 +185,3 @@ Specialist modules need their own verified inputs and are otherwise omitted: Taj
 aspects), muhurta/tara, Jaimini sign dashas, Kalachakra (PD says use it only when the Moon's navamsa lord is strong and
 calls nakshatra dasha "always the best" [PD XXII.30]), numerology.
 
-## 8. Lal Kitab timing (separate evidence note)
-
-Sources: KB B7/B17 (Shrimali, validated) and LK1952 (primary; cited `LK1952 pPDF`). Where they differ, say so
-(contradiction-register §C). None of these substitute for, or borrow from, Vimshottari or Tajika.
-
-1. **Varshaphal (annual chart)** — `scripts/varshaphal.py`. Natal house k's planets move to the RECOMMENDED house for
-   age-year N [KB B17; LK1952 p243]. Always state the age convention (running = completed years + 1) or show both;
-   years 67/99/104 show both readings; year 17 is a majority row.
-   - The planet reaching annual **H1 ("throne")** acts first on its natal house, then on its enemies, then friends
-     [KB B17; LK1952 p187].
-   - **Natal status shows only when the annual chart brings the planet to the house tied to that status** (e.g. an
-     exalted Jupiter shows its exaltation in years it reaches 4 or 2) [LK1952 p185–186]. Use this to pick *which* years a
-     natal promise or problem becomes visible.
-   - A planet that returns to H10 is that year's "deceiving" (dhokha) planet; a malefic becomes truly harmful on
-     reaching H8 [LK1952 p168–170, p186].
-   - Travel from annual Ketu's house; illness symbolism from luminaries reaching 1/6/7/8/10 — symbolism only [KB B17].
-2. **Planet ages (maturity years)**: Jupiter 16, Sun 22, Moon 24, Venus 25, Mars 28, Mercury 34, Saturn 36, Rahu 42,
-   Ketu 48 [KB B7 p51; LK1952 p54, image-checked]. A planet can show its effect at half or a quarter of its period
-   [LK1952 p54, p862]. Fortune rises for Mercury at 23 and Mars at 34, others at their own age [LK1952 p54–55].
-3. **Sleeping planets wake** on a life trigger after their age — Jupiter on starting business after 16, Sun on
-   government service after 22, Moon on education after 24, Venus on marriage after 25, Mars after 28, Mercury on trade
-   or a sister's/daughter's marriage after 34, Saturn on house matters after 36, Rahu on in-laws after 42, Ketu on a
-   child's birth after 48 — and each has a stated later year when it turns difficult [LK1952 p119–120, image-checked].
-   A sleeping planet woken by reaching annual H9 gives good results from its age for as many years again (e.g. Sun in 8:
-   22–44) [LK1952 p98].
-4. **35-year cycle**: Jupiter 6, Sun 2, Moon 1, Venus 3, Mars 6, Mercury 2, Saturn 6, Rahu 6, Ketu 3 years. Planets bad
-   in the first cycle are not bad in the second [LK1952 p60–61]. The cycle is anchored to a dated life event (e.g. first
-   marriage = Venus period) and checked against the past before use [LK1952 p235–236]. Without such an anchor, say the
-   cycle cannot be placed.
-5. **Conjunction durations**: two planets in one house act as one blended planet up to a stated age, then separately —
-   e.g. Sun+Moon 40, Sun+Mercury 39, Venus+Mercury 22, Venus+Saturn 52, Mars+Saturn 40, Mercury+Saturn 12 [LK1952
-   p868–982; full table in the LK1952_D source map §4.1].
-6. **Lal Kitab "mahadasha"** is *not* Vimshottari: it is one planet's continuous bad stretch (at most one per 35-year
-   cycle, 39 years in a life), arising when the planet's "equal" planets sit debilitated; it never applies when the Moon
-   is good [LK1952 p163–170]. Always say "Lal Kitab mahadasha" to avoid confusion (CR-S07).
-7. **40-day concession**: a difficult period can run 40 days past its end and a good one start 40 days early [LK1952
-   p57–58].
-8. **Months**: KB — house 1 = birth month, effect in the month of the annual Sun's house (ambiguous, R42). LK1952 refines
-   it: a planet arriving in a natally *occupied* house acts in that house's fixed solar month (H1 = Vaisakh … H12 =
-   Chet); in a natally *empty* house, in the month counted from the birthday by the annual Sun's house [LK1952
-   p239–241]. Present months only as the book's scheme, never as exact dates.
-
-Use in convergence: Lal Kitab timing is strongest when the annual chart brings the topic planet to its status house
-*and* the year falls at or after that planet's age or waking trigger. Report it beside, not inside, the Vimshottari
-window.

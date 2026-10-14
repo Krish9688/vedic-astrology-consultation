@@ -26,17 +26,4 @@ Moon phase: waxing, 120° from Sun. Natural malefics here: Ke, Ma, Me, Ra, Sa, S
 
 Dispositor chains: Su→Ju→Su; Mo→Mo; Ma→Sa→Sa; Me→Ju→Su→Ju; Ju→Su→Ju; Ve→Sa→Sa; Sa→Sa; Ra→Ju→Su→Ju; Ke→Me→Ju→Su→Ju. Final dispositor(s) in own sign: Mo, Sa
 
-# Lal Kitab fixed-Aries chart (whole-sign houses from lagna (KB B2 note)); signs dropped, house N = Kalpurush sign N
-  H1:—  H2:Ke  H3:Mo  H4:Ju  H5:—  H6:—  H7:—  H8:Ra  H9:Ma+Sa  H10:Ve  H11:Su+Me  H12:—
-  Empty houses: 1, 5, 6, 7, 12
-- Sun H11: SLEEPING? 7th from it (H5) empty (B7 p44, R14)
-- Moon H3: 'sinful' placement (B7 p41); rival? sits in Ma's pakka ghar; Ma not in Mo's (B7 p43); LK aspect → H9,11 ❓
-- Mars H9: 'sinful' placement (B7 p41); rival? sits in Ju's pakka ghar; Ju not in Ma's (B7 p43)
-- Mercury H11: SLEEPING? 7th from it (H5) empty (B7 p44, R14); with LK-friends Su; 'sinful' placement (B7 p41)
-- Jupiter H4: LK-exalted (B4); rival? sits in Mo's pakka ghar; Mo not in Ju's (B7 p43); LK aspect → H10
-- Venus H10: rival? sits in Sa's pakka ghar; Sa not in Ve's (B7 p43)
-- Saturn H9: with LK-enemies Ma; rival? sits in Ju's pakka ghar; Ju not in Sa's (B7 p43)
-- Rahu H8: node dignity ⚠️X3/X4: table-set none, chapter-set debil; rival? sits in Ma's pakka ghar; Ma not in Ra's (B7 p43); rival? sits in Sa's pakka ghar; Sa not in Ra's (B7 p43); LK aspect → H2
-- Ketu H2: rival? sits in Ju's pakka ghar; Ju not in Ke's (B7 p43); LK aspect → H6
-  Rin (debt) signatures: check KB B12 against this house map; judge debts from the natal chart only.
-  Rows 9-12 of the LK aspect table are missing in source (R10); never fill them from Parashari aspects.
+# Lal Kitab: not part of this edition (no Lal Kitab chart, flags, rules or remedies).

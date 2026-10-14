@@ -1,6 +1,6 @@
 # Deterministic, local extraction of the astrology library into Graphify's extraction schema.
-# No LLM, no network. Reads: knowledge/catalog.json, text/*.jsonl, sourcemaps/*.md, the Lal Kitab KB v2.2
-# and the skill's contradiction register. Writes: knowledge/extraction.json + validation/*.md reports.
+# No LLM, no network. Reads: knowledge/catalog.json, text/*.jsonl, sourcemaps/*.md, the skill's contradiction
+# register and (private edition only) the Lal Kitab KB v2.2. Writes: knowledge/extraction.json + validation/*.md reports.
 # usage: .venv-graphify/bin/python tools/kg/extract.py
 import datetime, hashlib, json, os, re, sys
 from collections import Counter, defaultdict
@@ -13,7 +13,6 @@ CAT = json.load(open(os.path.join(WS, "knowledge", "catalog.json"), encoding="ut
 BOOKS = {b["id"]: b for b in CAT["books"]}
 SRC_IDS = "|".join(sorted(list(BOOKS) + ["KB"], key=len, reverse=True))
 VAL = os.path.join(WS, "validation")
-KB_PATH = os.path.join(WS, "astrology-prediction", "data", "lal-kitab", "LalKitab_Shrimali_Knowledge_Base_v2.2.md")
 CR_PATH = os.path.join(WS, "astrology-prediction", "references", "contradiction-register.md")
 CURATION = os.path.join(WS, "knowledge", "curation", "xb_curation.json")   # manual review of the automatic disputes
 SYSTEM = {"PD": "Parashari", "BJ": "Parashari", "HJH2": "Parashari", "HPA": "Parashari", "LOL": "Parashari",
@@ -277,17 +276,19 @@ def add_rule(src, text, source_file, section, kind, tag, extracted, default_src,
     return rid
 
 
+ROLE = {"topic-rule": "direct rule", "timing-rule": "direct rule (timing)", "yoga": "direct rule (yoga)",
+        "method": "method principle (how to weigh/judge)",
+        "worked-example": "illustration (worked case, hindsight)", "contradiction-note": "dispute note",
+        "limits": "scope note", "page-notes": "context note", "notes": "context note"}
+
+
 def evidence_role(a):
     """How a rule may be used in a reading (answers "is this used directly or only as support?")."""
     if a.get("do_not_forecast"):
         return "doctrine only — never a forecast"
     if a.get("tier") == "synthesis":
         return "supporting inference (not the author's statement)"
-    return {"topic-rule": "direct rule", "timing-rule": "direct rule (timing)", "yoga": "direct rule (yoga)",
-            "lk-planet-in-house": "direct rule (Lal Kitab)", "kb-register": "direct rule (Lal Kitab KB)",
-            "kb-section": "direct rule (Lal Kitab KB)", "method": "method principle (how to weigh/judge)",
-            "worked-example": "illustration (worked case, hindsight)", "contradiction-note": "dispute note",
-            "limits": "scope note", "page-notes": "context note", "notes": "context note"}.get(a.get("kind"), "context note")
+    return ROLE.get(a.get("kind"), "context note")
 
 
 KIND = {"2": "method", "3": "topic-rule", "4": "timing-rule", "5": "yoga", "6": "worked-example",
@@ -346,39 +347,6 @@ def table_rows(lines, prefix):
             yield [c.strip() for c in ln.strip().strip("|").split("|")]
 
 
-def add_kb():
-    lines = open(KB_PATH, encoding="utf-8").read().splitlines()
-    date = "2026-09-21"
-    for row in table_rows(lines, "R"):
-        if len(row) >= 5 and re.fullmatch(r"R\d+", row[0]):
-            pages = ", ".join("p" + x.strip() for x in re.split(r",\s*", row[3]) if re.match(r"\d", x.strip()))
-            add_rule("LKS", f"[{row[2]}] KB {row[0]}: {row[1]} — {pages} — status {row[4]}", KB_PATH,
-                           "KB Part 0.2 Validation Register", "kb-register", row[2], date, "LKS",
-                           {"kb_id": row[0], "validation_status": row[4], "derived_via": "KB v2.2"})
-    # A5 contradictions X1..X23
-    for row in table_rows(lines, "X"):
-        if len(row) >= 7 and re.fullmatch(r"X\d+", row[0]):
-            add_contradiction(f"KB-{row[0]}", row[1], row[2], row[3], row[4], row[5], KB_PATH, "LKS", date)
-    # B8 planet-in-house entries and general bullets of Part B
-    planet = None
-    for ln_no, text, heads in bullets(lines):
-        h3, h4 = heads.get(3, ""), heads.get(4, "")
-        if not h3.startswith("B"):
-            continue
-        pm = re.match(r"(Sun|Moon|Mars|Mercury|Jupiter|Venus|Saturn|Rahu|Ketu)\b", h4)
-        planet = pm.group(1) if (h3.startswith("B8") and pm) else None
-        hm = re.match(r"\*\*H(\d{1,2})\*\*\s*\[p(\d+)\]", text)
-        if planet and hm:
-            body = text[hm.end():].lstrip(" :(").strip()
-            add_rule("LKS", f"[LK] {planet} in house {hm.group(1)} (Lal Kitab, Shrimali): {body} — p{hm.group(2)}", KB_PATH,
-                     f"KB {h3} › {h4}", "lk-planet-in-house", "LK", date, "LKS",
-                     {"kb_id": f"B8-{planet}-H{hm.group(1)}", "derived_via": "KB v2.2", "lk_planet": planet,
-                      "lk_house": int(hm.group(1)), "format": "result | adverse conditions | remedies"})
-        else:
-            sec_pages = re.findall(r"p(\d+)", h3 + " " + h4)[:1]
-            add_rule("LKS", text + ("" if re.search(r"\bp\d", text) or not sec_pages else f" — p{sec_pages[0]}"),
-                     KB_PATH, f"KB {h3}" + (f" › {h4}" if h4 else ""), "kb-section", "LK", date, "LKS",
-                     {"derived_via": "KB v2.2", "citation_level": "section" if not re.search(r"\bp\d", text) else "rule"})
 
 
 def add_contradiction(cid, topic, side_a, side_b, klass, default, path, default_src, date):
@@ -655,7 +623,6 @@ def main():
     add_entities()
     add_books_and_pages()
     add_sourcemaps()
-    add_kb()
     add_register()
     add_crossbook_disputes()
     link_rules_to_contradictions()

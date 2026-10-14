@@ -3,8 +3,8 @@
 
 Privacy modes
   private  (default) local calculation, local books/graph, local reports; no birth data leaves the machine.
-  hybrid   private + optional external calculation comparison (VedAstro), per call, with the data sent recorded.
-  research hybrid + public web research tools may be used by the AI client; chart data is still never sent there.
+  research private + public web research tools may be used by the AI client; chart data is still never sent there.
+(The former `hybrid` mode — an external engine comparison — was removed in 3.6.1; an old setting is read as private.)
 """
 from __future__ import annotations
 
@@ -26,16 +26,12 @@ class Settings:
     books_dir: str = ""                 # the user's own book PDFs (optional; never served)
     reports_dir: str = os.path.expanduser("~/Documents/astrology-reports")
     data_dir: str = os.path.expanduser("~/.local/share/astrology-consultation")
-    vedastro_server: str = os.path.expanduser("~/VedAstro/server.mjs")
     allow_remote: bool = False          # HTTP transports bind to 127.0.0.1 unless this is true AND a token is set
     source_url: str = ""                # AGPL-3.0 s.13: your modified source, if you serve a changed engine
     share_library_remotely: bool = False   # serve book excerpts to non-localhost clients (off: copyright)
     api_token: str = ""                 # bearer token required for any non-localhost listener
     extra: dict = field(default_factory=dict)
 
-    @property
-    def external_allowed(self) -> bool:
-        return self.mode in ("hybrid", "research")
 
 
 def _default_skill_dir():
@@ -66,7 +62,10 @@ def load() -> Settings:
     for env, key in (("ASTRO_SKILL_DIR", "skill_dir"), ("ASTRO_KNOWLEDGE_DIR", "knowledge_dir")):
         if os.environ.get(env):          # set by the Claude plugin's launcher; wins over the file (paths move on update)
             setattr(s, key, os.environ[env])
-    if s.mode not in ("private", "hybrid", "research"):
+    if s.mode == "hybrid":   # removed with the external engine comparison; nothing is sent anywhere now
+        print("astro: privacy mode 'hybrid' no longer exists; using 'private'", file=sys.stderr)
+        s.mode = "private"
+    if s.mode not in ("private", "research"):
         raise ValueError(f"unknown privacy mode {s.mode!r}")
     return s
 

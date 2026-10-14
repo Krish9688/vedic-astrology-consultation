@@ -9,11 +9,11 @@ benchmarks use the owner's chart and stay private (only their scores are publish
 |---|---|---|
 | Property tests (Hypothesis) | sign/nakshatra/pada follow from longitude at every value incl. exact boundaries; varga identities; Vimshottari structure (order, first lord, 120-year total, contiguous sub-periods); time-zone conversion is only a shift; the ascendant moves forward with time; leap days and midnight; nodes opposite | `tests/test_calc_properties.py` |
 | Reference values | Lahiri ayanamsa 23°51′ at J2000; tropical Sun 280.37° at J2000 | `tests/test_reference.py` |
-| Independent engine | local vs VedAstro on the synthetic chart S1: positions within tolerance, no sign/nakshatra/pada flips, only documented method differences | `tests/test_reference.py`, fixtures from VedAstro with synthetic data |
+| Comparator | the astrology-aware comparator finds no difference between a chart and itself; validated facts round-trip | `tests/test_reference.py` |
 | Schema | inconsistent facts are rejected; validated facts round-trip | same |
 | Sensitivity and contacts | the reported minutes really flip the ascendant; reported contact dates are exact conjunctions | same |
 | Strength and Jaimini (v3.5) | Raman's published 1918 drik bala reproduced (±0.02); Ashtakavarga totals 48/49/39/54/56/52/39 = 337 for any chart; Shadbala component ranges; circular cheshta mean across 0° Aries; BPHS war victor; karaka/arudha properties; S1 sensitivity classes | `tests/test_strength.py`, `tests/reference_charts/` |
-| Interfaces and security (v3.5) | service results equal the engine's; input validation; `skill://` traversal and code reads refused; live VedAstro refused in private mode; data-folder confinement; report-name sanitising; consent-gated, owner-only prediction log; REST endpoints, OpenAPI and bearer token; remote binding refused without a token (MCP and REST); MCP stdio round trip with a generic client; CLI; tampered ephemeris download rejected | `tests/test_service.py` |
+| Interfaces and security (v3.5) | service results equal the engine's; input validation; `skill://` traversal and code reads refused; data-folder confinement; report-name sanitising; consent-gated, owner-only prediction log; REST endpoints, OpenAPI and bearer token; remote binding refused without a token (MCP and REST); MCP stdio round trip with a generic client; CLI; tampered ephemeris download rejected | `tests/test_service.py` |
 
 Result (2026-09-27): **22/22 pass**. First-run finding: exact-boundary floating-point error (fixed; no real chart changed).
 Result (2026-10-02, v3.5): **54/54 pass** locally (Swiss Ephemeris files) and in a clean install from the exported
@@ -22,14 +22,14 @@ server log); `install.sh` with a sandboxed home folder.
 
 ## 2. Knowledge
 
-`validation/graph_checks.py` (27 checks incl. every book's SHA-256), `validation/retrieval_eval.py` (gold-page recall: curated set 16/17;
+`validation/graph_checks.py` (27 checks incl. every book's SHA-256), `validation/retrieval_eval.py` (private build only; gold-page recall: curated set 16/17;
 blind 24-question set from council member C: full text 16/24, hybrid 17/24, graph 9/24), `validation/citation_test.py` (20 sampled rules per book, cited page contains the rule's words:
 19–20/20), `tools/kg/validate_map.py` (every source-map part before promotion). Docling benchmark:
 `validation/docling/README.md`.
 
 ## 3. Skill self-tests and behaviour
 
-`chart_facts.py --selftest`, `varshaphal.py --selftest` (120 rows, worked examples), `vocab.py` (180 entities),
+`chart_facts.py --selftest`, `varshaphal.py --selftest` (private edition: 120 rows, worked examples), `vocab.py` (180 entities private / 169 public),
 `life_lint.py --selftest`, `render_report.py --selftest`. Behavioural regression cases with criteria fixed before
 outputs existed: `skill/…/tests/test-cases.md` (22 cases; v3.3 regression subset 8/8).
 
@@ -161,9 +161,9 @@ first from a local directory marketplace (the export), then from GitHub (`Krish9
 | `claude plugin marketplace add Krish9688/vedic-astrology-consultation` | "Successfully added marketplace: vedic-astrology" |
 | `claude plugin install astrology-consultation@vedic-astrology` | installed 3.5.0, user scope, enabled; details: 3 skills, MCP server `astrology`, ~250 always-on tokens |
 | setup (what `/astrology-consultation:setup` runs) | engine environment built in the plugin data folder, ephemeris downloaded and verified, settings in private mode — 14.5 s |
-| doctor | 13 PASS, 5 OPTIONAL (books, graph, Graphify, books folder, VedAstro), 0 WARN, 0 FAIL |
+| doctor | 13 PASS, 5 OPTIONAL (books, graph, Graphify, books folder, VedAstro — check removed in 3.6.1), 0 WARN, 0 FAIL |
 | `claude mcp list` | `plugin:astrology-consultation:astrology` ✔ Connected, launched from the plugin cache |
-| MCP smoke through the installed launcher | 16 tools; synthetic D9 ascendant Leo; `prepare_consultation` routes 5 skill files incl. the career topic file |
+| MCP smoke through the installed launcher | 16 tools (3.6.0; 15 from 3.6.1); synthetic D9 ascendant Leo; `prepare_consultation` routes 5 skill files incl. the career topic file |
 | `astro report` on the synthetic example | HTML + PDF; report folder created 0700 |
 | update 3.5.0 → newer (local marketplace) | updated; engine environment kept, not rebuilt; restart required |
 | disable / enable | server removed / Connected again |

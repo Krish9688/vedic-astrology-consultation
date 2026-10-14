@@ -56,7 +56,7 @@ SHADBALA_CONVENTIONS = {
     "ayana": "(24° ± kranti) × 1.25 (Raman), kranti of the ecliptic point (BPHS bhuja method; Santhanam's note variant 23°27′ × 1.2793 not used); Sun doubled",
     "cheshta": "Sun = ayana bala, Moon = paksha bala (Raman); others cheshta kendra = sighrochcha − mean of madhya "
                "and spashta, the mean taken circularly (a plain average breaks when the two straddle 0° Aries — "
-               "PyJHora and VedAstro both show this on test chart S2); modern mean elements (J2000)",
+               "PyJHora shows this on test chart S2); modern mean elements (J2000)",
     "yuddha": "Mars, Mercury, Jupiter, Venus, Saturn within 1°: Venus always wins (BPHS ch. 79 sl. 9), otherwise the "
               "northern (higher latitude) planet; transfer = difference of sthana+dig+kala. Variant: LOL — higher "
               "latitude wins with no Venus exception",

@@ -171,7 +171,7 @@ Use the five grades (Strong / Moderate / Weak / Contradictory / Unknown), set se
 
 1. **Promise class** (§3) — caps everything: weakly supported promise → at most Weak for timed claims.
 2. **Independent channels** — count D1 triad, Moon-chart repeat, relevant varga, dasha link, slow transit and
-   (separately) Lal Kitab/Jaimini by their own mechanisms. D9 and its derivatives are one channel; MD+AD is one;
+   (separately) Jaimini by its own mechanisms. D9 and its derivatives are one channel; MD+AD is one;
    the same transit counted from lagna and Moon is one [R1-P8].
 3. **Timing convergence** — activation *and* trigger on the same network.
 4. **Directness** — is the event represented directly (7th lord's period for partnership) or inferred (11th = "met
@@ -211,11 +211,10 @@ ayanamsa or house systems after seeing the outcome to make it fit [R1-P10, P11].
 
 ## 9. Systems stay separate
 
-Parashari, Jaimini, KP, Nadi (Deva Keralam, DEVA2) and Lal Kitab each reach their own verdict by their own rules; agreement between them is
-reported as convergence ([synthesis-method.md](synthesis-method.md) §4.4), never computed by mixing their aspects or
-significators [R1-P13; LOL p122]. In the answer, a Lal Kitab or Jaimini note earns space only when it confirms,
-changes or sharpens the conclusion; if it is mixed or silent, one sentence ("Lal Kitab doesn't add anything decisive
-here") or nothing.
+Parashari, Jaimini, KP and Nadi (Deva Keralam, DEVA2) each reach their own verdict by their own rules; agreement between
+them is reported as convergence, never computed by mixing their aspects or significators [R1-P13; LOL p122]. In the
+answer, a Jaimini note earns space only when it confirms, changes or sharpens the conclusion; if it is mixed or silent,
+one sentence or nothing.
 
 ## 10. Turning the judgement into the answer
 

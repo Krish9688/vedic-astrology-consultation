@@ -1,7 +1,6 @@
 # Parashari natal analysis: houses, lords, strength, yogas
 
-Parashari/Vedic branch only. Never apply these sign-lordship rules inside a Lal Kitab reading (see
-[lal-kitab-method.md](lal-kitab-method.md)). Run `scripts/chart_facts.py` on supplied positions first; it derives houses,
+Parashari/Vedic branch only. Run `scripts/chart_facts.py` on supplied positions first; it derives houses,
 lordships, aspects, dignity, combustion, D9/D10, dispositor chains and the Phaladeepika XV tests without hand arithmetic.
 How to weigh everything below is in [synthesis-method.md](synthesis-method.md).
 

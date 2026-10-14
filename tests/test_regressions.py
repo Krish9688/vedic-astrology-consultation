@@ -1,15 +1,14 @@
 # Regression tests for defects found by the final-completion council (round 1, member A). Synthetic or published data.
 import datetime as dt
-import json
 import os
 import shutil
 import sys
 
+import pytest
 import swisseph as swe
 
 from astro import config, service as S
 from astro.calc import engine as E, strength
-from astro.calc.compare import load_vedastro_dir
 
 HERE = os.path.dirname(__file__)
 
@@ -47,16 +46,6 @@ def test_zero_minute_sensitivity_is_shown():
     assert "Moon pada: 0 earlier / 383 later" in E.render_md(c)
 
 
-def test_vedastro_negative_half_hour_offset(tmp_path):
-    """A-14: '-00:30' is −0.5 h, not +0.5 h."""
-    for name in ("planet_data", "ascendant", "dasa_range", "shadbala"):
-        shutil.copy(os.path.join(HERE, "fixtures", "vedastro", f"S1_{name}.json"), tmp_path / f"{name}.json")
-    pd = json.load(open(tmp_path / "planet_data.json"))
-    pd["request_sent"]["body"]["Time"]["StdTime"] = "09:40 14/03/1992 -00:30"
-    json.dump(pd, open(tmp_path / "planet_data.json", "w"))
-    assert load_vedastro_dir(str(tmp_path)).birth.utc_offset_hours == -0.5
-
-
 def test_rounding_happens_once(monkeypatch):
     """A-3: a longitude within 0.00005° below a sign edge is reported consistently (sign, degree, nakshatra, vargas)."""
     real = E.positions
@@ -86,7 +75,8 @@ def test_range_flags_and_refusals():
 
 
 def test_lal_kitab_without_kb_says_so(tmp_path):
-    """K1/B-12: a KB-less install (the public edition) is told so by chart_facts and by the method file."""
+    """B2 (2026-10-12): without scripts/lal_kitab.py (the public edition) chart_facts prints no Lal Kitab part and
+    says so, and the method file tells the assistant to decline Lal Kitab analysis."""
     import importlib.util
     skill = config.load().skill_dir
     (tmp_path / "scripts").mkdir()
@@ -95,8 +85,9 @@ def test_lal_kitab_without_kb_says_so(tmp_path):
     cf = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(cf)
     out = cf.facts(E.chart_facts_input(E.compute("1992-03-14", "09:40", 0, 51.5, -0.12, extras=False)))
-    assert "KB not installed" in out
-    assert "is not installed" in open(os.path.join(skill, "references", "lal-kitab-method.md")).read()
+    assert "# Lal Kitab: not part of this edition" in out and "Lal Kitab fixed-Aries" not in out
+    assert "# Parashari D1" in out
+    assert "does not provide Lal Kitab analysis" in open(os.path.join(skill, "references", "lal-kitab-method.md")).read()
 
 
 def test_transit_sign_aspects_and_local_ingress_dates():
@@ -122,7 +113,9 @@ def test_consultation_context_carries_derived_facts():
     """D2/B-11: MCP/REST clients get the skill's chart_facts output (one implementation) and the transit windows."""
     ctx = S.consultation_context("When will my career change?", S.BirthInput(date="1992-03-14", time="09:40", tz=0,
                                                                             lat=51.5, lon=-0.12))
-    assert "Lal Kitab fixed-Aries chart" in ctx["derived_facts"] and ctx["facts"]["transit_sign_aspects"]
+    d = ctx["derived_facts"]
+    assert "# Parashari D1" in d and ctx["facts"]["transit_sign_aspects"]
+    assert ("Lal Kitab fixed-Aries chart" in d) == _private_edition() and ("not part of this edition" in d) != _private_edition()
 
 
 def test_retrieval_text_fixes():
@@ -134,3 +127,54 @@ def test_retrieval_text_fixes():
     assert normalise("7th lord in the l2th, llth or l0th; the lst house; still") == \
         "7th lord in the 12th, 11th or 10th; the 1st house; still"
     assert fts_terms("Vimshottari dasa") == ["(vimshottari OR vimsottari)", "dasa"]
+
+
+@pytest.mark.parametrize("script", ["chart_facts.py", "life_lint.py", "render_report.py"])
+def test_skill_scripts_answer_help(script):
+    # AUD-09: `--help` was opened as a file path (FileNotFoundError) instead of printing usage
+    import subprocess
+    path = os.path.join(config.load().skill_dir, "scripts", script)
+    r = subprocess.run([sys.executable, path, "--help"], capture_output=True, text=True)
+    assert r.returncode == 0 and "usage" in r.stdout.lower(), r.stderr[-300:]
+
+
+
+def _private_edition():
+    return os.path.exists(os.path.join(config.load().skill_dir, "scripts", "lal_kitab.py"))
+
+
+def _chart_facts():
+    sys.path.insert(0, os.path.join(config.load().skill_dir, "scripts"))
+    import chart_facts as cf
+    return cf
+
+
+def test_chart_facts_varga_matches_engine_at_exact_boundaries():
+    # council 2026-10-11 (R3 M1): exactly 10° / 20° fell one navamsa short and disagreed with the engine
+    cf = _chart_facts()
+    for s in range(12):
+        for d in (10 / 3, 20 / 3, 10.0, 20.0, 3.0, 15.0, 27.0):
+            for n in (9, 10):
+                assert cf.varga(s, d, n) == E.varga(s * 30 + d, n), (s, d, n)
+
+
+
+@pytest.mark.parametrize("text,flag", [
+    ("Your father will not suffer; he may pass away in 2031.", True),       # negation in another clause (R3 M3)
+    ("Your child may die young according to this chart.", True),
+    ("This placement indicates cancer in later life.", True),
+    ("Your houses show Cancer rising, a protective manner.", False),   # the sign, not the illness (council 5 R5 C1)
+    ("Your Putrakaraka is Venus in the Jaimini scheme.", False),      # a Jaimini term, not a progeny forecast (R7-7)
+    ("You should stop taking your medication during this period.", True),
+    ("This is not medical advice; please do not stop your medication without your doctor.", False),
+    ("The Moon in Cancer gives a caring nature.", False),
+    ("I cannot predict death or lifespan.", False),
+    ("I can't, and won't, predict early death.", False),                    # refusal across commas (review 2026-10-11)
+    ("This frustration may die down by spring.", False),
+    ("Saturn shows a stroke of luck in 2027.", False),
+])
+def test_safety_lint_catches_death_diagnosis_and_medication_advice(text, flag):
+    # council 2026-10-11 (R3/R6): the lint is a narrow backstop; these are the confirmed holes it must now close
+    sys.path.insert(0, os.path.join(config.load().skill_dir, "scripts"))
+    import life_lint
+    assert any(i.startswith("SAFETY") for i in life_lint.lint(text)["issues"]) is flag, life_lint.lint(text)["issues"]

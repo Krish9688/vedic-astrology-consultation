@@ -172,7 +172,6 @@ def cmd_promote(a):
     run(PYG, "tools/kg/build_graph.py")
     run("python3", "validation/graph_checks.py")
     run("python3", "validation/citation_test.py", a.name.split("_part")[0])
-    run("python3", "validation/retrieval_eval.py")
 
 
 def run(*cmd):
@@ -185,7 +184,6 @@ def cmd_rebuild(a):
     run(PYG, "tools/kg/extract.py")
     run(PYG, "tools/kg/build_graph.py")
     run("python3", "validation/graph_checks.py")
-    run("python3", "validation/retrieval_eval.py")
     print("done. Review validation/*.md (integrity, OCR, duplicates, provenance, entity linking), then "
           "`python3 tools/release_skill.py` to install the updated skill.")
 

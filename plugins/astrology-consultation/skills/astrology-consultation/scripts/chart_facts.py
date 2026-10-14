@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
 """Derive structural chart facts from SUPPLIED positions. No ephemeris: it never computes where a planet is.
 
-It removes hand-arithmetic errors (house counting, lordship, aspects, D9/D10, dispositors, Lal Kitab states).
-It does NOT interpret. Every Lal Kitab flag names the knowledge-base section/page to verify before use.
+It removes hand-arithmetic errors (house counting, lordship, aspects, D9/D10, dispositors). It does NOT interpret.
+The private edition adds a Lal Kitab block from scripts/lal_kitab.py; the public edition has no Lal Kitab part.
 
 usage:  chart_facts.py chart.json            chart_facts.py --selftest
 chart.json (degrees optional; without degrees D9/D10/combustion/Moon phase are skipped):
   {"asc": {"sign": "Cancer", "deg": 12.5},
    "planets": {"Su": {"sign": "Cancer", "deg": 10.2}, "Mo": {"sign": "Pisces", "deg": 3.1}, "Ma": {...},
                "Me": {...}, "Ju": {...}, "Ve": {...}, "Sa": {..., "retro": true}, "Ra": {...}, "Ke": {...}},
-   "lk_houses": {"Su": 1, ...}   # optional: override Lal Kitab houses (e.g. from a bhava/chalit chart)
+   "lk_houses": {"Su": 1, ...}   # optional, private edition only (see scripts/lal_kitab.py)
   }
-Houses are whole-sign from the ascendant sign (Parashari baseline; also the KB B2 default for Lal Kitab).
+Houses are whole-sign from the ascendant sign (Parashari baseline).
 """
 import json, os, sys
-
-KB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "lal-kitab",
-                       "LalKitab_Shrimali_Knowledge_Base_v2.2.md")
 
 SIGNS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
 SIGN_LORD = ["Ma", "Ve", "Me", "Mo", "Su", "Me", "Ve", "Ma", "Ju", "Sa", "Sa", "Ju"]
@@ -30,18 +27,6 @@ ENEMIES = dict(Su={"Ve", "Sa"}, Mo=set(), Ma={"Me"}, Me={"Mo"}, Ju={"Me", "Ve"},
 SPECIAL_ASPECTS = dict(Ma=[4, 8], Ju=[5, 9], Sa=[3, 10])      # plus the 7th for all
 COMBUST = dict(Me=(14, 12), Ve=(10, 8), Ma=(17, 17), Ju=(11, 11), Sa=(15, 15))  # LOL Table 9.1, p299 (pr 271), image-checked
 
-# ---- Lal Kitab tables: Shrimali KB v2.2 (data/lal-kitab/...Knowledge_Base_v2.2.md) ----
-LK_PAKKA = dict(Su=[1], Mo=[4], Ma=[3, 8], Me=[7], Ju=[2, 5, 9, 12], Ve=[7], Sa=[8, 10], Ra=[12], Ke=[6])  # B7/p40 (X8 default)
-LK_EXALT = dict(Su=[1], Mo=[2], Ma=[10, 8], Me=[6], Ju=[4], Ve=[12], Sa=[7])                            # B4, X1 (Mars 8 and 10)
-LK_DEBIL = dict(Su=[7], Mo=[8], Ma=[4], Me=[12], Ju=[10], Ve=[6], Sa=[1])
-LK_NODE_TABLE = dict(Ra=([3], [9]), Ke=([9, 12], [3, 6]))            # p33-34/60 table set (X3/X4 version A)
-LK_NODE_CHAPTER = dict(Ra=([3, 6], [8, 9, 11]), Ke=([5, 9, 12], [6, 8]))  # p130-138 chapter set (version B)
-LK_FRIEND = dict(Su={"Mo", "Ju", "Ma"}, Mo={"Su", "Me"}, Ma={"Su", "Mo", "Ju"}, Me={"Su", "Ve", "Ra"}, Ju={"Su", "Ma", "Mo"},
-                 Ve={"Sa", "Me", "Ke"}, Sa={"Me", "Ve", "Ra"}, Ra={"Sa", "Me", "Ke"}, Ke={"Ve", "Ra"})       # B4 (bracketed ones included)
-LK_ENEMY = dict(Su={"Ra", "Ke", "Ve", "Sa"}, Mo={"Ra", "Ke"}, Ma={"Me", "Ke"}, Me={"Mo"}, Ju={"Ve", "Me"},
-                Ve={"Su", "Mo", "Ra"}, Sa={"Su", "Mo", "Ma"}, Ra={"Su", "Ma", "Ve"}, Ke={"Mo", "Ma"})
-LK_ASPECT = {1: [7], 2: [6], 3: [9, 11], 4: [10], 5: [9], 6: [12], 7: [2], 8: [2]}  # B5/R10 ❓ rows 9-12 missing; 5 printed "9,11"; 7->2 printed but p67 says 7 aspects nothing
-LK_SINFUL = dict(Ju=[3, 6, 8, 9, 11], Ve=[3, 6, 8, 9, 11], Me=[3, 6, 8, 9, 11], Mo=[3, 6, 8, 9, 11], Sa=[3, 11], Ma=[2, 3, 9])  # B7 p41
 MALEFIC_BASE = {"Sa", "Ma", "Ra", "Ke", "Su"}
 
 
@@ -55,9 +40,9 @@ def sidx(name):
 def varga(sign, deg, n):
     """Standard Parashari D9 / D10 sign index from sign index + degree within sign (vargas.md formulas)."""
     if n == 9:
-        seg, start = int(deg // (10 / 3)), [0, 8, 4][sign % 3]   # movable: same; fixed: 9th; dual: 5th
+        seg, start = int(deg / (10 / 3) + 1e-9), [0, 8, 4][sign % 3]   # +1e-9: exactly 10°/20° start the next part (= engine.varga)
         return (sign + start + seg) % 12
-    seg = int(deg // 3)
+    seg = int(deg / 3 + 1e-9)
     return (sign + (0 if sign % 2 == 0 else 8) + seg) % 12       # odd signs (Aries=1) start at sign; even at 9th
 
 
@@ -152,61 +137,31 @@ def facts(chart):
     finals = sorted({p for p in P if p in P7 and SIGN_LORD[P[p]["s"]] == p})
     W("\nDispositor chains: " + "; ".join(chains) + (f". Final dispositor(s) in own sign: {', '.join(finals)}" if finals else ". No planet in own sign (chains end in a cycle)."))
 
-    # ---- Lal Kitab ----
-    lk = dict(house)
-    lk.update(chart.get("lk_houses", {}))
-    lk_occ = {h: [p for p in lk if lk[p] == h] for h in range(1, 13)}
-    src = "supplied lk_houses override" if chart.get("lk_houses") else "whole-sign houses from lagna (KB B2 note)"
-    W(f"\n# Lal Kitab fixed-Aries chart ({src}); signs dropped, house N = Kalpurush sign N")
-    if not os.path.exists(KB_FILE):
-        W("  KB not installed (public edition): the flags below come from built-in tables only — no house delineations,"
-          " KB section citations or Lal Kitab remedies (lal-kitab-method.md, top).")
-    W("  " + "  ".join(f"H{h}:{'+'.join(lk_occ[h]) or '—'}" for h in range(1, 13)))
-    W(f"  Empty houses: {', '.join(str(h) for h in range(1, 13) if not lk_occ[h])}")
-    for p in [q for q in ALL if q in lk]:
-        h, fl = lk[p], []
-        if h in LK_PAKKA[p]: fl.append("in PAKKA GHAR (B7 p40)")
-        if p in LK_EXALT:
-            if h in LK_EXALT[p]: fl.append("LK-exalted (B4)")
-            if h in LK_DEBIL[p]: fl.append("LK-debilitated (B4)")
-        else:
-            (te, td), (ce, cd) = LK_NODE_TABLE[p], LK_NODE_CHAPTER[p]
-            if h in te or h in ce or h in td or h in cd:
-                fl.append(f"node dignity ⚠️X3/X4: table-set {'exalt' if h in te else 'debil' if h in td else 'none'}, chapter-set {'exalt' if h in ce else 'debil' if h in cd else 'none'}")
-        opp = (h + 5) % 12 + 1
-        if not lk_occ[opp]: fl.append(f"SLEEPING? 7th from it (H{opp}) empty (B7 p44, R14)")
-        mates = [q for q in lk_occ[h] if q != p]
-        en = [q for q in mates if q in LK_ENEMY[p]]
-        fr = [q for q in mates if q in LK_FRIEND[p]]
-        if en: fl.append(f"with LK-enemies {','.join(en)}")
-        if fr: fl.append(f"with LK-friends {','.join(fr)}")
-        if p in LK_SINFUL and h in LK_SINFUL[p]: fl.append("'sinful' placement (B7 p41)")
-        if (p in ("Ra", "Ke") and (h == 4 or "Mo" in mates)) or (p == "Sa" and (h == 11 or "Ju" in mates)): fl.append("DHARMI (B7 p42)")
-        if p in ("Su", "Mo") and ({"Ra", "Ke"} & set(mates)): fl.append("eclipse: with node (B7 p73)")
-        for q in lk:
-            if q != p and h in LK_PAKKA.get(q, []) and lk[q] not in LK_PAKKA[p]:
-                fl.append(f"rival? sits in {q}'s pakka ghar; {q} not in {p}'s (B7 p43)")
-            if q != p and h in LK_PAKKA.get(q, []) and lk[q] in LK_PAKKA[p] and p < q:
-                fl.append(f"ALLY with {q}: exchange of pakka houses (B7 p42)")
-        tgt = LK_ASPECT.get(h)
-        if tgt: fl.append(f"LK aspect → H{','.join(map(str, tgt))}{' ❓' if h in (3, 5, 7) else ''}")
-        W(f"- {NAME[p]} H{h}: {'; '.join(fl) or '—'}")
-    blind = [p for p in lk_occ[10] if p in LK_DEBIL and 10 in LK_DEBIL[p]]
-    if blind: W(f"  Blind-chart check (B7 p41,48; H10 debilitated + mutual enemies): debilitated in 10: {blind} — verify enmity.")
-    if "Ma" in lk and lk["Ma"] in (1, 4, 7, 8, 12): W("  Mangalik by house (B9, a [VED] rule reproduced by the author).")
-    W("  Rin (debt) signatures: check KB B12 against this house map; judge debts from the natal chart only.")
-    W("  Rows 9-12 of the LK aspect table are missing in source (R10); never fill them from Parashari aspects.")
+    # Lal Kitab: scripts/lal_kitab.py exists only in the private edition (council B2, 2026-10-12)
+    lk = _lal_kitab()
+    if lk is None:
+        W("\n# Lal Kitab: not part of this edition (no Lal Kitab chart, flags, rules or remedies).")
+    else:
+        lk.section(chart, house, out, W, ALL, NAME)
     return "\n".join(out)
 
 
+def _lal_kitab():
+    """The private edition's Lal Kitab module, loaded by path (callers may import this file by path too)."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lal_kitab.py")
+    if not os.path.exists(path):
+        return None
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("lal_kitab", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def selftest():
-    # KB B2 p219 example: Cancer lagna; Sun 1; Me+Ve 2; Mars 3; Ketu 5; Sat 8; Jup+Rahu 11; Moon 12
-    ch = {"asc": {"sign": "Cancer"}, "planets": {
-        "Su": {"sign": "Cancer"}, "Me": {"sign": "Leo"}, "Ve": {"sign": "Leo"}, "Ma": {"sign": "Virgo"}, "Ke": {"sign": "Scorpio"},
-        "Sa": {"sign": "Aquarius"}, "Ju": {"sign": "Taurus"}, "Ra": {"sign": "Taurus"}, "Mo": {"sign": "Gemini"}}}
-    t = facts(ch)
-    assert "H1:Su  H2:Me+Ve  H3:Ma  H4:—  H5:Ke" in t, t
-    assert "Saturn H8: in PAKKA GHAR" in t and "Mars H3: in PAKKA GHAR" in t
+    lk = _lal_kitab()
+    if lk:
+        lk.selftest(facts)   # private edition: the Lal Kitab block checks itself
     assert varga(0, 3 + 1 / 3, 9) == 1, "exactly 3°20' Aries -> second navamsa (Taurus)"
     assert varga(1, 0.5, 9) == 9, "Taurus 0°30' -> Capricorn navamsa"
     assert varga(1, 0.5, 10) == 9, "Taurus (even) D10 starts at 9th = Capricorn"
@@ -215,12 +170,16 @@ def selftest():
     ch2 = {"asc": {"sign": "Aries"}, "planets": {"Ju": {"sign": "Cancer"}, "Ve": {"sign": "Aquarius"}}}
     t2 = facts(ch2)
     assert "H11 Aquarius: occ Ve | asp —" in t2 and "H8 Scorpio: occ — | asp Ju" in t2, t2
+    if not lk:
+        assert "# Lal Kitab: not part of this edition" in t2, t2
     print("selftest ok")
 
 
 if __name__ == "__main__":
     if sys.argv[1:] == ["--selftest"]:
         selftest()
+    elif sys.argv[1:] in (["-h"], ["--help"]):
+        print(__doc__.strip())
     elif len(sys.argv) == 2:
         print(facts(json.load(open(sys.argv[1]))))
     else:

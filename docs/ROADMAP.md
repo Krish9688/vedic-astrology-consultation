@@ -6,7 +6,7 @@ Updated 2026-10-03 (final-completion review in progress; this file is revised ag
 ## Done since the previous roadmap (v3.4 → v3.5 / 3.5.0)
 
 - The 125 automatic cross-book disputes curated (contradiction register section F; graph: 0 unresolved).
-- Local Shadbala and Ashtakavarga, with every difference from VedAstro/PyJHora classified.
+- Local Shadbala and Ashtakavarga, with every difference from PyJHora classified.
 - Swiss Ephemeris `.se1` files (1800–2399, checksum-verified download; Moshier outside that range).
 - Engine output (sensitivity minutes, slow-planet contacts) used directly by the benchmark fixtures.
 - A consent-gated prediction log (synthetic records only so far).
