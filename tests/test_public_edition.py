@@ -74,6 +74,9 @@ def test_real_public_export_passes_the_b2_gate(tmp_path):
     for rel in ("scripts/lal_kitab.py", "scripts/varshaphal.py"):
         assert skill + rel not in shipped, rel
     assert not [s for s in shipped if "data/lal-kitab" in s or s in ("tools/clean_lk1952.py", "validation/retrieval_eval.py")]
+    kg_pub = open(os.path.join(str(tmp_path), "tools", "kg", "extract.py")).read()   # private KB parser left out
+    assert "def add_kb" not in kg_pub and "KB_PATH" not in kg_pub and "def add_kb" in open(os.path.join(ROOT, "tools", "kg", "extract.py")).read()
+    compile(kg_pub, "extract.py", "exec")
     ex.b2_gate(str(tmp_path))                            # sys.exit on any finding
 
 

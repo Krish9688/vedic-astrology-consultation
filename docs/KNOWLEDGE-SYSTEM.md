@@ -1,5 +1,9 @@
 # Knowledge system: Graphify knowledge graph over the astrology library (v3.1; 18 books since v3.3)
 
+> **Editions.** This describes the owner's build. The public edition (from 3.6.1) contains no Lal Kitab material:
+> no Lal Kitab knowledge base, rules, method or graph. `kg.py` and `search.py` search only the books you add
+> yourself (`astro add-book`); the Lal Kitab parts below describe the owner's private build.
+
 ## 1. The flow
 
 ```
@@ -81,7 +85,7 @@ API, and for 3,459 pages it would be slow, costly and non-deterministic. Instead
 | Planet, Sign, House, Nakshatra, Yoga, DivisionalChart, Technique, LalKitabConcept, Topic | 171 | `planet:jupiter`, `house:7`, `varga:d9`… | synonyms in `scripts/vocab.py` (English, Sanskrit, Hindi) |
 
 Rule **kinds**: method, topic-rule, timing-rule, yoga, worked-example, contradiction-note, harmful-statement, limits,
-page-notes, kb-register, kb-section, lk-planet-in-house. Rules correspond to the brief's Rule / Timing Rule / Lal
+page-notes, and (private build) three Lal Kitab knowledge-base kinds. Rules correspond to the brief's Rule / Timing Rule / Lal
 Kitab rule / Exception entities; Prediction and Remedy are rule kinds or topics rather than separate node types,
 because forcing them apart would mean guessing.
 
