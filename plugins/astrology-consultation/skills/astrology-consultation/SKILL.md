@@ -82,6 +82,7 @@ The reasoning discipline is [consultation-reasoning.md](references/consultation-
 | Contradictory | Important factors disagree and don't resolve by domain or period |
 | Unknown | Needed data or calculation missing / unstable |
 
+Grade event, timing and manifestation separately when they differ.
 
 ## Tools
 
