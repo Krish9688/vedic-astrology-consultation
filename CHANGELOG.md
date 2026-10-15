@@ -4,7 +4,7 @@ Every version up to v3.4 predates this git repository as a package (created 2026
 [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md). For important changes this log records what existed before, what
 problem was observed, what exposed it, what changed, why that solution, and how it was validated.
 
-## [3.6.1] — 2026-10-10 — VedAstro removed (owner decision); corrected test fixtures
+## [3.6.1] — 2026-10-15 — VedAstro removed (owner decision); corrected test fixtures; no Lal Kitab material in the public edition
 
 Plugin and engine 3.6.1; skill text v3.6 (method unchanged). Validation: the private repository's
 `.project-council/TEST-EVIDENCE.md` (E-017 … E-029). Packaged as `astrology-consultation-3.6.1.skill`.
