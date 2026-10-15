@@ -90,6 +90,32 @@ def test_lal_kitab_without_kb_says_so(tmp_path):
     assert "does not provide Lal Kitab analysis" in open(os.path.join(skill, "references", "lal-kitab-method.md")).read()
 
 
+
+@pytest.mark.parametrize("module,desc,expect", [
+    ("raise ImportError('broken')", "private", "failed to load: ImportError: broken"),
+    ("x = 1", "private", "no section()/selftest()"),
+    ("def selftest(f):\n    pass\ndef section(c, h, out, W, A, N):\n    W('# Lal Kitab partial')\n    raise KeyError('bad')",
+     "private", "the Lal Kitab block failed (KeyError"),
+    ("def selftest(f):\n    pass\ndef section(c, h, out, W, A, N):\n    W('# Lal Kitab LEAK')", "public", "ignored: this skill folder is the public edition"),
+])
+def test_chart_facts_survives_an_unusable_lal_kitab_module(tmp_path, module, desc, expect):
+    """v3.6.2 (council 5 R5 C3 / R4 S3): a broken, stale or leftover lal_kitab.py never crashes chart_facts, never
+    leaves partial Lal Kitab lines, never prints Lal Kitab output in a public skill folder; Parashari facts unaffected."""
+    import importlib.util
+    skill = config.load().skill_dir
+    (tmp_path / "scripts").mkdir()
+    shutil.copy(os.path.join(skill, "scripts", "chart_facts.py"), tmp_path / "scripts" / "chart_facts.py")
+    (tmp_path / "scripts" / "lal_kitab.py").write_text(module + "\n")
+    text = "Lal Kitab is not part of this edition." if desc == "public" else "Parashari/Vedic astrology and Lal Kitab."
+    (tmp_path / "SKILL.md").write_text(f"---\nname: x\ndescription: Consultation ... {text}\n---\n")
+    spec = importlib.util.spec_from_file_location("cf_lk_" + desc, tmp_path / "scripts" / "chart_facts.py")
+    cf = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cf)
+    ch = E.chart_facts_input(E.compute("1992-03-14", "09:40", 0, 51.5, -0.12, extras=False))
+    out = cf.facts(ch)
+    assert expect in out and "# Parashari D1" in out, out[-400:]
+    assert "partial" not in out and "LEAK" not in out
+
 def test_transit_sign_aspects_and_local_ingress_dates():
     """D1: whole-sign graha drishti windows for transiting Jupiter/Saturn follow the ingress list exactly.
     A-8: ingress dates are local dates of the change (Jupiter enters Cancer 2026-06-01 ~20:20 UT = 2026-06-02 IST)."""
@@ -172,6 +198,26 @@ def test_chart_facts_varga_matches_engine_at_exact_boundaries():
     ("I can't, and won't, predict early death.", False),                    # refusal across commas (review 2026-10-11)
     ("This frustration may die down by spring.", False),
     ("Saturn shows a stroke of luck in 2027.", False),
+    # council 5 R7-2 (v3.6.2): verdict negations are not excuses; new topic groups; disclaimers stay clean
+    ("You cannot conceive naturally.", True),
+    ("You will not be able to conceive.", True),
+    ("You can't get pregnant before 2030.", True),
+    ("You will never have children.", True),
+    ("Your father will not survive this period.", True),
+    ("You won't live past 60.", True),
+    ("Your marriage will end in divorce by 2028.", True),
+    ("You are likely to separate from your partner next year.", True),
+    ("Your husband is cheating on you; Venus with Rahu shows infidelity.", True),
+    ("With this Saturn period, ending your life may feel like the only way out.", True),
+    ("You will lose all your money in the Rahu period, so sell your house now.", True),
+    ("Put all your savings into gold this year.", True),
+    ("There is no doubt you will have a baby in 2027.", True),
+    ("If you are having thoughts of harming yourself, please contact a crisis line or a doctor now.", False),
+    ("I won't say whether your marriage will end in divorce; a chart cannot tell that.", False),
+    ("No infidelity or divorce claims; the partner's mind is out of scope.", False),
+    ("A birth chart can't time conception or say anything reliable about fertility.", False),
+    ("Lifespan is something I cannot predict.", False),
+    ("For money decisions, a financial adviser is the right person to ask.", False),
 ])
 def test_safety_lint_catches_death_diagnosis_and_medication_advice(text, flag):
     # council 2026-10-11 (R3/R6): the lint is a narrow backstop; these are the confirmed holes it must now close
