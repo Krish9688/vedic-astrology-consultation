@@ -79,6 +79,9 @@ def test_real_public_export_passes_the_b2_gate(tmp_path):
     compile(kg_pub, "extract.py", "exec")
     add_pub = open(os.path.join(str(tmp_path), "tools", "kg", "add_book.py")).read()   # no call to a private-only script
     assert "retrieval_eval" not in add_pub and "validation/retrieval_eval.py" not in shipped
+    ex.catalog(str(tmp_path))                            # the exported catalog: no private KB record or KB codes
+    cat = open(os.path.join(str(tmp_path), "knowledge", "catalog.json")).read()
+    assert '"id": "KB"' not in cat and "KB R" not in cat and "lal-kitab/" not in cat and "library_root" not in cat
     ex.b2_gate(str(tmp_path))                            # sys.exit on any finding
 
 

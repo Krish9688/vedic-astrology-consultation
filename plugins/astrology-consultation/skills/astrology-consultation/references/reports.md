@@ -3,7 +3,7 @@
 A report is a consultation written down for someone who will reread it: the same judgement as mode A, organised so
 the answer is found in the first page and the evidence last. The structure below comes from research into how
 practitioners and report producers work — what to copy and what to avoid is in
-`_skill_workspace/research/reports/SYNTHESIS.md`. All structure here is **DESIGN**, not classical doctrine.
+the project's research notes (not part of this package). All structure here is **DESIGN**, not classical doctrine.
 
 ## 1. Principles
 

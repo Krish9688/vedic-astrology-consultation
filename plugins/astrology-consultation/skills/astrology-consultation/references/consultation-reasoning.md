@@ -3,7 +3,7 @@
 This is the thinking layer. The other references hold rules; this file decides **which rules matter for this
 question, what role each factor plays, and how they combine into one judgement**. The research behind it (how
 experienced practitioners actually reason, with sources and critiques) is in
-`_skill_workspace/docs/ASTROLOGER-CONSULTATION-RESEARCH.md`; tags like `[R1-P3]` point there. Book tags as usual.
+the project's research notes (not part of this package); tags like `[R1-P3]` point there. Book tags as usual.
 
 ## 0. Two layers: the workbench and the answer
 

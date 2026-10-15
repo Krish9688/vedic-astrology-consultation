@@ -26,7 +26,7 @@ PL = [("Su", swe.SUN), ("Mo", swe.MOON), ("Ma", swe.MARS), ("Me", swe.MERCURY), 
 YEAR = {"sidereal": 365.256363, "365.25": 365.25, "360": 360.0}
 VARGAS = [1, 2, 3, 4, 7, 9, 10, 12, 16, 20, 24, 27, 30, 40, 45, 60]
 EPS = 1e-9  # in units of a division (≈1e-8°): absorbs float error at exact boundaries
-ENGINE_VERSION = "3.6.1"
+ENGINE_VERSION = "3.6.2"
 
 # Parashari varga rules as implemented (BPHS ch. 6–7). Other engines' variants are recorded in compare.py notes.
 VARGA_METHODS = {

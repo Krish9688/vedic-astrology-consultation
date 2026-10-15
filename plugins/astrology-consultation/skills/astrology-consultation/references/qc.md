@@ -45,7 +45,7 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
 ## Regression scenarios (for testing changes to the skill)
 
 The behavioural test set lives in `tests/test-cases.md`. After any change to reasoning or voice files, rerun at least
-the regression subset and compare with the saved outputs in `tests/results/`. Also keep the v2.2 regression ideas:
+the regression subset and compare with your earlier outputs, if you keep them. Also keep the v2.2 regression ideas:
 removing natal support must weaken a transit-only claim; duplicating one placement as yoga/dignity/vargottama must not
 raise confidence; changing the ascendant must change functional ownership; unstable birth time must stop a high varga
 from confirming; reversed period dates must be caught; a diagnosis/death/guarantee request must be declined.
