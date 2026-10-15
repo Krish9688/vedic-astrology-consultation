@@ -4,8 +4,10 @@
 usage: python3 life_lint.py draft.md [--mode chat|deep|report]    (a report .json is read field by field)
        python3 life_lint.py --selftest
 Flags: chart-first sentences (subject is a planet/house/lord), too many chart facts for the mode, workbench words,
-page/verse citations outside a technical section, lists of sub-sub-periods. Stdlib only; never blocks — the
-consultant decides. See references/communication.md §0–1a.
+page/verse citations outside a technical section, lists of sub-sub-periods. Stdlib only. Advisory for chat and deep
+drafts (the consultant decides) with one exception: SAFETY lines are blocking errors when render_report.py checks a
+report. The safety patterns are a phrase-list backstop, not proof that a text is safe. See references/communication.md
+§0–1a and §6.
 """
 import json
 import re
@@ -47,7 +49,29 @@ CHILD_TIMING = re.compile(
     r"start(?:ing)? a family|addition to the family|sector of children|house of children)\b[^.]{0,160}?\b(?:months?|years?|\d{4}|window|stretch|period|timing|make plans|crosses|transits?)\b"
     r"|\b(?:months?|\d{4}|window|stretch|period)\b[^.]{0,160}?\b(?:sector of children|house of children|parenthood)\b"
     r"|\bchildren (?:later|earlier|sooner) rather than\b", re.I)
-REFERRAL = re.compile(r"\b(?:doctor|GP|midwife|specialist|clinic|medical|obstetrician|gynaecologist)\b", re.I)
+REFERRAL = re.compile(r"\b(?:doctor|GP|midwife|specialist|clinic|medical|obstetrician|gynaecologist|crisis (?:line|service)|"
+                      r"helpline|hotline|emergency (?:services|number)|counsel+or|therapist|psychologist|lawyer|solicitor|"
+                      r"financial (?:adviser|advisor|counsel+or))\b", re.I)
+# Further verdicts the skill must not give (council 5 R7-2): divorce/separation, infidelity, self-harm, infertility
+# verdicts, financial ruin and selling/investing instructions. Same excuses as SAFETY (refusal, dateless referral).
+SAFETY_MORE = re.compile(
+    r"\b(?:will|would|is going to|are going to|(?:is|are) (?:likely|bound|destined|certain) to)\b[^.;]{0,40}?\b(?:divorc\w*|separat\w*|break up|split up)\b"
+    r"|\bend(?:s|ing)? in (?:divorce|separation)\b|\bdivorce (?:is )?(?:likely|certain|indicated|inevitable|coming|in (?:19|20)\d\d)\b"
+    r"|\bcheat(?:s|ed|ing)? on (?:you|him|her|them)\b|\bunfaithful\b|\binfidelity\b|\badulter\w*|\b(?:having|has|had|have) an affair\b|\bextra-?marital\b"
+    r"|\b(?:will not|won't|may not|might not|not going to) (?:survive|live (?:past|beyond|to see|long|much longer))\b"
+    r"|\bsuicid\w*|\bkill (?:your|him|her|them|my)sel(?:f|ves)\b|\bend(?:ing)? (?:your|his|her|their|my) (?:own )?life\b|\bself-harm\w*"
+    r"|\bharm(?:ing)? (?:your|him|her|them|my)sel(?:f|ves)\b"
+    r"|\b(?:cannot|can't|can not|unable to|won't be able to|will not be able to|will never|never) (?:conceive|get pregnant|become (?:a )?(?:mother|father|parent)|have (?:a |any )?(?:child|children|kids|baby))\b"
+    r"|\b(?:lose|losing|will lose) (?:all (?:your|of your) |everything|your (?:house|home|savings|money|job|business)\b)|\bbankrupt\w*|\bfinancial ruin\b|\bgo broke\b"
+    r"|\bsell (?:your|the) (?:house|home|property|business|shares|stocks|gold)\b|\b(?:invest|put) (?:all|everything|your savings)\b", re.I)
+# A negation excuses a match unless it is a verdict about a person ("you cannot conceive", "he will not survive",
+# "your partner won't …") — council 5 R7-2; disclaimers ("no infidelity claims", "a chart can't time conception") stay excused.
+VERDICT_NEG = re.compile(r"\b(?:you|he|she|they|your (?:\w+ ){0,2}?(?:partner|spouse|husband|wife|father|mother|parents?|child|"
+                         r"children|son|daughter|brother|sister|sibling))\s+(?:will |would |may |might |can |could |are |is )?"
+                         r"(?:not|never|cannot|can't|can not|won't|will not|unable)\b", re.I)
+# "... which a chart cannot tell" / "lifespan is something I cannot predict": a refusal anywhere in a dateless sentence
+TELL_REFUSAL = re.compile(r"\b(?:I|we|astrology|(?:a|the|this|no|your) (?:birth )?chart|no one|nobody)\b[^.;]{0,20}?\b(?:cannot|can't|can not|"
+                          r"won't|will not|does not|doesn't|do not|don't)\s+(?:tell|predict|say|show|time|forecast|know|answer)\b", re.I)
 WHEN = re.compile(r"\b(?:1[89]|2\d)\d\d\b|\b\d{1,3} years?\b|\bage \d|\bby (?:your )?(?:\d|mid|late|early)", re.I)
 NEGATION = re.compile(r"\b(?:not|cannot|can't|won't|don't|never|no|nor|without)\b(?:[\s,]+\S+){0,3}[\s,]*$", re.I)
 
@@ -56,7 +80,10 @@ def _excused(s, m):
     """A safety match is excused only by a close negation ('I can't time a pregnancy'), an explicit refusal, or a
     medical referral that carries no date or age — never by 'no doubt' or a doctor mention next to a forecast."""
     before = re.split(r"[;:—–]", s[:m.start()])[-1]   # the negation must be in the same clause (council R3 M3)
-    if NEGATION.search(before) and not re.search(r"\bno doubt\b|\bnot surprising", before, re.I):
+    if (NEGATION.search(before) and not VERDICT_NEG.search(before)
+            and not re.search(r"\bno doubt\b|\bnot surprising", before, re.I)):
+        return True
+    if TELL_REFUSAL.search(s) and not WHEN.search(s):
         return True
     if re.search(r"\b(?:declin\w*|refus\w*)\b", s, re.I) and not WHEN.search(s):
         return True
@@ -87,8 +114,9 @@ def lint(text, mode="chat"):
     main = [(n, s) for n, s, t in S if not t]
     first = [(n, s) for n, s in main if CHART_FIRST.match(s)]
     facts = [(n, s) for n, s in main if FACT.search(s)]
-    issues = [f"SAFETY: '{m.group()}' (line {n}) — no fertility/childbirth forecast, death/longevity statement, diagnosis or medication advice"
-              for n, s, _ in S for m in [SAFETY.search(s) or CHILD_TIMING.search(s)]   # every section, incl. appendix
+    issues = [f"SAFETY: '{m.group()}' (line {n}) — no fertility/childbirth forecast, death/longevity, diagnosis or medication "
+              "advice, divorce/infidelity verdict, self-harm content without a crisis referral, or financial-ruin/investment call"
+              for n, s, _ in S for m in [SAFETY.search(s) or CHILD_TIMING.search(s) or SAFETY_MORE.search(s)]   # every section
               if m and not _excused(s, m) and not HEADING.match(s)]
     if len(facts) > BUDGET[mode]:
         issues.append(f"{len(facts)} chart-fact sentences in the main text (budget ~{BUDGET[mode]} for {mode})")

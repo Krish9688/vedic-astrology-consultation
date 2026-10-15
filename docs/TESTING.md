@@ -31,7 +31,7 @@ blind 24-question set from council member C: full text 16/24, hybrid 17/24, grap
 
 `chart_facts.py --selftest`, `varshaphal.py --selftest` (private edition: 120 rows, worked examples), `vocab.py` (180 entities private / 169 public),
 `life_lint.py --selftest`, `render_report.py --selftest`. Behavioural regression cases with criteria fixed before
-outputs existed: `skill/…/tests/test-cases.md` (22 cases; v3.3 regression subset 8/8).
+outputs existed: `skill/…/tests/test-cases.md` (23 cases — T23 crisis disclosure added for 3.6.2, not yet run; v3.3 regression subset 8/8).
 
 ## 4. Blind consultation benchmarks
 

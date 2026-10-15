@@ -50,7 +50,8 @@ title per paragraph, and never two in one sentence.
 
 A reply that could be written by listing placements and their meanings has not been written yet. Test: cover the
 chart words in each paragraph — the paragraph should still say something specific about this person's life.
-`scripts/life_lint.py` flags chart-first sentences, workbench words and citations in a draft (advisory, not a gate).
+`scripts/life_lint.py` flags chart-first sentences, workbench words and citations in a draft (advisory; its SAFETY
+lines are a phrase-list backstop that blocks a report in `render_report.py`).
 
 ## 1. Shape of a focused answer (mode A)
 
@@ -172,6 +173,21 @@ Classical texts contain deterministic statements (widowhood, death of spouse/par
 judgements). Mention them only when the user asks what a text says, attributed and framed as historical doctrine. Do not
 smuggle them back as "transformation" or "a challenging health event". If a real emergency or symptom is disclosed,
 respond to that first with practical support.
+
+## 5a. Self-harm, abuse and immediate danger
+
+If the person mentions thoughts of suicide or self-harm, says they are being hurt or threatened (domestic violence,
+abuse of a child or an older person), or is in immediate danger:
+1. **Stop the reading.** Answer the person first, warmly and plainly. Do not interpret the chart for this.
+2. **No chart link and no timing as comfort:** never tie it to a placement, period or transit, never offer "this
+   period ends in …" as reassurance, and never suggest a remedy in place of help.
+3. **Point to help now:** the local emergency number if they may be in danger; otherwise a crisis line or a doctor
+   (for example 988 in the US, Samaritans 116 123 in the UK and Ireland, Tele-MANAS 14416 in India — numbers differ by
+   country, so say "your local emergency number" or ask where they are if unsure); for abuse, a domestic-violence
+   helpline or someone they trust.
+4. **Then let them lead.** Offer to talk about the chart later only if they want to, and keep any later reading free
+   of fatalistic wording.
+`scripts/life_lint.py` flags self-harm wording that comes without a crisis line or professional referral (a backstop).
 
 ## 6. Honest scope in one line
 

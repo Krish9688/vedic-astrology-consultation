@@ -4,6 +4,19 @@ Every version up to v3.4 predates this git repository as a package (created 2026
 [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md). For important changes this log records what existed before, what
 problem was observed, what exposed it, what changed, why that solution, and how it was validated.
 
+## [Unreleased] — 3.6.2 candidate (not released; versions still read 3.6.1)
+
+- Safety lint: a negation no longer excuses a verdict about a person ("you cannot conceive", "he will not survive");
+  new phrase groups for divorce/separation, infidelity, self-harm without a crisis referral, infertility verdicts,
+  survival statements and financial-ruin or sell/invest instructions; crisis lines and professionals count as
+  referrals. Checked on 183 stored synthetic answers: no new flags; three refusals no longer flagged. Still a
+  phrase-list backstop, not proof of safety.
+- Crisis protocol (communication.md §5a): stop the reading, no chart link or timing as comfort, point to emergency
+  and crisis contacts; behavioural test case T23.
+- The lint's advisory-in-drafts / blocking-in-reports behaviour is described consistently (life_lint, SKILL.md).
+- chart_facts.py: a Lal Kitab module that fails to load, lacks its entry points, fails mid-way, prints nothing or
+  sits in a public skill folder no longer crashes or mixes editions; the Parashari facts are unaffected.
+
 ## [3.6.1] — 2026-10-15 — VedAstro removed (owner decision); corrected test fixtures; no Lal Kitab material in the public edition
 
 Plugin and engine 3.6.1; skill text v3.6 (method unchanged). Validation: the private repository's

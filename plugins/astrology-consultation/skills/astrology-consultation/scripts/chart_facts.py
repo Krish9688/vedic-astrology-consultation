@@ -13,7 +13,7 @@ chart.json (degrees optional; without degrees D9/D10/combustion/Moon phase are s
   }
 Houses are whole-sign from the ascendant sign (Parashari baseline).
 """
-import json, os, sys
+import json, os, re, sys
 
 SIGNS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
 SIGN_LORD = ["Ma", "Ve", "Me", "Mo", "Su", "Me", "Ve", "Ma", "Ju", "Sa", "Sa", "Ju"]
@@ -141,25 +141,50 @@ def facts(chart):
     lk = _lal_kitab()
     if lk is None:
         W("\n# Lal Kitab: not part of this edition (no Lal Kitab chart, flags, rules or remedies).")
+    elif isinstance(lk, str):
+        W(f"\n# Lal Kitab: scripts/lal_kitab.py not used ({lk}). No Lal Kitab output; the facts above are unaffected.")
     else:
-        lk.section(chart, house, out, W, ALL, NAME)
+        n = len(out)
+        try:
+            lk.section(chart, house, out, W, ALL, NAME)
+        except Exception as e:   # never let a broken private module take the Parashari facts down with it
+            del out[n:]
+            W(f"\n# Lal Kitab: the Lal Kitab block failed ({type(e).__name__}: {e}). No Lal Kitab output; the facts above are unaffected.")
+        else:
+            if len(out) == n:
+                W("\n# Lal Kitab: scripts/lal_kitab.py produced no output.")
     return "\n".join(out)
 
 
 def _lal_kitab():
-    """The private edition's Lal Kitab module, loaded by path (callers may import this file by path too)."""
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lal_kitab.py")
+    """The private edition's Lal Kitab module, loaded by path (callers may import this file by path too).
+    Returns the module, None when absent (public edition), or a reason string when the file is present but unusable:
+    it fails to load, lacks section()/selftest(), or sits in a public skill folder (a leftover private file)."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(here, "lal_kitab.py")
     if not os.path.exists(path):
         return None
+    try:
+        desc = re.search(r"^description: .*$", open(os.path.join(here, "..", "SKILL.md"), encoding="utf-8").read(), re.M)
+        if desc and "Lal Kitab is not part of this edition" in desc.group():   # the public edition's description
+            return "ignored: this skill folder is the public edition — a file left over from the private edition? remove it"
+    except OSError:
+        pass
     import importlib.util
-    spec = importlib.util.spec_from_file_location("lal_kitab", path)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
+    try:
+        spec = importlib.util.spec_from_file_location("lal_kitab", path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+    except Exception as e:
+        return f"failed to load: {type(e).__name__}: {e}"
+    if not (callable(getattr(mod, "section", None)) and callable(getattr(mod, "selftest", None))):
+        return "it has no section()/selftest() — stale or foreign file?"
     return mod
 
 
 def selftest():
     lk = _lal_kitab()
+    assert not isinstance(lk, str), f"scripts/lal_kitab.py unusable: {lk}"
     if lk:
         lk.selftest(facts)   # private edition: the Lal Kitab block checks itself
     assert varga(0, 3 + 1 / 3, 9) == 1, "exactly 3°20' Aries -> second navamsa (Taurus)"

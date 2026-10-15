@@ -100,7 +100,9 @@ Grade event, timing and manifestation separately when they differ.
   Ashtakavarga and Jaimini factors, and a birth-time sensitivity grid with classes**. Nothing is sent to an outside service;
   conventions in inputs.md.
 - `scripts/life_lint.py draft.md [--mode chat|deep|report]` — advisory check for chart-first sentences, workbench
-  words, citations and sub-period lists in a client-facing draft.
+  words, citations and sub-period lists in a client-facing draft. Its SAFETY lines (death, fertility, diagnosis or
+  medication, divorce or infidelity verdicts, self-harm without a crisis referral, financial ruin) are a phrase-list
+  backstop: advisory in drafts, blocking in reports (`render_report.py`). A clean run is not proof of safety.
 - `scripts/render_report.py report.json --out DIR` — validates a Structured Report Model
   (`assets/report/report.schema.json`), checks consistency, renders HTML and (with WeasyPrint) PDF. Needs jinja2.
 - Calculation layer: `python -m astro.calc.compare` turns the local output (and, optionally, another engine's
