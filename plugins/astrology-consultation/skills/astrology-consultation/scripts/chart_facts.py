@@ -195,6 +195,9 @@ def selftest():
     ch2 = {"asc": {"sign": "Aries"}, "planets": {"Ju": {"sign": "Cancer"}, "Ve": {"sign": "Aquarius"}}}
     t2 = facts(ch2)
     assert "H11 Aquarius: occ Ve | asp —" in t2 and "H8 Scorpio: occ — | asp Ju" in t2, t2
+    ch3 = {"asc": {"sign": "Cancer"}, "planets": {"Sa": {"sign": "Aquarius"}, "Mo": {"sign": "Gemini"}}}
+    t3 = facts(ch3)   # whole-sign houses from a non-Aries lagna: Aquarius is the 8th from Cancer, Gemini the 12th
+    assert "H8 Aquarius: occ Sa" in t3 and "H12 Gemini: occ Mo" in t3, t3
     if not lk:
         assert "# Lal Kitab: not part of this edition" in t2, t2
     print("selftest ok")

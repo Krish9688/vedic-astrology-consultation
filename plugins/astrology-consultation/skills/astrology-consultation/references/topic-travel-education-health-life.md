@@ -13,8 +13,8 @@ Separate **trip**, **study/work stint**, **long residence/settlement** and **ret
 - **Residence abroad**: 12th lord in 9th, 4th or lagna; lagna lord in 9th or 12th; a movable 12th holding the Moon or
   Mercury — with benefic aspect, residence and good fortune; with malefic hemming, a forced departure [HJH2 p418–421].
   Lagna lord strong in a fixed sign/kendra → trips but not residence; lagna lord in the 6th → many journeys, no long stay
-  [HJH2 p228, p464–465]. "Unless the ascendant and other planets warrant residence abroad, the dashas by themselves
-  cannot give it" [HJH2 p228].
+  [HJH2 p228, p464–465]. Dashas alone cannot give residence abroad unless the ascendant and other planets support it
+  [HJH2 p228].
 - **Purpose from the planets involved**: 4th/9th lords study; 9th/10th career (+6th: employer-sponsored); 11th lord
   business; Venus/7th lord after marriage; weak lagna lord + 6th medical; 6th/8th forced departure [HJH2 p225–226].
 - Earnings abroad: 10th sign or 10th lord's navamsa sign occupied/aspected by planets other than its lord [PD V.9];

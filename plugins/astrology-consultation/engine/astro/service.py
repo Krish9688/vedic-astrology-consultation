@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field, field_validator
 from . import config
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
-VERSION = "3.6.1"
+VERSION = "3.6.2"
 SOURCE_URL = "https://github.com/Krish9688/vedic-astrology-consultation"
 SOURCE_NOTICE = ("This service is free software under the GNU Affero General Public License v3 or later, with NO "
                  "WARRANTY. The Corresponding Source of the version running here is available at the 'source' URL. "
@@ -277,7 +277,10 @@ def create_report(model: dict, name: str = "report") -> dict:
     if errs:
         return {"ok": False, "errors": errs}
     os.makedirs(s.reports_dir, mode=0o700, exist_ok=True)      # reports hold birth details: owner-only when created
-    html, pdf = rr.render(model, s.reports_dir, name)
+    try:
+        html, pdf = rr.render(model, s.reports_dir, name)
+    except Exception as e:   # e.g. jinja2 or the PDF libraries missing: tell the client why (not a generic tool error)
+        return {"ok": False, "errors": [f"report could not be rendered: {type(e).__name__}: {e}"]}
     for f in (html, pdf):
         if f:
             os.chmod(f, 0o600)      # the files hold birth details too, not only the folder (council R4)

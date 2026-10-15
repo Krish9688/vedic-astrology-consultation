@@ -79,10 +79,10 @@ def test_report_file_owner_only_when_pdf_step_fails(isolated_config, monkeypatch
     model = json.load(open(f"{config.load().skill_dir}/assets/report/example-synthetic.json"))
     old = os.umask(0o022)                # the regression only shows under a permissive umask
     try:
-        with pytest.raises(RuntimeError, match="pdf failed"):
-            S.create_report(model, "failing")
+        res = S.create_report(model, "failing")
     finally:
         os.umask(old)
+    assert not res["ok"] and "pdf failed" in res["errors"][0]          # the reason reaches the client (3.6.2)
     assert os.stat(isolated_config / "reports" / "failing.html").st_mode & 0o777 == 0o600
 
 
