@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Advisory check of a client-facing draft: does it lead with the life or recite the chart?
 
-usage: python3 life_lint.py draft.md [--mode chat|deep|report]    (a report .json is read field by field)
+usage: python3 life_lint.py draft.md [--mode chat|deep|report|audit]    (a report .json is read field by field)
+--mode audit reads someone else's report (council 6): flags fear, sales, certainty, money and costly-remedy language.
        python3 life_lint.py --selftest
 Flags: chart-first sentences (subject is a planet/house/lord), too many chart facts for the mode, workbench words,
 page/verse citations outside a technical section, lists of sub-sub-periods. Stdlib only. Advisory for chat and deep
@@ -88,6 +89,28 @@ def _excused(s, m):
     if re.search(r"\b(?:declin\w*|refus\w*)\b", s, re.I) and not WHEN.search(s):
         return True
     return bool(REFERRAL.search(s)) and not WHEN.search(s)
+# Audit mode (council 6, P3-4): advisory probes for a third-party report; paraphrase-tested, never verbatim vendor text
+AUDIT = [
+    ("fear", r"\b(?:secret (?:affair|relationship)|hidden (?:romance|affair|relationship)|come to light|(?:will|may|could) be "
+             r"(?:exposed|discovered)|hard to diagnose|struggle to identify|chronic illness|danger to (?:your )?life|"
+             r"black magic|evil eye|curse[ds]?|(?:enemies|rivals) (?:will|may|could) (?:harm|destroy|ruin)|"
+             r"(?:will|may|could) (?:ruin|destroy) your)\b"),
+    ("sales", r"\b(?:book (?:a|your|the)\b[^.]{0,20}\b(?:puja|pooja|ritual|homa|havan|consultation)|coupons?|discount|"
+              r"limited[- ]time|order now|buy now|energi[sz]ed|certified (?:gem|stone|rudraksha)|"
+              r"(?:our|the) (?:expert )?astrologers?|call (?:now|us)|whatsapp)\b"),
+    ("certainty", r"(?:\b100 ?%|\bguaranteed\b|\bscientifically proven\b|\bdefinitely will\b|\bno doubt\b)"),
+    ("money", r"\b(?:invest (?:in|your)|(?:buy|sell) (?:shares|stocks|property|gold)|(?:stock|share) market|"
+              r"speculat\w*|lottery)\b"),
+    ("costly-remedy", r"\b(?:gemstones?|(?:blue|yellow) sapphire|emerald|ruby|diamond|cat'?s eye|hessonite)\b"),
+]
+AUDIT = [(cat, re.compile(rx, re.I)) for cat, rx in AUDIT]
+
+
+def audit(text):
+    """(category, line, match) for each probe hit in someone else's report — advisory, never blocking."""
+    return [(cat, n, m.group()) for n, s, _ in sentences(text) for cat, rx in AUDIT for m in [rx.search(s)] if m]
+
+
 HEADING = re.compile(r"^#+\s")   # a heading that restates the user's question is not a statement
 BUDGET = {"chat": 5, "deep": 25, "report": 8}   # chart-fact sentences per answer (report: per section)
 
@@ -157,6 +180,10 @@ def main():
     mode = sys.argv[sys.argv.index("--mode") + 1] if "--mode" in sys.argv else "chat"
     raw = open(path, encoding="utf-8").read()
     text = report_text(json.loads(raw)) if path.endswith(".json") else raw
+    if mode == "audit":
+        hits = audit(text)
+        print("\n".join(f"AUDIT {c}: '{m}' (line {n})" for c, n, m in hits) or "no audit flags")
+        return
     r = lint(text, mode)
     print(f"{r['sentences']} sentences, {r['chart_facts']} with chart facts, {len(r['chart_first'])} chart-first")
     for n, s in r["chart_first"][:10]:

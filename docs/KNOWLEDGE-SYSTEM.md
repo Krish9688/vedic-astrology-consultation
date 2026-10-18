@@ -149,7 +149,7 @@ python3 kg.py sources "karaka in its own house"          # best first call: rule
 python3 kg.py find "Saturn in the 10th" --system "Lal Kitab" -n 5
 python3 kg.py find "Jupiter aspecting the 7th lord" --tier classical
 python3 kg.py contradictions "Rahu exaltation"
-python3 kg.py pages "Guru 7th house marriage"            # pages in all 8 books, Hindi LK1952 included
+python3 kg.py pages "Guru 7th house marriage"            # pages in all 18 books, Hindi LK1952 included
 python3 kg.py terms "Guru in 7th, navamsa"               # how the query is understood
 # Graphify's own tools on the same graph:
 _skill_workspace/.venv-graphify/bin/graphify explain "Gajakesari yoga" --graph _skill_workspace/graphify-out/graph.json

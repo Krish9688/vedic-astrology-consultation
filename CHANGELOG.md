@@ -4,6 +4,41 @@ Every version up to v3.4 predates this git repository as a package (created 2026
 [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md). For important changes this log records what existed before, what
 problem was observed, what exposed it, what changed, why that solution, and how it was validated.
 
+## [Unreleased]
+
+Grouped as in [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Not yet released; verified locally
+(workspace suite 355 passed / 1 skipped on 2026-10-19; full public gate passed on 2026-10-18).
+
+### Added
+- `astro sky FROM TO`: retrograde stations and sign changes between two dates, with no birth data — for checking
+  generic "year ahead" claims ([docs/TESTING.md](docs/TESTING.md)).
+- Report identity check (`astro.identity`): compares the birth details a report prints with a person's own and
+  returns BOUND / PROVISIONAL / UNBOUND / REJECT, naming fields and statuses, never values (skill:
+  `references/inputs.md`).
+- `references/report-audit.md`: the order for auditing a report from elsewhere (identity, sky facts, lagna/Moon frame
+  test, chart facts, claim types, language, remedies).
+- `life_lint.py --mode audit`: advisory flags for fear, sales, certainty, money and gemstone language in someone
+  else's report.
+- `astro sensitivity --span N` (up to ±720 minutes) and a Moon-sign row in the birth-time sensitivity grid.
+- Report units may carry `system`, `claim_type` and `rule_refs`.
+- Privacy check: birth-data records are found by their structure (labelled dates/times/places in many formats,
+  JSON records) after Unicode normalisation; only fingerprints of reviewed synthetic or published records pass.
+
+### Changed
+- Export manifests bind every published file to the SHA-256 of its content; a new, deleted, renamed or edited file
+  fails the export, and accepting a change needs a review token ([docs/PRIVACY.md](docs/PRIVACY.md)).
+- Images, office documents, unreadable text and unopenable archives now fail the privacy check (fail closed);
+  build caches are skipped. Packages are privacy-checked before they are written.
+
+### Fixed
+- An unpadded birth time such as `9:40` passed validation and then crashed the engine.
+- `time_source` and `label` were dropped from chart output.
+- `qc.md` claimed that a script checked sandhi; it does not (now says so). `source-index.md` listed six books as
+  missing from the library that are in it.
+
+### Private edition only
+- Lal Kitab improvements, not part of the public edition (B2); recorded in the private repository.
+
 ## [3.6.2] — 2026-10-15 — safety lint scope, crisis protocol, graceful Lal Kitab loader
 
 - Safety lint: a negation no longer excuses a verdict about a person ("you cannot conceive", "he will not survive");

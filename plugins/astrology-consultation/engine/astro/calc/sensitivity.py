@@ -5,7 +5,9 @@ Classes (per factor, using the nearest offset at which it changes, either direct
   moderate    — first changes between ±5 and ±15 min
   high        — first changes between ±1 and ±5 min
   very high   — changes within ±1 min (treat as unknown unless the birth time is verified to the minute)
-The reasoning layer uses these classes to say which conclusions depend on the exact birth time.
+The reasoning layer uses these classes to say which conclusions depend on the exact birth time. span_min > 15 adds
+offsets out to ±span (council 6, P3-5): the classes keep their ±15 min meaning, and first_change_within_grid shows how
+far a "robust" factor really holds.
 """
 from __future__ import annotations
 
@@ -26,30 +28,38 @@ def _state(ut, lat, lon, on_ut, ylen):
     mds = E.vimshottari(moon, ut, ylen, levels=3)
     run = "–".join(next(((md["lord"], ad["lord"], pd["lord"]) for md in mds for ad in md["sub"] for pd in ad["sub"]
                          if pd["start"] <= on_ut < pd["end"]), ("?", "?", "?")))
-    return {"ascendant sign": E.SIGNS[int(A // 30)], "ascendant nakshatra-pada": f"{an}-{ap}",
+    return {"ascendant sign": E.SIGNS[int(A // 30)], "Moon sign": E.SIGNS[int(moon // 30)], "ascendant nakshatra-pada": f"{an}-{ap}",
             "D9 lagna": E.SIGNS[E.varga(A, 9)], "D10 lagna": E.SIGNS[E.varga(A, 10)],
             "D12 lagna": E.SIGNS[E.varga(A, 12)], "D60 lagna": E.SIGNS[E.varga(A, 60)],
             "Moon nakshatra-pada": f"{mn}-{mp}", "running MD–AD–PD": run,
             "_md_start": mds[0]["start"]}
 
 
-def grid(date, time, tz, lat, lon, on=None, year="sidereal"):
+def offsets(span_min=15):
+    if not 15 <= span_min <= 720:
+        raise ValueError("span_min must be 15..720 minutes")
+    extra = [o for o in (20, 30, 45, 60, 90, 120, 180, 240, 360, 480, 720) if o < span_min] + ([span_min] if span_min > 15 else [])
+    return sorted({*OFFSETS_MIN, *extra, *(-o for o in extra)})
+
+
+def grid(date, time, tz, lat, lon, on=None, year="sidereal", span_min=15):
+    OFFSETS = offsets(span_min)
     base_ut = dt.datetime.fromisoformat(f"{date}T{time}") - dt.timedelta(hours=tz)
     on_ut = dt.datetime.fromisoformat((on or dt.date.today().isoformat()) + "T12:00") - dt.timedelta(hours=tz)
     ylen = E.YEAR[year]
-    states = {o: _state(base_ut + dt.timedelta(minutes=o), lat, lon, on_ut, ylen) for o in OFFSETS_MIN}
+    states = {o: _state(base_ut + dt.timedelta(minutes=o), lat, lon, on_ut, ylen) for o in OFFSETS}
     factors = [k for k in states[0] if not k.startswith("_")]
-    rows = {f: [states[o][f] for o in OFFSETS_MIN] for f in factors}
+    rows = {f: [states[o][f] for o in OFFSETS] for f in factors}
     classes, first = {}, {}
     for f in factors:
-        changed = [o for o in OFFSETS_MIN if states[o][f] != states[0][f]]
+        changed = [o for o in OFFSETS if states[o][f] != states[0][f]]
         near = min((abs(o) for o in changed), default=None)
         first[f] = {"earlier": max((o for o in changed if o < 0), default=None),
                     "later": min((o for o in changed if o > 0), default=None)}
-        classes[f] = ("robust" if near is None else "moderate" if near > 5 else "high" if near > 1 else "very high")
+        classes[f] = ("robust" if near is None or near > 15 else "moderate" if near > 5 else "high" if near > 1 else "very high")
     shift = {o: round((states[o]["_md_start"] - states[0]["_md_start"]).total_seconds() / 86400, 1)
-             for o in OFFSETS_MIN}
-    return {"offsets_min": OFFSETS_MIN, "rows": rows, "classes": classes, "first_change_within_grid": first,
+             for o in OFFSETS}
+    return {"offsets_min": OFFSETS, "rows": rows, "classes": classes, "first_change_within_grid": first,
             "dasha_boundary_shift_days": shift,
             "note": "dasha dates move by the shift shown when the birth time moves; lords change only where the "
                     "running-period row changes"}

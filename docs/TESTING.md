@@ -15,6 +15,14 @@ benchmarks use the owner's chart and stay private (only their scores are publish
 | Strength and Jaimini (v3.5) | Raman's published 1918 drik bala reproduced (±0.02); Ashtakavarga totals 48/49/39/54/56/52/39 = 337 for any chart; Shadbala component ranges; circular cheshta mean across 0° Aries; BPHS war victor; karaka/arudha properties; S1 sensitivity classes | `tests/test_strength.py`, `tests/reference_charts/` |
 | Interfaces and security (v3.5) | service results equal the engine's; input validation; `skill://` traversal and code reads refused; data-folder confinement; report-name sanitising; consent-gated, owner-only prediction log; REST endpoints, OpenAPI and bearer token; remote binding refused without a token (MCP and REST); MCP stdio round trip with a generic client; CLI; tampered ephemeris download rejected | `tests/test_service.py` |
 
+| Identity gate (2026-10-18) | a report's printed birth data bind it to a person or reject it; ambiguous dates, missing fields, two people in one report, unreadable values and name-only matches never bind; results carry no values | `tests/test_identity.py` |
+| Sky events (2026-10-18) | 2026 Mercury and Jupiter stations and Jupiter's sign changes within a day of the almanac; no birth data needed | `tests/test_sky.py` |
+| Report audit lint (2026-10-18) | `life_lint.py --mode audit` flags fear, sales, certainty, money and gemstone language in someone else's report (paraphrased, invented sentences) | `tests/test_audit_lint.py` |
+| Privacy boundary (private, 2026-10-18) | private and third-party folders reach no export (archive, public, package) and are blocked by the privacy check; structural birth-record detection; manifest gates; packages scanned | `tests/test_privacy_boundary.py` |
+
+Run everything: `.venv/bin/python -m pytest tests -q` (2026-10-18: 339 passed, 1 skipped; the full public gate
+`export_public.py --check` passes, its fresh-environment suite 220 passed, 9 skipped without ephemeris files).
+
 Result (2026-09-27): **22/22 pass**. First-run finding: exact-boundary floating-point error (fixed; no real chart changed).
 Result (2026-10-02, v3.5): **54/54 pass** locally (Swiss Ephemeris files) and in a clean install from the exported
 repository (Moshier fallback). Manual: MCP over Streamable HTTP with and without a token; REST under uvicorn (empty

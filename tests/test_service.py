@@ -37,6 +37,20 @@ def test_service_matches_engine():
     assert S.dasha(b, S.Options(on="2026-10-02"))["running"] == ["Me", "Ra", "Ma"]
 
 
+def test_unpadded_time_is_normalised():
+    """P1-5 (council 6): "9:40" used to pass validation and then crash the engine (fromisoformat needs HH)."""
+    b = S.BirthInput(**(S1 | dict(time="9:40")))
+    assert b.time == "09:40:00"
+    assert S.planet_positions(b)["bodies"]["Asc"] == S.planet_positions(S.BirthInput(**S1))["bodies"]["Asc"]
+
+
+def test_time_source_and_label_reach_the_output():
+    """P1-5: time_source (how reliable the birth time is) and the opaque label used to be silently dropped."""
+    c = S.calculate_chart(S.BirthInput(**S1, time_source="hospital record", label="S1"), full=False)
+    assert c["meta"]["time_source"] == "hospital record" and c["meta"]["label"] == "S1"
+    assert "time_source" not in S.calculate_chart(S.BirthInput(**S1), full=False)["meta"]
+
+
 @pytest.mark.parametrize("bad", [dict(time="25:00"), dict(time="9.40"), dict(lat=91), dict(tz=15)])
 def test_birth_input_validation(bad):
     with pytest.raises(ValueError):

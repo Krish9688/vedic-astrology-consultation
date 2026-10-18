@@ -150,6 +150,8 @@ def main(argv=None):
         p.add_argument("--md", action="store_true")
         if name == "chart":
             p.add_argument("--out")
+        if name == "sensitivity":
+            p.add_argument("--span", type=int, default=15, help="minutes either side (15..720)")
         if name == "varga":
             p.add_argument("--d", type=int, required=True)
     p = sub.add_parser("consult")
@@ -175,6 +177,10 @@ def main(argv=None):
     p.add_argument("--id", type=int)
     p.add_argument("--outcome")
     p.add_argument("--evaluation")
+    p = sub.add_parser("sky", help="retrograde stations and sign changes between two dates (no birth data)")
+    p.add_argument("start", type=dt.date.fromisoformat)
+    p.add_argument("end", type=dt.date.fromisoformat)
+    p.add_argument("--tz", type=float, default=0.0, help="UTC offset for the printed dates")
     sub.add_parser("doctor")
     p = sub.add_parser("setup")
     p.add_argument("--mode", choices=["private", "research"])
@@ -210,6 +216,8 @@ def main(argv=None):
     if a.cmd == "report":
         with open(a.model) as f:
             return _print(S.create_report(json.load(f), a.name))
+    if a.cmd == "sky":
+        return _print(S.sky(a.start, a.end, a.tz))
     if a.cmd == "sources":
         return _print(S.rule_sources(a.rule))
     if a.cmd == "search":
@@ -246,7 +254,7 @@ def main(argv=None):
     fn = {"positions": lambda: S.planet_positions(b), "dasha": lambda: S.dasha(b, o),
           "transits": lambda: S.transits(b, o), "strength": lambda: {"shadbala": S.shadbala(b),
                                                                      "ashtakavarga": S.ashtakavarga(b)},
-          "jaimini": lambda: S.jaimini_factors(b), "sensitivity": lambda: S.birth_time_sensitivity(b, o),
+          "jaimini": lambda: S.jaimini_factors(b), "sensitivity": lambda: S.birth_time_sensitivity(b, o, a.span),
           "varga": lambda: S.divisional_chart(b, a.d)}[a.cmd]
     return _print(fn(), md_key="table_markdown", md=a.md)
 

@@ -52,11 +52,34 @@ choosing the client (local model, ChatGPT, Claude…) is a separate privacy deci
    personal and book-derived folders (private/, text/, index/, graphify-out/, source-map parts, benchmark results),
    files over 5 MB, absolute home paths, e-mail addresses, and every term in the local personal list (birth date in
    several formats, birth time with place, name). Runs in pre-commit and CI.
+   Since 2026-10-18 (council 6) it also finds **birth-data records by their structure** — a labelled date/time/place of
+   birth in many formats (dd/mm, month names, ordinals, `date_of_birth`-style keys, Hindi labels), and JSON records with
+   a date and a time — after normalising Unicode and removing zero-width characters, so a person's data is caught even
+   when no local term list exists (as in CI). A record passes only if the fingerprint of its whole line is listed in
+   `tools/birthdata-reviewed.txt` (synthetic test charts and published book examples, reviewed by hand; fingerprints
+   only, no dates). It refuses images and office documents outside an `assets/` folder, archives it cannot open,
+   unreadable or non-UTF-8 text (fail closed), and package members in blocked folders.
 3. **Gitleaks** — secrets in the working tree and the full git history (pre-commit and CI).
 4. **Package check** — `tools/check_package.py` refuses a skill package containing private or benchmark folders or
    failing the privacy check.
 5. **Synthetic fixtures** — every test and example uses the synthetic chart S1 or the fictional charts A/B, all
    calculated with the local engine.
+6. **Packages are scanned before they are written** — `tools/build_package.py` runs the privacy check on every file
+   and refuses to build on any finding.
+7. **Reviewed files and contents** — every manifest line is `sha256  path` of the exported (sanitised) content. The
+   public export must equal `tools/public-manifest.txt` and the private archive `tools/archive-manifest.txt`; a new,
+   deleted, renamed or edited file — or an edited manifest line — fails the export (the archive before anything is
+   copied). Updating a manifest is a two-step review: `--review` lists the differences and prints a token;
+   `--write-manifest TOKEN` accepts exactly those differences (any later change invalidates the token) and only after
+   the privacy check (and, for the public export, the B2 gate) passes on the exported copies. Symbolic links are never
+   exported. Generated archive extras (compressed graph, environment lists, local-only manifest) are not in the
+   manifest but are privacy-scanned in the archive.
+8. **Other people's data** stays in an ignored local folder that no export rule reaches, under random identifiers,
+   with a registry of source, permission, purpose and retention date; tests (`tests/test_privacy_boundary.py`, private)
+   prove that every export path and the privacy check exclude it. Removing a name does not make a record shareable.
+9. **Whose report is it?** — `astro.identity` compares the birth data a report prints with a person's own; only a
+   matching (BOUND) report, or one the person confirms (PROVISIONAL), may inform that person's reading. Results name
+   fields and statuses, never values.
 
 Findings during the 2026-09-27 audit, fixed: the local engine's usage comment contained the owner's birth data as its
 example (never packaged; replaced with S1); `kg.py`, `search.py` and `source-index.md` in the v3.3 package contain an

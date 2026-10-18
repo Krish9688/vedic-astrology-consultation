@@ -225,6 +225,36 @@ def ingresses(t0, months, node, tz=0):
     return sorted(out, key=lambda r: r["date"])
 
 
+def sky(t0, t1, node="mean", tz=0):
+    """Sky events between UT datetimes t0 and t1, no birth data (council 6, P2-1): sign changes of Sun to Saturn and
+    the nodes, and retrograde/direct stations of Mercury to Saturn. 1-day scan, bisection to ~1 minute; dates are local
+    dates at UTC offset `tz`."""
+    def scan(key, bodies, step):
+        found = {}
+        for n in bodies:
+            f = lambda t, n=n: key(positions(jd_of(t), node)[n])
+            t, v = t0, f(t0)
+            while t < t1:
+                t2 = min(t + step, t1)
+                v2 = f(t2)
+                if v2 != v:
+                    a, b = t, t2
+                    while (b - a) > dt.timedelta(minutes=1):
+                        m = a + (b - a) / 2
+                        (a, b) = (a, m) if f(m) != v else (m, b)
+                    found.setdefault(n, []).append(((a + (b - a) / 2 + dt.timedelta(hours=tz)).date().isoformat(), v, v2))
+                    v = v2
+                t = t2
+        return found
+    day = dt.timedelta(days=1)
+    signs = scan(lambda p: int(p["lon"] // 30), ("Su", "Me", "Ve", "Ma", "Ju", "Sa", "Ra"), day)
+    stations = scan(lambda p: p["speed"] < 0, ("Me", "Ve", "Ma", "Ju", "Sa"), day)
+    return {"sign_changes": sorted(({"planet": n, "date": d, "from": SIGNS[a], "to": SIGNS[b]}
+                                    for n, rows in signs.items() for d, a, b in rows), key=lambda r: r["date"]),
+            "stations": sorted(({"planet": n, "date": d, "station": "retrograde" if b else "direct"}
+                                for n, rows in stations.items() for d, a, b in rows), key=lambda r: r["date"])}
+
+
 def sensitivity(ut, lat, lon, moon_lon, window_min=180):
     """Minutes of birth-time change (earlier / later) before each birth-time-sensitive factor changes."""
     def asc_at(m):

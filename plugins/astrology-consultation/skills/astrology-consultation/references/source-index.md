@@ -29,8 +29,10 @@ source maps contribute page-cited rules to `kg.py find/sources`; books still pen
 `search.py --src <ID>` and appear in the graph's page layer only. Nadi (DEVA2) and KP-style material stay in their own
 notes like Jaimini.
 
-Not in the library, and therefore only "external knowledge" if used: BPHS, Saravali, Jataka Parijata, K. N. Rao's
-works, KP, Raman's *Varshaphal*, Sanjay Rath, P. V. R. Narasimha Rao (used by v2.2 via web pages — see §5).
+In the library since v3.3 (searchable page by page; see the table above): BPHS, Saravali Vol 1, Jataka Parijata Vol 2,
+K. N. Rao's *Timing through Vimshottari Dasha*, Sanjay Rath's *Crux*, P. V. R. Narasimha Rao's *Integrated Approach*.
+Not in the library, and therefore only "external knowledge" if used: KP, Raman's *Varshaphal*, the other volumes and
+works of these authors (v2.2 used some via web pages — see §5).
 
 ## 2. Reliability notes
 

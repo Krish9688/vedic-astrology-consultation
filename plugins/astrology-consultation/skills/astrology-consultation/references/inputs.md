@@ -46,6 +46,21 @@ For weekday discrepancies distinguish the civil calendar day from a traditional 
 
 When sources conflict, record which input differs and its affected claims; a document calling itself authoritative is not evidence of calculation accuracy. Prefer the actual reproducible export over unsupported prose, but ask for resolution when neither source's authority can be established. See [reports.md](reports.md) for revision handling.
 
+## Whose report is it? (identity gate)
+
+Before a supplied report, chart or reading informs anyone's predictions, compare the birth data it prints with that
+person's own data (the engine's `astro.identity` check does this field by field):
+
+| Verdict | Meaning | Use |
+|---|---|---|
+| BOUND | Date, time and place match; an ambiguous dd/mm date is confirmed by the ascendant and Moon sign | May be used, still audited claim by claim |
+| PROVISIONAL | No conflict, but a field is missing or the name differs | Only after the person confirms it is theirs |
+| UNBOUND | No birth date printed (a generic Moon-sign or name-only report) | Sky facts only; nothing personal |
+| REJECT | Any birth field conflicts | Someone else's report: never used for this person |
+
+A matching name proves nothing, and removing a name does not make another person's report usable. Never merge two
+people's data, and say plainly when a report was set aside and why, without repeating the other person's details.
+
 ## Sensitivity protocol (DESIGN)
 
 When chart variants across the stated time interval are supplied or legitimately computed, compare the interval endpoints **and any boundaries inside it**, not just one nominal time. Record which of D1 ascendant, Moon nakshatra, varga signs, varga ascendant and MD/AD dates change. Equal endpoints can conceal intervening changes in a higher varga. No blanket ±2-hour assurance establishes Moon/nakshatra or dasha-date stability; a boundary may occur inside even a short interval. D60 has 30′ (0.5°) divisions, not 1°; this angular width is not a universal clock-minute tolerance. See [source-index.md](source-index.md), PVR-60 and PVR-B.

@@ -1,0 +1,199 @@
+# Birth-data records reviewed as synthetic or published (council 6, C-4; re-reviewed 2026-10-18 after the security review).
+# Fingerprint = sha256 of the whole normalised line(s) holding the record. No dates here. A record not listed fails
+# tools/privacy_check.py. Add one only after checking it is invented or from a book (privacy_check.py --records PATH).
+02287202972782b0  synthetic-test-chart
+055dddb2bf55f4a8  reference-or-edge-chart
+064a11984ea23e9d  reference-or-edge-chart
+0739166144592d66  book-example
+074a88499c787107  book-example
+081fb6b4a632efdd  reference-or-edge-chart
+091948abede76db5  reference-or-edge-chart
+0a04200daa087242  synthetic-test-chart
+0b252659e41e6eba  book-example
+0c795ec9aaaf1389  synthetic-test-chart
+0f326c19c9d9e8c3  book-example
+118ca8a1a22afa62  synthetic-test-chart
+11ca3a0978512b99  synthetic-test-chart
+131b3eb693dbb43f  book-example
+15c6f5cd267f3926  book-example
+165df91799719629  synthetic-test-chart
+16dd52ac435e0b52  reference-or-edge-chart
+1aeac899626cec6d  synthetic-test-chart
+1b607e168417bf17  book-example
+1cf9c18e2610ae7f  synthetic-test-chart
+1e01f0d2967014a3  book-example
+257c183044d69860  synthetic-test-chart
+2aea7e6de3207be5  synthetic-test-chart
+2aef716cdb9065f4  book-example
+2d0454ea86199a36  synthetic-test-chart
+2d55dfecefcd8f04  book-example
+2dbe30b6be274028  book-example
+2ddbe89be7420225  reference-or-edge-chart
+2e32a5749ec7c6cd  synthetic-test-chart
+30202bb8c737070e  book-example
+337bc3f53e897ed5  synthetic-test-chart
+34707109c2d1b836  synthetic-test-chart
+37ce911fc8734ef6  book-example
+39cefa6f9e15580d  reference-or-edge-chart
+3a7452ff62ac10eb  reference-or-edge-chart
+3c3312e703b021e5  book-example
+3dff4037cadfc9a2  book-example
+404fd7736d083424  book-example
+441c25f327b9af0b  synthetic-test-chart
+474b7014150d74c4  reference-or-edge-chart
+485a9ddc896eb97a  book-example
+49852f16cde04e38  synthetic-test-chart
+49fe7929062313ab  book-example
+4b01aa87cad1e7a9  reference-or-edge-chart
+4c1340e1cecb7e90  synthetic-test-chart
+4c2546a395f7aca3  reference-or-edge-chart
+4d0aa5ad85d0e5db  book-example
+4dfaa99c113889e8  synthetic-test-chart
+4ef436faf60ebdf2  book-example
+4f43683d3f0b6c8c  synthetic-test-chart
+58606163d3606d71  synthetic-test-chart
+60cb7bd477547c6e  book-example
+616c3fade939753f  book-example
+63ff78109cd58558  synthetic-test-chart
+6a0a318a954f7ecb  synthetic-test-chart
+6b548351b1a5d8e0  book-example
+6d783fd5a3eecdab  synthetic-test-chart
+71c6e3887722d3b0  reference-or-edge-chart
+73b0ef13c734a7e5  synthetic-test-chart
+761b042705499fa1  synthetic-test-chart
+7b1bdb04a33f3be7  synthetic-test-chart
+7e9eb4d089a61fed  reference-or-edge-chart
+816db82c63eeb893  synthetic-test-chart
+83e8f5486fb9e60a  synthetic-test-chart
+86fc0a6b948c33ef  synthetic-test-chart
+893476b6030ac599  synthetic-test-chart
+8ae71a8487d87d89  synthetic-test-chart
+9160ae7b9c324497  synthetic-test-chart
+98222a9cc66f492f  synthetic-test-chart
+987b2114e9d82809  synthetic-test-chart
+987fd69001b2fb18  synthetic-test-chart
+98c69c59ec71e4b8  synthetic-test-chart
+98d1b81fb05110d7  book-example
+9c53c463815175f7  synthetic-test-chart
+a15bd1dbd28738cd  synthetic-test-chart
+a22e80dff440005f  reference-or-edge-chart
+a30b912b5586d105  synthetic-test-chart
+a7ec30c8f0ef8213  reference-or-edge-chart
+a800faecd6c90338  reference-or-edge-chart
+a83529321330c9e0  book-example
+a8c4778e708684de  book-example
+a93914f3f56cc95b  reference-or-edge-chart
+aa3942c1652aa656  synthetic-test-chart
+ac75da892ecfa7ab  book-example
+aeae96c89b19f48e  synthetic-test-chart
+b22d7591ba262117  synthetic-test-chart
+b5efc6d1e823d3ca  book-example
+b6c4156e8c65b2a3  synthetic-test-chart
+b72a3a31c85dce8a  book-example
+b73412b96dc97590  book-example
+b75c33e225f49c66  synthetic-test-chart
+b773322f47cce337  synthetic-test-chart
+baaa39afa1838526  book-example
+bcb3033fba10fa3e  reference-or-edge-chart
+bd351427aeef04b6  book-example
+be645fcac5db6f94  synthetic-test-chart
+bee8299efa92d879  reference-or-edge-chart
+c10a25c40d597245  synthetic-test-chart
+c735e90c825c5cef  synthetic-test-chart
+cd860393c63516ba  reference-or-edge-chart
+d23aac3519226769  synthetic-test-chart
+d52c7a6b53eafa30  synthetic-test-chart
+d5c2b1f89e685f7b  synthetic-test-chart
+d6cb8f631e4ad546  reference-or-edge-chart
+d8694f83b52dad67  synthetic-test-chart
+d87595f4891fd353  synthetic-test-chart
+d88480acd99068bf  book-example
+dc06775bbf36c80b  book-example
+dc6812e8ed655d20  reference-or-edge-chart
+dcd7fd72805f663a  synthetic-test-chart
+e4537090386e78d0  synthetic-test-chart
+e4a9470251b062e8  book-example
+e7165783f04a7bec  synthetic-test-chart
+e83277ea471543bc  synthetic-test-chart
+e8972ab9b7aacb12  synthetic-test-chart
+ea97689606c6e5d4  book-example
+f4db8836d8ca87d4  synthetic-test-chart
+fb2334cd979f06cc  reference-or-edge-chart
+77d44d946ef04990  book-example (knowledge graph)
+ba4cde5a985dabb7  book-example (knowledge graph)
+4bdc26cd11380b95  book-example (knowledge graph)
+bf4b6d29a676c415  book-example (knowledge graph)
+7571196082c606bc  book-example (knowledge graph)
+ece373c93e0d8b89  book-example (knowledge graph)
+dc3a3c2bf33aa5e4  book-example (knowledge graph)
+1c687774b9515b62  book-example (knowledge graph)
+bb17fb10b9d87eaa  book-example (knowledge graph)
+b1c32ac12e5ba06c  book-example (knowledge graph)
+171b1c73aedeb9cd  book-example (knowledge graph)
+709a07dd492c34b0  book-example (knowledge graph)
+2625f67844ff217d  book-example (knowledge graph)
+8d01a1b8a70c8f9d  book-example (knowledge graph)
+7f16fb61ddecb351  book-example (knowledge graph)
+3f64ea26d9030d56  book-example (knowledge graph)
+8fbbf1ce87ec3455  book-example (knowledge graph)
+c95288c05561deee  book-example (knowledge graph)
+956f34723200af5c  book-example (knowledge graph)
+3bb87f39e893a467  book-example (knowledge graph)
+c6ca7f9a91996ed3  book-example (knowledge graph)
+633b417ab4953f83  book-example (knowledge graph)
+9ebfab8d879ca884  book-example (knowledge graph)
+58d247941d435aba  book-example (knowledge graph)
+d4225a972b41c3ea  book-example (knowledge graph)
+fef08e281c81f4d0  book-example (knowledge graph)
+a72c710faf9274a5  book-example (knowledge graph)
+da7936196b369bf4  book-example (knowledge graph)
+4cf6ee063ad83f05  book-example (knowledge graph)
+474f359fa459950c  book-example (knowledge graph)
+2fd71a4eaad90c74  book-example (knowledge graph)
+df209929bd21684b  book-example (knowledge graph)
+e34ff008519dae67  book-example (knowledge graph)
+3997a54bc4c26596  book-example (knowledge graph)
+594e8580a70d4470  book-example (knowledge graph)
+b2a511229731234c  book-example (knowledge graph)
+a39645b2afeddc9b  book-example (knowledge graph)
+2017302988dde3da  book-example (knowledge graph)
+687928f92b50e211  book-example (knowledge graph)
+a799e198c6f2ed59  book-example (knowledge graph)
+75f90d9b6162d706  book-example (knowledge graph)
+3c36b7fb7b84616b  book-example (knowledge graph)
+8b2a76598a0a9fa2  book-example (knowledge graph)
+9de457e7eaebc0f2  book-example (knowledge graph)
+8fd9fc1e1e3273b2  book-example (knowledge graph)
+d738151fc7c49ff9  book-example (knowledge graph)
+f55887c9a91559d0  book-example (knowledge graph)
+e6ad8946ae061de6  book-example (knowledge graph)
+44b7c44f3b98eb1b  book-example (knowledge graph)
+93c2fa72da723995  book-example (knowledge graph)
+037a74d1fd61a728  book-example (knowledge graph)
+6d555771e8c7239b  book-example (knowledge graph)
+77f42c0c2ac2fdec  book-example (knowledge graph)
+21b31864479a5982  book-example (knowledge graph)
+7c1b740d9d44d7bf  book-example (knowledge graph)
+ffc7e43cda48c390  book-example (knowledge graph)
+f8a4f369d124631b  book-example (knowledge graph)
+36e47b1f5387e102  book-example (knowledge graph)
+03f2c385242b513a  book-example (knowledge graph)
+99c508f4297e7676  book-example (knowledge graph)
+d957c8149c52fb66  book-example (knowledge graph)
+0d22849ae830900e  book-example (knowledge graph)
+881dba010bead4b4  book-example (knowledge graph)
+dbdb6a819210e733  book-example (knowledge graph)
+2e13f04ab0b82b83  book-example (knowledge graph)
+c2197864b1d402af  book-example (knowledge graph)
+08e54c848c993ce0  book-example (knowledge graph)
+d9d35bc273d55818  book-example (knowledge graph)
+cda700346460c5a4  book-example (knowledge graph)
+1685b1722ff536e9  book-example (knowledge graph)
+8e2b5d41f10c97b3  book-example (knowledge graph)
+3e22f5ed232a7917  book-example (knowledge graph)
+036b60400710c54d  book-example (knowledge graph)
+0eb0b994fc61abed  book-example (knowledge graph)
+e99fdeb355f98170  book-example (knowledge graph)
+c1b6a8bd5a41b5d8  synthetic-test-chart
+a7ec4cc884dd8b05  synthetic-test-chart
+7b3cc74ddda5f25c  synthetic-test-chart

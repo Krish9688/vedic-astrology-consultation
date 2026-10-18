@@ -67,7 +67,7 @@ class BirthInput(BaseModel):
         h, m, *s = (int(x) for x in v.split(":"))
         if not (0 <= h < 24 and 0 <= m < 60 and all(0 <= x < 60 for x in s)):
             raise ValueError("time must be a valid 24-hour clock time")
-        return v if s else v + ":00"
+        return f"{h:02d}:{m:02d}:{(s or [0])[0]:02d}"   # zero-padded: the engine parses ISO times (P1-5)
 
 
 class Options(BaseModel):
@@ -106,7 +106,9 @@ def engine_info() -> dict:
 
 def calculate_chart(b: BirthInput, o: Options = DEFAULTS, full: bool = True) -> dict:
     a, kw = _args(b, o)
-    return compute_full(*a, **kw) if full else engine.compute(*a, **kw)
+    c = compute_full(*a, **kw) if full else engine.compute(*a, **kw)
+    c["meta"] |= {k: v for k, v in (("time_source", b.time_source), ("label", b.label)) if v}   # P1-5: never dropped
+    return c
 
 
 def planet_positions(b: BirthInput) -> dict:
@@ -153,9 +155,21 @@ def jaimini_factors(b: BirthInput) -> dict:
     return jaimini.jaimini(engine.compute(*_args(b, Options())[0], extras=False))
 
 
-def birth_time_sensitivity(b: BirthInput, o: Options = DEFAULTS) -> dict:
+def sky(start, end, tz: float = 0.0, node: str = "mean") -> dict:
+    """Retrograde stations and sign changes between two dates — no birth data (council 6, P2-1)."""
+    a, b = dt.date.fromisoformat(str(start)), dt.date.fromisoformat(str(end))
+    if not (a < b and (b - a).days <= 3 * 366 and -14 <= tz <= 14 and node in ("mean", "true")):
+        raise ValueError("need start < end, at most 3 years apart, UTC offset -14..14, node mean or true")
+    t0 = dt.datetime.combine(a, dt.time()) - dt.timedelta(hours=tz)
+    t1 = dt.datetime.combine(b, dt.time(23, 59)) - dt.timedelta(hours=tz)
+    return engine.sky(t0, t1, node, tz) | {"meta": {"from": a.isoformat(), "to": b.isoformat(), "utc_offset": tz,
+        "nodes": node, "zodiac": "sidereal Lahiri", "engine": f"astro {engine.ENGINE_VERSION}",
+        "note": "sky facts only: the same for everyone; they say nothing about a person without a chart"}}
+
+
+def birth_time_sensitivity(b: BirthInput, o: Options = DEFAULTS, span_min: int = 15) -> dict:
     a, kw = _args(b, o)
-    g = sensitivity.grid(*a, on=kw["on"], year=o.year)
+    g = sensitivity.grid(*a, on=kw["on"], year=o.year, span_min=span_min)
     return g | {"table_markdown": sensitivity.render(g)}
 
 
