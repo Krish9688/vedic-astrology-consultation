@@ -1,6 +1,6 @@
 [project]
 name = "astrology-consultation"
-version = "3.6.2"
+version = "3.6.3"
 description = "Local Vedic astrology calculation engine and service (MCP, REST, CLI) for the astrology-consultation skill and Claude plugin"
 license = "AGPL-3.0-or-later"
 requires-python = ">=3.11"

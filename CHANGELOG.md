@@ -6,8 +6,13 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 ## [Unreleased]
 
-Grouped as in [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Not yet released; verified locally
-(workspace suite 355 passed / 1 skipped on 2026-10-19; full public gate passed on 2026-10-18).
+Nothing yet.
+
+## [3.6.3] — 2026-10-19 — identity check, sky events, report audit tools, content-integrity privacy checks
+
+Grouped as in [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Plugin and engine 3.6.3; skill text v3.6 (no
+method change that needs a v3.7 benchmark). Validated: workspace suite 362 passed / 1 skipped; full public gate
+(privacy, links, Gitleaks, Ruff, versions, `claude plugin validate --strict`, fresh-environment tests, package check).
 
 ### Added
 - `astro sky FROM TO`: retrograde stations and sign changes between two dates, with no birth data — for checking

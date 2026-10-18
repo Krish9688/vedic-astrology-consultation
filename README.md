@@ -7,7 +7,7 @@ engine that runs on your own computer.
 
 | | |
 |---|---|
-| **Version** | 3.6.2 (2026-10-15) — plugin, engine and skill share one version; unreleased work: [CHANGELOG](CHANGELOG.md#unreleased) |
+| **Version** | 3.6.3 (2026-10-19) — plugin, engine and skill share one version; changes: [CHANGELOG](CHANGELOG.md) |
 | **Install** | Claude plugin marketplace (below), or the standalone engine for any MCP client |
 | **Platforms** | macOS and Linux. Windows: use WSL 2 (works as Linux; not tested by the project). Native Windows is not supported. |
 | **Privacy** | private by default: calculation is local, nothing is sent anywhere |
@@ -20,8 +20,8 @@ engine that runs on your own computer.
 
 ## Project status
 
-- **Released:** 3.6.2 (2026-10-15). Every change since then is listed under *Unreleased* in the
-  [CHANGELOG](CHANGELOG.md) and ships only with the next release.
+- **Released:** 3.6.3 (2026-10-19). Changes after it are listed under *Unreleased* in the
+  [CHANGELOG](CHANGELOG.md) and ship only with the next release.
 - **Maintained by one person**; issues and pull requests are read, but there is no support schedule.
 - **Scope is deliberately narrow:** Parashari with an optional Jaimini lens. Other systems (Lal Kitab, KP, Western,
   numerology) are not part of this edition.
@@ -120,8 +120,8 @@ echo '{"date": "1992-03-14", "time": "09:40", "tz": 0, "lat": 51.5, "lon": -0.12
 ```bash
 .venv/bin/astro dasha s1.json --md                     # Vimshottari periods
 .venv/bin/astro transits s1.json --on 2027-01-01 --md  # transits and sign changes from a date
-.venv/bin/astro sky 2026-01-01 2026-12-31              # (unreleased) retrograde stations and sign changes, no birth data
-.venv/bin/astro sensitivity s1.json --span 120         # (unreleased) look ±2 hours instead of ±15 minutes
+.venv/bin/astro sky 2026-01-01 2026-12-31              # retrograde stations and sign changes, no birth data
+.venv/bin/astro sensitivity s1.json --span 120         # look ±2 hours instead of ±15 minutes
 ```
 
 ## Requirements and configuration
@@ -184,7 +184,7 @@ method and results: [docs/TESTING.md](docs/TESTING.md).
 
 ## Version history
 
-The skill has evolved since v1.1 (2026-09-06); v3.5.0 was the first version published here, followed by 3.6.0, 3.6.1 and 3.6.2 (current). Full history:
+The skill has evolved since v1.1 (2026-09-06); v3.5.0 was the first version published here, followed by 3.6.0, 3.6.1, 3.6.2 and 3.6.3 (current). Full history:
 [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md) · [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing and security
