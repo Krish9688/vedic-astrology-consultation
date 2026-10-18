@@ -8,7 +8,9 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
 - [ ] The answer addresses the actual question and horizon; it is not a chart recital.
 - [ ] Every main conclusion rests on at least two distinct channels (synthesis-method §4.1), or is graded Weak.
 - [ ] House, lord and karaka were all considered; the same network was checked from the Moon where relevant.
-- [ ] Functional lordship, dignity, dispositor, combustion/retrogression/sandhi used correctly (verified by `chart_facts.py`).
+- [ ] Functional lordship, dignity, dispositor, combustion and retrogression used correctly (verified by `chart_facts.py`).
+      Sandhi is NOT checked by any script: for a planet within about 1° of a sign edge, or in a different Sripati
+      bhava (the engine's `bhavas`), say so and judge it by hand.
 - [ ] Every placement, conjunction and aspect restated in the reply matches the `chart_facts.py` output (no "together
       with" for planets in different houses; no aspect the script does not list).
 - [ ] Yogas verified by definition and constituents; no double counting of a yoga and its parts; bhanga checked.

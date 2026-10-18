@@ -17,8 +17,8 @@ PRIVATE = os.path.exists(os.path.join(SKILL, "scripts", "lal_kitab.py"))
 FORBIDDEN = [r"\bLK1952\b|\bLKS\b|Shrimali", r"\bLK_[A-Z]+\b|(?i:\bpakka\b|\bdharmi\b|mangal-?bad|\bsleeping\?)",
              r"\bKB\b|knowledge base v2|CR-L\d|CR-X1[5-8]\b", r"(?i)varshaphal\.py|varshaphal (?:csv|table)|\bsleeping planet",
              r"data/lal-kitab", r"\bLK1952[: ]p?\d|\bLKS[: ]p?\d|KB B\d+ p\d|\((?:KB )?B\d+ p\d"]   # + FORBIDDEN_IN_REPO's citations
-KB_SHA256 = {   # the private knowledge base must never change (B2 touches only the public edition)
-    "LalKitab_Shrimali_Knowledge_Base_v2.2.md": "b9d15b1f9f224ea077deca69fd7716866a7c968a911bb3c54ed26bc0cc0077ca",
+KB_SHA256 = {   # the private knowledge base changes only together with its version number (v2.3 since 2026-10-19)
+    "LalKitab_Shrimali_Knowledge_Base_v2.2.md": "fe7528f0cc50f2589f3b6215f5b5774e65c64fd77410c9e6fc4cfa9f745d5b60",
     "LalKitab_Validation_Audit_Report_v2.2.md": "ceb251714fc64c6095776869b909ef71fb923e80a69b1d84680c9acbd47c358e",
     "LalKitab_Varshaphal_Table_v2.2.csv": "9cf7ea1e9ea3645d03f6f30764c1a9f606229c74f08055b789ab0eb0dd9b90ac",
 }

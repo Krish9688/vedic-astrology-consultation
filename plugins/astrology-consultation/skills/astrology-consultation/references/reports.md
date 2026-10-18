@@ -63,7 +63,9 @@ technical appendix.
 2. Write the **Structured Report Model** (`assets/report/report.schema.json`) as JSON: `summary`, `sections` of life
    `units` (put the chart relationships behind each unit in its `basis` field — the renderer moves them to the
    appendix), `timeline`, `watch_list`, `uncertainty`, `practical_summary`, `appendix`. Use first name or initials
-   only; birth data only if the person wants it printed.
+   only; birth data only if the person wants it printed. Optionally tag each unit with `system` (parashari, jaimini,
+   lal_kitab, combined), `claim_type` (fact, rule, interpretation, prediction, speculation) and `rule_refs`, so a
+   calculated fact is never presented with the weight of a prediction and every rule can be traced.
 3. Check and render: `python3 scripts/render_report.py report.json --out <dir>` validates the model, checks that the
    summary's windows are argued in the body, that units carry a counter-factor and a sign to watch, and runs the
    life-first lint; then it writes HTML and, when WeasyPrint is installed, a PDF (cream and green, visuals.md). Without

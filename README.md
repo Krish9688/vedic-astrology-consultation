@@ -7,7 +7,7 @@ engine that runs on your own computer.
 
 | | |
 |---|---|
-| **Version** | 3.6.1 (2026-10-10) — plugin, engine and skill share one version |
+| **Version** | 3.6.2 (2026-10-15) — plugin, engine and skill share one version; unreleased work: [CHANGELOG](CHANGELOG.md#unreleased) |
 | **Install** | Claude plugin marketplace (below), or the standalone engine for any MCP client |
 | **Platforms** | macOS and Linux. Windows: use WSL 2 (works as Linux; not tested by the project). Native Windows is not supported. |
 | **Privacy** | private by default: calculation is local, nothing is sent anywhere |
@@ -17,6 +17,14 @@ engine that runs on your own computer.
 > Astrology's predictive validity is not scientifically established. The consultation describes what a tradition's
 > documented methods indicate and how strongly its factors agree. It never claims certainty and refuses death,
 > diagnosis, fertility, legal and investment verdicts.
+
+## Project status
+
+- **Released:** 3.6.2 (2026-10-15). Every change since then is listed under *Unreleased* in the
+  [CHANGELOG](CHANGELOG.md) and ships only with the next release.
+- **Maintained by one person**; issues and pull requests are read, but there is no support schedule.
+- **Scope is deliberately narrow:** Parashari with an optional Jaimini lens. Other systems (Lal Kitab, KP, Western,
+  numerology) are not part of this edition.
 
 ## Install in Claude
 
@@ -107,6 +115,25 @@ echo '{"date": "1992-03-14", "time": "09:40", "tz": 0, "lat": 51.5, "lon": -0.12
 .venv/bin/astro sensitivity s1.json --md    # minutes of birth-time error each factor tolerates
 ```
 
+### More engine commands
+
+```bash
+.venv/bin/astro dasha s1.json --md                     # Vimshottari periods
+.venv/bin/astro transits s1.json --on 2027-01-01 --md  # transits and sign changes from a date
+.venv/bin/astro sky 2026-01-01 2026-12-31              # (unreleased) retrograde stations and sign changes, no birth data
+.venv/bin/astro sensitivity s1.json --span 120         # (unreleased) look ±2 hours instead of ±15 minutes
+```
+
+## Requirements and configuration
+
+- Python 3.11 or newer (or [uv](https://docs.astral.sh/uv/)); runtime dependencies `pyswisseph` and `pydantic`.
+  Optional extras: `mcp` (MCP server), `api` (FastAPI + Uvicorn for REST), `report` (Jinja2 + WeasyPrint for PDF).
+- Ephemeris: the Swiss Ephemeris files (downloaded by setup, pinned SHA-256) cover 1800–2399; outside that the engine
+  falls back to the built-in Moshier ephemeris and says so. Dates are accepted from year 2 to 2999.
+- Settings live in `~/.config/astrology-consultation/config.toml` (owner-only permissions), written by `astro setup`:
+  `mode`, `skill_dir`, `knowledge_dir`, `books_dir`, `reports_dir`, `data_dir`, `allow_remote`, `api_token`,
+  `source_url`, `share_library_remotely`. Unknown keys are reported and ignored. `ASTRO_CONFIG` points to another file.
+
 ## Privacy
 
 - All calculation is local; no tool sends birth data anywhere (default **private** mode).
@@ -157,10 +184,15 @@ method and results: [docs/TESTING.md](docs/TESTING.md).
 
 ## Version history
 
-The skill has evolved since v1.1 (2026-09-06); v3.5.0 was the first version published here; 3.6.0 is the second and 3.6.1 the third. Full history:
+The skill has evolved since v1.1 (2026-09-06); v3.5.0 was the first version published here, followed by 3.6.0, 3.6.1 and 3.6.2 (current). Full history:
 [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md) · [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing and security
 
 [CONTRIBUTING.md](CONTRIBUTING.md) · [SECURITY.md](SECURITY.md). Never put real birth details in an issue, test or
-pull request.
+pull request: tests use invented charts only, and the privacy check rejects unreviewed birth records.
+
+## License
+
+AGPL-3.0-or-later (engine), Apache-2.0 (skill scripts and plugin files), CC-BY-4.0 (method text and documentation);
+book quotations are not relicensed. Full terms: [LICENSE](LICENSE) and [LICENSES/](LICENSES/).

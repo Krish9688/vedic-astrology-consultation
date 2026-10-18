@@ -39,7 +39,7 @@ The reasoning discipline is [consultation-reasoning.md](references/consultation-
    timing / open activation / description / comparison / explaining the past), fit it to the person's age and
    situation, and ask one short question only if the answer truly depends on it.
 2. **Check inputs** — [inputs.md](references/inputs.md): chart format, conventions, birth-time reliability, period
-   tables. Run `python3 scripts/chart_facts.py chart.json` on the positions (write the JSON from the supplied chart).
+   tables. A report from elsewhere is audited, never trusted: [report-audit.md](references/report-audit.md). Run `python3 scripts/chart_facts.py chart.json` on the positions (write the JSON from the supplied chart).
 3. **Walk the question's tree** in [question-trees.md](references/question-trees.md) — it names the few houses,
    lords, karakas, vargas and timing layers this question needs and which are primary, secondary or supporting.
    Rules and networks come from the topic file:

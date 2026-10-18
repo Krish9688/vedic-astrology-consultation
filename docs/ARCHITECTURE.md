@@ -64,7 +64,7 @@ Astrology Books/                         the owner's library (books; never publi
     └── docs/                            this documentation
 ```
 
-The git repository (`~/Documents/astrology-consultation`) is generated from this workspace by
+The git repository (`~/Documents/Astrology Books/astrology-consultation`) is generated from this workspace by
 `tools/export_repo.py` (allowlist + sanitisation) — see RELEASE-PROCESS.md (private development docs) and [REPOSITORY-EDITIONS.md](REPOSITORY-EDITIONS.md).
 
 ## Why the skill is split into many files

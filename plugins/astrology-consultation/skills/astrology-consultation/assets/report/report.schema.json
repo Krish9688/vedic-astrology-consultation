@@ -110,7 +110,10 @@
      "type": "object",
      "properties": {"event": {"$ref": "#/$defs/grade"}, "timing": {"$ref": "#/$defs/grade"}, "manifestation": {"$ref": "#/$defs/grade"}}
     },
-    "basis": {"type": "string", "description": "the chart relationships behind it — shown only in the appendix"}
+    "basis": {"type": "string", "description": "the chart relationships behind it — shown only in the appendix"},
+    "system": {"enum": ["parashari", "jaimini", "lal_kitab", "combined"], "description": "method behind this unit; 'combined' only when each system reaches it by its own mechanism (synthesis-method.md)"},
+    "claim_type": {"enum": ["fact", "rule", "interpretation", "prediction", "speculation"], "description": "fact = calculated chart fact; rule = a cited method rule; interpretation and prediction are judgements; speculation is labelled as such"},
+    "rule_refs": {"type": "array", "items": {"type": "string"}, "description": "rule ids or book/page citations behind the unit (appendix only)"}
    }
   }
  }
