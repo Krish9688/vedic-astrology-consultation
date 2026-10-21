@@ -11,7 +11,7 @@
 #   python3 kg.py terms "Guru in 7th, navamsa"               show how a query is understood
 #
 # The graph is built on the user's Mac (tools/kg); elsewhere this exits cleanly and the skill answers without it.
-import argparse, json, os, re, sys
+import argparse, gzip, json, os, re, sys
 from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -30,7 +30,8 @@ def load():
     if not os.path.exists(GRAPH):
         sys.exit(f"Knowledge graph not found at {GRAPH}. It exists only on the machine where it was built; "
                  "set ASTRO_KG or answer without graph retrieval and say so.")
-    g = json.load(open(GRAPH, encoding="utf-8"))
+    with (gzip.open if GRAPH.endswith(".gz") else open)(GRAPH, "rt", encoding="utf-8") as f:   # .gz read as is
+        g = json.load(f)
     N = {n["id"]: n for n in g["nodes"]}
     out, inc = defaultdict(list), defaultdict(list)
     for e in g.get("links") or g.get("edges"):
@@ -176,8 +177,9 @@ def cmd_find(a, N, out, inc):
     print(f"\n# by source: {', '.join(f'{k} {v}' for k, v in sorted(rest.items()))}  (use --src/-n/--per-source for more)")
 
 
-def find_contradictions(N, out, query):
-    """Recorded disputes whose topic or positions cover every recognised term (or, failing that, every word)."""
+def find_contradictions(N, out, query, system=None):
+    """Recorded disputes whose topic or positions cover every recognised term (or, failing that, every word).
+    A named system (--system, or "Lal Kitab" in the question) keeps the disputes inside that system."""
     ents, houses, topics = parse(query)
     want = ents | topics | {f"house:{h}" for h, _ in houses}
     words = [w[:5] for w in re.findall(r"\w{4,}", query.lower())]  # stems: "exaltation" also matches "exalted"
@@ -200,7 +202,7 @@ def find_contradictions(N, out, query):
 
 
 def cmd_contradictions(a, N, out, inc):
-    found = find_contradictions(N, out, a.query)
+    found = find_contradictions(N, out, a.query, a.system)
     print(f"# {len(found)} recorded disputes")
     for _, cid, n, pos in found[: a.n]:
         at = attrs(n)
@@ -225,7 +227,7 @@ def cmd_sources(a, N, out, inc):
             flag = " ⚠ do not forecast" if at.get("do_not_forecast") else ""
             role = at.get("evidence_role", "")
             print(f"- [{src}] {at.get('tier')} · {role} · {cite(N[rid])}{flag}: {at.get('text', '')[:a.width]}")
-    found = find_contradictions(N, out, a.query)[:3]
+    found = find_contradictions(N, out, a.query, a.system)[:3]
     if found:
         print("\n## Recorded disputes (both sides kept)")
         for _, cid, n, pos in found:

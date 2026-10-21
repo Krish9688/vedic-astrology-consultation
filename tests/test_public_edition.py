@@ -16,7 +16,8 @@ PRIVATE = os.path.exists(os.path.join(SKILL, "scripts", "lal_kitab.py"))
 # The same patterns as tools/public_edition.py FORBIDDEN_IN_SKILL (that tool stays in the private workspace).
 FORBIDDEN = [r"\bLK1952\b|\bLKS\b|Shrimali", r"\bLK_[A-Z]+\b|(?i:\bpakka\b|\bdharmi\b|mangal-?bad|\bsleeping\?)",
              r"\bKB\b|knowledge base v2|CR-L\d|CR-X1[5-8]\b", r"(?i)varshaphal\.py|varshaphal (?:csv|table)|\bsleeping planet",
-             r"data/lal-kitab", r"\bLK1952[: ]p?\d|\bLKS[: ]p?\d|KB B\d+ p\d|\((?:KB )?B\d+ p\d"]   # + FORBIDDEN_IN_REPO's citations
+             r"data/lal-kitab", r"\bLK1952[: ]p?\d|\bLKS[: ]p?\d|KB B\d+ p\d|\((?:KB )?B\d+ p\d",   # + FORBIDDEN_IN_REPO's citations
+             r"_skill_workspace|Documents/Astrology Books"]   # the author's private folder layout (audit H4)
 KB_SHA256 = {   # the private knowledge base changes only together with its version number (v2.3 since 2026-10-19)
     "LalKitab_Shrimali_Knowledge_Base_v2.2.md": "fe7528f0cc50f2589f3b6215f5b5774e65c64fd77410c9e6fc4cfa9f745d5b60",
     "LalKitab_Validation_Audit_Report_v2.2.md": "ceb251714fc64c6095776869b909ef71fb923e80a69b1d84680c9acbd47c358e",
@@ -110,3 +111,17 @@ def test_vedic_calculation_and_chart_facts_work_in_this_edition():
     assert "# Parashari D1" in out and "Dispositor chains" in out and "# Houses:" in out
     assert ("Lal Kitab fixed-Aries chart" in out) == PRIVATE
     assert ("# Lal Kitab: not part of this edition" in out) == (not PRIVATE)
+
+
+def test_claude_code_config_never_reaches_the_public_export():
+    """The research agents, skills, hooks and CLAUDE.md are private-edition tooling: no public MAP entry may match them,
+    while the private archive export carries them from repo-root/ (approval checklist items 3-4)."""
+    import fnmatch
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    if not os.path.exists(os.path.join(ROOT, "tools", "export_public.py")):
+        pytest.skip("exporters stay in the private edition")
+    import export_public, export_repo
+    for path in (".claude/settings.json", ".claude/agents/vedic-researcher.md", ".claude/skills/verify-rule/SKILL.md",
+                 "CLAUDE.md", "research/ledger/findings.json"):
+        assert not any(fnmatch.fnmatch(path, g) for g, *_ in export_public.MAP), path
+    assert ("repo-root/.claude/**/*", ".") in export_repo.ALLOW

@@ -23,7 +23,15 @@ TYPE_NAMES = {"complete-life": "Complete life report", "career": "Career report"
 HOW_TO_READ = ("Each section starts from what a theme means in your life, then how it is likely to show, when, what "
                "argues against it and what to watch for. Confidence words — Strong, Moderate, Weak, Contradictory, "
                "Unknown — describe how much of the chart agrees, not a probability. Dates are periods, never exact days. "
-               "The chart details behind each conclusion are in the technical appendix.")
+               "The chart details behind each conclusion are in the technical appendix. The small label under a "
+               "heading says what it rests on — a calculated fact, a cited rule or an interpretation — and which system "
+               "produced it.")
+# plain-language labels for unit.claim_type and unit.system (EVID-F11, REP-F1): computed facts, cited rules and
+# judgements must stay distinguishable on the page
+CLAIM_LABELS = {"fact": "Calculated fact", "rule": "Traditional rule (cited)", "interpretation": "Interpretation",
+                "prediction": "Prediction (interpretive)", "speculation": "Speculative"}
+SYSTEM_LABELS = {"parashari": "Parashari", "jaimini": "Jaimini", "lal_kitab": "Lal Kitab",
+                 "combined": "Combined (each system separately)"}
 
 
 def validate(obj, schema, root=None, path="$"):
@@ -161,17 +169,22 @@ def _strings(x):
     return []
 
 
-def render(r, out_dir, base):
+def html_of(r):
     try:
         import jinja2
     except ImportError:
         raise RuntimeError("render needs jinja2 (pip install jinja2); the JSON itself was valid")   # not sys.exit: callers are servers (council R3 M4)
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(ASSETS), autoescape=True)
     bases = [dict(theme=u["theme"], basis=u["basis"]) for s in r["sections"] for u in s.get("units", []) if u.get("basis")]
-    html = env.get_template("template.html.j2").render(
+    return env.get_template("template.html.j2").render(
         r=r, css=open(os.path.join(ASSETS, "report.css")).read(), type_name=TYPE_NAMES[r["report_type"]],
         default_how_to_read=HOW_TO_READ, tl=timeline(r.get("timeline", [])), bases=bases,
-        appendix=bool(bases or r.get("appendix")), section_titles={s["id"]: s["title"] for s in r["sections"]})
+        appendix=bool(bases or r.get("appendix")), section_titles={s["id"]: s["title"] for s in r["sections"]},
+        claim_labels=CLAIM_LABELS, system_labels=SYSTEM_LABELS)
+
+
+def render(r, out_dir, base):
+    html = html_of(r)
     os.makedirs(out_dir, exist_ok=True)
     hp = os.path.join(out_dir, base + ".html")
     with _owner_only(hp) as f:          # reports hold birth details: 0600 from the first byte, also on errors
@@ -247,6 +260,15 @@ def selftest():
     assert any("window codes" in e for e in checks(coded)[0]) and not any("window codes" in e for e in checks(ex)[0])
     leak = dict(ex, appendix=dict(ex.get("appendix") or {}, sources=["fewer children (PD XII.3)"]))
     assert any(e.startswith("SAFETY") for e in checks(leak)[0]), "appendix safety"
+    try:
+        import jinja2  # noqa: F401
+    except ImportError:
+        pass                                   # labels are checked where jinja2 is installed (CI installs it)
+    else:
+        page = html_of(ex)
+        assert 'class="basis">Interpretation · Parashari<' in page and "Prediction (interpretive)" in page, "unit labels"
+        assert set(CLAIM_LABELS) == set(schema["$defs"]["unit"]["properties"]["claim_type"]["enum"])
+        assert set(SYSTEM_LABELS) == set(schema["$defs"]["unit"]["properties"]["system"]["enum"])
     print(f"selftest ok ({len(warns)} advisory warnings on the example)")
 
 

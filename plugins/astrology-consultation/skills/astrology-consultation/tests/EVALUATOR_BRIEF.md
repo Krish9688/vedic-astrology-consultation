@@ -5,8 +5,8 @@ written (load the references it routes you to, run its scripts if it has any). D
 this project.
 
 Rules:
-- Do NOT open `tests/test-cases.md`, `tests/results/` (other than writing your own outputs) or anything under
-  `_skill_workspace/sourcemaps` or `docs`. Those would bias the test.
+- Do NOT open `tests/test-cases.md`, `tests/results/` (other than writing your own outputs), any source maps or
+  `docs`. Those would bias the test.
 - Do NOT call any MCP server or the internet. All calculated data you may use is in the fixture files named in each
   request. "Today" is 2026-09-24. If the skill would normally calculate something that is not in the fixtures, behave as
   the skill instructs for missing data.

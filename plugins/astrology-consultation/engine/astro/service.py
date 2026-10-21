@@ -13,12 +13,13 @@ import json
 import os
 import re
 import subprocess
+import zoneinfo
 import sys
 from typing import Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
-from . import config
+from . import config, places
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
 VERSION = "3.6.3"
@@ -27,7 +28,8 @@ SOURCE_NOTICE = ("This service is free software under the GNU Affero General Pub
                  "WARRANTY. The Corresponding Source of the version running here is available at the 'source' URL. "
                  "If you run a modified version for other people over a network, set source_url in the config to "
                  "your modified source (AGPL-3.0 section 13).")
-THIRD_PARTY = "Swiss Ephemeris © Astrodienst AG (AGPL-3.0); pyswisseph"
+THIRD_PARTY = ("Swiss Ephemeris © Astrodienst AG (AGPL-3.0); pyswisseph; IANA tz database (public domain); "
+               "place data, if installed: GeoNames (CC-BY 4.0)")
 REMOTE = False   # set by the HTTP servers when they listen beyond localhost
 SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
 TOPICS = {  # question → the skill's topic reference (SKILL.md routing table); word starts, so "remove" ≠ "move"
@@ -45,14 +47,102 @@ TOPICS = {  # question → the skill's topic reference (SKILL.md routing table);
 }
 
 
+OFFSET = re.compile(r"^(?:UTC|GMT)?([+-])?(\d{1,2}):([0-5]\d)(?::([0-5]\d))?$", re.I)
+
+
+def utc_offset_hours(v) -> float:
+    """'+05:30', '-03:00', 'UTC+05:45' or '+05:53:20'; decimal hours only in whole or quarter steps (5.5, -3.75).
+    A decimal such as 5.30 is refused: it would silently mean 5 h 18 min, a 3.6° ascendant shift (audit H1)."""
+    if isinstance(v, str):
+        m = OFFSET.match(v.strip().replace(" ", ""))
+        if m:
+            sign, h, mi, se = m.groups()
+            hours = int(h) + int(mi) / 60 + int(se or 0) / 3600
+            return -hours if sign == "-" else hours
+        try:
+            v = float(v)
+        except ValueError:
+            raise ValueError(f"UTC offset {v!r}: write it as +HH:MM, e.g. +05:30") from None
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        raise ValueError("UTC offset: write it as +HH:MM, e.g. +05:30")
+    if abs(v * 4 - round(v * 4)) > 1e-9:
+        raise ValueError(f"UTC offset {v}: decimal hours must be whole or .25/.5/.75 (5.30 would mean 5 h 18 min); "
+                         "write it as +HH:MM, e.g. +05:30")
+    return float(v)
+
+
+def tzdb_version():
+    """IANA tz database release in use, in zoneinfo's own lookup order: the system's files, then the tzdata package."""
+    for root in zoneinfo.TZPATH:
+        try:
+            with open(os.path.join(root, "tzdata.zi"), encoding="utf-8") as f:
+                return f.readline().split()[-1]
+        except (OSError, IndexError):
+            continue
+    try:
+        import tzdata
+        return tzdata.IANA_VERSION
+    except (ImportError, AttributeError):
+        return "unknown"
+
+
+def resolve_zone(date, time, zone, lon, fold=None):
+    """Local clock time in an IANA zone → (UTC offset hours, flags). Refuses what the database cannot settle: a clock
+    time skipped by a transition, a repeated one without `fold`, and local mean time (the tz database's LMT offsets
+    'should not be considered meaningful', data.iana.org/time-zones/theory.html)."""
+    try:
+        z = zoneinfo.ZoneInfo(zone)
+    except (zoneinfo.ZoneInfoNotFoundError, ValueError):
+        raise ValueError(f"unknown IANA time zone {zone!r} (e.g. Asia/Kolkata, Europe/London)") from None
+    local = dt.datetime.combine(date, dt.time.fromisoformat(time))
+    a, b = local.replace(tzinfo=z, fold=0), local.replace(tzinfo=z, fold=1)
+    if a.astimezone(dt.timezone.utc).astimezone(z).replace(tzinfo=None) != local and \
+            b.astimezone(dt.timezone.utc).astimezone(z).replace(tzinfo=None) != local:
+        raise ValueError(f"{date} {time} does not exist in {zone} (clocks jumped forward): check the birth record and "
+                         "give the UTC offset explicitly")
+    if a.utcoffset() != b.utcoffset() and fold is None:
+        raise ValueError(f"{date} {time} occurs twice in {zone} (clocks went back): pass fold=0 for the first "
+                         f"({utc_offset_str(a.utcoffset())}) or fold=1 for the second ({utc_offset_str(b.utcoffset())})")
+    t = b if fold == 1 else a
+    if t.tzname() == "LMT":
+        lmt = utc_offset_str(dt.timedelta(seconds=round(lon * 240)))
+        raise ValueError(f"{zone} on {date} is before standard time; the tz database's local mean time is not meaningful "
+                         f"for a birth place. Give the offset explicitly (local mean time at this longitude: {lmt})")
+    flags = []
+    if date.year < 1970:
+        flags.append("IANA offsets before 1970 often come from unreliable sources (tz theory.html): confirm with the "
+                     "birth record")
+    if zone in ("Asia/Kolkata", "Asia/Calcutta", "Asia/Karachi", "Asia/Dhaka", "Asia/Colombo") and date.year < 1948:
+        flags.append("pre-1948 South Asian offsets are disputed (railway, local and war time): confirm the clock used")
+    return t.utcoffset().total_seconds() / 3600, flags
+
+
+def utc_offset_str(td):
+    s = round(td.total_seconds())
+    sign, s = ("-" if s < 0 else "+"), abs(s)
+    return f"{sign}{s // 3600:02d}:{s % 3600 // 60:02d}" + (f":{s % 60:02d}" if s % 60 else "")
+
+
 class BirthInput(BaseModel):
     date: dt.date
     time: str = Field(pattern=r"^\d{1,2}:\d{2}(:\d{2})?$")
-    tz: float = Field(ge=-14, le=14, description="UTC offset in hours at the birth moment (include daylight saving)")
+    tz: Optional[float] = Field(default=None, ge=-14, le=14, description="UTC offset at the birth moment as +HH:MM "
+                                "(include daylight saving); decimal hours only in whole or quarter steps")
+    zone: Optional[str] = Field(default=None, max_length=64, description="IANA time zone, e.g. Asia/Kolkata: the offset "
+                                "at the birth moment is taken from the tz database (historical rules included)")
+    fold: Optional[int] = Field(default=None, ge=0, le=1, description="for a clock time that occurs twice: 0 = first, "
+                                "1 = second")
     lat: float = Field(ge=-89.9, le=89.9, description="the ascendant is undefined at the poles")
     lon: float = Field(ge=-180, le=180)
     label: Optional[str] = Field(default=None, max_length=64)
     time_source: Optional[str] = Field(default=None, max_length=120)
+    tz_source: Optional[str] = None
+    tz_flags: list = Field(default_factory=list)
+
+    @field_validator("tz", mode="before")
+    @classmethod
+    def _offset(cls, v):
+        return None if v is None else utc_offset_hours(v)
 
     @field_validator("date")
     @classmethod
@@ -68,6 +158,21 @@ class BirthInput(BaseModel):
         if not (0 <= h < 24 and 0 <= m < 60 and all(0 <= x < 60 for x in s)):
             raise ValueError("time must be a valid 24-hour clock time")
         return f"{h:02d}:{m:02d}:{(s or [0])[0]:02d}"   # zero-padded: the engine parses ISO times (P1-5)
+
+    @model_validator(mode="after")
+    def _resolve(self):
+        if self.zone:
+            hours, flags = resolve_zone(self.date, self.time, self.zone, self.lon, self.fold)
+            if self.tz is not None and abs(self.tz - hours) > 1 / 3600:
+                raise ValueError(f"tz {utc_offset_str(dt.timedelta(hours=self.tz))} disagrees with {self.zone} on "
+                                 f"{self.date} {self.time} ({utc_offset_str(dt.timedelta(hours=hours))}): give one")
+            self.tz, self.tz_flags = hours, flags
+            self.tz_source = f"IANA {self.zone} (tzdb {tzdb_version()})" + (f", fold={self.fold}" if self.fold is not None else "")
+        elif self.tz is None:
+            raise ValueError("give the UTC offset at birth (+HH:MM) or an IANA time zone (zone)")
+        else:
+            self.tz_source = self.tz_source or "explicit UTC offset"
+        return self
 
 
 class Options(BaseModel):
@@ -87,6 +192,11 @@ def _args(b: BirthInput, o: Options):
         node=o.node, year=o.year, on=(o.on or dt.date.today()).isoformat(), months=o.months)
 
 
+def find_place(name: str, country: Optional[str] = None) -> dict:
+    """Offline place lookup (GeoNames); nothing leaves the machine. Ambiguous names return every candidate."""
+    return places.search(name[:120], config.load().data_dir, country=(country or "")[:2] or None)
+
+
 def source_offer(s=None) -> dict:
     """AGPL-3.0 section 13: where network users get the Corresponding Source."""
     s = s or config.load()
@@ -98,79 +208,199 @@ def engine_info() -> dict:
     s = config.load()
     return {"service": "astrology-consultation", "version": VERSION, "engine": engine.ENGINE_VERSION,
             **source_offer(s),
-            **engine.ephemeris_info(), "ayanamsa": "Lahiri (default)", "privacy_mode": s.mode,
+            **engine.ephemeris_info(), "ayanamsa": f"{engine.AYANAMSA_NAME} (default)", "privacy_mode": s.mode,
             "knowledge_available": bool(s.knowledge_dir), "skill_available": bool(s.skill_dir),
             "vargas": engine.VARGA_METHODS, "shadbala_conventions": strength.SHADBALA_CONVENTIONS,
             "jaimini_conventions": jaimini.CONVENTIONS}
 
 
-def calculate_chart(b: BirthInput, o: Options = DEFAULTS, full: bool = True) -> dict:
-    a, kw = _args(b, o)
-    c = compute_full(*a, **kw) if full else engine.compute(*a, **kw)
-    c["meta"] |= {k: v for k, v in (("time_source", b.time_source), ("label", b.label)) if v}   # P1-5: never dropped
+def _compute(b: BirthInput, o: Options = DEFAULTS, full=False, **kw):
+    """The one way service code computes a chart: the birth input's provenance (zone, offset source and warnings,
+    time source, label) joins the calculation meta on every output."""
+    a, okw = _args(b, o)
+    c = compute_full(*a, **okw) if full else engine.compute(*a, **okw, **kw)
+    c["meta"] |= {k: v for k, v in (("time_source", b.time_source), ("label", b.label), ("zone", b.zone),
+                                    ("utc_offset_source", b.tz_source), ("utc_offset_flags", b.tz_flags)) if v}
     return c
 
 
+def calculate_chart(b: BirthInput, o: Options = DEFAULTS, full: bool = True) -> dict:
+    return _compute(b, o, full=full)   # P1-5: time_source and label never dropped
+
+
 def planet_positions(b: BirthInput) -> dict:
-    c = engine.compute(*_args(b, Options())[0], extras=False)
+    c = _compute(b, Options(), extras=False)
     return {"meta": c["meta"], "bodies": {k: {x: v[x] for x in ("sign", "deg", "lon", "nakshatra", "pada", "retro")}
                                           for k, v in c["bodies"].items()}}
+
+
+def _with_meta(c: dict, out: dict) -> dict:
+    """Every chart-derived output carries the chart's calculation provenance (audit H3, PRED-F9)."""
+    return out if "meta" in out else out | {"meta": c["meta"]}
 
 
 def divisional_chart(b: BirthInput, division: int) -> dict:
     if division not in engine.VARGAS:
         raise ValueError(f"supported divisions: {engine.VARGAS}")
-    c = engine.compute(*_args(b, Options())[0], extras=False)
-    return {"division": f"D{division}", "method": engine.VARGA_METHODS[f"D{division}"],
-            "signs": {k: v["vargas"][f"D{division}"] for k, v in c["bodies"].items()}}
+    c = _compute(b, Options(), extras=False)
+    return _with_meta(c, {"division": f"D{division}", "method": engine.VARGA_METHODS[f"D{division}"],
+                          "signs": {k: v["vargas"][f"D{division}"] for k, v in c["bodies"].items()}})
 
 
 def dasha(b: BirthInput, o: Options = DEFAULTS) -> dict:
-    a, kw = _args(b, o)
-    c = engine.compute(*a, **kw, extras=False)
-    on = kw["on"]
+    c = _compute(b, o, extras=False)
+    on = _args(b, o)[1]["on"]
     running = next(([md["lord"], ad["lord"], pd["lord"]] for md in c["vimshottari"] for ad in md["sub"]
                     for pd in ad["sub"] if pd["start"] <= on < pd["end"]), None)
-    return {"system": "Vimshottari", "year_days": engine.YEAR[o.year], "running_on": on, "running": running,
-            "periods": c["vimshottari"]}
+    return _with_meta(c, {"system": "Vimshottari", "year_days": engine.YEAR[o.year], "running_on": on,
+                          "running": running, "periods": c["vimshottari"]})
+
+
+def panchang(date, lat: float, lon: float, tz=None, zone: Optional[str] = None) -> dict:
+    """Panchang of the Hindu day that begins at the sunrise of `date` at (lat, lon). No birth data needed."""
+    from .calc import panchang as P
+    d = dt.date.fromisoformat(str(date))
+    if not (-89.9 <= lat <= 89.9 and -180 <= lon <= 180):
+        raise ValueError("latitude must be within ±89.9° and longitude within ±180°")
+    if zone:
+        hours, flags = resolve_zone(d, "12:00:00", zone, lon)
+        if tz is not None and abs(utc_offset_hours(tz) - hours) > 1 / 3600:
+            raise ValueError(f"tz disagrees with {zone} on {d}: give one")
+    elif tz is not None:
+        hours, flags = utc_offset_hours(tz), []
+    else:
+        raise ValueError("give the UTC offset (+HH:MM) or an IANA time zone (zone)")
+    out = P.day(d, lat, lon, hours)
+    out["meta"] |= {k: v for k, v in (("zone", zone), ("utc_offset_flags", flags)) if v}
+    return out
+
+
+def gochara(b: BirthInput, o: Options = DEFAULTS) -> dict:
+    """Transits on `on` against the natal chart: PD XXVI gochara from the Moon with vedha and condition, lagna frame
+    separate, sade sati."""
+    from .calc import transit as TR
+    c = _compute(b, o, extras=False)
+    on = c["meta"]["transit_date"]
+    jd = engine.jd_of(dt.datetime.fromisoformat(on + "T12:00") - dt.timedelta(hours=b.tz))
+    moon, asc = int(c["bodies"]["Mo"]["lon"] // 30), int(c["bodies"]["Asc"]["lon"] // 30)
+    sat = int(engine.positions(jd, o.node)["Sa"]["lon"] // 30)
+    return _with_meta(c, {"on": on, "time": "12:00 local (birth UTC offset)", "rows": TR.gochara(jd, moon, asc, o.node),
+                          "sade_sati": TR.sade_sati(sat, moon), "sources": TR.SOURCES})
+
+
+def outlook(b: BirthInput, period: str = "month", start=None, o: Options = DEFAULTS) -> dict:
+    """Chart-specific factors for a day, week, month or year from `start` (default today): dashas, gochara, sade sati,
+    sign changes, stations, slow-planet contacts and (day/week) the Moon's transit. Facts only; see timing.md §3a."""
+    from .calc import transit as TR
+    if period not in TR.PERIODS:
+        raise ValueError(f"period must be one of {', '.join(TR.PERIODS)}")
+    d = dt.date.fromisoformat(str(start)) if start else dt.date.today()
+    o = Options(on=d, months=o.months, node=o.node, year=o.year)
+    c = _compute(b, o, extras=False)
+    y = yogini_dasha(b, o)["periods"]
+    return _with_meta(c, TR.outlook(c, d, period, b.tz, y, o.node))
+
+
+def compatibility(girl: BirthInput, boy: BirthInput, o: Options = DEFAULTS) -> dict:
+    """PM2 ch. XXI Moon-sign and birth-star counts between two charts, each with its verse; no score, no verdict.
+    Needs both people's consent: it is two people's birth data."""
+    from .calc import match
+    cs = [_compute(b, o, extras=False) for b in (girl, boy)]
+    pts = []
+    for b in (girl, boy):                              # unrounded: chart longitudes are rounded to 0.0001°
+        jd = engine.jd_of(dt.datetime.fromisoformat(f"{b.date}T{b.time}") - dt.timedelta(hours=b.tz))
+        pts.append({"moon": engine.positions(jd, o.node)["Mo"]["lon"], "asc": engine.asc(jd, b.lat, b.lon)})
+    return match.facts(*pts) | {"source": "Prasna Marga II ch. XXI (Raman), p96-107; source map, not page-checked",
+                                "meta": {"girl": cs[0]["meta"], "boy": cs[1]["meta"]}}
+
+
+def tajika(b: BirthInput, year: Optional[int] = None, o: Options = DEFAULTS) -> dict:
+    """Tajika annual chart (PVR ch. 27-28, 31) for year N of life (default: the year running on `on`): solar return at
+    the birthplace, muntha, harsha bala, year-lord candidates, sahams, Mudda dasha. Secondary to the natal chart."""
+    from .calc import tajika as TJ
+    c = _compute(b, o, extras=False)
+    bj = engine.jd_of(dt.datetime.fromisoformat(f"{b.date}T{b.time}") - dt.timedelta(hours=b.tz))
+    P = engine.positions(bj, o.node)                  # unrounded: 0.0001° of Sun is ~9 s of return time
+    natal = {"Su": P["Su"]["lon"], "Mo": P["Mo"]["lon"], "Asc": engine.asc(bj, b.lat, b.lon)}
+    if year is None:
+        on = engine.jd_of(dt.datetime.fromisoformat(c["meta"]["transit_date"] + "T12:00") - dt.timedelta(hours=b.tz))
+        if on < bj:
+            raise ValueError("the date asked about is before the birth")
+        n = int((on - bj) / TJ.SIDEREAL_YEAR)
+        n -= TJ.varsha_pravesh(bj, natal["Su"], n) > on
+    elif year < 1:
+        raise ValueError("year is the year of life, 1 or more (year 1 starts at birth)")
+    else:
+        n = year - 1
+    a = TJ.annual(bj, natal, n, b.lat, b.lon, o.node)
+    local = lambda jd: (dt.datetime(2000, 1, 1, 12) + dt.timedelta(days=jd - 2451545.0, hours=b.tz, seconds=0.5)
+                        ).strftime("%Y-%m-%d %H:%M:%S")                 # JD 2451545.0 = 2000-01-01 12:00 UT
+    pos = lambda x: f"{engine.SIGNS[int(x // 30)]} {x % 30:.2f}"
+    return _with_meta(c, {
+        "year": a["year"], "completed_years": n, "varsha_pravesh": local(a["jd"]),
+        "time": f"local clock at the birth UTC offset ({engine.fmt_offset(b.tz)}); cast for the birthplace",
+        "annual_lagna": pos(a["asc"]), "day_or_night": "night" if a["night"] else "day",
+        "positions": {p: pos(v["lon"]) for p, v in a["positions"].items()},
+        "muntha": engine.SIGNS[a["muntha"]], "harsha_bala": a["harsha_bala"], "year_lord_candidates": a["candidates"],
+        "year_lord": a["year_lord"], "year_lord_reason": a["year_lord_reason"],
+        "sahams": {k: pos(v) for k, v in a["sahams"].items()},
+        "mudda_dasha": [{"lord": r["lord"], "start": local(r["start_jd"])[:16], "end": local(r["end_jd"])[:16],
+                         "solar_days": r["solar_days"]} for r in a["mudda"]],
+        "sources": TJ.SOURCES, "not_computed": TJ.NOT_COMPUTED})
+
+
+def yogini_dasha(b: BirthInput, o: Options = DEFAULTS) -> dict:
+    """Yogini mahadashas (BPHS ch. 46 sl. 195-200); a secondary, conditional dasha - Vimshottari stays the default."""
+    c = _compute(b, o, extras=False)
+    ut = dt.datetime.fromisoformat(f"{b.date}T{b.time}") - dt.timedelta(hours=b.tz)
+    ylen, on = engine.YEAR[o.year], c["meta"]["transit_date"]
+    fmt = lambda t: (t + dt.timedelta(hours=b.tz)).strftime("%Y-%m-%d")
+    rows = [dict(r, start=fmt(r["start"]), end=fmt(r["end"])) for r in engine.yogini(c["bodies"]["Mo"]["lon"], ut, ylen)]
+    return _with_meta(c, {"system": "Yogini", "source": "BPHS ch. 46 sl. 195-200 (p563): opening yogini = (birth "
+                          "nakshatra number + 3) mod 8, years 1-8; the source gives no sub-period rule",
+                          "year_days": ylen, "running_on": on,
+                          "running": next((r["yogini"] for r in rows if r["start"] <= on < r["end"]), None),
+                          "periods": rows})
 
 
 def transits(b: BirthInput, o: Options = DEFAULTS) -> dict:
-    a, kw = _args(b, o)
-    c = engine.compute(*a, **kw)
-    return {k: c[k] for k in ("transits", "ingresses", "slow_contacts")} | {"on": kw["on"]}
+    c = _compute(b, o)
+    return _with_meta(c, {k: c[k] for k in ("transits", "ingresses", "slow_contacts")} | {"on": c["meta"]["transit_date"]})
 
 
 def shadbala(b: BirthInput) -> dict:
-    c = engine.compute(*_args(b, Options())[0], extras=False)
+    c = _compute(b, Options(), extras=False)
     ut = dt.datetime.fromisoformat(f"{b.date}T{b.time}") - dt.timedelta(hours=b.tz)
-    return strength.shadbala(c, ut, b.lat, b.lon, b.tz)
+    return _with_meta(c, strength.shadbala(c, ut, b.lat, b.lon, b.tz))
 
 
 def ashtakavarga(b: BirthInput) -> dict:
-    return strength.ashtakavarga(engine.compute(*_args(b, Options())[0], extras=False))
+    c = _compute(b, Options(), extras=False)
+    return _with_meta(c, strength.ashtakavarga(c))
 
 
 def jaimini_factors(b: BirthInput) -> dict:
-    return jaimini.jaimini(engine.compute(*_args(b, Options())[0], extras=False))
+    c = _compute(b, Options(), extras=False)
+    return _with_meta(c, jaimini.jaimini(c))
 
 
-def sky(start, end, tz: float = 0.0, node: str = "mean") -> dict:
+def sky(start, end, tz=0.0, node: str = "mean") -> dict:
     """Retrograde stations and sign changes between two dates — no birth data (council 6, P2-1)."""
-    a, b = dt.date.fromisoformat(str(start)), dt.date.fromisoformat(str(end))
+    a, b, tz = dt.date.fromisoformat(str(start)), dt.date.fromisoformat(str(end)), utc_offset_hours(tz)
     if not (a < b and (b - a).days <= 3 * 366 and -14 <= tz <= 14 and node in ("mean", "true")):
         raise ValueError("need start < end, at most 3 years apart, UTC offset -14..14, node mean or true")
     t0 = dt.datetime.combine(a, dt.time()) - dt.timedelta(hours=tz)
     t1 = dt.datetime.combine(b, dt.time(23, 59)) - dt.timedelta(hours=tz)
     return engine.sky(t0, t1, node, tz) | {"meta": {"from": a.isoformat(), "to": b.isoformat(), "utc_offset": tz,
-        "nodes": node, "zodiac": "sidereal Lahiri", "engine": f"astro {engine.ENGINE_VERSION}",
+        "nodes": node, "zodiac": f"sidereal {engine.AYANAMSA_NAME}", "ayanamsa": engine.AYANAMSA_NAME,
+        **engine.ephemeris_info(engine.jd_of(t0)), "engine": f"astro {engine.ENGINE_VERSION}",
         "note": "sky facts only: the same for everyone; they say nothing about a person without a chart"}}
 
 
 def birth_time_sensitivity(b: BirthInput, o: Options = DEFAULTS, span_min: int = 15) -> dict:
     a, kw = _args(b, o)
     g = sensitivity.grid(*a, on=kw["on"], year=o.year, span_min=span_min)
-    return g | {"table_markdown": sensitivity.render(g)}
+    return _with_meta(_compute(b, o, extras=False), g | {"table_markdown": sensitivity.render(g)})
 
 
 def _run_skill_script(name, *args):
@@ -254,10 +484,7 @@ def consultation_context(question: str, b: BirthInput, o: Options = DEFAULTS) ->
                                                                              ("arudha_lagna", "upapada", "karakamsa")},
              "sensitivity_classes": c["sensitivity_grid"]["classes"],
              "transit_sign_aspects": c["transit_sign_aspects"], "transit_aspects_note": c["meta"]["transit_aspects"]}
-    return {"analysis": analyze_question(question), "facts": facts, "derived_facts": _derived_facts(c),
-            "instructions": "Follow the loaded skill files: answer life-first (communication.md §1a), grade "
-                            "evidence, keep systems separate, never invent positions or dates beyond these facts, "
-                            "and treat 'high'/'very high' sensitivity factors as uncertain."}
+    return {"analysis": analyze_question(question), "facts": facts, "derived_facts": _derived_facts(c)}
 
 
 def _derived_facts(c):
