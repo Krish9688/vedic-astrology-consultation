@@ -36,6 +36,8 @@ def _auth(request: Request, authorization: Optional[str] = Header(default=None))
     if request.url.path == "/api/v1/source":   # AGPL section 13: the source offer is visible without a token
         return
     token = config.load().api_token
+    if S.REMOTE and not token:   # token blanked after startup: never fall open on a remote listener (council 4 R4 L2)
+        raise HTTPException(status_code=401, detail="unauthorized")
     if token and not hmac.compare_digest((authorization or "").encode(), f"Bearer {token}".encode()):
         raise HTTPException(status_code=401, detail="unauthorized")
 

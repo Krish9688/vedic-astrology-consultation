@@ -125,3 +125,24 @@ def test_claude_code_config_never_reaches_the_public_export():
                  "CLAUDE.md", "research/ledger/findings.json"):
         assert not any(fnmatch.fnmatch(path, g) for g, *_ in export_public.MAP), path
     assert ("repo-root/.claude/**/*", ".") in export_repo.ALLOW
+
+
+@pytest.mark.skipif(not PRIVATE, reason="public edition")
+@pytest.mark.parametrize("name,body", [("docs/X.md", "a\n<!-- private-edition -->\nLK\n<!-- /private-edition -->\nb\n"),
+                                       ("tests/t.py", "x = 1\n# <private-edition>\nLK = 2\n# </private-edition>\ny = 3\n")])
+def test_markers_in_non_skill_exported_files_are_applied(tmp_path, name, body):
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import export_public as ex
+    ex.WS = str(tmp_path)                                # copy() reads rel paths against WS
+    try:
+        src = tmp_path / name
+        src.parent.mkdir(parents=True, exist_ok=True)
+        src.write_text(body)
+        dst = tmp_path / "out" / name
+        ex.copy(str(src), str(dst))
+        assert "LK" not in dst.read_text() and "edition" not in dst.read_text()
+        src.write_text(body.split("\n", 1)[0] + "\n<!-- private-edition -->\n# <private-edition>\nLK\n")   # unbalanced
+        with pytest.raises((ValueError, SyntaxError)):   # loud either way
+            ex.copy(str(src), str(dst))
+    finally:
+        ex.WS = ROOT

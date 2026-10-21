@@ -497,11 +497,19 @@ def chart_facts_input(c):
                         for n, b in c["bodies"].items() if n != "Asc"}}
 
 
+def input_stamp(c):
+    """Engine version + short hash of the inputs, to recognise a stale calc file (older engine or other inputs)."""
+    m = c["meta"]
+    key = json.dumps([m[k] for k in ("birth_local", "lat", "lon", "nodes", "dasha_year_days", "transit_date")])
+    return f"astro {ENGINE_VERSION}; inputs sha256:{hashlib.sha256(key.encode()).hexdigest()[:12]}"
+
+
 def write_outputs(c, out_dir):
     os.makedirs(out_dir, exist_ok=True)
+    stamp = input_stamp(c)
     with open(os.path.join(out_dir, "calc.json"), "w") as f:
-        json.dump(c, f, indent=1, ensure_ascii=False)
+        json.dump({"stamp": stamp, **c}, f, indent=1, ensure_ascii=False)
     with open(os.path.join(out_dir, "chart.json"), "w") as f:
-        json.dump(chart_facts_input(c), f, indent=1)
+        json.dump({"_stamp": stamp, **chart_facts_input(c)}, f, indent=1)
     with open(os.path.join(out_dir, "calc.md"), "w") as f:
-        f.write(render_md(c))
+        f.write(f"<!-- {stamp} -->\n" + render_md(c))
