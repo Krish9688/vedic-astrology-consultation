@@ -33,6 +33,8 @@ MOOLATRIKONA = dict(Su=(4, 0, 20), Mo=(1, 3, 30), Ma=(0, 0, 12), Me=(5, 15, 20),
 
 
 def sidx(name):
+    if not isinstance(name, str) or not name.strip():
+        raise ValueError(f"unknown sign {name!r}")   # "" would match Aries (every string starts with "")
     for i, s in enumerate(SIGNS):
         if s.lower().startswith(str(name).lower()[:3]):
             return i
@@ -51,6 +53,12 @@ def varga(sign, deg, n):
 def derive(chart):
     """The structural facts every section uses: signs, houses, lords, occupants, malefics, graha drishti."""
     asc = sidx(chart["asc"]["sign"])
+    for who, v in [("asc", chart["asc"])] + list(chart["planets"].items()):   # council 4 R3 L3: fail loudly, not with a TypeError
+        if who != "asc" and who not in ALL:
+            raise ValueError(f"unknown planet key {who!r} (use {', '.join(ALL)})")
+        d = v.get("deg")
+        if d is not None and (isinstance(d, bool) or not isinstance(d, (int, float)) or not 0 <= d < 30):
+            raise ValueError(f"{who} deg must be a number in [0, 30), not {d!r}")
     P = {p: dict(v, s=sidx(v["sign"])) for p, v in chart["planets"].items()}
     house = {p: (v["s"] - asc) % 12 + 1 for p, v in P.items()}
     sign_of_house = {h: (asc + h - 1) % 12 for h in range(1, 13)}

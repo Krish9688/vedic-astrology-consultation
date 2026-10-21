@@ -220,3 +220,4 @@ e5a3a006ac1edbd0  synthetic-test-chart
 784b371d8a83bdc3  synthetic-test-chart
 d9197c73ffb4d9ff  synthetic-test-chart
 4747103cd6d5b90e  synthetic-test-chart
+f493c1f9a7012576  synthetic-test-chart
