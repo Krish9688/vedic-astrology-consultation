@@ -92,7 +92,10 @@ Raman's matching table penalises the woman's chart more — do not reproduce tha
 
 **Compatibility** (two charts supplied): basic chart structure matters more than kuta points [HJH2 p66; PM2 p107].
 Harmonious Venus/Mars/Jupiter links (trine or 3/11), Sun–Moon harmony, one partner's Moon sign as the other's lagna
-[HJH2 p69–70]. Kutas rest only on Moon signs/stars and are a separate traditional module.
+[HJH2 p69–70]. Kutas rest only on Moon signs/stars and are a separate traditional module: `get_compatibility` gives
+the Prasna Marga XXI sign and star counts, each with the verse that reads it and the authorities that disagree. It
+gives no points: the 36-point Ashtakoota has no source in the library, and PM2 assigns no unit scores (p107). Get both
+people's consent before calculating, and never turn a kuta reading into a marriage verdict.
 
 ## 3. Timing marriage
 

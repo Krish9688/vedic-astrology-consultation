@@ -45,6 +45,7 @@
 {% for u in s.units or [] %}
 <div class="unit">
   <div class="theme">{{ u.theme }}</div>
+  {% if u.claim_type or u.system %}<div class="basis">{{ claim_labels.get(u.claim_type, "") }}{% if u.claim_type and u.system %} · {% endif %}{{ system_labels.get(u.system, "") }}</div>{% endif %}
   <dl>
     <dt>What it means</dt><dd>{{ u.meaning }}</dd>
     {% if u.manifestation %}<dt>Likely form</dt><dd>{{ u.manifestation }}</dd>{% endif %}

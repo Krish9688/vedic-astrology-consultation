@@ -4,6 +4,7 @@ anything else needs `allow_remote = true` and `api_token` (bearer auth on every 
 """
 from __future__ import annotations
 
+import datetime as dt
 import hmac
 from typing import Optional
 
@@ -67,6 +68,16 @@ def version():
     return S.engine_info()
 
 
+@app.get("/api/v1/panchang")
+def panchang(date: str, lat: float, lon: float, tz: str | None = None, zone: str | None = None):
+    return _wrap(lambda: S.panchang(date, lat, lon, tz, zone))
+
+
+@app.get("/api/v1/place")
+def place(name: str, country: str | None = None):
+    return _wrap(lambda: S.find_place(name, country))
+
+
 @app.post("/api/v1/chart")
 def chart(r: ChartRequest):
     return _wrap(lambda: S.calculate_chart(r.birth, r.options))
@@ -80,6 +91,46 @@ def positions(r: ChartRequest):
 @app.post("/api/v1/varga")
 def varga(r: VargaRequest):
     return _wrap(lambda: S.divisional_chart(r.birth, r.division))
+
+
+class OutlookRequest(ChartRequest):
+    period: str = "month"
+    start: dt.date | None = None
+
+
+@app.post("/api/v1/gochara")
+def gochara(r: ChartRequest):
+    return _wrap(lambda: S.gochara(r.birth, r.options))
+
+
+@app.post("/api/v1/outlook")
+def outlook(r: OutlookRequest):
+    return _wrap(lambda: S.outlook(r.birth, r.period, r.start, r.options))
+
+
+class TajikaRequest(ChartRequest):
+    year: int | None = None
+
+
+@app.post("/api/v1/tajika")
+def tajika(r: TajikaRequest):
+    return _wrap(lambda: S.tajika(r.birth, r.year, r.options))
+
+
+class CompatibilityRequest(BaseModel):
+    girl: S.BirthInput
+    boy: S.BirthInput
+    options: S.Options = S.Options()
+
+
+@app.post("/api/v1/compatibility")
+def compatibility(r: CompatibilityRequest):
+    return _wrap(lambda: S.compatibility(r.girl, r.boy, r.options))
+
+
+@app.post("/api/v1/yogini")
+def yogini(r: ChartRequest):
+    return _wrap(lambda: S.yogini_dasha(r.birth, r.options))
 
 
 @app.post("/api/v1/dasha")

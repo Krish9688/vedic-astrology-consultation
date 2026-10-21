@@ -60,7 +60,17 @@ def _find_ephe():
 
 EPHE_DIR = _find_ephe()
 swe.set_ephe_path(EPHE_DIR)          # None → Moshier fallback
-swe.set_sid_mode(swe.SIDM_LAHIRI)
+AYANAMSA = swe.SIDM_LAHIRI
+AYANAMSA_NAME = swe.get_ayanamsa_name(AYANAMSA)
+
+
+def _sid():
+    """Re-assert the ayanamsa before every sidereal call: swisseph keeps it as process-global state that any other
+    caller in the same process can change (CALC-F1)."""
+    swe.set_sid_mode(AYANAMSA)
+
+
+_sid()
 
 
 def ephemeris_info(jd=2451545.0):
@@ -77,6 +87,13 @@ def ephemeris_info(jd=2451545.0):
             "ephemeris_range": "≈3000 BCE–3000 CE"}
 
 
+def fmt_offset(tz):
+    """UTC offset in hours → '+05:30' (seconds only when present: '+05:53:20')."""
+    s = round(abs(tz) * 3600)
+    h, m, sec = s // 3600, s % 3600 // 60, s % 60
+    return f"{'-' if tz < 0 else '+'}{h:02d}:{m:02d}" + (f":{sec:02d}" if sec else "")
+
+
 def jd_of(t):
     return swe.julday(t.year, t.month, t.day, t.hour + t.minute / 60 + t.second / 3600 + t.microsecond / 3.6e9)
 
@@ -87,6 +104,7 @@ def lon_of(jd, body, flags):
 
 
 def positions(jd, node="mean"):
+    _sid()
     f = swe.FLG_SIDEREAL | swe.FLG_SWIEPH | swe.FLG_SPEED
     out = {}
     for n, b in PL:
@@ -104,12 +122,14 @@ def declination(jd, body):
 
 
 def asc(jd, lat, lon):
+    _sid()
     _, ascmc = swe.houses_ex(jd, lat, lon, b"W", swe.FLG_SIDEREAL)
     return ascmc[0] % 360
 
 
 def angles(jd, lat, lon):
     """Sidereal ascendant and midheaven."""
+    _sid()
     _, ascmc = swe.houses_ex(jd, lat, lon, b"W", swe.FLG_SIDEREAL)
     return ascmc[0] % 360, ascmc[1] % 360
 
@@ -117,6 +137,7 @@ def angles(jd, lat, lon):
 def bhavas(jd, lat, lon):
     """Sripati bhavas: madhyas (house middles) at the Porphyry cusps — house 1 middle = ascendant, house 10 middle =
     midheaven — and sandhis (boundaries) halfway between consecutive madhyas. Sidereal."""
+    _sid()
     cusps, _ = swe.houses_ex(jd, lat, lon, b"O", swe.FLG_SIDEREAL)
     mid = [c % 360 for c in cusps[:12]]
     sandhi = [(mid[i] + ((mid[(i + 1) % 12] - mid[i]) % 360) / 2) % 360 for i in range(12)]
@@ -199,6 +220,27 @@ def vimshottari(moon, birth_ut, ylen, levels=3):
         mds.append({"lord": lord, "start": t, "end": end, "sub": sub((lord_i + j) % 9, t, yrs, levels - 1)})
         t = end
     return mds
+
+
+# Yogini dasha, BPHS ch. 46 sl. 195-200 (p563): eight yoginis with their planets and years 1-8; the opening yogini is
+# (birth nakshatra number + 3) mod 8 (remainder 0 = the 8th). The passage gives no sub-period rule, so none is computed.
+YOGINI = [("Mangala", "Mo", 1), ("Pingala", "Su", 2), ("Dhanya", "Ju", 3), ("Bhramari", "Ma", 4),
+          ("Bhadrika", "Me", 5), ("Ulka", "Sa", 6), ("Siddha", "Ve", 7), ("Sankata", "Ra", 8)]
+
+
+def yogini(moon, birth_ut, ylen, span_years=120):
+    """Yogini mahadashas from the period running at birth until `span_years` after birth (3+ cycles of 36 years)."""
+    q = moon / (40 / 3) + EPS          # same arithmetic as nak() and vimshottari()
+    i = ((int(q) % 27 + 1 + 3) % 8 - 1) % 8
+    frac_left = 1 - (q - int(q))
+    t = birth_ut - dt.timedelta(days=YOGINI[i][2] * (1 - frac_left) * ylen)
+    rows, end_by = [], birth_ut + dt.timedelta(days=span_years * ylen)
+    while t < end_by:
+        name, lord, yrs = YOGINI[i % 8]
+        end = t + dt.timedelta(days=yrs * ylen)
+        rows.append({"yogini": name, "lord": lord, "years": yrs, "start": t, "end": end})
+        t, i = end, i + 1
+    return rows
 
 
 def ingresses(t0, months, node, tz=0):
@@ -337,6 +379,7 @@ def transit_sign_aspects(t0, months, ingress_rows, T, asc_i, moon_i, tz=0):
 def compute(date, time, tz, lat, lon, node="mean", year="sidereal", on=None, months=36, extras=True):
     """Everything for one chart as a JSON-ready dict (the calc.json format). ``tz`` = UTC offset in hours."""
     on = on or dt.date.today().isoformat()
+    swe.set_ephe_path(EPHE_DIR)          # also process-global: re-assert once per chart
     local = dt.datetime.fromisoformat(f"{date}T{time}")
     ut = local - dt.timedelta(hours=tz)
     jd = jd_of(ut)
@@ -350,21 +393,22 @@ def compute(date, time, tz, lat, lon, node="mean", year="sidereal", on=None, mon
         bodies[n] = {"sign": SIGNS[int(L // 30)], "deg": round(L % 30, 4), "lon": L, "retro": p["retro"],
                      "speed": None if p["speed"] is None else round(p["speed"], 5),
                      "nakshatra": nk, "pada": pada, "vargas": {f"D{v}": SIGNS[varga(L, v)] for v in VARGAS}}
+    moon = bodies["Mo"]["lon"]            # the reported (rounded) Moon drives dasha and Moon sign too (QA-F3)
     ylen = YEAR[year]
     fmt = lambda t: (t + dt.timedelta(hours=tz)).strftime("%Y-%m-%d")
     ser = lambda rows: [{"lord": r["lord"], "start": fmt(r["start"]), "end": fmt(r["end"]),
                          **({"sub": ser(r["sub"])} if "sub" in r else {})} for r in rows]
-    dasha = vimshottari(P["Mo"]["lon"], ut, ylen, levels=3)
+    dasha = vimshottari(moon, ut, ylen, levels=3)
     t_on = dt.datetime.fromisoformat(on + "T12:00") - dt.timedelta(hours=tz)
     T = positions(jd_of(t_on), node)
-    asc_i, moon_i = int(A // 30), int(P["Mo"]["lon"] // 30)
+    asc_i, moon_i = int(A // 30), int(moon // 30)
     transits = {n: {"sign": SIGNS[int(p["lon"] // 30)], "deg": round(p["lon"] % 30, 2), "retro": p["retro"],
                     "house_from_lagna": (int(p["lon"] // 30) - asc_i) % 12 + 1,
                     "house_from_moon": (int(p["lon"] // 30) - moon_i) % 12 + 1} for n, p in T.items()}
     meta = {"engine": f"astro {ENGINE_VERSION} on Swiss Ephemeris {swe.version} (pyswisseph, local)",
-            **ephemeris_info(jd), "ayanamsa": f"Lahiri {swe.get_ayanamsa_ut(jd):.4f}°", "nodes": node,
+            **ephemeris_info(jd), "ayanamsa": f"{AYANAMSA_NAME} {swe.get_ayanamsa_ut(jd):.4f}°", "nodes": node,
             "dasha_year_days": ylen, "houses": "whole sign from the sidereal ascendant; Sripati bhavas in 'bhavas'",
-            "birth_local": f"{date} {time} UTC{tz:+}", "lat": lat, "lon": lon, "transit_date": on,
+            "birth_local": f"{date} {time} UTC{fmt_offset(tz)}", "utc_offset": fmt_offset(tz), "lat": lat, "lon": lon, "transit_date": on,
             "transit_time": "12:00 local (birth UTC offset)", "vargas": "Parashari rules, engine.VARGA_METHODS",
             "computed_at_utc": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "flags": [f for f, on_ in (
@@ -375,7 +419,7 @@ def compute(date, time, tz, lat, lon, node="mean", year="sidereal", on=None, mon
            "vimshottari": ser(dasha), "transits": transits}
     if extras:
         out["ingresses"] = ingresses(t_on, months, node, tz)
-        out["birth_time_sensitivity_minutes"] = sensitivity(ut, lat, lon, P["Mo"]["lon"])
+        out["birth_time_sensitivity_minutes"] = sensitivity(ut, lat, lon, moon)
         out["slow_contacts"] = contacts(t_on, months, {n: p["lon"] for n, p in P.items() if n not in ("Ra", "Ke")},
                                         node, tz)
         out["transit_sign_aspects"] = transit_sign_aspects(t_on, months, out["ingresses"], T, asc_i, moon_i, tz)

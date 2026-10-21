@@ -57,6 +57,18 @@ def add(chart_id, category, prediction, window_start=None, window_end=None, conf
     return cur.lastrowid
 
 
+def purge(older_than_days, delete=False, db=None):
+    """Prediction rows made more than `older_than_days` ago: counted, and deleted only when delete=True."""
+    cutoff = (dt.date.today() - dt.timedelta(days=older_than_days)).isoformat()
+    c = _db(db)
+    n = c.execute("SELECT COUNT(*) FROM predictions WHERE made_on < ?", (cutoff,)).fetchone()[0]
+    if delete:
+        c.execute("DELETE FROM predictions WHERE made_on < ?", (cutoff,))
+        c.commit()
+        c.execute("VACUUM")                  # deleted text must not linger in free pages
+    return n
+
+
 def evaluate(pid, outcome, evaluation, outcome_date=None, db=None):
     if evaluation not in ("hit", "miss", "partial", "not evaluable"):
         raise ValueError("evaluation: hit | miss | partial | not evaluable")
@@ -78,9 +90,10 @@ def rows(db=None, synthetic=None):
     return [dict(zip(cols, r)) for r in c.execute(q + " ORDER BY id")]
 
 
-def scorecard(db=None):
+def scorecard(db=None, include_synthetic=False):
+    """Hit/miss counts by category and confidence. Synthetic (test) records are left out unless asked for (EVID-F10)."""
     out = {}
-    for r in rows(db):
+    for r in rows(db, synthetic=None if include_synthetic else False):
         if r["evaluation"]:
             k = (r["category"], r["confidence"])
             out.setdefault(k, {"hit": 0, "miss": 0, "partial": 0, "not evaluable": 0})[r["evaluation"]] += 1

@@ -131,6 +131,10 @@ For each material yoga: exact definition → actual constituents → their funct
 modification → link to the question → whether its planets' dashas run at a usable age [LOL p310]. A software yoga
 list is a list of candidates. Yogas describe principles, not literal promises [LOL p310–312]; many "fail" because the
 planets are weak, cancelled or never get their period.
+`chart_facts.py` prints a "Candidate yogas and Kuja conventions" section: one line per named definition, each with
+its source and base rate ([yoga-definitions.md](yoga-definitions.md)). Start from it instead of recognising yogas by
+eye; name the definition you use; a high base rate (a kendra–kona relation in about two thirds of charts, popular Kuja
+in nine out of ten) means the bare condition carries little weight. Then apply the steps above.
 
 - **Raja yoga (dharma-karma adhipati):** kona lord + kendra lord related; 9th–10th strongest, 4th–5th valuable
   [LOL p313–314]. Place matters: a raja yoga in the 12th is not fully enjoyed, in the 6th suffers bhanga, 12th from the
