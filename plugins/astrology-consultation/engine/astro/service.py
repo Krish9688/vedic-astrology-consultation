@@ -161,11 +161,22 @@ class BirthInput(BaseModel):
 
     @model_validator(mode="after")
     def _resolve(self):
-        if self.zone:
+        if self.zone and self.tz is not None:   # P2-1: a manual offset always overrides; the IANA view is kept as a flag
+            given = utc_offset_str(dt.timedelta(hours=self.tz))
+            try:
+                hours, flags = resolve_zone(self.date, self.time, self.zone, self.lon, self.fold)
+                if abs(self.tz - hours) > 1 / 3600:
+                    flags = [f"manual offset {given} overrides IANA {self.zone} "
+                             f"({utc_offset_str(dt.timedelta(hours=hours))}, tzdb {tzdb_version()}): confirm it with "
+                             "the birth record"] + flags
+            except ValueError as e:              # a skipped/repeated clock time or the LMT era: the offset settles it
+                if str(e).startswith("unknown IANA time zone"):
+                    raise                        # a misspelt zone is still refused
+                flags = [f"IANA {self.zone} cannot resolve this time ({e}); manual offset {given} used"]
+            self.tz_flags = flags
+            self.tz_source = f"manual UTC offset (zone {self.zone} given)"
+        elif self.zone:
             hours, flags = resolve_zone(self.date, self.time, self.zone, self.lon, self.fold)
-            if self.tz is not None and abs(self.tz - hours) > 1 / 3600:
-                raise ValueError(f"tz {utc_offset_str(dt.timedelta(hours=self.tz))} disagrees with {self.zone} on "
-                                 f"{self.date} {self.time} ({utc_offset_str(dt.timedelta(hours=hours))}): give one")
             self.tz, self.tz_flags = hours, flags
             self.tz_source = f"IANA {self.zone} (tzdb {tzdb_version()})" + (f", fold={self.fold}" if self.fold is not None else "")
         elif self.tz is None:

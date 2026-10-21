@@ -53,7 +53,7 @@ def cmd_register(a):
     for b in cat["books"]:
         if b["id"] == a.id:
             sys.exit(f"id {a.id} already used by {b['title']}")
-        if b["sha256"] == h:
+        if b.get("sha256") == h:
             b.setdefault("duplicates", [])
             if os.path.basename(path) not in b["duplicates"] and os.path.basename(path) != b["file"]:
                 b["duplicates"].append(os.path.basename(path))
@@ -141,9 +141,9 @@ def cmd_relink(a):
         if f.lower().endswith(".pdf"):
             by_hash.setdefault(sha256(os.path.join(root, f)), []).append(f)
     for b in cat["books"]:
-        files = by_hash.pop(b["sha256"], [])
+        files = by_hash.pop(b.get("sha256"), [])
         if not files:
-            print(f"MISSING {b['id']}: no file with its fingerprint (was {b['file']})")
+            print(f"MISSING {b['id']}: no file with its fingerprint (was {b.get('file', 'not recorded')})")
             continue
         import unicodedata
         if unicodedata.normalize("NFC", b["file"]) not in {unicodedata.normalize("NFC", f) for f in files}:

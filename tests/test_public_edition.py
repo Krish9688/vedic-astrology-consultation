@@ -2,6 +2,7 @@
 # all of it. In the private workspace these tests check the markers, the private files and a real export; in the public
 # repository (no tools/public_edition.py, no scripts/lal_kitab.py) they check the shipped skill folder itself.
 import hashlib
+import json
 import os
 import re
 import sys
@@ -83,6 +84,8 @@ def test_real_public_export_passes_the_b2_gate(tmp_path):
     ex.catalog(str(tmp_path))                            # the exported catalog: no private KB record or KB codes
     cat = open(os.path.join(str(tmp_path), "knowledge", "catalog.json")).read()
     assert '"id": "KB"' not in cat and "KB R" not in cat and "lal-kitab/" not in cat and "library_root" not in cat
+    books = json.loads(cat)["books"]                     # owner's file names and fingerprints stay private (2026-10-21)
+    assert books and not [k for b in books for k in b if k in ("file", "sha256", "duplicates")]
     ex.b2_gate(str(tmp_path))                            # sys.exit on any finding
 
 
