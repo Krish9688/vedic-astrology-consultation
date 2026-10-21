@@ -22,13 +22,29 @@ def test_zone_gives_the_offset_of_the_birth_moment():
     assert birth(date="2021-07-04", time="13:15", zone="America/New_York", lat=40.71, lon=-74.01).tz == -4.0
 
 
-def test_explicit_offset_still_works_and_must_agree_with_a_zone():
+def test_explicit_offset_overrides_a_zone_and_says_so():
+    """Catalogue P2-1 (Phase 3): the manual offset always overrides; the IANA value stays visible as a flag."""
     assert birth(tz="+05:30").tz_source == "explicit UTC offset"
-    assert birth(tz="+05:30", zone="Asia/Kolkata").tz == 5.5
-    with pytest.raises(ValueError, match="disagrees"):
-        birth(tz="+05:00", zone="Asia/Kolkata")
+    b = birth(tz="+05:30", zone="Asia/Kolkata")
+    assert b.tz == 5.5 and not any("overrides" in f for f in b.tz_flags)
+    b = birth(date="1943-06-01", tz="+05:30", zone="Asia/Kolkata")        # birth record says +05:30, IANA says +06:30
+    assert b.tz == 5.5 and b.tz_source.startswith("manual UTC offset")
+    assert any("overrides IANA Asia/Kolkata (+06:30" in f for f in b.tz_flags)
+    ny = dict(lat=40.71, lon=-74.01, zone="America/New_York")
+    b = birth(date="2021-03-14", time="02:30", tz="-05:00", **ny)          # skipped time: the offset settles it, flagged
+    assert b.tz == -5.0 and any("cannot resolve" in f for f in b.tz_flags)
+    with pytest.raises(ValueError, match="unknown IANA time zone"):        # a misspelt zone is still refused
+        birth(tz="+05:30", zone="Asia/Kolkatta")
     with pytest.raises(ValueError, match="UTC offset at birth"):
         birth()
+
+
+def test_kathmandu_moved_from_0530_to_0545_in_1986():
+    """Phase 3 acceptance: Kathmandu 1980 / 1990 give +05:30 / +05:45."""
+    ktm = dict(time="12:00", lat=27.7, lon=85.32, zone="Asia/Kathmandu")
+    assert birth(date="1980-06-01", **ktm).tz == 5.5 and birth(date="1990-06-01", **ktm).tz == 5.75
+    c = S.calculate_chart(birth(date="1990-06-01", **ktm), full=False)
+    assert c["meta"]["utc_offset"] == "+05:45"
 
 
 def test_skipped_and_repeated_clock_times_are_refused_not_guessed():
