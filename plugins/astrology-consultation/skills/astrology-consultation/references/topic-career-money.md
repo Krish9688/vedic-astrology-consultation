@@ -1,5 +1,9 @@
 # Career, business, income and wealth
 
+Contents: [1. Split the question](#1-split-the-question) · [2. Capacities first](#2-capacities-first) · [3. Vocation (type of work)](#3-vocation-type-of-work) · [4. Rank, recognition and setbacks](#4-rank-recognition-and-setbacks) · [5. Income and wealth](#5-income-and-wealth) · [6. Timing career and money events](#6-timing-career-and-money-events)
+[7. Lal Kitab](#7-lal-kitab)
+[8. Alternatives and boundaries](#8-alternatives-and-boundaries)
+
 Load for questions about vocation, job change, promotion, business, income, savings, windfalls, debt or financial
 stress. Procedure from [synthesis-method.md](synthesis-method.md); timing from [timing.md](timing.md). No investment,
 trading or market-timing advice: astrology here describes themes, not returns.

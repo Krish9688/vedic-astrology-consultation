@@ -1,5 +1,7 @@
 # Parashari natal analysis: houses, lords, strength, yogas
 
+Contents: [1. Evidence roles (what each layer can and cannot do)](#1-evidence-roles-what-each-layer-can-and-cannot-do) · [2. Houses](#2-houses) · [3. Functional nature (lordship) — the most common source of error](#3-functional-nature-lordship--the-most-common-source-of-error) · [4. Strength and condition](#4-strength-and-condition) · [5. Aspects and associations](#5-aspects-and-associations) · [6. Yogas: define, verify, check bhanga, check delivery](#6-yogas-define-verify-check-bhanga-check-delivery) · [7. Nakshatras](#7-nakshatras) · [8. Optional Jaimini / argala lens (separately named module) — full module: jaimini.md](#8-optional-jaimini--argala-lens-separately-named-module--full-module-jaiminimd) · [9. What the classical texts say that this skill will not state as fact](#9-what-the-classical-texts-say-that-this-skill-will-not-state-as-fact)
+
 Parashari/Vedic branch only. Run `scripts/chart_facts.py` on supplied positions first; it derives houses,
 lordships, aspects, dignity, combustion, D9/D10, dispositor chains and the Phaladeepika XV tests without hand arithmetic.
 How to weigh everything below is in [synthesis-method.md](synthesis-method.md).
@@ -59,7 +61,9 @@ aspects its own house.
 - Yogakaraka (one planet owning a kendra and a kona): Saturn for Taurus/Libra, Mars for Cancer/Leo, Venus for
   Capricorn/Aquarius [LOL p315]. A kendra lord related to a kona lord by any of the five relationships
   (exchange, conjunction, mutual aspect, mutual kendra, mutual trine [PD XV.30]) forms raja yoga even if each also owns a
-  bad house [PD XX.45].
+  bad house [PD XX.45]. **Disputed:** BPHS 34.14–15 says a lord that also owns 6/8/12 gives no yoga by these relations
+  alone (the moolatrikona sign decides, per the translator); both positions stand, not page-checked — see
+  [yoga-definitions.md](yoga-definitions.md) (RAJA-KK) and `chart_facts.py`, which prints both.
 - Nodes give the results of the house they occupy, the planets they join, their dispositor and their star lord; the
   strongest influence dominates [LOL p357; HPA p72]. "Rahu acts like Saturn, Ketu like Mars" is used by Raman in
   delegation [HJH2 p124].
@@ -102,7 +106,7 @@ cases [HJH2 p46; PM2 p20].
 **Numerical strength.** Shadbala has six parts — sthana (positional: dignity, vargas), dig (directional), kala
 (temporal), chesta (motional), naisargika (natural) and drik (aspectual) [EXT BPHS 27; PD IV lists the sources].
 Use it to say *how able* a planet is to deliver, never *what* it delivers; engines implement it differently (see inputs.md — a >1 rupa spread is common), so a borderline pass/fail is never decisive; a high-Shadbala functional malefic
-delivers its lordship more fully. Ishta/kashta phala (from the same engine) separate helpful from harmful capacity.
+delivers its lordship more fully. Ishta/kashta phala (not computed by this engine; use only values the person supplies, with their source) separate helpful from harmful capacity.
 Shadbala minima for "strong" in rupas: Sun 6.5, Moon 6, Mars 5, Mercury 7, Jupiter 6.5,
 Venus 5.5, Saturn 5 [PD IV.22–24]. Read only supplied values with units; never invent them; a Shadbala total that
 includes dignity is not an extra vote. Ashtakavarga: house SAV > 30 good, 25–30 middling, < 25 weak, except 6/8/12
@@ -149,7 +153,7 @@ in nine out of ten) means the bare condition carries little weight. Then apply t
 - **Kemadruma** (no planets 2nd/12th from the Moon) is said to neutralise good yogas [HPA p59]; benefics in upachayas
   from lagna or Moon override it [BJ XIII.9].
 - **Neechabhanga** moderates debility; it does not guarantee effortless success. Verify the specific clause used.
-- **Kuja dosha** is disputed: LOL calls it non-authoritative, BPHS gives a narrower classical form (CR-N04); it is extremely common; cancels when both partners have it, when
+- **Kuja dosha** is disputed, and the conventions differ: BPHS 80.47–49 (Mars in 12/4/7/8 from the lagna only, benefic aspect or association cancels), the popular LOL form (1/2/4/7/8/12 from lagna, Moon and Venus; LOL calls it non-authoritative) and PD XI.3 (Mars in the 7th) — name the one used (CR-N04, CR-V16, [yoga-definitions.md](yoga-definitions.md)); it is extremely common; cancels when both partners have it, when
   Mars is own/exalted (disputed), with Moon–Mars, and fades after ~28–30 [LOL p329–331]. Never a verdict on a marriage.
 - **Kala Sarpa** is not classical, has no agreed effect and no known cancellation [LOL p331–333]; mention only if asked,
   as a disputed modern combination.

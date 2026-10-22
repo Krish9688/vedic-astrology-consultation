@@ -1,5 +1,7 @@
 # Relocation and foreign travel · education · health symbolism · spirituality · major changes · annual forecast
 
+Contents: [1. Relocation, foreign travel and residence](#1-relocation-foreign-travel-and-residence) · [2. Education and learning](#2-education-and-learning) · [3. Health (traditional symbolism only)](#3-health-traditional-symbolism-only) · [4. Spirituality](#4-spirituality) · [5. Major life changes](#5-major-life-changes) · [6. Annual forecast (a year ahead)](#6-annual-forecast-a-year-ahead)
+
 Procedure from [synthesis-method.md](synthesis-method.md); timing from [timing.md](timing.md).
 
 ## 1. Relocation, foreign travel and residence

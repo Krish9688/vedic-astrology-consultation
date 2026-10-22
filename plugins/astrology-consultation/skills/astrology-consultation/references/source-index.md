@@ -1,5 +1,7 @@
 # Source index, citation format and retrieval
 
+Contents: [1. Sources](#1-sources) · [2. Reliability notes](#2-reliability-notes) · [3. Citation format](#3-citation-format) · [4a. Knowledge graph (local, private)](#4a-knowledge-graph-local-private) · [4. Retrieving passages (local, private)](#4-retrieving-passages-local-private) · [5. Web sources inherited from v2.2](#5-web-sources-inherited-from-v22)
+
 The books in your own library (the folder set with `astro setup --knowledge-dir`) are the authoritative evidence.
 Page-cited source maps are development material and are not loaded at runtime.
 

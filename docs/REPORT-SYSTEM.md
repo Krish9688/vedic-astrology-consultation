@@ -28,7 +28,7 @@ HTML  ──► WeasyPrint ──► PDF          (without WeasyPrint the HTML p
 
 | Field | Content |
 |---|---|
-| `report_type` | one-page (≤300 words, exactly one printed page; no cover, timeline or appendix) · compact (2–4 pages) · career · relationship · marriage · dasha · 12-month · relocation · complete-life |
+| `report_type` | compact (consultation summary, 2–4 pages) · career · relationship · marriage · dasha · 12-month · relocation · complete-life |
 | `summary` | headline + at most seven key points, each with a confidence word, optional window and the section that argues it |
 | `sections[]` | `units[]` of the life-first unit (theme, meaning, manifestation, timing, nuance, counter, watch, confidence per event/timing/form, basis) or free `text` |
 | `timeline[]` | start, end, label, kind (chapter · window · pressure · watch), basis |

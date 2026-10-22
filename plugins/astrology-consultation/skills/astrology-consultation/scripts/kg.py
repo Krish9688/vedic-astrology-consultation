@@ -24,6 +24,23 @@ STOPWORDS = set("what which when where why does have that this with from into ab
                 "given give each other more most some than then also only".split())
 GRAPH = knowledge_file("ASTRO_KG", os.path.join("graphify-out", "graph.json"))
 TIER_ORDER = {"classical": 0, "traditional": 1, "modern": 2, "synthesis": 3, "experimental": 4}
+# claim_basis (P3-1, EVID-X1): what a claim rests on. COMPUTED (engine output) and TESTED (prediction-log results
+# only) never come from the graph. Keys are evidence_role prefixes; each role matches exactly one.
+ROLE_BASIS = {"direct rule": "TEXT", "doctrine only": "TEXT", "method principle": "COMMENTARY",
+              "illustration": "COMMENTARY", "context note": "COMMENTARY", "scope note": "COMMENTARY",
+              "dispute note": "DISPUTED", "supporting inference": "SPECULATIVE"}
+
+
+def claim_basis(a):
+    """claim_basis of a rule's attributes. Synthesis-tier text is the extractor's, not the author's: SPECULATIVE,
+    unless a named author made the inference (inferred_by)."""
+    role = a.get("evidence_role", "")
+    (basis,) = [b for k, b in ROLE_BASIS.items() if role.startswith(k)] or [None]
+    if basis is None:
+        raise ValueError(f"evidence_role {role!r} has no claim_basis")
+    if basis != "DISPUTED" and (a.get("tier") == "synthesis" or basis == "SPECULATIVE"):
+        return "COMMENTARY" if a.get("inferred_by") else "SPECULATIVE"
+    return basis
 
 
 def load():
@@ -168,7 +185,7 @@ def cmd_find(a, N, out, inc):
         at = attrs(n)
         d = disputes(rid, out, N)
         flag = " ⚠ do not forecast" if at.get("do_not_forecast") else ""
-        print(f"\n[{src}] {at.get('tier')} · {at.get('system')} · {at.get('evidence_role', '')} · {cite(n)}{flag}\n"
+        print(f"\n[{src}] {at.get('tier')} · {at.get('system')} · {at.get('evidence_role', '')} [{claim_basis(at)}] · {cite(n)}{flag}\n"
               f"  {at.get('text', '')[:a.width]}"
               + (f"\n  disputed in: {', '.join(d)}" if d else "")
               + (f"\n  also supported by: {', '.join(supports(rid, out, N))}" if supports(rid, out, N) else "")
@@ -226,7 +243,7 @@ def cmd_sources(a, N, out, inc):
             cited.update(at.get("pages", []))
             flag = " ⚠ do not forecast" if at.get("do_not_forecast") else ""
             role = at.get("evidence_role", "")
-            print(f"- [{src}] {at.get('tier')} · {role} · {cite(N[rid])}{flag}: {at.get('text', '')[:a.width]}")
+            print(f"- [{src}] {at.get('tier')} · {role} [{claim_basis(at)}] · {cite(N[rid])}{flag}: {at.get('text', '')[:a.width]}")
     found = find_contradictions(N, out, a.query, a.system)[:3]
     if found:
         print("\n## Recorded disputes (both sides kept)")

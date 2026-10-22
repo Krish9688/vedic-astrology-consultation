@@ -1,0 +1,1388 @@
+{
+ "provenance": {
+  "run_id": "pyjhora-4.8.7-2026-10-22",
+  "tool": "PyJHora",
+  "tool_version": "4.8.7",
+  "tool_license": "AGPL-3.0 (dev oracle only; never a golden, never imported)",
+  "tool_runtime": {
+   "pyswisseph": "2.10.3.2",
+   "swisseph": "2.10.03",
+   "python": "venv outside the repository",
+   "deviations": "timezonefinder 6.6.3 for 6.5.2 (no cp313 wheel; place lookup only, unused)"
+  },
+  "local_engine": "astro 3.6.3",
+  "date": "2026-10-22",
+  "harness": "tools/oracle_pyjhora.py",
+  "ephemeris": {
+   "local": "Swiss Ephemeris data files",
+   "tool": "Swiss Ephemeris data files"
+  },
+  "settings": {
+   "ayanamsa": "LAHIRI (PyJHora default TRUE_PUSHYA); mode read back: LAHIRI",
+   "dasha_year": "MEAN_SIDEREAL_YEAR = 365.256364 d (local 365.256363 d; PyJHora default TRUE_SIDEREAL_YEAR)",
+   "positions": "apparent, FLG_TRUEPOS off (PyJHora default on); flags 65794",
+   "nodes": "mean (PyJHora default true)",
+   "sunrise": "disc centre with refraction (PyJHora default without)",
+   "vargas": {
+    "D2": 2,
+    "D3": 1,
+    "D4": 1,
+    "D7": 1,
+    "D9": 1,
+    "D10": 1,
+    "D12": 1,
+    "D16": 1,
+    "D20": 1,
+    "D24": 1,
+    "D27": 1,
+    "D30": 1,
+    "D40": 1,
+    "D45": 1,
+    "D60": 1
+   },
+   "vimshottari_antardasha": "antardhasa_option 1 (from the MD lord, forward)",
+   "panchang": "elements at the birth moment; vara of the Hindu day (sunrise to sunrise)"
+  },
+  "charts": [
+   "normal",
+   "moon-sign-before",
+   "moon-sign-after",
+   "moon-nak-before",
+   "moon-nak-after",
+   "moon-pada-before",
+   "moon-pada-after",
+   "asc-sign-before",
+   "asc-sign-after",
+   "d9-lagna-before",
+   "d9-lagna-after",
+   "polar-day",
+   "polar-night",
+   "midnight-before",
+   "midnight-after",
+   "pre-sunrise",
+   "leap-2024",
+   "leap-2000",
+   "me-station-before",
+   "me-station-after",
+   "dasha-edge-before",
+   "dasha-edge-after",
+   "S1",
+   "S2",
+   "ayan-1900",
+   "ayan-1956",
+   "ayan-2000",
+   "ayan-2050",
+   "dst-gap-after",
+   "cal-1582",
+   "cal-1500",
+   "south-west"
+  ],
+  "chart_sources": {
+   "edge_suite": "tests/reference_charts/edge_suite.json",
+   "oracle extra": "EXTRA in tools/oracle_pyjhora.py"
+  },
+  "verdicts": {
+   "agree": 11115,
+   "explained": 12,
+   "unresolved": 0
+  }
+ },
+ "verdict_classes": {
+  "agree": [
+   "match",
+   "within tolerance"
+  ],
+  "explained": [
+   "methodology",
+   "configuration",
+   "implementation",
+   "not comparable"
+  ],
+  "unresolved": [
+   "unresolved"
+  ]
+ },
+ "tolerances": {
+  "position_arcmin": "compare.POS_TOL_ARCMIN (1′), ascendant compare.ASC_TOL_ARCMIN (3′)",
+  "dasha_days": "compare.DASHA_TOL_DAYS (3 days) on Vimshottari MD/AD and Yogini MD boundaries",
+  "ayanamsa_deg": 1e-06,
+  "sunrise_minutes": 1,
+  "panchang": "exact element numbers at the birth moment",
+  "varga": "exact sign"
+ },
+ "summary": {
+  "position": {
+   "match": 300
+  },
+  "varga": {
+   "match": 4800
+  },
+  "MD": {
+   "match": 518,
+   "within tolerance": 22
+  },
+  "AD": {
+   "match": 4800,
+   "within tolerance": 60
+  },
+  "ayanamsa": {
+   "match": 30
+  },
+  "retro": {
+   "match": 150
+  },
+  "yogini": {
+   "match": 240
+  },
+  "panchang": {
+   "match": 180
+  },
+  "chart": {
+   "not comparable": 2
+  },
+  "varga rule": {
+   "match": 15,
+   "methodology": 10
+  }
+ },
+ "varga_rules": [
+  {
+   "kind": "varga rule",
+   "key": "D2 method 2",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D2 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "6000/7200 grid points",
+   "verdict": "methodology",
+   "note": "PyJHora variant 'Parasara hora with parivritti and even reversal (PVR)'; local follows Parashari hora: odd signs 0–15° Leo, 15–30° Cancer; even signs reversed"
+  },
+  {
+   "kind": "varga rule",
+   "key": "D2 method 3",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "6600/7200 grid points",
+   "verdict": "methodology",
+   "note": "PyJHora variant 'Raman method'; local follows Parashari hora: odd signs 0–15° Leo, 15–30° Cancer; even signs reversed"
+  },
+  {
+   "kind": "varga rule",
+   "key": "D2 method 4",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "6600/7200 grid points",
+   "verdict": "methodology",
+   "note": "PyJHora variant 'Parivritti dwaya'; local follows Parashari hora: odd signs 0–15° Leo, 15–30° Cancer; even signs reversed"
+  },
+  {
+   "kind": "varga rule",
+   "key": "D2 method 6",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "6000/7200 grid points",
+   "verdict": "methodology",
+   "note": "PyJHora variant 'Somanatha'; local follows Parashari hora: odd signs 0–15° Leo, 15–30° Cancer; even signs reversed"
+  },
+  {
+   "kind": "varga rule",
+   "key": "D3 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D4 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D7 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D9 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D10 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D12 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D16 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D20 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D24 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D24 method 2",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "3000/7200 grid points",
+   "verdict": "methodology",
+   "note": "PyJHora variant 'Parasara with even-sign reversal'; local follows chaturvimshamsha: odd signs from Leo, even signs from Cancer, 1°15′ parts"
+  },
+  {
+   "kind": "varga rule",
+   "key": "D24 method 3",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "3600/7200 grid points",
+   "verdict": "methodology",
+   "note": "PyJHora variant 'even-sign double reversal (PyJHora function default)'; local follows chaturvimshamsha: odd signs from Leo, even signs from Cancer, 1°15′ parts"
+  },
+  {
+   "kind": "varga rule",
+   "key": "D27 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D30 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D30 method 2",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "6720/7200 grid points",
+   "verdict": "methodology",
+   "note": "PyJHora variant 'Parivritti cyclic'; local follows trimshamsha (Parashari): odd 5/5/8/7/5° → Ar/Aq/Sg/Ge/Li; even 5/7/8/5/5° → Ta/Vi/Pi/Cp/Sc"
+  },
+  {
+   "kind": "varga rule",
+   "key": "D30 method 3",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "6600/7200 grid points",
+   "verdict": "methodology",
+   "note": "PyJHora variant 'Shastyamsa-like'; local follows trimshamsha (Parashari): odd 5/5/8/7/5° → Ar/Aq/Sg/Ge/Li; even 5/7/8/5/5° → Ta/Vi/Pi/Cp/Sc"
+  },
+  {
+   "kind": "varga rule",
+   "key": "D30 method 4",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "6720/7200 grid points",
+   "verdict": "methodology",
+   "note": "PyJHora variant 'Parivritti even reverse'; local follows trimshamsha (Parashari): odd 5/5/8/7/5° → Ar/Aq/Sg/Ge/Li; even 5/7/8/5/5° → Ta/Vi/Pi/Cp/Sc"
+  },
+  {
+   "kind": "varga rule",
+   "key": "D30 method 5",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "6660/7200 grid points",
+   "verdict": "methodology",
+   "note": "PyJHora variant 'Somanatha'; local follows trimshamsha (Parashari): odd 5/5/8/7/5° → Ar/Aq/Sg/Ge/Li; even 5/7/8/5/5° → Ta/Vi/Pi/Cp/Sc"
+  },
+  {
+   "kind": "varga rule",
+   "key": "D40 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D45 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "kind": "varga rule",
+   "key": "D60 method 1",
+   "a": "engine.varga",
+   "b": "PyJHora",
+   "delta": "0/7200 grid points",
+   "verdict": "match",
+   "note": ""
+  }
+ ],
+ "charts": [
+  {
+   "id": "normal",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 162
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "moon-sign-before",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 160,
+     "within tolerance": 2
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "moon-sign-after",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "moon-nak-before",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "moon-nak-after",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 162
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "moon-pada-before",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "moon-pada-after",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 162
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "asc-sign-before",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "asc-sign-after",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 162
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "d9-lagna-before",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 162
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "d9-lagna-after",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 162
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "polar-day",
+   "source": "edge_suite",
+   "counts": {
+    "chart": {
+     "not comparable": 1
+    }
+   },
+   "differences": [
+    {
+     "kind": "chart",
+     "key": "all",
+     "a": "computed",
+     "b": "error",
+     "verdict": "not comparable",
+     "note": "PyJHora raised Error: swisseph.houses_ex: error; local engine flags: polar latitude (|lat| > 66.5°): Sripati bhavas degenerate and the ascendant is unstable"
+    }
+   ]
+  },
+  {
+   "id": "polar-night",
+   "source": "edge_suite",
+   "counts": {
+    "chart": {
+     "not comparable": 1
+    }
+   },
+   "differences": [
+    {
+     "kind": "chart",
+     "key": "all",
+     "a": "computed",
+     "b": "error",
+     "verdict": "not comparable",
+     "note": "PyJHora raised Error: swisseph.houses_ex: error; local engine flags: polar latitude (|lat| > 66.5°): Sripati bhavas degenerate and the ascendant is unstable"
+    }
+   ]
+  },
+  {
+   "id": "midnight-before",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 160,
+     "within tolerance": 2
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "midnight-after",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "pre-sunrise",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 157,
+     "within tolerance": 5
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "leap-2024",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 159,
+     "within tolerance": 3
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "leap-2000",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 158,
+     "within tolerance": 4
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "me-station-before",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 157,
+     "within tolerance": 5
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "me-station-after",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 16,
+     "within tolerance": 2
+    },
+    "AD": {
+     "match": 154,
+     "within tolerance": 8
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "dasha-edge-before",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 159,
+     "within tolerance": 3
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "dasha-edge-after",
+   "source": "edge_suite",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "S1",
+   "source": "oracle extra",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 159,
+     "within tolerance": 3
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "S2",
+   "source": "oracle extra",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "ayan-1900",
+   "source": "oracle extra",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 15,
+     "within tolerance": 3
+    },
+    "AD": {
+     "match": 157,
+     "within tolerance": 5
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "ayan-1956",
+   "source": "oracle extra",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 160,
+     "within tolerance": 2
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "ayan-2000",
+   "source": "oracle extra",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "ayan-2050",
+   "source": "oracle extra",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 18
+    },
+    "AD": {
+     "match": 160,
+     "within tolerance": 2
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "dst-gap-after",
+   "source": "oracle extra",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "cal-1582",
+   "source": "oracle extra",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "cal-1500",
+   "source": "oracle extra",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 157,
+     "within tolerance": 5
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  },
+  {
+   "id": "south-west",
+   "source": "oracle extra",
+   "counts": {
+    "position": {
+     "match": 10
+    },
+    "varga": {
+     "match": 160
+    },
+    "MD": {
+     "match": 17,
+     "within tolerance": 1
+    },
+    "AD": {
+     "match": 161,
+     "within tolerance": 1
+    },
+    "ayanamsa": {
+     "match": 1
+    },
+    "retro": {
+     "match": 5
+    },
+    "yogini": {
+     "match": 8
+    },
+    "panchang": {
+     "match": 6
+    }
+   },
+   "differences": []
+  }
+ ]
+}

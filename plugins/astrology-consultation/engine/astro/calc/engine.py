@@ -304,6 +304,7 @@ def sensitivity(ut, lat, lon, moon_lon, window_min=180):
     base = asc_at(0)
     factors = {"ascendant sign (D1)": lambda L: int(L // 30), "D9 lagna": lambda L: varga(L, 9),
                "D10 lagna": lambda L: varga(L, 10), "D12 lagna": lambda L: varga(L, 12)}
+    factors |= {f"D{n} lagna (topic varga)": (lambda L, n=n: varga(L, n)) for n in (2, 3, 4, 7, 24)}   # P3-2
     out = {}
     for name, f in factors.items():
         b = f(base)

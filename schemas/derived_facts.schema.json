@@ -1,0 +1,55 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "DerivedFacts",
+ "description": "Output of skill scripts/chart_facts.py --json (facts_json) and consultation_context.derived_fact_ids. Parashari only. Id grammar: F.<group>.<field>, e.g. F.H7.lord, F.Sa.combust, F.yoga.GK-BPHS36.holds. Values are scalars or lists of scalars; null means the needed data was not supplied or the fact does not apply. Version the scheme in 'schema'.",
+ "type": "object",
+ "required": [
+  "schema",
+  "conventions",
+  "facts"
+ ],
+ "additionalProperties": false,
+ "properties": {
+  "schema": {
+   "const": "derived_facts/1"
+  },
+  "conventions": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "string"
+   }
+  },
+  "facts": {
+   "type": "object",
+   "propertyNames": {
+    "pattern": "^F\\.[A-Za-z0-9_]+(\\.[A-Za-z0-9_\\-]+)*$"
+   },
+   "additionalProperties": {
+    "$ref": "#/$defs/Value"
+   }
+  }
+ },
+ "$defs": {
+  "Scalar": {
+   "type": [
+    "string",
+    "number",
+    "boolean",
+    "null"
+   ]
+  },
+  "Value": {
+   "anyOf": [
+    {
+     "$ref": "#/$defs/Scalar"
+    },
+    {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/Scalar"
+     }
+    }
+   ]
+  }
+ }
+}

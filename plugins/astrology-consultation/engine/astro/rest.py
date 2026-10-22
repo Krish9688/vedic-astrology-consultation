@@ -135,6 +135,11 @@ def yogini(r: ChartRequest):
     return _wrap(lambda: S.yogini_dasha(r.birth, r.options))
 
 
+@app.post("/api/v1/applicability")
+def applicability(r: ChartRequest):
+    return _wrap(lambda: S.dasha_applicability(r.birth, r.options))
+
+
 @app.post("/api/v1/dasha")
 def dasha(r: ChartRequest):
     return _wrap(lambda: S.dasha(r.birth, r.options))

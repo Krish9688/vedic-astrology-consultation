@@ -162,8 +162,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(prog="astro", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
                                  epilog=S.SOURCE_NOTICE + f" Source: {S.SOURCE_URL}. Uses {S.THIRD_PARTY}.")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("chart", "positions", "dasha", "yogini", "gochara", "outlook", "tajika", "transits", "strength",
-                 "jaimini", "sensitivity", "varga"):
+    for name in ("chart", "positions", "dasha", "yogini", "applicability", "gochara", "outlook", "tajika", "transits",
+                 "strength", "jaimini", "sensitivity", "varga"):
         p = sub.add_parser(name)
         p.add_argument("input")
         p.add_argument("--on", type=dt.date.fromisoformat)
@@ -176,7 +176,7 @@ def main(argv=None):
             p.add_argument("--life-year", type=int, help="year of life N (default: the year running on --on)")
         if name == "chart":
             p.add_argument("--out")
-        if name == "sensitivity":
+        if name in ("sensitivity", "applicability"):
             p.add_argument("--span", type=int, default=15, help="minutes either side (15..720)")
         if name == "varga":
             p.add_argument("--d", type=int, required=True)
@@ -298,7 +298,8 @@ def main(argv=None):
             return print(engine.render_md(c))
         return _print(c)
     fn = {"positions": lambda: S.planet_positions(b), "dasha": lambda: S.dasha(b, o),
-          "yogini": lambda: S.yogini_dasha(b, o), "gochara": lambda: S.gochara(b, o),
+          "yogini": lambda: S.yogini_dasha(b, o), "applicability": lambda: S.dasha_applicability(b, o, a.span),
+          "gochara": lambda: S.gochara(b, o),
           "outlook": lambda: S.outlook(b, getattr(a, "period", "month") or "month", a.on, o),
           "tajika": lambda: S.tajika(b, a.life_year, o),
           "transits": lambda: S.transits(b, o), "strength": lambda: {"shadbala": S.shadbala(b),

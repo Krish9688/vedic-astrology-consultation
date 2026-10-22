@@ -1,5 +1,7 @@
 # Professional reports (mode C), working record and continuity
 
+Contents: [1. Principles](#1-principles) · [2. Report types](#2-report-types) · [3. Producing a report](#3-producing-a-report) · [4. Consistency](#4-consistency) · [Lightweight per-report working record](#lightweight-per-report-working-record) · [Revision and outcome handling](#revision-and-outcome-handling) · [Final consistency and recovery](#final-consistency-and-recovery) · [When this reference helps](#when-this-reference-helps) · [The explanation unit](#the-explanation-unit) · [Past: explain the period without manufacturing a memory](#past-explain-the-period-without-manufacturing-a-memory) · [Present: give the current phase its own explanation](#present-give-the-current-phase-its-own-explanation) · [Future: develop the existing thread conditionally](#future-develop-the-existing-thread-conditionally) · [Join the periods without forcing a story](#join-the-periods-without-forcing-a-story) · [Final delivery check](#final-delivery-check)
+
 A report is a consultation written down for someone who will reread it: the same judgement as mode A, organised so
 the answer is found in the first page and the evidence last. The structure below comes from research into how
 practitioners and report producers work — what to copy and what to avoid is in
@@ -66,7 +68,10 @@ technical appendix.
    only; birth data only if the person wants it printed. Tag each unit with `system` (parashari, jaimini,
    lal_kitab, combined) and `claim_type` (fact, rule, interpretation, prediction, speculation) — the report prints them
    as a small label under the heading — and add `rule_refs`, so a calculated fact is never presented with the weight of
-   a prediction and every rule can be traced.
+   a prediction and every rule can be traced. Optionally add `claim_basis`, what the unit rests on: TEXT (a source's
+   statement), COMMENTARY (an author's explanation or worked case), DISPUTED, COMPUTED (engine output; every `fact`),
+   TESTED (only with a prediction-log `test_result`) or SPECULATIVE; `kg.py` prints the basis of every rule. A unit
+   about the past takes `temporal_mode: past` and `history_status`; without it the report prints "not confirmed".
 3. Check and render: `python3 scripts/render_report.py report.json --out <dir>` validates the model, checks that the
    summary's windows are argued in the body, that units carry a counter-factor and a sign to watch, and runs the
    life-first lint; then it writes HTML and, when WeasyPrint is installed, a PDF (cream and green, visuals.md). Without

@@ -1,5 +1,7 @@
 # Question trees: which techniques a question actually needs
 
+Contents: [1. Relationship (romance, dating, a serious relationship)](#1-relationship-romance-dating-a-serious-relationship) · [2. Marriage (promise, timing, relationship vs marriage)](#2-marriage-promise-timing-relationship-vs-marriage) · [3. How will I meet them / who initiates (description of form)](#3-how-will-i-meet-them--who-initiates-description-of-form) · [4. Future spouse: nature and appearance](#4-future-spouse-nature-and-appearance) · [5. Career (change, direction, promotion, job vs business)](#5-career-change-direction-promotion-job-vs-business) · [6. Money](#6-money) · [7. Travel, study abroad and relocation](#7-travel-study-abroad-and-relocation) · [8. Open activation: "what is active now", "next 30 days", "the theme of my period", "what am I overlooking"](#8-open-activation-what-is-active-now-next-30-days-the-theme-of-my-period-what-am-i-overlooking) · [9. Explaining a past period ("why was X hard?")](#9-explaining-a-past-period-why-was-x-hard) · [10. Children, property, education, health symbolism](#10-children-property-education-health-symbolism)
+
 Each tree is the **order of judgement** for one family of questions, with a stop rule at each step. Walk only the
 branches the question needs; the rules themselves live in the topic files, [timing.md](timing.md) and
 [vargas.md](vargas.md). The reasoning discipline (roles, promise classes, scenarios, confidence) is

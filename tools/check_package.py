@@ -5,7 +5,8 @@ usage: python3 tools/check_package.py <skill folder | package.skill> [--notes RE
 Checks the Agent Skills frontmatter rules used by Anthropic's skill-creator quick_validate (kebab-case name ≤ 64,
 description ≤ 1024 without angle brackets, allowed keys), that every file SKILL.md links to exists, that no
 personal/benchmark folders are inside, and the privacy check on every text file. With --notes: the release notes must
-not claim that no book-derived data ships when the package carries the Lal Kitab knowledge base (data/lal-kitab/).
+not claim that no book-derived data ships when the package carries the Lal Kitab knowledge base (data/lal-kitab/),
+and a 'matched <tool>' claim must cite 'provenance: <run_id>' of a tests/fixtures/oracle/ run record of that tool.
 """
 import os
 import re
@@ -24,11 +25,58 @@ NO_BOOK_CLAIM = re.compile(
     + r"|\bcontains no book[- ]derived|\bno book[- ]derived (?:data|text|content|material)", re.I)
 
 
-def notes_errors(folder, notes_text):
-    """Release notes must not deny shipping book-derived material that the package contains."""
+def notes_errors(folder, notes_text, provenance_dir=None):
+    """Release notes must not deny shipping book-derived material that the package contains, and may not claim to
+    match another tool without citing a provenance record of that tool's run."""
     has_kb = os.path.isdir(os.path.join(folder, "data", "lal-kitab"))
     m = NO_BOOK_CLAIM.search(notes_text)
-    return [f"release notes claim {m.group(0)!r} but the package ships data/lal-kitab/ (book-derived)"] if has_kb and m else []
+    errs = [f"release notes claim {m.group(0)!r} but the package ships data/lal-kitab/ (book-derived)"] if has_kb and m else []
+    return errs + match_claim_errors(notes_text, provenance_dir)
+
+
+# 'matched <tool>' needs a provenance record (P6-1; blind round 7 found a 'matched JHora' claim for a chart JHora never
+# ran on). The line must cite `provenance: <run_id>` of a record for that same tool with 0 unresolved rows.
+PROVENANCE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tests", "fixtures", "oracle")
+PROVENANCE_FIELDS = {"run_id": str, "tool": str, "tool_version": str, "local_engine": str, "date": str, "harness": str,
+                     "ephemeris": dict, "settings": dict, "charts": list, "verdicts": dict}
+_TOOLS = r"PyJHora|JHora|Jagannatha\s+Hora|VedAstro|Parashara'?s\s+Light|Kala|Maitreya|JPL\s+Horizons|Horizons"
+MATCH_CLAIM = re.compile(r"(?<![\"'‘“])\b(?:matched|matches|match(?:es|ed)?\s+with|agree[sd]?\s+with|"
+                         r"in\s+agreement\s+with|identical\s+to|verified\s+against)\s+(?:the\s+)?(" + _TOOLS + r")\b", re.I)
+CITE = re.compile(r"provenance:\s*([\w.-]+)")
+
+
+def provenance_errors(rec):
+    """Shape of one provenance record (the 'provenance' object of a tests/fixtures/oracle/*.json run file)."""
+    errs = [f"provenance field {k!r} missing or not {t.__name__}" for k, t in PROVENANCE_FIELDS.items()
+            if not isinstance(rec.get(k), t)]
+    v = rec.get("verdicts") if isinstance(rec.get("verdicts"), dict) else {}
+    errs += [f"verdicts.{k} missing" for k in ("agree", "explained", "unresolved") if not isinstance(v.get(k), int)]
+    return errs
+
+
+def provenance_records(provenance_dir=None):
+    import json
+    d, out = provenance_dir or PROVENANCE_DIR, {}
+    for f in sorted(os.listdir(d)) if os.path.isdir(d) else []:
+        if f.endswith(".json"):
+            rec = json.load(open(os.path.join(d, f), encoding="utf-8")).get("provenance")
+            if isinstance(rec, dict) and not provenance_errors(rec):
+                out[rec["run_id"]] = rec
+    return out
+
+
+def match_claim_errors(notes_text, provenance_dir=None):
+    recs, errs = None, []
+    norm = lambda s: re.sub(r"\s+", " ", s).lower()
+    for line in notes_text.splitlines():
+        for m in MATCH_CLAIM.finditer(line):
+            recs = provenance_records(provenance_dir) if recs is None else recs
+            cited = [recs.get(c) for c in CITE.findall(line)]
+            ok = [r for r in cited if r and norm(r["tool"]) == norm(m.group(1)) and r["verdicts"]["unresolved"] == 0]
+            if not ok:
+                errs.append(f"release notes claim {m.group(0)!r} without citing a provenance record of a {m.group(1)} "
+                            f"run with 0 unresolved rows (add 'provenance: <run_id>' from tests/fixtures/oracle/)")
+    return errs
 
 
 def frontmatter(text):

@@ -1,4 +1,4 @@
-# Parashari D1 (whole-sign)  ascendant Taurus 26.6477°
+# Parashari D1 (whole-sign)  ascendant Taurus 26.6477°  [COMPUTED: calculated chart facts, not interpretation]
 Moon phase: waxing, 120° from Sun. Natural malefics here: Ke, Ma, Me, Ra, Sa, Su. Node aspects omitted (school-dependent).
 - Sun: Pisces 0.3149° H11; no sign dignity; friend's sign; dispositor Jupiter (H4); owns H4; with Me; aspected by Sa; D9 Cancer, D10 Scorpio
 - Moon: Cancer 0.4074° H3; own sign; dispositor Moon (H3); owns H3; aspected by Ma,Sa; D9 Cancer VARGOTTAMA, D10 Pisces
@@ -23,6 +23,47 @@ Moon phase: waxing, 120° from Sun. Natural malefics here: Ke, Ma, Me, Ra, Sa, S
 - H10 Aquarius: occ Ve | asp Ju | lord Saturn in H9 | HEMMED by malefics; malefics 4/8/12 from it: Ma,Sa; malefics 5/9 from it: Ke
 - H11 Pisces: occ Su,Me | asp Sa | lord Jupiter in H4 | malefics 4/8/12 from it: Ke
 - H12 Aries: occ — | asp Ma,Ju | lord Mars in H9 | malefics 4/8/12 from it: Su,Me; malefics 5/9 from it: Ra; lord occupies/aspects own house
+
+# Dignity detail (computed): moolatrikona | compound relation to the dispositor | D9 dignity
+- Sun: towards dispositor Jupiter: neutral; D9 Cancer
+- Moon: D9 Cancer own sign
+- Mars: towards dispositor Saturn: enemy; D9 Leo
+- Mercury: towards dispositor Jupiter: enemy; D9 Sagittarius
+- Jupiter: towards dispositor Sun: neutral; D9 Leo
+- Venus: towards dispositor Saturn: great friend; D9 Sagittarius
+- Saturn: D9 Cancer
+Moon as malefic, two conventions (B-20 open): waning = malefic (LOL p280): no; within 72° of the Sun: no. The tests above use the first.
+
+# From the Moon (Chandra lagna Cancer): occupants | lord placement, counted from the Moon
+- M1 Cancer: occ Mo | lord Moon in M1
+- M2 Leo: occ Ju | lord Sun in M9
+- M3 Virgo: occ — | lord Mercury in M9
+- M4 Libra: occ — | lord Venus in M8
+- M5 Scorpio: occ — | lord Mars in M7
+- M6 Sagittarius: occ Ra | lord Jupiter in M2
+- M7 Capricorn: occ Ma,Sa | lord Saturn in M7
+- M8 Aquarius: occ Ve | lord Saturn in M7
+- M9 Pisces: occ Su,Me | lord Jupiter in M2
+- M10 Aries: occ — | lord Mars in M7
+- M11 Taurus: occ — | lord Venus in M8
+- M12 Gemini: occ Ke | lord Mercury in M9
+
+# Candidate yogas and Kuja conventions (computed; named definitions, candidates only - not results)
+Each line: definition id | holds? | details | source | how often the condition holds in random charts.
+- [GK-BPHS36] Gajakesari, strict: Jupiter in a kendra from the lagna or the Moon, joined or aspected by a benefic, not debilitated, combust or in an enemy's sign: HOLDS. kendra from lagna yes, from Moon no; benefic contact Ve; debilitated no; enemy's sign no; combust no. Source: BPHS 36.3-4, source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked. Base rate 9%.
+- [KESARI-LOOSE] Kesari (loose 'Gajakesari'): Jupiter in a kendra from the Moon: does not hold. Jupiter M2. Source: Phaladeepika VI.14 per the BPHS translator (only 'Kesari'); called Gajakesari by CRUX p28-30 and HJH1 p118 - source map BPHS_part3.md, not page-checked. Base rate 34%.
+- [KEM-BARE] Kemadruma (Varahamihira): no planet other than the Sun (nodes not counted) in the 2nd or 12th from the Moon: does not hold. 2nd/12th from the Moon: Ju. Source: Brihat Jataka XIII (p175-178), source map BJ.md, not page-checked; Varahamihira rejects the other schools' versions. Base rate 45%.
+- [KEM-BPHS] Kemadruma (BPHS 37.11-13): besides the 2nd/12th, no planet but the Sun with the Moon or in a kendra from the lagna - the Moon itself in a kendra counts (LOL p322; Garga/Parasara via BJ): does not hold. 2nd/12th occupied. Source: BPHS p398 (ch. 37 sl. 11-13), source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked. Base rate 3%.
+- [PMP-Ma-BPHS] Ruchaka (Pancha Mahapurusha): Mars own/exalted in a kendra from the lagna: does not hold. Mars H9; BPHS gives no cancellation in this chapter. Source: BPHS ch. 75, source map BPHS_part6.md §5.1, not page-checked. Base rate 34%.
+- [PMP-Ma-LOL] Ruchaka, LOL variant: kendra or kona from the lagna: HOLDS. Mars H9. Source: Phaladeepika VI.2-4 as given in LOL p311 (kendra or kona; BPHS ch. 75: kendra only), source map LOL.md, not page-checked. Base rate 48%.
+- [PMP-Sa-BPHS] Sasa (Pancha Mahapurusha): Saturn own/exalted in a kendra from the lagna: does not hold. Saturn H9; BPHS gives no cancellation in this chapter. Source: BPHS ch. 75, source map BPHS_part6.md §5.1, not page-checked. Base rate 34%.
+- [PMP-Sa-LOL] Sasa, LOL variant: kendra or kona from the lagna: HOLDS. Saturn H9. Source: Phaladeepika VI.2-4 as given in LOL p311 (kendra or kona; BPHS ch. 75: kendra only), source map LOL.md, not page-checked. Base rate 48%.
+- [RAJA-KK-MaSa] kendra-kona lord relation Mars-Saturn (BPHS 34.11-12): HOLDS. joined in a kendra/kona; Mars owns H7,12, Saturn owns H9,10; DISPUTED - Mars also owns H12 (its moolatrikona: the evil lordship prevails): BPHS 34.14-15 gives no yoga by relation alone, PD XX.45 gives yoga even so. Source: BPHS p356-358 (ch. 34 sl. 11-15), source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked; PD XX.45 (p245) source map PD_part1.md, not page-checked. Base rate 68%.
+- [RAJA-KKP-Ma] angular lord Mars placed in a trine (BPHS 34.11-12): HOLDS. Mars owns H7,12, in H9; DISPUTED - Mars also owns H12 (its moolatrikona: the evil lordship prevails): BPHS 34.14-15 gives no yoga by relation alone, PD XX.45 gives yoga even so. Source: BPHS p356-358 (ch. 34 sl. 11-15), source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked; PD XX.45 (p245) source map PD_part1.md, not page-checked. Base rate 61%.
+- [KUJA-BPHS80] BPHS 80.47-49: Mars 12/4/7/8 from the lagna; a benefic aspect or association cancels: does not hold. Mars H9; the 'partner has the same yoga' clause needs both charts. Source: source map BPHS_part6.md (BPHS p955), not page-checked. Base rate 15%.
+- [KUJA-POPULAR] popular rule (LOL: 'not in any authoritative text'): Mars 1/2/4/7/8/12 from lagna, Moon or Venus: HOLDS. Mars from lagna 9, Moon 7, Venus 12; meets it from Moon, Venus; LOL exception: Mars own/exalted modifies or cancels it (experts disagree); the partner and age (about 28-30) exceptions need more than this chart. Source: LOL p329-331, source map LOL.md, not page-checked. Base rate 88%.
+- [KUJA-PD11.3] Phaladeepika XI.3: Mars in the 7th, or the 7th sign and its navamsa both Mars's: does not hold. Mars H9; 7th sign Scorpio, descendant navamsa Aquarius. Source: PD p141-142 (XI.3), source map PD_part1.md, not page-checked. Base rate 10%.
+Kuja lines are convention membership for comparison only, never a marriage verdict (CR-V16); several conventions fire in most charts.
 
 Dispositor chains: Su→Ju→Su; Mo→Mo; Ma→Sa→Sa; Me→Ju→Su→Ju; Ju→Su→Ju; Ve→Sa→Sa; Sa→Sa; Ra→Ju→Su→Ju; Ke→Me→Ju→Su→Ju. Final dispositor(s) in own sign: Mo, Sa
 

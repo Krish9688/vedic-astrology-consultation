@@ -1,0 +1,802 @@
+{
+ "S1": {
+  "bodies": {
+   "Asc": {
+    "D10": "Virgo",
+    "D9": "Leo",
+    "deg": 26.65,
+    "nakshatra": "Mrigashira",
+    "pada": 1,
+    "retro": false,
+    "sign": "Taurus"
+   },
+   "Ju": {
+    "D10": "Sagittarius",
+    "D9": "Leo",
+    "deg": 14.09,
+    "nakshatra": "PurvaPhalguni",
+    "pada": 1,
+    "retro": true,
+    "sign": "Leo"
+   },
+   "Ke": {
+    "D10": "Libra",
+    "D9": "Capricorn",
+    "deg": 12.17,
+    "nakshatra": "Ardra",
+    "pada": 2,
+    "retro": true,
+    "sign": "Gemini"
+   },
+   "Ma": {
+    "D10": "Taurus",
+    "D9": "Leo",
+    "deg": 25.65,
+    "nakshatra": "Dhanishtha",
+    "pada": 1,
+    "retro": false,
+    "sign": "Capricorn"
+   },
+   "Me": {
+    "D10": "Aries",
+    "D9": "Sagittarius",
+    "deg": 17.07,
+    "nakshatra": "Revati",
+    "pada": 1,
+    "retro": false,
+    "sign": "Pisces"
+   },
+   "Mo": {
+    "D10": "Pisces",
+    "D9": "Cancer",
+    "deg": 0.41,
+    "nakshatra": "Punarvasu",
+    "pada": 4,
+    "retro": false,
+    "sign": "Cancer"
+   },
+   "Ra": {
+    "D10": "Aries",
+    "D9": "Cancer",
+    "deg": 12.17,
+    "nakshatra": "Mula",
+    "pada": 4,
+    "retro": true,
+    "sign": "Sagittarius"
+   },
+   "Sa": {
+    "D10": "Pisces",
+    "D9": "Cancer",
+    "deg": 20.53,
+    "nakshatra": "Shravana",
+    "pada": 4,
+    "retro": false,
+    "sign": "Capricorn"
+   },
+   "Su": {
+    "D10": "Scorpio",
+    "D9": "Cancer",
+    "deg": 0.31,
+    "nakshatra": "PurvaBhadrapada",
+    "pada": 4,
+    "retro": false,
+    "sign": "Pisces"
+   },
+   "Ve": {
+    "D10": "Aries",
+    "D9": "Sagittarius",
+    "deg": 6.75,
+    "nakshatra": "Shatabhisha",
+    "pada": 1,
+    "retro": false,
+    "sign": "Aquarius"
+   }
+  },
+  "ingresses": [
+   [
+    "Ju",
+    "2026-06",
+    "Cancer"
+   ],
+   [
+    "Ju",
+    "2026-10",
+    "Leo"
+   ],
+   [
+    "Ra",
+    "2026-12",
+    "Capricorn"
+   ],
+   [
+    "Ju",
+    "2027-01",
+    "Cancer"
+   ],
+   [
+    "Sa",
+    "2027-06",
+    "Aries"
+   ],
+   [
+    "Ju",
+    "2027-06",
+    "Leo"
+   ],
+   [
+    "Sa",
+    "2027-10",
+    "Pisces"
+   ],
+   [
+    "Ju",
+    "2027-11",
+    "Virgo"
+   ],
+   [
+    "Sa",
+    "2028-02",
+    "Aries"
+   ],
+   [
+    "Ju",
+    "2028-02",
+    "Leo"
+   ],
+   [
+    "Ra",
+    "2028-06",
+    "Sagittarius"
+   ],
+   [
+    "Ju",
+    "2028-07",
+    "Virgo"
+   ],
+   [
+    "Ju",
+    "2028-12",
+    "Libra"
+   ],
+   [
+    "Ju",
+    "2029-03",
+    "Virgo"
+   ],
+   [
+    "Sa",
+    "2029-08",
+    "Taurus"
+   ],
+   [
+    "Ju",
+    "2029-08",
+    "Libra"
+   ],
+   [
+    "Sa",
+    "2029-10",
+    "Aries"
+   ],
+   [
+    "Ra",
+    "2030-01",
+    "Scorpio"
+   ],
+   [
+    "Ju",
+    "2030-01",
+    "Scorpio"
+   ],
+   [
+    "Sa",
+    "2030-04",
+    "Taurus"
+   ],
+   [
+    "Ju",
+    "2030-05",
+    "Libra"
+   ],
+   [
+    "Ju",
+    "2030-09",
+    "Scorpio"
+   ]
+  ],
+  "mc": 290.9,
+  "meta": {
+   "dasha_year_days": 365.256363,
+   "flags": [],
+   "lat": 51.5,
+   "lon": -0.12,
+   "nodes": "mean",
+   "transit_date": "2026-01-01",
+   "utc_offset": "+00:00"
+  },
+  "transits": {
+   "Ju": {
+    "house": 2,
+    "sign": "Gemini"
+   },
+   "Ke": {
+    "house": 4,
+    "sign": "Leo"
+   },
+   "Ma": {
+    "house": 8,
+    "sign": "Sagittarius"
+   },
+   "Me": {
+    "house": 8,
+    "sign": "Sagittarius"
+   },
+   "Mo": {
+    "house": 1,
+    "sign": "Taurus"
+   },
+   "Ra": {
+    "house": 10,
+    "sign": "Aquarius"
+   },
+   "Sa": {
+    "house": 11,
+    "sign": "Pisces"
+   },
+   "Su": {
+    "house": 8,
+    "sign": "Sagittarius"
+   },
+   "Ve": {
+    "house": 8,
+    "sign": "Sagittarius"
+   }
+  },
+  "vimshottari": [
+   {
+    "end": "1995-09",
+    "lord": "Ju",
+    "start": "1979-09",
+    "sub": [
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra"
+    ]
+   },
+   {
+    "end": "2014-09",
+    "lord": "Sa",
+    "start": "1995-09",
+    "sub": [
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju"
+    ]
+   },
+   {
+    "end": "2031-09",
+    "lord": "Me",
+    "start": "2014-09",
+    "sub": [
+     "Me",
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa"
+    ]
+   },
+   {
+    "end": "2038-09",
+    "lord": "Ke",
+    "start": "2031-09",
+    "sub": [
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me"
+    ]
+   },
+   {
+    "end": "2058-09",
+    "lord": "Ve",
+    "start": "2038-09",
+    "sub": [
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke"
+    ]
+   },
+   {
+    "end": "2064-09",
+    "lord": "Su",
+    "start": "2058-09",
+    "sub": [
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve"
+    ]
+   },
+   {
+    "end": "2074-09",
+    "lord": "Mo",
+    "start": "2064-09",
+    "sub": [
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve",
+     "Su"
+    ]
+   },
+   {
+    "end": "2081-09",
+    "lord": "Ma",
+    "start": "2074-09",
+    "sub": [
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo"
+    ]
+   },
+   {
+    "end": "2099-09",
+    "lord": "Ra",
+    "start": "2081-09",
+    "sub": [
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma"
+    ]
+   }
+  ]
+ },
+ "S2": {
+  "bodies": {
+   "Asc": {
+    "D10": "Pisces",
+    "D9": "Pisces",
+    "deg": 8.17,
+    "nakshatra": "Krittika",
+    "pada": 4,
+    "retro": false,
+    "sign": "Taurus"
+   },
+   "Ju": {
+    "D10": "Scorpio",
+    "D9": "Aquarius",
+    "deg": 16.11,
+    "nakshatra": "Ardra",
+    "pada": 3,
+    "retro": false,
+    "sign": "Gemini"
+   },
+   "Ke": {
+    "D10": "Leo",
+    "D9": "Sagittarius",
+    "deg": 17.53,
+    "nakshatra": "Ashlesha",
+    "pada": 1,
+    "retro": true,
+    "sign": "Cancer"
+   },
+   "Ma": {
+    "D10": "Libra",
+    "D9": "Taurus",
+    "deg": 25.75,
+    "nakshatra": "PurvaBhadrapada",
+    "pada": 2,
+    "retro": false,
+    "sign": "Aquarius"
+   },
+   "Me": {
+    "D10": "Leo",
+    "D9": "Leo",
+    "deg": 14.19,
+    "nakshatra": "Bharani",
+    "pada": 1,
+    "retro": true,
+    "sign": "Aries"
+   },
+   "Mo": {
+    "D10": "Aries",
+    "D9": "Cancer",
+    "deg": 22.8,
+    "nakshatra": "Shravana",
+    "pada": 4,
+    "retro": false,
+    "sign": "Capricorn"
+   },
+   "Ra": {
+    "D10": "Aquarius",
+    "D9": "Gemini",
+    "deg": 17.53,
+    "nakshatra": "Shravana",
+    "pada": 3,
+    "retro": true,
+    "sign": "Capricorn"
+   },
+   "Sa": {
+    "D10": "Virgo",
+    "D9": "Capricorn",
+    "deg": 1.5,
+    "nakshatra": "UttaraAshadha",
+    "pada": 2,
+    "retro": true,
+    "sign": "Capricorn"
+   },
+   "Su": {
+    "D10": "Capricorn",
+    "D9": "Capricorn",
+    "deg": 2.16,
+    "nakshatra": "Krittika",
+    "pada": 2,
+    "retro": false,
+    "sign": "Taurus"
+   },
+   "Ve": {
+    "D10": "Taurus",
+    "D9": "Capricorn",
+    "deg": 20.85,
+    "nakshatra": "Revati",
+    "pada": 2,
+    "retro": false,
+    "sign": "Pisces"
+   }
+  },
+  "ingresses": [
+   [
+    "Ju",
+    "2026-06",
+    "Cancer"
+   ],
+   [
+    "Ju",
+    "2026-10",
+    "Leo"
+   ],
+   [
+    "Ra",
+    "2026-12",
+    "Capricorn"
+   ],
+   [
+    "Ju",
+    "2027-01",
+    "Cancer"
+   ],
+   [
+    "Sa",
+    "2027-06",
+    "Aries"
+   ],
+   [
+    "Ju",
+    "2027-06",
+    "Leo"
+   ],
+   [
+    "Sa",
+    "2027-10",
+    "Pisces"
+   ],
+   [
+    "Ju",
+    "2027-11",
+    "Virgo"
+   ],
+   [
+    "Sa",
+    "2028-02",
+    "Aries"
+   ],
+   [
+    "Ju",
+    "2028-02",
+    "Leo"
+   ],
+   [
+    "Ra",
+    "2028-06",
+    "Sagittarius"
+   ],
+   [
+    "Ju",
+    "2028-07",
+    "Virgo"
+   ],
+   [
+    "Ju",
+    "2028-12",
+    "Libra"
+   ],
+   [
+    "Ju",
+    "2029-03",
+    "Virgo"
+   ],
+   [
+    "Sa",
+    "2029-08",
+    "Taurus"
+   ],
+   [
+    "Ju",
+    "2029-08",
+    "Libra"
+   ],
+   [
+    "Sa",
+    "2029-10",
+    "Aries"
+   ],
+   [
+    "Ra",
+    "2030-01",
+    "Scorpio"
+   ],
+   [
+    "Ju",
+    "2030-01",
+    "Scorpio"
+   ],
+   [
+    "Sa",
+    "2030-04",
+    "Taurus"
+   ],
+   [
+    "Ju",
+    "2030-05",
+    "Libra"
+   ],
+   [
+    "Ju",
+    "2030-09",
+    "Scorpio"
+   ]
+  ],
+  "mc": 296.2,
+  "meta": {
+   "dasha_year_days": 365.256363,
+   "flags": [],
+   "lat": 19.07,
+   "lon": 72.88,
+   "nodes": "mean",
+   "transit_date": "2026-01-01",
+   "utc_offset": "+05:30"
+  },
+  "transits": {
+   "Ju": {
+    "house": 2,
+    "sign": "Gemini"
+   },
+   "Ke": {
+    "house": 4,
+    "sign": "Leo"
+   },
+   "Ma": {
+    "house": 8,
+    "sign": "Sagittarius"
+   },
+   "Me": {
+    "house": 8,
+    "sign": "Sagittarius"
+   },
+   "Mo": {
+    "house": 1,
+    "sign": "Taurus"
+   },
+   "Ra": {
+    "house": 10,
+    "sign": "Aquarius"
+   },
+   "Sa": {
+    "house": 11,
+    "sign": "Pisces"
+   },
+   "Su": {
+    "house": 8,
+    "sign": "Sagittarius"
+   },
+   "Ve": {
+    "house": 8,
+    "sign": "Sagittarius"
+   }
+  },
+  "vimshottari": [
+   {
+    "end": "1990-10",
+    "lord": "Mo",
+    "start": "1980-10",
+    "sub": [
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve",
+     "Su"
+    ]
+   },
+   {
+    "end": "1997-10",
+    "lord": "Ma",
+    "start": "1990-10",
+    "sub": [
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo"
+    ]
+   },
+   {
+    "end": "2015-10",
+    "lord": "Ra",
+    "start": "1997-10",
+    "sub": [
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma"
+    ]
+   },
+   {
+    "end": "2031-10",
+    "lord": "Ju",
+    "start": "2015-10",
+    "sub": [
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra"
+    ]
+   },
+   {
+    "end": "2050-10",
+    "lord": "Sa",
+    "start": "2031-10",
+    "sub": [
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju"
+    ]
+   },
+   {
+    "end": "2067-10",
+    "lord": "Me",
+    "start": "2050-10",
+    "sub": [
+     "Me",
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa"
+    ]
+   },
+   {
+    "end": "2074-10",
+    "lord": "Ke",
+    "start": "2067-10",
+    "sub": [
+     "Ke",
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me"
+    ]
+   },
+   {
+    "end": "2094-10",
+    "lord": "Ve",
+    "start": "2074-10",
+    "sub": [
+     "Ve",
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke"
+    ]
+   },
+   {
+    "end": "2100-10",
+    "lord": "Su",
+    "start": "2094-10",
+    "sub": [
+     "Su",
+     "Mo",
+     "Ma",
+     "Ra",
+     "Ju",
+     "Sa",
+     "Me",
+     "Ke",
+     "Ve"
+    ]
+   }
+  ]
+ }
+}

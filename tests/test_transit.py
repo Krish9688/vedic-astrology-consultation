@@ -45,6 +45,24 @@ def test_gochara_output_names_frames_and_sources():
     assert "PD XXVI" in g["sources"]["gochara"] and "CR-V07" in g["sources"]["vedha"]
 
 
+def test_transit_rows_carry_the_bindus_of_the_transited_sign():
+    """P4-5(d): each planet's own BAV and the SAV for the sign it transits, equal to ashtakavarga(); nodes have none."""
+    from astro.calc import strength
+    b = S.BirthInput(**B)
+    av = strength.ashtakavarga(S._compute(b, S.Options(on=dt.date(2026, 1, 15)), extras=False))
+    g = S.gochara(b, S.Options(on=dt.date(2026, 1, 15)))
+    for r in g["rows"]:
+        i = TR.E.SIGNS.index(r["sign"])
+        if r["planet"] in ("Ra", "Ke"):
+            assert "bav" not in r
+        else:
+            assert (r["bav"], r["sav"]) == (av["bav"][r["planet"]][i], av["sav"][i]), r
+    assert "quality only" in g["sources"]["bindus"]
+    o = S.outlook(b, "month", "2026-01-15")
+    ju = next(f for f in o["factors"] if f["kind"] == "gochara" and f["planet"] == "Ju")
+    assert f"own {ju['bav']}, SAV {ju['sav']}" in ju["fact"] and "quality only" in ju["source"]
+
+
 @pytest.mark.parametrize("period", ["day", "week", "month", "year"])
 def test_outlook_is_dated_sourced_and_chart_specific(period):
     a = S.outlook(S.BirthInput(**B), period, "2026-01-15")

@@ -4,7 +4,8 @@
 It removes hand-arithmetic errors (house counting, lordship, aspects, D9/D10, dispositors). It does NOT interpret.
 The private edition adds a Lal Kitab block from scripts/lal_kitab.py; the public edition has no Lal Kitab part.
 
-usage:  chart_facts.py chart.json            chart_facts.py --selftest
+usage:  chart_facts.py chart.json            chart_facts.py --json chart.json (Parashari fact ids, schemas/derived_facts.schema.json)
+        chart_facts.py --selftest
 chart.json (degrees optional; without degrees D9/D10/combustion/Moon phase are skipped):
   {"asc": {"sign": "Cancer", "deg": 12.5},
    "planets": {"Su": {"sign": "Cancer", "deg": 10.2}, "Mo": {"sign": "Pisces", "deg": 3.1}, "Ma": {...},
@@ -107,7 +108,7 @@ def _from(D, p, ref_sign):
 
 def _contact(D, p, by):
     """Planets in `by` that are with p or aspect p's house (graha drishti)."""
-    return [q for q in by if q in D["P"] and q != p and (D["house"][q] == D["house"][p] or D["house"][p] in D["aspects_from"](q))]
+    return [q for q in sorted(by) if q in D["P"] and q != p and (D["house"][q] == D["house"][p] or D["house"][p] in D["aspects_from"](q))]
 
 
 def _combust(D, p):
@@ -259,6 +260,80 @@ def _candidate_section(D, W):
       " fire in most charts.")
 
 
+def _dignity(p, s):
+    """Sign dignity words of planet p in sign index s (seven planets only): EXALTED / DEBILITATED / own sign."""
+    out = []
+    if p in EXALT:
+        if s == EXALT[p]: out.append("EXALTED")
+        if s == (EXALT[p] + 6) % 12: out.append("DEBILITATED")
+        if SIGN_LORD[s] == p: out.append("own sign")
+    return out
+
+
+def _sign_relation(p, s):
+    """'friend's sign' / 'enemy's sign' / 'neutral's sign' by the natural relation to the sign lord; '' for own sign and nodes."""
+    disp = SIGN_LORD[s]
+    if p in FRIENDS and disp != p:
+        return "friend's sign" if disp in FRIENDS[p] else "enemy's sign" if disp in ENEMIES[p] else "neutral's sign"
+    return ""
+
+
+def _mt_state(p, v):
+    """Moolatrikona: None (not the MT sign), 'deg?' (MT sign, no degree), True/False (MT sign; inside/outside the MT degrees)."""
+    if MOOLATRIKONA[p][0] != v["s"]:
+        return None
+    lo, hi = MOOLATRIKONA[p][1:]
+    return "deg?" if "deg" not in v else lo <= v["deg"] <= hi
+
+
+def _compound(p, P):
+    """Compound (panchadha) relation of p to its sign's dispositor: (dispositor, word), or None when it is p itself or absent."""
+    s = P[p]["s"]
+    disp = SIGN_LORD[s]
+    if disp == p or disp not in P:
+        return None
+    nat = 1 if disp in FRIENDS[p] else -1 if disp in ENEMIES[p] else 0
+    tmp = 1 if (P[disp]["s"] - s) % 12 + 1 in (2, 3, 4, 10, 11, 12) else -1
+    return disp, {2: "great friend", 1: "friend", 0: "neutral", -1: "enemy", -2: "great enemy"}[nat + tmp]
+
+
+def _d9_dignity(p, d9):
+    return ("EXALTED" if d9 == EXALT[p] else "DEBILITATED" if d9 == (EXALT[p] + 6) % 12 else
+            "own sign" if SIGN_LORD[d9] == p else "")
+
+
+def _house_notes(D, h):
+    """Phaladeepika XV.1/XV.6 tests for house h as [(code, text)]; the text goes into the report, the code into the JSON ids."""
+    occ, malefic, lord, aspected_by, house, P = D["occ"], D["malefic"], D["lord"], D["aspected_by"], D["house"], D["P"]
+    L = lord[h]
+    lh = house.get(L)
+    prev_, next_ = occ[(h - 2) % 12 + 1], occ[h % 12 + 1]
+    notes = []
+    if prev_ and next_ and all(q in malefic for q in prev_ + next_): notes.append(("HEMMED", "HEMMED by malefics"))
+    if prev_ and next_ and not any(q in malefic for q in prev_ + next_): notes.append(("FLANKED_BENEFICS", "flanked by benefics"))
+    m_dus = [q for k in (4, 8, 12) for q in occ[(h + k - 2) % 12 + 1] if q in malefic]
+    m_tri = [q for k in (5, 9) for q in occ[(h + k - 2) % 12 + 1] if q in malefic]
+    if m_dus: notes.append((f"MALEFICS_4_8_12:{','.join(m_dus)}", f"malefics 4/8/12 from it: {','.join(m_dus)}"))
+    if m_tri: notes.append((f"MALEFICS_5_9:{','.join(m_tri)}", f"malefics 5/9 from it: {','.join(m_tri)}"))
+    if lh in (6, 8, 12) and SIGN_LORD[P[L]['s']] != L: notes.append((f"LORD_IN_DUSTHANA:H{lh}", f"lord in dusthana H{lh}"))
+    if L in aspected_by[h] or L in occ[h]: notes.append(("LORD_OCCUPIES_OR_ASPECTS", "lord occupies/aspects own house"))
+    return notes
+
+
+def _chains(P):
+    """(dispositor chains as 'Su→Mo→...' strings, final dispositors: planets in their own sign)."""
+    chains = []
+    for p in P:
+        seen, q = [p], SIGN_LORD[P[p]["s"]]
+        while q in P and q not in seen:
+            seen.append(q); q = SIGN_LORD[P[q]["s"]]
+        chains.append("→".join(seen + ([q] if q in seen else [])))
+    return chains, sorted({p for p in P if p in P7 and SIGN_LORD[P[p]["s"]] == p})
+
+
+COMPUTED = "  [COMPUTED: calculated chart facts, not interpretation]"   # claim_basis of every line below (P3-1)
+
+
 def facts(chart):
     D = derive(chart)
     asc, P, house, sign_of_house, lord, occ, malefic, el, aspects_from, aspected_by = (
@@ -268,19 +343,13 @@ def facts(chart):
     moon_phase = ("unknown (no degrees)" if el is None else f"{'waxing' if el < 180 else 'waning'}, {el:.0f}° from Sun"
                   + (" (dim: near new Moon — weigh as weak)" if min(el, 360 - el) < 72 else ""))
 
-    W(f"# Parashari D1 (whole-sign)  ascendant {SIGNS[asc]}" + (f" {chart['asc'].get('deg')}°" if "deg" in chart["asc"] else ""))
+    W(f"# Parashari D1 (whole-sign)  ascendant {SIGNS[asc]}" + (f" {chart['asc'].get('deg')}°" if "deg" in chart["asc"] else "") + COMPUTED)
     W(f"Moon phase: {moon_phase}. Natural malefics here: {', '.join(sorted(malefic))}. Node aspects omitted (school-dependent).")
     for p in [q for q in ALL if q in P]:
         v, s = P[p], P[p]["s"]
-        dign = []
-        if p in EXALT:
-            if s == EXALT[p]: dign.append("EXALTED")
-            if s == (EXALT[p] + 6) % 12: dign.append("DEBILITATED")
-            if SIGN_LORD[s] == p: dign.append("own sign")
+        dign = _dignity(p, s)
         disp = SIGN_LORD[s]
-        rel = ""
-        if p in FRIENDS and disp != p:
-            rel = "friend's sign" if disp in FRIENDS[p] else "enemy's sign" if disp in ENEMIES[p] else "neutral's sign"
+        rel = _sign_relation(p, s)
         owns = [h for h in range(1, 13) if lord[h] == p]
         extra = []
         if v.get("retro"): extra.append("retrograde")
@@ -303,16 +372,7 @@ def facts(chart):
     for h in range(1, 13):
         L = lord[h]
         lh = house.get(L)
-        prev_, next_ = occ[(h - 2) % 12 + 1], occ[h % 12 + 1]
-        notes = []
-        if prev_ and next_ and all(q in malefic for q in prev_ + next_): notes.append("HEMMED by malefics")
-        if prev_ and next_ and not any(q in malefic for q in prev_ + next_): notes.append("flanked by benefics")
-        m_dus = [q for k in (4, 8, 12) for q in occ[(h + k - 2) % 12 + 1] if q in malefic]
-        m_tri = [q for k in (5, 9) for q in occ[(h + k - 2) % 12 + 1] if q in malefic]
-        if m_dus: notes.append(f"malefics 4/8/12 from it: {','.join(m_dus)}")
-        if m_tri: notes.append(f"malefics 5/9 from it: {','.join(m_tri)}")
-        if lh in (6, 8, 12) and SIGN_LORD[P[L]['s']] != L: notes.append(f"lord in dusthana H{lh}")
-        if L in aspected_by[h] or L in occ[h]: notes.append("lord occupies/aspects own house")
+        notes = [t for _, t in _house_notes(D, h)]
         W(f"- H{h} {SIGNS[sign_of_house[h]]}: occ {','.join(occ[h]) or '—'} | asp {','.join(aspected_by[h]) or '—'} | "
           f"lord {NAME[L]} in H{lh if lh else '?'}{' | ' + '; '.join(notes) if notes else ''}")
 
@@ -321,20 +381,17 @@ def facts(chart):
     for p in [q for q in P7 if q in P]:
         v, s = P[p], P[p]["s"]
         parts = []
-        if MOOLATRIKONA[p][0] == s:
+        mt = _mt_state(p, v)
+        if mt is not None:
             lo, hi = MOOLATRIKONA[p][1:]
-            parts.append("MT sign (degree needed)" if "deg" not in v else
-                         "MOOLATRIKONA" if lo <= v["deg"] <= hi else f"MT sign, outside the MT degrees ({lo}–{hi}°)")
-        disp = SIGN_LORD[s]
-        if disp != p and disp in P:
-            nat = 1 if disp in FRIENDS[p] else -1 if disp in ENEMIES[p] else 0
-            tmp = 1 if (P[disp]["s"] - s) % 12 + 1 in (2, 3, 4, 10, 11, 12) else -1
-            rel = {2: "great friend", 1: "friend", 0: "neutral", -1: "enemy", -2: "great enemy"}[nat + tmp]
-            parts.append(f"towards dispositor {NAME[disp]}: {rel}")
+            parts.append("MT sign (degree needed)" if mt == "deg?" else
+                         "MOOLATRIKONA" if mt else f"MT sign, outside the MT degrees ({lo}–{hi}°)")
+        comp = _compound(p, P)
+        if comp:
+            parts.append(f"towards dispositor {NAME[comp[0]]}: {comp[1]}")
         if "deg" in v:
             d9 = varga(s, v["deg"], 9)
-            d9d = ("EXALTED" if d9 == EXALT[p] else "DEBILITATED" if d9 == (EXALT[p] + 6) % 12 else
-                   "own sign" if SIGN_LORD[d9] == p else "")
+            d9d = _d9_dignity(p, d9)
             parts.append(f"D9 {SIGNS[d9]}" + (f" {d9d}" if d9d else ""))
         W(f"- {NAME[p]}: {'; '.join(parts) or '—'}")
     if el is not None:
@@ -355,13 +412,7 @@ def facts(chart):
     _candidate_section(D, W)
 
     # dispositor chain
-    chains = []
-    for p in P:
-        seen, q = [p], SIGN_LORD[P[p]["s"]]
-        while q in P and q not in seen:
-            seen.append(q); q = SIGN_LORD[P[q]["s"]]
-        chains.append("→".join(seen + ([q] if q in seen else [])))
-    finals = sorted({p for p in P if p in P7 and SIGN_LORD[P[p]["s"]] == p})
+    chains, finals = _chains(P)
     W("\nDispositor chains: " + "; ".join(chains) + (f". Final dispositor(s) in own sign: {', '.join(finals)}" if finals else ". No planet in own sign (chains end in a cycle)."))
 
     # Lal Kitab: scripts/lal_kitab.py exists only in the private edition (council B2, 2026-10-12)
@@ -381,6 +432,78 @@ def facts(chart):
             if len(out) == n:
                 W("\n# Lal Kitab: scripts/lal_kitab.py produced no output.")
     return "\n".join(out)
+
+
+SCHEMA_ID = "derived_facts/1"
+CONVENTIONS = {
+    "houses": "whole-sign from the ascendant sign (Parashari baseline)",
+    "node_aspects": "omitted (school-dependent); Rahu and Ketu aspect nothing here",
+    "aspects": "graha drishti: the 7th for all, plus Mars 4/8, Jupiter 5/9, Saturn 3/10",
+    "malefics": "Sun, Mars, Saturn, Rahu, Ketu; Moon when waning; Mercury when with a malefic (LOL p280)",
+    "waning_moon": "both shown until B-20 is decided: F.moon.malefic_waning (waning = malefic; the malefic set and the "
+                   "tests use this one) and F.moon.malefic_72 (within 72 degrees of the Sun)",
+    "combustion": "LOL Table 9.1 orbs, the retrograde orb when retrograde; null without degrees or for Sun, Moon, nodes",
+    "moolatrikona": "BPHS table (same as astro/calc/strength.py); null when the sign is not the MT sign, or no degree",
+    "compound_to_dispositor": "natural plus temporary (panchadha) relation to the sign lord; null for own sign or lord absent",
+    "yogas": "candidates under named definitions, not results; F.yoga.<ID>.holds is null when undetermined; "
+             "'.' in an ID becomes '_'",
+    "dignity": "'+'-joined EXALTED / DEBILITATED / own sign, or 'none' (seven planets; the nodes have none)",
+    "nulls": "null means the data needed (degrees, a planet) was not supplied or the fact does not apply",
+}
+
+
+def facts_json(chart):
+    """The same facts as facts() as stable ids: {"schema", "conventions", "facts": {"F.Sa.house": 7, ...}}.
+    Parashari only (no Lal Kitab). Every value comes from derive()/candidates()/kuja() and the helpers the text uses.
+    IDs: F.asc.{sign,deg}; F.<P>.{sign,deg,house,retro,dignity,sign_relation,dispositor,dispositor_house,owns,with,
+    aspected_by,combust,d9,d10,vargottama,moolatrikona,compound_to_dispositor,d9_dignity} per planet P present;
+    F.H<h>.{sign,occupants,aspected_by,lord,lord_house,notes} h=1..12; F.M<h>.{sign,occupants,lord,lord_house} from the
+    Moon (when present); F.moon.{phase,elongation,malefic_waning,malefic_72}; F.malefics;
+    F.yoga.<ID>.{holds,detail,source}; F.dispositor.{chains,finals}."""
+    D = derive(chart)
+    asc, P, house, soh, lord, occ, el = (D[k] for k in ("asc", "P", "house", "sign_of_house", "lord", "occ", "el"))
+    F = {"F.asc.sign": SIGNS[asc], "F.asc.deg": D["asc_deg"]}
+    for p in [q for q in ALL if q in P]:
+        v, s = P[p], P[p]["s"]
+        deg = v.get("deg")
+        disp, comp = SIGN_LORD[s], _compound(p, P) if p in P7 else None
+        d9 = varga(s, deg, 9) if deg is not None else None
+        mt = _mt_state(p, v) if p in P7 else None
+        F |= {f"F.{p}.sign": SIGNS[s], f"F.{p}.deg": deg, f"F.{p}.house": house[p], f"F.{p}.retro": bool(v.get("retro")),
+              f"F.{p}.dignity": "+".join(_dignity(p, s)) or "none", f"F.{p}.sign_relation": _sign_relation(p, s) or None,
+              f"F.{p}.dispositor": disp, f"F.{p}.dispositor_house": house.get(disp),
+              f"F.{p}.owns": [h for h in range(1, 13) if lord[h] == p],
+              f"F.{p}.with": [q for q in occ[house[p]] if q != p],
+              f"F.{p}.aspected_by": [q for q in D["aspected_by"][house[p]] if q != p],
+              f"F.{p}.combust": _combust(D, p),
+              f"F.{p}.d9": None if d9 is None else SIGNS[d9],
+              f"F.{p}.d10": None if deg is None else SIGNS[varga(s, deg, 10)],
+              f"F.{p}.vargottama": None if d9 is None else d9 == s,
+              f"F.{p}.moolatrikona": None if mt in (None, "deg?") else mt,
+              f"F.{p}.compound_to_dispositor": comp[1] if comp else None,
+              f"F.{p}.d9_dignity": None if d9 is None or p not in P7 else _d9_dignity(p, d9) or "none"}
+    for h in range(1, 13):
+        L = lord[h]
+        F |= {f"F.H{h}.sign": SIGNS[soh[h]], f"F.H{h}.occupants": occ[h], f"F.H{h}.aspected_by": D["aspected_by"][h],
+              f"F.H{h}.lord": L, f"F.H{h}.lord_house": house.get(L), f"F.H{h}.notes": [c for c, _ in _house_notes(D, h)]}
+    if "Mo" in P:
+        m = P["Mo"]["s"]
+        mh = {p: (v["s"] - m) % 12 + 1 for p, v in P.items()}
+        for h in range(1, 13):
+            L = SIGN_LORD[(m + h - 1) % 12]
+            F |= {f"F.M{h}.sign": SIGNS[(m + h - 1) % 12], f"F.M{h}.occupants": [q for q in P if mh[q] == h],
+                  f"F.M{h}.lord": L, f"F.M{h}.lord_house": mh.get(L)}
+    F |= {"F.moon.phase": None if el is None else "waxing" if el < 180 else "waning",
+          "F.moon.elongation": None if el is None else round(el, 1),
+          "F.moon.malefic_waning": None if el is None else el >= 180,
+          "F.moon.malefic_72": None if el is None else min(el, 360 - el) < 72,
+          "F.malefics": sorted(D["malefic"])}
+    for rid, label, holds, detail, src in candidates(D) + kuja(D):
+        k = f"F.yoga.{rid.replace('.', '_')}"
+        F |= {f"{k}.holds": holds, f"{k}.detail": detail, f"{k}.source": src}
+    chains, finals = _chains(P)
+    F |= {"F.dispositor.chains": chains, "F.dispositor.finals": finals}
+    return {"schema": SCHEMA_ID, "conventions": CONVENTIONS, "facts": F}
 
 
 def _lal_kitab():
@@ -438,6 +561,15 @@ def selftest():
     # Mercury in Sagittarius: dispositor Jupiter natural neutral, 7th away (temporary enemy) -> enemy; 5° -> D9 Taurus
     assert "- Mercury: towards dispositor Jupiter: enemy; D9 Taurus" in t4, t4
     assert "- Sun: MOOLATRIKONA; D9 Libra DEBILITATED" in t4 and "Mars: MT sign, outside the MT degrees (0–12°); D9 Cancer DEBILITATED" in t4
+    ch6 = {"asc": {"sign": "Aries"}, "planets": {"Mo": {"sign": "Taurus", "deg": 3.0}, "Ma": {"sign": "Scorpio", "deg": 5.0},
+                                                  "Ve": {"sign": "Libra", "deg": 15.01}, "Su": {"sign": "Leo", "deg": 0.0}}}
+    t6 = facts(ch6)   # MT boundaries are inclusive (Moon 3°, Sun 0°) and end at the stated degree (Venus 15.01° is outside)
+    assert "- Moon: MOOLATRIKONA" in t6 and "- Sun: MOOLATRIKONA" in t6 and "Venus: MT sign, outside the MT degrees (0–15°)" in t6, t6
+    # Venus in Libra is the 6th from the Moon's Taurus (temporary enemy) and a natural neutral to the Moon -> enemy
+    assert "- Moon: MOOLATRIKONA; towards dispositor Venus: enemy" in t6, t6
+    ch7 = {"asc": {"sign": "Aries"}, "planets": {"Ma": {"sign": "Virgo"}, "Me": {"sign": "Libra"}}}
+    # compound neutral: Mercury is Mars's natural enemy (-1) but Libra is the 2nd from Virgo (temporary friend, +1) -> neutral
+    assert "- Mars: towards dispositor Mercury: neutral" in facts(ch7), facts(ch7)
     ch5 = {"asc": {"sign": "Aries"}, "planets": {"Ju": {"sign": "Taurus", "deg": 1.0}}}   # fixed sign: D9 from the 9th
     assert "- Jupiter: D9 Capricorn DEBILITATED" in facts(ch5), facts(ch5)   # no relation line: Venus not supplied
     assert "# From the Moon (Chandra lagna Cancer)" in t4 and "- M2 Leo: occ Su | lord Sun in M2" in t4, t4
@@ -489,6 +621,13 @@ def selftest():
     assert "own/exalted" in rows("Aries", Ma="Aries")["KUJA-POPULAR"][1]
     pd = lambda deg: candidates_kuja({"asc": {"sign": "Libra", "deg": deg}, "planets": {"Ma": {"sign": "Gemini"}}})
     assert pd(2.0) is True and pd(5.0) is False and pd(None) is None    # 7th Aries: navamsa Aries (Ma) / Taurus / unknown
+    j = facts_json(ch4)   # the ids agree with the text
+    f = j["facts"]
+    assert j["schema"] == "derived_facts/1" and f["F.Su.moolatrikona"] is True and f["F.Ma.moolatrikona"] is False, f
+    assert f["F.Ju.compound_to_dispositor"] == "great enemy" and f["F.Su.d9_dignity"] == "DEBILITATED", f
+    assert f["F.Ma.combust"] is False and facts_json(ch2)["facts"]["F.Ju.combust"] is None and facts_json(ch2)["facts"]["F.Ju.d9"] is None
+    assert f["F.moon.malefic_waning"] is not None and f["F.M2.occupants"] == ["Su"] and f["F.H7.lord"] == "Ve"
+    assert all(re.fullmatch(r"F\.[A-Za-z0-9_]+(\.[A-Za-z0-9_\-]+)*", k) for k in f), [k for k in f if not re.fullmatch(r"F\.[A-Za-z0-9_]+(\.[A-Za-z0-9_\-]+)*", k)]
     print("selftest ok")
 
 
@@ -499,5 +638,7 @@ if __name__ == "__main__":
         print(__doc__.strip())
     elif len(sys.argv) == 2:
         print(facts(json.load(open(sys.argv[1]))))
+    elif len(sys.argv) == 3 and sys.argv[1] == "--json":
+        print(json.dumps(facts_json(json.load(open(sys.argv[2]))), indent=1, ensure_ascii=False))
     else:
         sys.exit(__doc__)

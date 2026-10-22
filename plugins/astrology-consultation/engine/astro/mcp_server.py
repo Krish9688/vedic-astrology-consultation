@@ -115,6 +115,14 @@ def get_yogini_dasha(date: dt.date, time: str, lat: float, lon: float, tz: Union
     return S.yogini_dasha(_b(date, time, tz, lat, lon, zone, fold), _o(on, year=year))
 
 
+@tool("Which BPHS ch. 46 conditional nakshatra dashas (Ashtottari, Shodashottari ...) have their chart condition "
+      "met, each reading shown, overlaps and birth-time flips flagged. Vimshottari stays the default; information "
+      "only, never a reason to switch clocks after seeing dates.")
+def get_dasha_applicability(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
+                            zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
+    return S.dasha_applicability(_b(date, time, tz, lat, lon, zone, fold))
+
+
 @tool("Tajika annual chart (PVR ch. 27-28, 31) for year of life `year` (default: the year running on `on`): solar "
       "return at the birthplace, muntha, harsha bala, year-lord candidates with their Tajika aspect, sahams, Mudda "
       "dasha. Secondary: it confirms what the natal chart promises, never overrides it.")

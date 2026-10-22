@@ -1,5 +1,9 @@
 # Relationships, marriage and partnership
 
+Contents: [1. Split the question first — relationship level](#1-split-the-question-first--relationship-level) · [2. Parashari network](#2-parashari-network) · [3. Timing marriage](#3-timing-marriage)
+[4. Lal Kitab](#4-lal-kitab)
+[5. Form questions: how they meet, who initiates, new vs past person, second marriage](#5-form-questions-how-they-meet-who-initiates-new-vs-past-person-second-marriage) · [6. Partner description and appearance (themes and ranges)](#6-partner-description-and-appearance-themes-and-ranges) · [7. Alternative manifestations to offer](#7-alternative-manifestations-to-offer) · [8. Boundaries](#8-boundaries)
+
 Load for questions on romance, a specific relationship, marriage (whether/when/what kind), spouse, separation,
 compatibility or business partnership. Procedure from [synthesis-method.md](synthesis-method.md); timing from
 [timing.md](timing.md).
@@ -86,7 +90,7 @@ Raman: consult the navamsa only after the rasi is satisfactory — if D1 itself 
 (Raman): remarriage after divorce or death, or a significant second relationship [PM2 p27, p64–65]. Only mention when
 asked and when several signatures repeat.
 
-**Kuja dosha**: disputed (LOL: non-authoritative; BPHS: a narrower classical form — CR-N04), very common, many cancellations (both partners have it; Mars own/
+**Kuja dosha**: disputed; three conventions, never merged — BPHS 80.47–49 (12/4/7/8 from the lagna, benefic aspect cancels), popular LOL form (1/2/4/7/8/12 from lagna, Moon, Venus; "non-authoritative"), PD XI.3 (Mars in the 7th); see CR-N04, CR-V16 and yoga-definitions.md. Very common, many cancellations (both partners have it; Mars own/
 exalted; Moon–Mars; after ~28–30; certain signs) [LOL p329–331; HJH2 p70]. Never present it as a marriage verdict.
 Raman's matching table penalises the woman's chart more — do not reproduce that asymmetry as advice.
 

@@ -113,7 +113,12 @@
     "basis": {"type": "string", "description": "the chart relationships behind it — shown only in the appendix"},
     "system": {"enum": ["parashari", "jaimini", "lal_kitab", "combined"], "description": "method behind this unit; 'combined' only when each system reaches it by its own mechanism (synthesis-method.md)"},
     "claim_type": {"enum": ["fact", "rule", "interpretation", "prediction", "speculation"], "description": "fact = calculated chart fact; rule = a cited method rule; interpretation and prediction are judgements; speculation is labelled as such"},
-    "rule_refs": {"type": "array", "items": {"type": "string"}, "description": "rule ids or book/page citations behind the unit (appendix only)"}
+    "claim_basis": {"enum": ["TEXT", "COMMENTARY", "DISPUTED", "COMPUTED", "TESTED", "SPECULATIVE"], "description": "what the claim rests on (P3-1): a source's statement, an author's explanation, a recorded dispute, engine output, a prediction-log result (needs test_result) or a guess; kg.py prints it for every rule"},
+    "test_result": {"type": "string", "description": "for claim_basis TESTED: the prediction-log result, e.g. '7 of 12 hits, log PL-2026-03'"},
+    "temporal_mode": {"enum": ["past", "current", "future", "timeless"], "description": "when the claim applies"},
+    "history_status": {"enum": ["confirmed", "not confirmed", "contradicted"], "description": "for a past claim: what the person confirmed; without it a past claim is shown as not confirmed"},
+    "rule_refs": {"type": "array", "items": {"type": "string"}, "description": "rule ids or book/page citations behind the unit (appendix only)"},
+    "fact_refs": {"type": "array", "items": {"type": "string", "pattern": "^F\\.[A-Za-z0-9_]+(\\.[A-Za-z0-9_\\-]+)*$"}, "description": "derived-fact ids (chart_facts.py --json) behind the unit (appendix only)"}
    }
   }
  }

@@ -22,7 +22,7 @@ Updated 2026-10-03 (final-completion review in progress; this file is revised ag
 3. **Blind retrieval evaluation** on unseen questions (done as a development set: full text 16/24, hybrid 17/24; an unseen holdout is still needed).
 4. **Calculation edge-case suite**: southern hemisphere, western longitudes and negative offsets, DST, +05:45/+09:30,
    equator, date line, outside 1800–2399, outer-planet stations, node sign boundaries.
-5. **Reports**: done in the 3.6 cycle — one-page summary type, Main-windows rule with a restatement warning, visual QA
+5. **Reports**: done in the 3.6 cycle — Main-windows rule (the one-page summary type was added, then removed in round 12; `compact` remains) with a restatement warning, visual QA
    of all nine types (`tools/report_qa.py`); remaining: blind re-test (round 10, S3).
 6. **Real-client verification**: Claude app plugin flow, a live model turn using the tools, ChatGPT/Codex migration.
 

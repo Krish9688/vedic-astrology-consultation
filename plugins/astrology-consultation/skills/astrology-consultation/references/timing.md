@@ -1,5 +1,9 @@
 # Timing engine: dashas, transits, annual charts
 
+Contents: [0. The timing ladder (how a window is earned) — read first](#0-the-timing-ladder-how-a-window-is-earned--read-first) · [1. Vimshottari: identify the significators first](#1-vimshottari-identify-the-significators-first) · [2. Reading a dasha–bhukti pair](#2-reading-a-dashabhukti-pair) · [3. Transits (gochara): triggers inside an activated period](#3-transits-gochara-triggers-inside-an-activated-period) · [4. Parashari annual chart (Tajika / varshaphala) — separate from Lal Kitab](#4-parashari-annual-chart-tajika--varshaphala--separate-from-lal-kitab)
+[5. Building a window (short form of §0, with a worked report shape)](#5-building-a-window-short-form-of-0-with-a-worked-report-shape)
+[6. Temporal modes (carried over from v2.2)](#6-temporal-modes-carried-over-from-v22)
+
 Timing answers "when is the natal promise foregrounded?". It never creates a promise. Output a **window with its
 reasons** ("the strongest activation is X–Y because A, B and C converge"), graded Strong/Moderate/Weak/Contradictory/
 Unknown per [synthesis-method.md](synthesis-method.md). Never read current sky positions from memory; use supplied
@@ -42,6 +46,14 @@ hindsight [LOL p354; R2-TP1].
    *which way* — direction comes from the natal roles [R2-TP3, TP5].
 6. **Secondary confirmation**, each counted once: a pre-chosen Jaimini sign dasha variant; the Tajika year lord or
    muntha lord (only from a supplied or calculated return chart) being the AD lord or a network planet. Disagreement is reported.
+   **Secondary nakshatra dashas (rule for step 6).** Vimshottari is the default clock (BPHS 46.2-5) and stays
+   primary. At most one secondary dasha clock (Yogini, or a BPHS ch. 46 conditional system such as Ashtottari) is
+   used, chosen and named before any date is examined; it counts once, as one secondary confirmation, is never pooled
+   with Vimshottari and never rescues a window Vimshottari does not give. `get_dasha_applicability`
+   (`astro applicability`) reports which ch. 46 conditions hold: information, not a reason to switch clocks. State
+   overlaps as such (BPHS gives no rule for choosing), name the reading where the texts differ
+   ([contradiction-register.md](contradiction-register.md) CR-V23, CR-V24), and treat a condition that flips within
+   the birth-time window as Unknown. The engine computes no periods for the conditional systems.
 7. **Supporting only** (quality or fine placement, never occurrence): Ashtakavarga bindus of the transiting planet
    (quality: easy vs strained), double transit on the network (true most of the time — label it), eclipses/nodal
    contacts ("sensitised for about six months", not a timer), PD inside an earned band [R2-TP7–TP9].
@@ -150,6 +162,8 @@ Build it only from `get_outlook` (or `astro outlook --period day|week|month|year
 chart-specific factors, each with an id (F1, F2 …) and a source — running Vimshottari and Yogini periods, gochara from
 the Moon (PD XXVI good houses, vedha, condition) with the lagna frame beside it, sade sati, sign changes, stations,
 exact slow-planet contacts and, for a day or week, the Moon's transit. `get_gochara` gives the table for one date.
+  Gochara rows carry the bindus of the transited sign (the planet's own BAV and the SAV, BPHS tables): they qualify a
+  transit, never time or predict on their own.
 - Every statement names the factor ids behind it and the tradition (Parashari gochara; Yogini is a secondary dasha).
   Lead with the running dasha, then the transits that touch its lords and houses (§0, §3); a favourable transit in an
   unfavourable period is a minor note.
