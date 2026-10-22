@@ -154,6 +154,8 @@ Build it only from `get_outlook` (or `astro outlook --period day|week|month|year
 chart-specific factors, each with an id (F1, F2 …) and a source — running Vimshottari and Yogini periods, gochara from
 the Moon (PD XXVI good houses, vedha, condition) with the lagna frame beside it, sade sati, sign changes, stations,
 exact slow-planet contacts and, for a day or week, the Moon's transit. `get_gochara` gives the table for one date.
+  Gochara rows carry the bindus of the transited sign (the planet's own BAV and the SAV, BPHS tables): they qualify a
+  transit, never time or predict on their own.
 - Every statement names the factor ids behind it and the tradition (Parashari gochara; Yogini is a secondary dasha).
   Lead with the running dasha, then the transits that touch its lords and houses (§0, §3); a favourable transit in an
   unfavourable period is a minor note.

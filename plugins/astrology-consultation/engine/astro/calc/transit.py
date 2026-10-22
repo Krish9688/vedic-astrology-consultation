@@ -11,7 +11,7 @@ from __future__ import annotations
 import datetime as dt
 
 from . import engine as E
-from .strength import EXALT, NATURAL, SIGN_LORD
+from .strength import EXALT, NATURAL, SIGN_LORD, ashtakavarga
 
 GOOD = {"Su": {3, 6, 10, 11}, "Mo": {1, 3, 6, 7, 10, 11}, "Ma": {3, 6, 11}, "Me": {2, 4, 6, 8, 10, 11},
         "Ju": {2, 5, 7, 9, 11}, "Ve": {1, 2, 3, 4, 5, 8, 9, 11, 12}, "Sa": {3, 6, 11}, "Ra": {3, 6, 10, 11},
@@ -28,7 +28,9 @@ SOURCES = {"gochara": "PD XXVI.1-2 (p312): from the natal Moon's sign; good hous
                         "sign voids a good transit",
            "lagna_frame": "LOL p362: some count transits from the lagna; shown separately, never added to the Moon frame",
            "sade_sati": "LOL p363-364, HPA p130: Saturn in the 12th, 1st or 2nd from the natal Moon; a broad lens that "
-                        "needs dasha confluence, never a verdict by itself"}
+                        "needs dasha confluence, never a verdict by itself",
+           "bindus": "BPHS ashtakavarga tables (engine ashtakavarga()): the planet's own BAV and the SAV of the sign it "
+                     "transits; transit quality only, never a separate prediction"}
 BODIES = ("Su", "Mo", "Ma", "Me", "Ju", "Ve", "Sa", "Ra", "Ke")
 
 
@@ -45,8 +47,9 @@ def _condition(p, sign):
     return None
 
 
-def gochara(jd, moon_sign, asc_sign, node="mean"):
-    """One row per transiting body: houses from the Moon and lagna, PD reading with vedha and condition."""
+def gochara(jd, moon_sign, asc_sign, node="mean", av=None):
+    """One row per transiting body: houses from the Moon and lagna, PD reading with vedha and condition; with `av`
+    (ashtakavarga() of the natal chart) also the bindus of the transited sign."""
     T = E.positions(jd, node)
     sign = {p: int(T[p]["lon"] // 30) for p in BODIES}
     hm = {p: (sign[p] - moon_sign) % 12 + 1 for p in BODIES}
@@ -64,7 +67,8 @@ def gochara(jd, moon_sign, asc_sign, node="mean"):
             reading = "unfavourable house" + (", no harm (own or exalted sign)" if cond == "own or exalted sign" else "")
         rows.append({"planet": p, "sign": E.SIGNS[sign[p]], "retro": T[p]["retro"], "house_from_moon": h,
                      "house_from_lagna": (sign[p] - asc_sign) % 12 + 1, "condition": cond, "vedha_by": by,
-                     "pd_reading": reading})
+                     "pd_reading": reading}
+                    | ({"bav": av["bav"][p][sign[p]], "sav": av["sav"][sign[p]]} if av and p in av["bav"] else {}))
     return rows
 
 
@@ -84,7 +88,7 @@ def outlook(c, start, period, tz, yogini_rows=None, node="mean"):
     t1 = t0 + dt.timedelta(days=days)
     s0, s1 = start.isoformat(), (start + dt.timedelta(days=days)).isoformat()
     moon_sign, asc_sign = int(c["bodies"]["Mo"]["lon"] // 30), int(c["bodies"]["Asc"]["lon"] // 30)
-    factors = []
+    factors, av = [], c.get("ashtakavarga") or ashtakavarga(c)
 
     def add(kind, text, when, source, **data):
         factors.append({"id": f"F{len(factors) + 1}", "kind": kind, "fact": text, "when": when, "source": source,
@@ -100,11 +104,12 @@ def outlook(c, start, period, tz, yogini_rows=None, node="mean"):
         if y["start"] < s1 and y["end"] > s0:
             add("dasha", f"Yogini {y['yogini']} ({y['lord']})", f"{y['start']} to {y['end']}",
                 "Yogini (BPHS ch. 46 sl. 195-200), secondary dasha", lords=[y["lord"]])
-    for r in gochara(E.jd_of(t0), moon_sign, asc_sign, node):
+    for r in gochara(E.jd_of(t0), moon_sign, asc_sign, node, av):
         if r["planet"] != "Mo" or days > 7:
             add("gochara", f"{r['planet']} in {r['sign']}: {r['house_from_moon']} from the Moon, "
-                f"{r['house_from_lagna']} from the lagna - {r['pd_reading']}", f"at {s0}",
-                SOURCES["gochara"] + "; " + SOURCES["vedha"], **r)
+                f"{r['house_from_lagna']} from the lagna - {r['pd_reading']}"
+                + (f" (bindus: own {r['bav']}, SAV {r['sav']})" if "bav" in r else ""), f"at {s0}",
+                SOURCES["gochara"] + "; " + SOURCES["vedha"] + ("; " + SOURCES["bindus"] if "bav" in r else ""), **r)
     sky = E.sky(t0, t1, node, tz)
     ss = sade_sati(int(E.positions(E.jd_of(t0), node)["Sa"]["lon"] // 30), moon_sign)
     if ss:

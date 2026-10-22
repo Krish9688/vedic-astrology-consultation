@@ -283,7 +283,7 @@ def gochara(b: BirthInput, o: Options = DEFAULTS) -> dict:
     jd = engine.jd_of(dt.datetime.fromisoformat(on + "T12:00") - dt.timedelta(hours=b.tz))
     moon, asc = int(c["bodies"]["Mo"]["lon"] // 30), int(c["bodies"]["Asc"]["lon"] // 30)
     sat = int(engine.positions(jd, o.node)["Sa"]["lon"] // 30)
-    return _with_meta(c, {"on": on, "time": "12:00 local (birth UTC offset)", "rows": TR.gochara(jd, moon, asc, o.node),
+    return _with_meta(c, {"on": on, "time": "12:00 local (birth UTC offset)", "rows": TR.gochara(jd, moon, asc, o.node, strength.ashtakavarga(c)),
                           "sade_sati": TR.sade_sati(sat, moon), "sources": TR.SOURCES})
 
 
