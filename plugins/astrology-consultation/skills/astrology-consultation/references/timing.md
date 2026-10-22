@@ -46,6 +46,14 @@ hindsight [LOL p354; R2-TP1].
    *which way* — direction comes from the natal roles [R2-TP3, TP5].
 6. **Secondary confirmation**, each counted once: a pre-chosen Jaimini sign dasha variant; the Tajika year lord or
    muntha lord (only from a supplied or calculated return chart) being the AD lord or a network planet. Disagreement is reported.
+   **Secondary nakshatra dashas (rule for step 6).** Vimshottari is the default clock (BPHS 46.2-5) and stays
+   primary. At most one secondary dasha clock (Yogini, or a BPHS ch. 46 conditional system such as Ashtottari) is
+   used, chosen and named before any date is examined; it counts once, as one secondary confirmation, is never pooled
+   with Vimshottari and never rescues a window Vimshottari does not give. `get_dasha_applicability`
+   (`astro applicability`) reports which ch. 46 conditions hold: information, not a reason to switch clocks. State
+   overlaps as such (BPHS gives no rule for choosing), name the reading where the texts differ
+   ([contradiction-register.md](contradiction-register.md) CR-V23, CR-V24), and treat a condition that flips within
+   the birth-time window as Unknown. The engine computes no periods for the conditional systems.
 7. **Supporting only** (quality or fine placement, never occurrence): Ashtakavarga bindus of the transiting planet
    (quality: easy vs strained), double transit on the network (true most of the time — label it), eclipses/nodal
    contacts ("sensitised for about six months", not a timer), PD inside an earned band [R2-TP7–TP9].

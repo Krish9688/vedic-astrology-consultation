@@ -362,6 +362,15 @@ def yogini_dasha(b: BirthInput, o: Options = DEFAULTS) -> dict:
                           "periods": rows})
 
 
+def dasha_applicability(b: BirthInput, o: Options = DEFAULTS, span_min: int = 15) -> dict:
+    """Which BPHS ch. 46 conditional nakshatra dashas' chart conditions hold, with readings, overlaps and birth-time
+    flips; Vimshottari stays the default. Information only (timing.md §0 step 6)."""
+    from .calc import applicability as AP
+    c = _compute(b, o, extras=False)
+    ut = dt.datetime.fromisoformat(f"{b.date}T{b.time}") - dt.timedelta(hours=b.tz)
+    return _with_meta(c, AP.report(ut, b.lat, b.lon, o.node, span_min))
+
+
 def transits(b: BirthInput, o: Options = DEFAULTS) -> dict:
     c = _compute(b, o)
     return _with_meta(c, {k: c[k] for k in ("transits", "ingresses", "slow_contacts")} | {"on": c["meta"]["transit_date"]})
