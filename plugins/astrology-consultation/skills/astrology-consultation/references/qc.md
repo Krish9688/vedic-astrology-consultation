@@ -1,5 +1,7 @@
 # Final check before sending
 
+Contents: [Reasoning](#reasoning) · [Systems and sources](#systems-and-sources) · [Data and privacy](#data-and-privacy) · [Communication and safety](#communication-and-safety) · [Regression scenarios (for testing changes to the skill)](#regression-scenarios-for-testing-changes-to-the-skill) · [Life-first and report checks (v3.4)](#life-first-and-report-checks-v34)
+
 Apply to the answer itself, proportionately (a short answer needs a quick pass). If a check fails, fix the reasoning,
 not just the wording. Adding a disclaimer never repairs an unsupported claim.
 
@@ -24,6 +26,10 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
       7th/Venus network (topic-relationships §2); a money question separates 11th (income) from 2nd (retention).
 
 ## Systems and sources
+
+- [ ] Nothing that rests on a book (claim_basis TEXT or COMMENTARY) is called tested, proven or validated: a source's
+      statement is not evidence that the event happens (`render_report.py` rejects it in reports). TESTED needs a
+      prediction-log result.
 
 - [ ] Disputed rules from the contradiction register named when they decide the answer.
 - [ ] Citations (when given) are real pages retrieved from the index; source statement / inference / synthesis /

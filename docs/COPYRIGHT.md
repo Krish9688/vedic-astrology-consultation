@@ -9,7 +9,7 @@ project's synthesis, with short page references), synthetic test data and biblio
 
 | ID | Book | Translator / author | Status | In repository |
 |---|---|---|---|---|
-| BJ | Brihat Jataka (Varahamihira) | N. Chidambaram Iyer, 1905 | likely public domain in the US (published 1905); elsewhere depends on the translator's dates — not verified | metadata only |
+| BJ | Brihat Jataka (Varahamihira) | N. Chidambaram Iyer, 1885 (title page; catalogue metadata says 1905) | likely public domain in the US (published 1885); elsewhere depends on the translator's dates — not verified | metadata only |
 | PD | Phaladeepika (Mantreswara) | V. Subrahmanya Sastri, 1950 | unclear (translator's dates not verified) — treated as restricted | metadata only |
 | JP2 | Jataka Parijata Vol. 2 | V. Subrahmanya Sastri, 1933 | unclear — treated as restricted | metadata only |
 | BPHS | Brihat Parasara Hora Sastra | R. Santhanam | copyrighted translation | metadata only |
@@ -33,7 +33,7 @@ page convention and page count. The owner's file names and SHA-256 fingerprints 
 
 | ID | Publication | United States | India (author's life + 60 years) | Treatment |
 |---|---|---|---|---|
-| BJ | N. Chidambaram Iyer, 1905 | public domain (published before 1931) | translator's death year not verified | still not redistributed (no need) |
+| BJ | N. Chidambaram Iyer, 1885 (title page) | public domain (published before 1931) | translator's death year not verified | still not redistributed (no need) |
 | JP2 | V. Subrahmanya Sastri, Mysore 1933 | not yet: a 1933 foreign publication stays protected until 1 Jan 2029 (95 years) | Sastri's death year not found in public sources checked (his output spans 1915–1950s) | restricted |
 | PD | V. Subrahmanya Sastri, 2nd ed. 1950 | protected until 2046 | as above | restricted |
 

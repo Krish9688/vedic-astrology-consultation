@@ -1,5 +1,7 @@
 # Input contract and uncertainty
 
+Contents: [Two valid starting points](#two-valid-starting-points) · [Record only what the question needs](#record-only-what-the-question-needs) · [Consistency checks](#consistency-checks) · [Whose report is it? (identity gate)](#whose-report-is-it-identity-gate) · [Sensitivity protocol (DESIGN)](#sensitivity-protocol-design) · [Compact intake example](#compact-intake-example) · [Calculation engines and their conventions (re-checked 2026-10-02, v3.5)](#calculation-engines-and-their-conventions-re-checked-2026-10-02-v35)
+
 ## Two valid starting points
 
 The whole-sign calculation below is a declared **Parashari default**, not an automatic substitute for a user-supplied bhava/chalit house map.

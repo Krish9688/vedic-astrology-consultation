@@ -19,7 +19,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-from . import config, places
+from . import config, places, routing as ROUTING
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
 VERSION = "3.6.3"
@@ -32,19 +32,7 @@ THIRD_PARTY = ("Swiss Ephemeris © Astrodienst AG (AGPL-3.0); pyswisseph; IANA t
                "place data, if installed: GeoNames (CC-BY 4.0)")
 REMOTE = False   # set by the HTTP servers when they listen beyond localhost
 SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
-TOPICS = {  # question → the skill's topic reference (SKILL.md routing table); word starts, so "remove" ≠ "move"
-    "relationships-marriage": r"\bmarr(?:y|ie|ia)|\bwed|\bspouse|\bwife|\bhusband|(?<!business )\bpartner|"
-                              r"\brelationship|\blove\b|\bromance|\bdating|\bgirlfriend|\bboyfriend|\bmy ex\b|\bbreak ?up",
-    "career-money": r"\bcareer|\bjob|\bwork|\bbusiness|\bpromotion|\bincome|\bmoney|\bfinanc|\bwealth|\bdebt|"
-                    r"\bsalary|\bboss|\bcompany|\binvest",
-    "home-family-children": r"\bhome|\bhouse\b|\bproperty|\bflat\b|\bapartment|\bmother|\bfather|\bparent|\bsibling|"
-                            r"\bbrother|\bsister|\bchild|\bkids?\b|\bbab(?:y|ies)|\bpregnan|\bconceiv|\bson\b|"
-                            r"\bdaughter|\bfamil|\bfriend",
-    "travel-education-health-life": r"\babroad|\bforeign|\btravel|\brelocat|\bmov(?:e|ing)\b|\bstud(?:y|ies)|"
-                                    r"\beducation|\bdegree|\buniversity|\bcollege|\bexam|\bschool|\bhealth|"
-                                    r"\billness|\bill\b|\bsick|\bdisease|\bsurgery|\bwellbeing|\bspiritual|"
-                                    r"\byear ahead|\bnext year|\b12 months",
-}
+TOPICS = ROUTING.TOPICS   # question → the skill's topic reference; the manifest astro/routing.py is the one source (SKILL.md is test-checked against it)
 
 
 OFFSET = re.compile(r"^(?:UTC|GMT)?([+-])?(\d{1,2}):([0-5]\d)(?::([0-5]\d))?$", re.I)
@@ -470,11 +458,9 @@ def skill_file(rel: str) -> str:
 def analyze_question(question: str) -> dict:
     q = question.lower()
     topics = [t for t, rx in TOPICS.items() if re.search(rx, q)]
-    timing = bool(re.search(r"\bwhen\b|next \d+|this year|next year|soon|month|period|dasha|timing", q))
+    timing = bool(re.search(ROUTING.TIMING_RX, q))
     return {"question": question, "topics": topics or ["open activation — see question-trees.md §8"],
-            "timing_question": timing, "load": ["SKILL.md", "references/consultation-reasoning.md",
-                                                "references/question-trees.md", "references/communication.md"]
-            + [f"references/topic-{t}.md" for t in topics] + (["references/timing.md"] if timing else [])}
+            "timing_question": timing, "load": ROUTING.load(topics, timing)}
 
 
 def consultation_context(question: str, b: BirthInput, o: Options = DEFAULTS) -> dict:
@@ -495,20 +481,22 @@ def consultation_context(question: str, b: BirthInput, o: Options = DEFAULTS) ->
                                                                              ("arudha_lagna", "upapada", "karakamsa")},
              "sensitivity_classes": c["sensitivity_grid"]["classes"],
              "transit_sign_aspects": c["transit_sign_aspects"], "transit_aspects_note": c["meta"]["transit_aspects"]}
-    return {"analysis": analyze_question(question), "facts": facts, "derived_facts": _derived_facts(c)}
+    return {"analysis": analyze_question(question), "facts": facts, "derived_facts": _derived_facts(c),
+            "derived_fact_ids": _derived_facts(c, ids=True)}
 
 
-def _derived_facts(c):
+def _derived_facts(c, ids=False):
     """The skill's chart_facts.py output (houses, lordships, graha drishti, combustion, D9/D10, dispositors, PD XV tests,
     Lal Kitab flags) — one implementation, owned by the skill with its conventions named — so clients without a shell
-    get the same derived facts."""
+    get the same derived facts. ids=True: the same facts as stable ids (chart_facts.facts_json, schemas/derived_facts.schema.json)."""
     path = os.path.join(config.load().skill_dir, "scripts", "chart_facts.py")
     if not os.path.exists(path):
         return "unavailable: the skill's scripts/chart_facts.py was not found"
     spec = importlib.util.spec_from_file_location("chart_facts", path)
     cf = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(cf)
-    return cf.facts(engine.chart_facts_input(c))
+    chart = engine.chart_facts_input(c)
+    return cf.facts_json(chart) if ids else cf.facts(chart)
 
 
 def create_report(model: dict, name: str = "report") -> dict:

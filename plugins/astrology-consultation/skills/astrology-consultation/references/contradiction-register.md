@@ -1,5 +1,8 @@
 # Contradiction register
 
+Contents: [A. Parashari / Vedic](#a-parashari--vedic)
+[E. Disputes introduced by the new books (v3.3; curated from the source maps' §7)](#e-disputes-introduced-by-the-new-books-v33-curated-from-the-source-maps-7) · [F. Curated from the automatic cross-book disputes (v3.5)](#f-curated-from-the-automatic-cross-book-disputes-v35)
+
 Disputed rules that can change a reading. For each: both versions with pages, a classification, the default this
 skill uses, and how confident that default is. **Never pick a version silently because it makes a cleaner
 prediction.** When a disputed rule is decisive for the answer, name the dispute in one sentence.
@@ -33,6 +36,7 @@ working choice only). Source ids: [source-index.md](source-index.md).
 | CR-V19 | Ashtakavarga reductions | Trikona: subtract the least — HPA p98; BJ note | Equalise to the least (rival view noted by Raman) | R | Use supplied tables; disclose method [Medium] |
 | CR-V20 | Planetary war winner | Higher latitude — LOL p93 | Lower longitude (many modern books) | R | Only use with supplied war data; disclose [Low] |
 | CR-V21 | Number of chara karakas | Seven, Sun–Saturn; Rahu only as a tie-breaker — LOL p122 | Seven or eight (Sun–Rahu, Rahu counted from 30°) both mentioned — BPHS ch. 32 (in the library; see CR-X01, which supersedes this row) | R | State the scheme; if AK/DK changes between schemes the karaka reading is Unknown [Medium] |
+| CR-V22 | Kendra–kona lord who also owns 6/8/12 (dual lordship) | No raja yoga by these relations alone; the moolatrikona sign decides (translator) — BPHS 34.14–15, not page-checked | Yoga even so — PD XX.45, not page-checked | R | Show both; chart_facts prints both under RAJA-KK [Medium] |
 
 Other intra-source inconsistencies (dates, chart numbers, duplicated passages, garbled tables) are listed in each source
 map's §7 and do not change readings.

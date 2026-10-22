@@ -1,5 +1,8 @@
 # Worked consultations (synthetic)
 
+Contents: [E1. Marriage: delay, not denial (Parashari)](#e1-marriage-delay-not-denial-parashari) · [E2. Career: D1 promise, D10 caution, birth-time limit](#e2-career-d1-promise-d10-caution-birth-time-limit)
+[Earlier calibration examples (v2.2, retained)](#earlier-calibration-examples-v22-retained) · [1. Career potential activated: support without a guaranteed promotion](#1-career-potential-activated-support-without-a-guaranteed-promotion) · [2. D1–D10 conflict limits the promotion claim](#2-d1d10-conflict-limits-the-promotion-claim) · [3. Relationship transit with no natal foundation supplied](#3-relationship-transit-with-no-natal-foundation-supplied) · [4. Mixed MD/AD: income and cost can coexist](#4-mixed-mdad-income-and-cost-can-coexist) · [5. Vargottama and Shadbala are not automatic benefit](#5-vargottama-and-shadbala-are-not-automatic-benefit) · [6. Birth time uncertainty and D60](#6-birth-time-uncertainty-and-d60) · [7. Sensitive parenthood question](#7-sensitive-parenthood-question) · [8. Past reconstruction without claiming a forecast](#8-past-reconstruction-without-claiming-a-forecast) · [Revision 2: synthetic failure and consultation examples](#revision-2-synthetic-failure-and-consultation-examples) · [Revision 2.1: one connected temporal explanation](#revision-21-one-connected-temporal-explanation)
+
 Teaching examples only: partial, invented chart packets. They show *reasoning and voice*, not facts about any person.
 Unlisted factors are unknown. The first three are v3 examples; the v2.2 calibration examples follow unchanged.
 

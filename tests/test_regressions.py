@@ -315,7 +315,7 @@ def test_untrusted_content_rule_in_both_editions_and_no_imperative_context():
     except ModuleNotFoundError:
         pass                                                          # public edition: the exporter is not shipped
     ctx = S.consultation_context("career?", S.BirthInput(date="1990-05-17", time="06:30", tz="+05:30", lat=19.07, lon=72.88))
-    assert "instructions" not in ctx and set(ctx) == {"analysis", "facts", "derived_facts"}
+    assert "instructions" not in ctx and set(ctx) == {"analysis", "facts", "derived_facts", "derived_fact_ids"}
 
 
 def test_claude_code_hooks_selftest():

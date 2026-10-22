@@ -1,4 +1,4 @@
-# Parashari D1 (whole-sign)  ascendant Pisces 16.783°
+# Parashari D1 (whole-sign)  ascendant Pisces 16.783°  [COMPUTED: calculated chart facts, not interpretation]
 Moon phase: waxing, 20° from Sun (dim: near new Moon — weigh as weak). Natural malefics here: Ke, Ma, Me, Ra, Sa, Su. Node aspects omitted (school-dependent).
 - Sun: Aquarius 29.478° H12; no sign dignity; enemy's sign; dispositor Saturn (H12); owns H6; with Ma,Me,Sa; aspected by Ju; D9 Gemini, D10 Scorpio
 - Moon: Pisces 19.169° H1; no sign dignity; neutral's sign; dispositor Jupiter (H8); owns H5; with Ve; D9 Sagittarius, D10 Taurus
@@ -23,6 +23,46 @@ Moon phase: waxing, 20° from Sun (dim: near new Moon — weigh as weak). Natura
 - H10 Sagittarius: occ — | asp — | lord Jupiter in H8 | malefics 4/8/12 from it: Ra; lord in dusthana H8
 - H11 Capricorn: occ — | asp — | lord Saturn in H12 | malefics 5/9 from it: Ke
 - H12 Aquarius: occ Su,Ma,Me,Sa | asp Ju | lord Saturn in H12 | malefics 4/8/12 from it: Ke; lord occupies/aspects own house
+
+# Dignity detail (computed): moolatrikona | compound relation to the dispositor | D9 dignity
+- Sun: towards dispositor Saturn: great enemy; D9 Gemini
+- Moon: towards dispositor Jupiter: enemy; D9 Sagittarius
+- Mars: towards dispositor Saturn: enemy; D9 Capricorn EXALTED
+- Mercury: towards dispositor Saturn: enemy; D9 Libra
+- Jupiter: towards dispositor Venus: great enemy; D9 Aries
+- Venus: towards dispositor Jupiter: enemy; D9 Libra own sign
+- Saturn: MOOLATRIKONA; D9 Capricorn own sign
+Moon as malefic, two conventions (B-20 open): waning = malefic (LOL p280): no; within 72° of the Sun: yes. The tests above use the first.
+
+# From the Moon (Chandra lagna Pisces): occupants | lord placement, counted from the Moon
+- M1 Pisces: occ Mo,Ve | lord Jupiter in M8
+- M2 Aries: occ — | lord Mars in M12
+- M3 Taurus: occ Ke | lord Venus in M1
+- M4 Gemini: occ — | lord Mercury in M12
+- M5 Cancer: occ — | lord Moon in M1
+- M6 Leo: occ — | lord Sun in M12
+- M7 Virgo: occ — | lord Mercury in M12
+- M8 Libra: occ Ju | lord Venus in M1
+- M9 Scorpio: occ Ra | lord Mars in M12
+- M10 Sagittarius: occ — | lord Jupiter in M8
+- M11 Capricorn: occ — | lord Saturn in M12
+- M12 Aquarius: occ Su,Ma,Me,Sa | lord Saturn in M12
+
+# Candidate yogas and Kuja conventions (computed; named definitions, candidates only - not results)
+Each line: definition id | holds? | details | source | how often the condition holds in random charts.
+- [GK-BPHS36] Gajakesari, strict: Jupiter in a kendra from the lagna or the Moon, joined or aspected by a benefic, not debilitated, combust or in an enemy's sign: does not hold. kendra from lagna no, from Moon no; benefic contact none; debilitated no; enemy's sign yes; combust no. Source: BPHS 36.3-4, source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked. Base rate 9%.
+- [KESARI-LOOSE] Kesari (loose 'Gajakesari'): Jupiter in a kendra from the Moon: does not hold. Jupiter M8. Source: Phaladeepika VI.14 per the BPHS translator (only 'Kesari'); called Gajakesari by CRUX p28-30 and HJH1 p118 - source map BPHS_part3.md, not page-checked. Base rate 34%.
+- [KEM-BARE] Kemadruma (Varahamihira): no planet other than the Sun (nodes not counted) in the 2nd or 12th from the Moon: does not hold. 2nd/12th from the Moon: Ma,Me,Sa. Source: Brihat Jataka XIII (p175-178), source map BJ.md, not page-checked; Varahamihira rejects the other schools' versions. Base rate 45%.
+- [KEM-BPHS] Kemadruma (BPHS 37.11-13): besides the 2nd/12th, no planet but the Sun with the Moon or in a kendra from the lagna - the Moon itself in a kendra counts (LOL p322; Garga/Parasara via BJ): does not hold. 2nd/12th occupied. Source: BPHS p398 (ch. 37 sl. 11-13), source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked. Base rate 3%.
+- [PMP-Ve-BPHS] Malavya (Pancha Mahapurusha): Venus own/exalted in a kendra from the lagna: HOLDS. Venus H1; BPHS gives no cancellation in this chapter. Source: BPHS ch. 75, source map BPHS_part6.md §5.1, not page-checked. Base rate 34%.
+- [PMP-Ve-LOL] Malavya, LOL variant: kendra or kona from the lagna: HOLDS. Venus H1. Source: Phaladeepika VI.2-4 as given in LOL p311 (kendra or kona; BPHS ch. 75: kendra only), source map LOL.md, not page-checked. Base rate 48%.
+- [PMP-Sa-BPHS] Sasa (Pancha Mahapurusha): Saturn own/exalted in a kendra from the lagna: does not hold. Saturn H12; BPHS gives no cancellation in this chapter. Source: BPHS ch. 75, source map BPHS_part6.md §5.1, not page-checked. Base rate 34%.
+- [PMP-Sa-LOL] Sasa, LOL variant: kendra or kona from the lagna: does not hold. Saturn H12. Source: Phaladeepika VI.2-4 as given in LOL p311 (kendra or kona; BPHS ch. 75: kendra only), source map LOL.md, not page-checked. Base rate 48%.
+- [RAJA-KKP-Mo] trinal lord Moon placed in an angle (BPHS 34.11-12): HOLDS. Moon owns H5, in H1. Source: BPHS p356-358 (ch. 34 sl. 11-15), source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked; PD XX.45 (p245) source map PD_part1.md, not page-checked. Base rate 61%.
+- [KUJA-BPHS80] BPHS 80.47-49: Mars 12/4/7/8 from the lagna; a benefic aspect or association cancels: does not hold. Mars H12; cancelled by Ju; the 'partner has the same yoga' clause needs both charts. Source: source map BPHS_part6.md (BPHS p955), not page-checked. Base rate 15%.
+- [KUJA-POPULAR] popular rule (LOL: 'not in any authoritative text'): Mars 1/2/4/7/8/12 from lagna, Moon or Venus: HOLDS. Mars from lagna 12, Moon 12, Venus 12; meets it from lagna, Moon, Venus; the partner and age (about 28-30) exceptions need more than this chart. Source: LOL p329-331, source map LOL.md, not page-checked. Base rate 88%.
+- [KUJA-PD11.3] Phaladeepika XI.3: Mars in the 7th, or the 7th sign and its navamsa both Mars's: does not hold. Mars H12; 7th sign Virgo, descendant navamsa Gemini. Source: PD p141-142 (XI.3), source map PD_part1.md, not page-checked. Base rate 10%.
+Kuja lines are convention membership for comparison only, never a marriage verdict (CR-V16); several conventions fire in most charts.
 
 Dispositor chains: Su→Sa→Sa; Mo→Ju→Ve→Ju; Ma→Sa→Sa; Me→Sa→Sa; Ju→Ve→Ju; Ve→Ju→Ve; Sa→Sa; Ra→Ma→Sa→Sa; Ke→Ve→Ju→Ve. Final dispositor(s) in own sign: Sa
 

@@ -1,5 +1,7 @@
 # How to reach a judgement: synthesis, evidence and conflict
 
+Contents: [1. The senior-practitioner sequence](#1-the-senior-practitioner-sequence) · [2. The triad test (house, lord, karaka) — Phaladeepika XV](#2-the-triad-test-house-lord-karaka--phaladeepika-xv) · [3. Weighing: what dominates](#3-weighing-what-dominates) · [4. Convergence and the evidence hierarchy](#4-convergence-and-the-evidence-hierarchy) · [5. Contradiction procedure](#5-contradiction-procedure) · [6. Distinguish what you are saying](#6-distinguish-what-you-are-saying) · [7. Before answering, the four checks](#7-before-answering-the-four-checks)
+
 This is the core of the skill. Every other reference feeds this procedure. Source tags: `[PD]` Phaladeepika,
 `[BJ]` Brihat Jataka, `[HJH2]`/`[HPA]` B. V. Raman, `[LOL]` Light on Life, `[PM2]` Prasna Marga II,
 `[DESIGN]` this skill's own policy. Page citations resolve through [source-index.md](source-index.md).

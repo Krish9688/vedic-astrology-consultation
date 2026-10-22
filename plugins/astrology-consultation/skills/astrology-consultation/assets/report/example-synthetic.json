@@ -62,6 +62,7 @@
      },
      "basis": "Saturn, which rules both the 9th and 10th houses for a Taurus ascendant, sits in its own sign with exalted Mars; the ascendant lord Venus occupies the 10th, aspected by Jupiter.",
      "claim_type": "interpretation",
+     "claim_basis": "TEXT",
      "system": "parashari"
     }
    ]
@@ -90,6 +91,8 @@
      },
      "basis": "Mercury–Jupiter sub-period 2026-10-03 → 2029-01-07 (local engine); Jupiter rules the 11th and occupies the 4th. Jupiter enters Leo (4th) on 2026-10-31, returns to Cancer 2027-01-24, re-enters Leo 2027-06-26. Saturn enters Aries (12th) 2027-06-03, returns 2027-10-20, re-enters 2028-02-23.",
      "claim_type": "prediction",
+     "claim_basis": "TEXT",
+     "temporal_mode": "future",
      "system": "parashari"
     }
    ]
@@ -110,6 +113,7 @@
      },
      "basis": "Sun and debilitated Mercury (2nd and 5th lord) in the 11th; 11th lord Jupiter in the 4th, vargottama.",
      "claim_type": "interpretation",
+     "claim_basis": "TEXT",
      "system": "parashari"
     }
    ]

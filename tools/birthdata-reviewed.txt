@@ -223,3 +223,6 @@ d9197c73ffb4d9ff  synthetic-test-chart
 f493c1f9a7012576  synthetic-test-chart
 043e471d168a2257  synthetic-test-chart
 d555e8c4bd67f25f  synthetic-test-chart
+c944c69a71dc3e96  synthetic-test-chart
+1fc1b28a41aa2e36  synthetic-test-chart
+7790673b1c0f5739  synthetic-test-chart

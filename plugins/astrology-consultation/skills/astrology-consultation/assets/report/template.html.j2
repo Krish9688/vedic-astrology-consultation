@@ -6,7 +6,7 @@
 <title>{{ r.title }}</title>
 <style>{{ css|safe }}</style>
 </head>
-<body{% if r.report_type in ("compact", "one-page") %} class="compact{% if r.report_type == "one-page" %} one-page{% endif %}"{% endif %}>
+<body{% if r.report_type == "compact" %} class="compact"{% endif %}>
 <section class="cover">
   <div class="kind">{{ type_name }}</div>
   <h1>{{ r.title }}</h1>
@@ -32,9 +32,9 @@
 {% endfor %}
 </ul>
 
-{% if r.report_type not in ("compact", "one-page") or r.how_to_read %}<h3>How to read this report</h3>
+{% if r.report_type != "compact" or r.how_to_read %}<h3>How to read this report</h3>
 <p>{{ r.how_to_read or default_how_to_read }}</p>{% endif %}
-{% if r.sections|length > 3 and r.report_type != "one-page" %}
+{% if r.sections|length > 3 %}
 <ol class="toc">{% for s in r.sections %}<li><a href="#{{ s.id }}">{{ s.title }}</a></li>{% endfor %}{% if r.timeline %}<li><a href="#timeline">Timeline</a></li>{% endif %}<li><a href="#uncertain">What is uncertain</a></li>{% if appendix %}<li><a href="#appendix">Technical appendix</a></li>{% endif %}</ol>
 {% endif %}
 
@@ -45,7 +45,9 @@
 {% for u in s.units or [] %}
 <div class="unit">
   <div class="theme">{{ u.theme }}</div>
-  {% if u.claim_type or u.system %}<div class="basis">{{ claim_labels.get(u.claim_type, "") }}{% if u.claim_type and u.system %} · {% endif %}{{ system_labels.get(u.system, "") }}</div>{% endif %}
+  {% set tags = [claim_labels.get(u.claim_type), (basis_labels[u.claim_basis] ~ (": " ~ u.test_result if u.test_result else "")) if u.claim_basis else None, system_labels.get(u.system),
+                 ("Past: " ~ (u.history_status or "not confirmed")) if u.temporal_mode == "past" else None] | select | list %}
+  {% if tags %}<div class="basis">{{ tags | join(" · ") }}</div>{% endif %}
   <dl>
     <dt>What it means</dt><dd>{{ u.meaning }}</dd>
     {% if u.manifestation %}<dt>Likely form</dt><dd>{{ u.manifestation }}</dd>{% endif %}
@@ -59,7 +61,6 @@
 {% endfor %}
 {% endfor %}
 
-{% if r.report_type != "one-page" %}
 {% if tl %}
 <h2 id="timeline">Timeline</h2>
 <div class="timeline">
@@ -94,9 +95,8 @@
 <div class="callout"><ul>{% for p in r.practical_summary %}<li>{{ p }}</li>{% endfor %}</ul></div>
 {% endif %}
 
-{% endif %}{# one-page: no timeline, watch list, uncertainty block or practical list — the summary carries them #}
 
-{% if appendix and r.report_type != "one-page" and (r.report_type != "compact" or r.appendix) %}
+{% if appendix and (r.report_type != "compact" or r.appendix) %}
 <section class="appendix">
 <h2 id="appendix">Technical appendix</h2>
 {% if bases %}<h3>Why each conclusion</h3>

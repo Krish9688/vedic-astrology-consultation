@@ -1,5 +1,9 @@
 # Timing engine: dashas, transits, annual charts
 
+Contents: [0. The timing ladder (how a window is earned) — read first](#0-the-timing-ladder-how-a-window-is-earned--read-first) · [1. Vimshottari: identify the significators first](#1-vimshottari-identify-the-significators-first) · [2. Reading a dasha–bhukti pair](#2-reading-a-dashabhukti-pair) · [3. Transits (gochara): triggers inside an activated period](#3-transits-gochara-triggers-inside-an-activated-period) · [4. Parashari annual chart (Tajika / varshaphala) — separate from Lal Kitab](#4-parashari-annual-chart-tajika--varshaphala--separate-from-lal-kitab)
+[5. Building a window (short form of §0, with a worked report shape)](#5-building-a-window-short-form-of-0-with-a-worked-report-shape)
+[6. Temporal modes (carried over from v2.2)](#6-temporal-modes-carried-over-from-v22)
+
 Timing answers "when is the natal promise foregrounded?". It never creates a promise. Output a **window with its
 reasons** ("the strongest activation is X–Y because A, B and C converge"), graded Strong/Moderate/Weak/Contradictory/
 Unknown per [synthesis-method.md](synthesis-method.md). Never read current sky positions from memory; use supplied
