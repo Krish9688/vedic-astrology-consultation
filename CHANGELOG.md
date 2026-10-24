@@ -6,8 +6,39 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 ## [Unreleased]
 
-Engine, plugin and skill text stay at 3.6.3 / v3.6 until the owner chooses the release number; the skill changes
-below add calculated inputs and source-checked definitions, and have not been through a blind benchmark round.
+## [3.7.0] — 2026-10-25 — roadmap phases 0–8: fact layer, evidence labels, new calculations, charts and outlook report
+
+Engine, plugin and skill move to 3.7.0 / v3.7. The skill changes add calculated inputs and source-checked
+definitions. A blind benchmark of the new skill text has not been run; the only private-chart round (E-056, v3.5
+against v3.6) showed parity. Lal Kitab stays out of the public edition (council option B2).
+
+### Roadmap phases completed (0–8)
+- **Phase 0, correctness and leak fixes**: the council findings fixed, with regression tests.
+- **Phase 1, hygiene**: goldens, reproducible validation, stale docs corrected.
+- **Phase 2, project tooling**: research-team agents, skills and hooks for Claude Code.
+- **Phase 3, historical time zones** (P2-1): IANA zone resolution, DST gap and fold handling, offline place lookup.
+- **Phase 4, deterministic fact layer and evidence labels**: `chart_facts.py --json` with stable fact ids; grounding and
+  citation validators in `render_report` and `life_lint`; `claim_basis` labels (tested, textual, commentary); behavioural
+  harness with routing manifest and conflict tests (T01–T24).
+- **Phase 5, new calculations behind the QA gate**: PyJHora out-of-process oracle (32 charts, 0 unresolved; dasha timing
+  within a second); 38 named yoga definitions with positive, negative and boundary fixtures; Kuja multi-convention
+  table; panchang; Yogini dasha; gochara layer with vedha and station episodes; activation table and topic presets.
+- **Phase 6, knowledge ledger and evidence infrastructure**: stable rule ids, typed disputes, findings registry,
+  catalog v2 with title-page checks, verification ladder, evidence card and pre-registered prediction-log columns;
+  `ref_check.py` proves every reference resolves.
+- **Phase 7, report features**: North and South Indian SVG charts (South grid checked against four printed charts); a
+  periodic outlook report type with an anti-generic lint, two pages at most.
+- **Phase 8, research-gated items (partial)**: Tajika core with Patyayini and pancha vargeeya bala (unsettled
+  conventions shown as variants); Ashtakoota as facts for four rule-fixed kootas, no total; Chara dasha from BPHS
+  (Santhanam) with antardashas, exposed through MCP, REST and CLI; ayanamsa choice (six modes, Lahiri default
+  unchanged); Julian-calendar input.
+- **Evidence and QA design**: EVID-X7 blind matching self-test frozen as a pre-registration (58 cases, k = 3); QA-X9
+  held-out adversarial set and practitioner review approved. Neither has been run: both need people the owner arranges.
+
+### Still open
+- Narayana dasha and the Rath variant of Chara; vashya, yoni, gana and varna kootas and any 36-point total (sources
+  conflict); takraav; warring planets (not supported).
+- Real-install and app-surface tests (a sandbox rehearsal passed, one report prompt did not finish).
 
 ### Added
 - **Historical time zones and places**: `zone` (IANA) beside the `+HH:MM` offset, resolved by the tz database for the
@@ -38,9 +69,12 @@ below add calculated inputs and source-checked definitions, and have not been th
 - Compatibility facts: exact star and pada boundaries now fall forward like the engine's own nakshatra; Tajika refuses
   a date before birth (both found by an independent code review before release).
 
+- **Also in 3.7.0**: Chara dasha (BPHS, Santhanam), four Ashtakoota kootas as facts, Patyayini and pancha vargeeya
+  bala, activation tables, North/South SVG charts, the outlook report, six ayanamsa modes, Julian-calendar input and
+  the evidence card.
+
 ### Blocked (recorded in [docs/ROADMAP.md](docs/ROADMAP.md))
-- Chara/Narayana dasha (garbled BPHS verse, competing schools), 36-point Ashtakoota (no source in the library),
-  pancha vargeeya bala (neutral-sign value missing).
+- Narayana dasha (competing schools) and 36-point Ashtakoota (the vashya, yoni, gana and varna sources conflict).
 
 ## [3.6.3] — 2026-10-19 — identity check, sky events, report audit tools, content-integrity privacy checks
 
