@@ -56,9 +56,25 @@ fertility questions belong with a medical professional. `life_lint.py` and the r
 4th (close circle). Lagna, 2nd and 11th lords friendly → gains used honourably [HJH2 p373]. Mutual friendship of
 planets in a combination makes them cooperate [LOL p293].
 
-## 2. Lal Kitab
+## 2. Lal Kitab layer
 
-Not part of this edition ([lal-kitab-method.md](lal-kitab-method.md)).
+- **House 4** (Moon's pakka ghar; mother, happiness, vehicles): a lone planet here gives no debilitated effect; any
+  planet in 4 acts like the Moon; 4 empty with the Moon outside the kendras makes all planets good; Mars+Rahu in 6 "kill"
+  the 4th [KB B3 H4]. **Matri rin**: Ketu in 4 [KB B12].
+- **House 9** (Jupiter; father/ancestors, luck): after children the 5th merges into the 9th, after brothers the 3rd; a
+  sleeping 9 is awakened through 2 [KB B3 H9]. **Pitri rin**: malefics or enemies in Jupiter's houses 2, 5, 9, 12;
+  judged from the natal chart only; recurs across family members' charts [KB B12 p164–168].
+- **House 5** (progeny): follows the Sun; progeny safe while Jupiter is good; planets in 6 and 10 are enemies of planets
+  in 5 [KB B3 H5]. Author's own practice (Santan Gopal sadhana) is [AUTH], not Lal Kitab [KB B16].
+- **House 3** (siblings): planets in 3 protect against the 8th; Rahu/Ketu here "worrying" [KB B3 H3].
+- **House 2 and 12**: family/in-laws and expenses; the 12th is read as judging the others and the 2nd as judging the 12th [KB A5 notes].
+- Relatives signified by a planet protect the native while alive; after their death keep that planet's objects
+  [KB B13 p199]. The scapegoat chains name relatives (maternal uncle, son, wife) — read as family *themes*, never as
+  predictions about a named person [KB B7 p48–50].
+- **House-building and Saturn** [KB B15; R33]: Lal Kitab ties house construction to Saturn's placement; several
+  statements are deterministic (a father's death tied to the native building three houses) — C5, never forecast.
+- Rin remedies are collective family practices; check [remedy-safety.md](remedy-safety.md) (e.g. feeding 100 dogs is
+  allowed as charity; the "fast 40–43" instruction is unsafe as stated).
 
 ## 3. Alternatives and boundaries
 

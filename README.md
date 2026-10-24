@@ -11,7 +11,7 @@ engine that runs on your own computer.
 | **Install** | Claude plugin marketplace (below), or the standalone engine for any MCP client |
 | **Platforms** | macOS and Linux. Windows: use WSL 2 (works as Linux; not tested by the project). Native Windows is not supported. |
 | **Privacy** | private by default: calculation is local, nothing is sent anywhere |
-| **Traditions** | Parashari (primary); Jaimini as a separate, labelled system. Lal Kitab is not part of this edition |
+| **Traditions** | Parashari (primary); Jaimini and Lal Kitab as separate, labelled systems (Lal Kitab rules, code and remedies; see the copyright note below) |
 | **Licence** | AGPL-3.0-or-later (engine) · Apache-2.0 (skill scripts, plugin files) · CC BY 4.0 (method text, docs) — [LICENSE](LICENSE) |
 
 > Astrology's predictive validity is not scientifically established. The consultation describes what a tradition's
@@ -23,8 +23,8 @@ engine that runs on your own computer.
 - **Released:** 3.7.0 (2026-10-25). Changes after it are listed under *Unreleased* in the
   [CHANGELOG](CHANGELOG.md) and ship only with the next release.
 - **Maintained by one person**; issues and pull requests are read, but there is no support schedule.
-- **Scope is deliberately narrow:** Parashari with an optional Jaimini lens. Other systems (Lal Kitab, KP, Western,
-  numerology) are not part of this edition.
+- **Scope is deliberately narrow:** Parashari, with optional Jaimini and Lal Kitab lenses kept separate. Other systems
+  (KP, Western, numerology) are not part of this edition.
 
 ## Install in Claude
 
@@ -151,8 +151,10 @@ Details: [docs/PRIVACY.md](docs/PRIVACY.md).
 
 No books, book text, index or knowledge graph are distributed here. Book search and the page-cited knowledge graph
 work with **your own** legally obtained copies ([docs/ADD-A-BOOK.md](docs/ADD-A-BOOK.md)); without them the
-consultation works and says that source lookup is unavailable. This edition contains no Lal Kitab material (rules,
-tables, annual chart or remedies); asked about Lal Kitab, the assistant says so. Per-book status:
+consultation works and says that source lookup is unavailable. The Lal Kitab rules, code and remedies in this edition are the
+project owner's own wording of books that are still in copyright; their redistribution status is not legally cleared and
+the owner accepts that risk. The Lal Kitab knowledge base, the Varshaphal table and all book text are not distributed
+(the Varshaphal script says its table is not installed). Per-book status:
 [docs/COPYRIGHT.md](docs/COPYRIGHT.md).
 
 ## Testing

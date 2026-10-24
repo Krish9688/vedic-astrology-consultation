@@ -3,8 +3,8 @@
 v3.2 adds a reasoning layer on top of the v3.1 knowledge system. Nothing below replaces the calculation inputs, the
 books, the Graphify knowledge graph, provenance, the contradiction register, or the Jaimini/Lal Kitab separation.
 
-> **Editions.** Lal Kitab parts below describe the owner's private build; the public edition (from 3.6.1) has no Lal
-> Kitab material and declines Lal Kitab requests.
+> **Editions.** From 3.7.0 the public edition also answers Lal Kitab requests, as a separate system from Parashari and
+> with remedies only on request; the knowledge-base and annual-table parts below describe the owner's private build.
 
 ## 1. The flow
 

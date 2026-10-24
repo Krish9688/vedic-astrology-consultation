@@ -75,7 +75,7 @@ choosing the client (local model, ChatGPT, Claude…) is a separate privacy deci
    deleted, renamed or edited file — or an edited manifest line — fails the export (the archive before anything is
    copied). Updating a manifest is a two-step review: `--review` lists the differences and prints a token;
    `--write-manifest TOKEN` accepts exactly those differences (any later change invalidates the token) and only after
-   the privacy check (and, for the public export, the B2 gate) passes on the exported copies. Symbolic links are never
+   the privacy check (and, for the public export, the KEEP-OUT gate) passes on the exported copies. Symbolic links are never
    exported. Generated archive extras (compressed graph, environment lists, local-only manifest) are not in the
    manifest but are privacy-scanned in the archive.
 8. **Other people's data** stays in an ignored local folder that no export rule reaches, under random identifiers,

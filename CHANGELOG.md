@@ -10,7 +10,7 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 Engine, plugin and skill move to 3.7.0 / v3.7. The skill changes add calculated inputs and source-checked
 definitions. A blind benchmark of the new skill text has not been run; the only private-chart round (E-056, v3.5
-against v3.6) showed parity. Lal Kitab stays out of the public edition (council option B2).
+against v3.6) showed parity.
 
 ### Roadmap phases completed (0–8)
 - **Phase 0, correctness and leak fixes**: the council findings fixed, with regression tests.
@@ -37,10 +37,20 @@ against v3.6) showed parity. Lal Kitab stays out of the public edition (council 
 
 ### Still open
 - Narayana dasha and the Rath variant of Chara; vashya, yoni, gana and varna kootas and any 36-point total (sources
-  conflict); takraav; warring planets (not supported).
+  conflict); warring planets (not supported). Takraav is not open: it was decided and built on 2026-10-24 (D-4, LK-F36,
+  E-047).
 - Real-install and app-surface tests (a sandbox rehearsal passed, one report prompt did not finish).
 
 ### Added
+- **Lal Kitab in the public edition** (owner decision 2026-10-25, reversing council option B2; scope "rules, code,
+  remedies"): the Lal Kitab calculation block (`scripts/lal_kitab.py`), the Varshaphal lookup code, REP-X7 remedy cards
+  (with the never-recommend and caution rules unchanged), the method, timing, remedy-safety and contradiction notes,
+  and the Lal Kitab tests and synthetic fixtures now ship publicly. The Lal Kitab books are still in copyright: the rules
+  are the project's own wording with book and page locators, no book text is reproduced, and the owner has accepted that
+  their redistribution status is not legally cleared (see docs/COPYRIGHT.md). Still private: book and page text, PDFs,
+  source and chapter maps, the extraction, the knowledge graph, the full-text index and the Lal Kitab knowledge base
+  and Varshaphal table. The export gate that failed on Lal Kitab content now fails on those private items instead.
+  Without the table the Varshaphal script says it is not installed and gives no annual chart.
 - **Historical time zones and places**: `zone` (IANA) beside the `+HH:MM` offset, resolved by the tz database for the
   birth moment; a clock time skipped by daylight saving is refused, a repeated one needs `fold`, the pre-standard-time
   era is refused (local mean time suggested), and offsets before 1970 (South Asia before 1948) are flagged for checking

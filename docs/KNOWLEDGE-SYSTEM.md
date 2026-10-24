@@ -1,8 +1,9 @@
 # Knowledge system: Graphify knowledge graph over the astrology library (v3.1; 18 books since v3.3)
 
-> **Editions.** This describes the owner's build. The public edition (from 3.6.1) contains no Lal Kitab material:
-> no Lal Kitab knowledge base, rules, method or graph. `kg.py` and `search.py` search only the books you add
-> yourself (`astro add-book`); the Lal Kitab parts below describe the owner's private build.
+> **Editions.** This describes the owner's build. The public edition (from 3.7.0) carries the Lal Kitab rules, code and
+> remedies but not the Lal Kitab knowledge base, its audit, the Varshaphal table or any graph. `kg.py` and `search.py`
+> search only the books you add yourself (`astro add-book`); the knowledge-base and graph parts below describe the
+> owner's private build.
 
 ## 1. The flow
 

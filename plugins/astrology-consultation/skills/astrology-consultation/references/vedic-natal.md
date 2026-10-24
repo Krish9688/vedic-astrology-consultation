@@ -2,7 +2,8 @@
 
 Contents: [1. Evidence roles (what each layer can and cannot do)](#1-evidence-roles-what-each-layer-can-and-cannot-do) · [2. Houses](#2-houses) · [3. Functional nature (lordship) — the most common source of error](#3-functional-nature-lordship--the-most-common-source-of-error) · [4. Strength and condition](#4-strength-and-condition) · [5. Aspects and associations](#5-aspects-and-associations) · [6. Yogas: define, verify, check bhanga, check delivery](#6-yogas-define-verify-check-bhanga-check-delivery) · [7. Nakshatras](#7-nakshatras) · [8. Optional Jaimini / argala lens (separately named module) — full module: jaimini.md](#8-optional-jaimini--argala-lens-separately-named-module--full-module-jaiminimd) · [9. What the classical texts say that this skill will not state as fact](#9-what-the-classical-texts-say-that-this-skill-will-not-state-as-fact)
 
-Parashari/Vedic branch only. Run `scripts/chart_facts.py` on supplied positions first; it derives houses,
+Parashari/Vedic branch only. Never apply these sign-lordship rules inside a Lal Kitab reading (see
+[lal-kitab-method.md](lal-kitab-method.md)). Run `scripts/chart_facts.py` on supplied positions first; it derives houses,
 lordships, aspects, dignity, combustion, D9/D10, dispositor chains and the Phaladeepika XV tests without hand arithmetic.
 How to weigh everything below is in [synthesis-method.md](synthesis-method.md).
 

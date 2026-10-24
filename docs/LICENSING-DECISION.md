@@ -46,9 +46,10 @@ repository (`LICENSE`, `LICENSES/`, `plugin.json` `license`, engine `pyproject.t
   version (AGPL §13). Local, single-user use triggers nothing. Keep Swiss Ephemeris's copyright notices.
 - **Apache side** (skill scripts, template): keep the licence and NOTICE; state changes. No copyleft.
 - **CC BY 4.0** (skill prose): attribution on reuse.
-- **Never relicensed:** book quotations and paraphrases stay short and attributed; the Lal Kitab KB and all
-  book-derived files stay out of public releases (from 3.6.1 this also covers every Lal Kitab rule, table and method
-  note — council option B2; 3.5.0 and 3.6.0 shipped Lal Kitab rule tables and notes).
+- **Never relicensed:** book quotations and paraphrases stay short and attributed; the Lal Kitab KB, the Varshaphal
+  table and all book-derived files stay out of public releases. Lal Kitab rules, code and remedies in the project's own
+  words are public from 3.7.0 (owner decision 2026-10-25; they had been removed in 3.6.1 by council option B2). Their
+  redistribution status is not legally cleared and the owner accepts the risk (COPYRIGHT.md).
 
 ## 5. Compatibility checks
 
