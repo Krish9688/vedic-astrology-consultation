@@ -36,6 +36,7 @@ def workspace(tmp_path, script, graph=None, db=None):
     shutil.copy(os.path.join(VAL, script), ws / "validation" / script)
     os.symlink(SKILL, ws / "astrology-prediction")
     os.symlink(os.path.join(ROOT, "knowledge"), ws / "knowledge")
+    os.symlink(os.path.join(ROOT, "tools"), ws / "tools")      # graph_checks imports tools/kg/rule_ledger.py
     with open(ws / "graphify-out" / "graph.json", "wb") as f:
         if graph is None:
             with gzip.open(GZ, "rb") as g:

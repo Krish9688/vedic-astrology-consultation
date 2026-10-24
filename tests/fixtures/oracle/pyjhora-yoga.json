@@ -1,0 +1,378 @@
+{
+ "provenance": {
+  "run_id": "pyjhora-yoga-4.8.7-2026-10-22",
+  "tool": "PyJHora",
+  "tool_version": "4.8.7",
+  "local_engine": "skill chart_facts.candidates",
+  "date": "2026-10-22",
+  "harness": "tools/oracle_pyjhora.py yoga",
+  "ephemeris": {
+   "local": "none (sign charts)",
+   "tool": "none (sign charts)"
+  },
+  "settings": {
+   "input": "chart_1d sign charts; PyJHora yoga.gaja_kesari_yoga, kemadruma_yoga"
+  },
+  "charts": [
+   "gk_self_conjunction",
+   "gk_with_venus",
+   "kem_rahu_only",
+   "kem_no_node"
+  ],
+  "verdicts": {
+   "agree": 7,
+   "explained": 5,
+   "unresolved": 0
+  }
+ },
+ "charts": {
+  "gk_self_conjunction": {
+   "asc": 0,
+   "planets": {
+    "Su": [
+     4,
+     10
+    ],
+    "Mo": [
+     0,
+     10
+    ],
+    "Ma": [
+     0,
+     20
+    ],
+    "Me": [
+     4,
+     20
+    ],
+    "Ju": [
+     3,
+     5
+    ],
+    "Ve": [
+     2,
+     10
+    ],
+    "Sa": [
+     6,
+     10
+    ],
+    "Ra": [
+     5,
+     10
+    ],
+    "Ke": [
+     11,
+     10
+    ]
+   }
+  },
+  "gk_with_venus": {
+   "asc": 0,
+   "planets": {
+    "Su": [
+     4,
+     10
+    ],
+    "Mo": [
+     0,
+     10
+    ],
+    "Ma": [
+     0,
+     20
+    ],
+    "Me": [
+     4,
+     20
+    ],
+    "Ju": [
+     3,
+     5
+    ],
+    "Ve": [
+     3,
+     20
+    ],
+    "Sa": [
+     6,
+     10
+    ],
+    "Ra": [
+     5,
+     10
+    ],
+    "Ke": [
+     11,
+     10
+    ]
+   }
+  },
+  "kem_rahu_only": {
+   "asc": 0,
+   "planets": {
+    "Su": [
+     1,
+     10
+    ],
+    "Me": [
+     1,
+     20
+    ],
+    "Ke": [
+     1,
+     15
+    ],
+    "Ve": [
+     2,
+     10
+    ],
+    "Ma": [
+     4,
+     10
+    ],
+    "Mo": [
+     6,
+     10
+    ],
+    "Ra": [
+     7,
+     15
+    ],
+    "Ju": [
+     8,
+     10
+    ],
+    "Sa": [
+     10,
+     10
+    ]
+   }
+  },
+  "kem_no_node": {
+   "asc": 0,
+   "planets": {
+    "Su": [
+     1,
+     10
+    ],
+    "Me": [
+     1,
+     20
+    ],
+    "Ke": [
+     2,
+     15
+    ],
+    "Ve": [
+     2,
+     10
+    ],
+    "Ma": [
+     4,
+     10
+    ],
+    "Mo": [
+     6,
+     10
+    ],
+    "Ra": [
+     8,
+     15
+    ],
+    "Ju": [
+     8,
+     10
+    ],
+    "Sa": [
+     10,
+     10
+    ]
+   }
+  }
+ },
+ "tool_output": {
+  "gk_self_conjunction": {
+   "chart_1d": [
+    "L/1/2",
+    "",
+    "5",
+    "4",
+    "0/3",
+    "7",
+    "6",
+    "",
+    "",
+    "",
+    "",
+    "8"
+   ],
+   "gaja_kesari": true,
+   "kemadruma": false
+  },
+  "gk_with_venus": {
+   "chart_1d": [
+    "L/1/2",
+    "",
+    "",
+    "4/5",
+    "0/3",
+    "7",
+    "6",
+    "",
+    "",
+    "",
+    "",
+    "8"
+   ],
+   "gaja_kesari": true,
+   "kemadruma": false
+  },
+  "kem_rahu_only": {
+   "chart_1d": [
+    "L",
+    "0/3/8",
+    "5",
+    "",
+    "2",
+    "",
+    "1",
+    "7",
+    "4",
+    "",
+    "6",
+    ""
+   ],
+   "gaja_kesari": false,
+   "kemadruma": false
+  },
+  "kem_no_node": {
+   "chart_1d": [
+    "L",
+    "0/3",
+    "8/5",
+    "",
+    "2",
+    "",
+    "1",
+    "",
+    "7/4",
+    "",
+    "6",
+    ""
+   ],
+   "gaja_kesari": false,
+   "kemadruma": true
+  }
+ },
+ "rows": [
+  {
+   "chart": "gk_self_conjunction",
+   "kind": "yoga",
+   "key": "GK-BPHS36 vs PyJHora gaja_kesari",
+   "a": false,
+   "b": true,
+   "verdict": "methodology",
+   "note": "PyJHora's benefic list includes Jupiter itself, so 'a benefic joins Jupiter' always holds (VED-F4); GK-BPHS36 needs another benefic"
+  },
+  {
+   "chart": "gk_self_conjunction",
+   "kind": "yoga",
+   "key": "KEM-BARE vs PyJHora kemadruma",
+   "a": true,
+   "b": false,
+   "verdict": "methodology",
+   "note": "PyJHora counts the nodes in the 2nd/12th from the Moon (KEM-BARE does not) and allows the Moon in a kendra from the lagna (KEM-BPHS counts it, LOL p322)"
+  },
+  {
+   "chart": "gk_self_conjunction",
+   "kind": "yoga",
+   "key": "KEM-BPHS vs PyJHora kemadruma",
+   "a": false,
+   "b": false,
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "chart": "gk_with_venus",
+   "kind": "yoga",
+   "key": "GK-BPHS36 vs PyJHora gaja_kesari",
+   "a": true,
+   "b": true,
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "chart": "gk_with_venus",
+   "kind": "yoga",
+   "key": "KEM-BARE vs PyJHora kemadruma",
+   "a": true,
+   "b": false,
+   "verdict": "methodology",
+   "note": "PyJHora counts the nodes in the 2nd/12th from the Moon (KEM-BARE does not) and allows the Moon in a kendra from the lagna (KEM-BPHS counts it, LOL p322)"
+  },
+  {
+   "chart": "gk_with_venus",
+   "kind": "yoga",
+   "key": "KEM-BPHS vs PyJHora kemadruma",
+   "a": false,
+   "b": false,
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "chart": "kem_rahu_only",
+   "kind": "yoga",
+   "key": "GK-BPHS36 vs PyJHora gaja_kesari",
+   "a": false,
+   "b": false,
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "chart": "kem_rahu_only",
+   "kind": "yoga",
+   "key": "KEM-BARE vs PyJHora kemadruma",
+   "a": true,
+   "b": false,
+   "verdict": "methodology",
+   "note": "PyJHora counts the nodes in the 2nd/12th from the Moon (KEM-BARE does not) and allows the Moon in a kendra from the lagna (KEM-BPHS counts it, LOL p322)"
+  },
+  {
+   "chart": "kem_rahu_only",
+   "kind": "yoga",
+   "key": "KEM-BPHS vs PyJHora kemadruma",
+   "a": false,
+   "b": false,
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "chart": "kem_no_node",
+   "kind": "yoga",
+   "key": "GK-BPHS36 vs PyJHora gaja_kesari",
+   "a": false,
+   "b": false,
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "chart": "kem_no_node",
+   "kind": "yoga",
+   "key": "KEM-BARE vs PyJHora kemadruma",
+   "a": true,
+   "b": true,
+   "verdict": "match",
+   "note": ""
+  },
+  {
+   "chart": "kem_no_node",
+   "kind": "yoga",
+   "key": "KEM-BPHS vs PyJHora kemadruma",
+   "a": false,
+   "b": true,
+   "verdict": "methodology",
+   "note": "PyJHora counts the nodes in the 2nd/12th from the Moon (KEM-BARE does not) and allows the Moon in a kendra from the lagna (KEM-BPHS counts it, LOL p322)"
+  }
+ ]
+}

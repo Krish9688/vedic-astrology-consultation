@@ -43,7 +43,7 @@ NAKSHATRAS = [
 YOGAS = [
     ("Gajakesari yoga", [r"gaja ?kesari"]), ("Raja yoga", [r"raja ?yoga", r"rajayoga"]), ("Dhana yoga", [r"dhana ?yoga"]),
     ("Viparita raja yoga", [r"viparita"]), ("Neechabhanga", [r"neecha ?bhanga", r"nichabhanga"]),
-    ("Budhaditya yoga", [r"budha ?aditya", r"budhaditya"]), ("Kemadruma yoga", [r"kemadruma"]),
+    ("Budhaditya yoga", [r"budha ?aditya", r"budhaditya"]), ("Kemadruma yoga", [r"kem[a]?dru?ma?"]),
     ("Sunapha yoga", [r"sunapha"]), ("Anapha yoga", [r"anapha"]), ("Durudhura yoga", [r"durudh?ura"]),
     ("Ruchaka yoga", [r"ruchaka"]), ("Bhadra yoga", [r"bhadra yoga"]), ("Hamsa yoga", [r"hamsa"]),
     ("Malavya yoga", [r"malavya"]), ("Sasa yoga", [r"sasa yoga", r"shasha yoga"]),
@@ -54,7 +54,7 @@ YOGAS = [
     ("Vasumati yoga", [r"vasumati"]), ("Vesi yoga", [r"vesi"]), ("Vasi yoga", [r"vasi yoga"]), ("Ubhayachari yoga", [r"ubhayachari", r"obhayachari"]),
     ("Harsha yoga", [r"harsha yoga"]), ("Sarala yoga", [r"sarala yoga"]), ("Vimala yoga", [r"vimala yoga"]),
     ("Guru-Chandala yoga", [r"guru ?chandala"]), ("Nabhasa yogas", [r"nabhasa"]), ("Sanyasa yoga", [r"sa[nm]yasa yoga", r"pravrajya"]),
-    ("Kuja dosha", [r"kuja ?dosha", r"manglik", r"mangalik"]),
+    ("Kuja dosha", [r"(?:kuja|mangala?|bhauma|angaraka) ?dos(?:ha?|a)", r"manglik", r"mangalik"]),
 ]
 
 VARGAS = [
@@ -69,7 +69,7 @@ VARGAS = [
 ]
 
 TECHNIQUES = [
-    ("Vimshottari dasha", [r"vims[h]?ottari", r"\bdasa\b", r"\bdasha\b", r"mahadasa", r"mahadasha"], ["दशा", "महादशा"]),
+    ("Vimshottari dasha", [r"vim[s]?[h]?o?t+a?ri", r"\bdasa\b", r"\bdasha\b", r"mahadasa", r"mahadasha"], ["दशा", "महादशा"]),
     ("Antardasha (bhukti)", [r"bhukti", r"antardas[h]?a", r"apahara"], ["अंतर्दशा", "अन्तर्दशा"]),
     ("Pratyantardasha", [r"pratyantar", r"\bantara\b"], []),
     ("Chara dasha", [r"chara das[h]?a"], []),
@@ -187,6 +187,11 @@ _HOUSE_RX = [
     (re.compile(r"\b(lagna|ascendant)(\s+lord)?\b", re.I), "lagna"),
     (re.compile(r"(?:खाना|खाने|घर)\s*(?:नंबर|नम्बर|नं\.?|न०)?\s*([0-9०-९]{1,2})"), "deva"),
 ]
+# Sanskrit names for "the Nth lord" (lagnesh = lagna lord, saptamesh = 7th lord, ...); also -adhipati / -adhipa forms
+_LORDS = {"lagn": 1, "dhan": 2, "sahaj": 3, "sukh": 4, "chaturth": 4, "putr": 5, "panch": 5, "shasht": 6, "ari": 6,
+          "saptam": 7, "kalatr": 7, "ashtam": 8, "randhr": 8, "bhagy": 9, "navam": 9, "dasham": 10, "karm": 10,
+          "labh": 11, "ekadash": 11, "vyay": 12, "dwadash": 12, "dvadash": 12}
+_LORD_RX = re.compile(r"\b(" + "|".join(sorted(_LORDS, key=len, reverse=True)) + r")(?:esh|eshwar|adhipati|adhipa)a?\b", re.I)
 _DEVA_DIGITS = str.maketrans("०१२३४५६७८९", "0123456789")
 
 
@@ -207,6 +212,7 @@ def house_spans(text):
                 n = int(m.group(1)) if m.group(1) else ORD[m.group(2).lower()]
                 role = "lord" if kind == "lord" or (kind is None and m.group(3).lower().startswith("lord")) else "house"
                 out.append((n, role, m.start()))
+    out += [(_LORDS[m.group(1).lower()], "lord", m.start()) for m in _LORD_RX.finditer(text)]
     return out
 
 
@@ -251,6 +257,7 @@ if __name__ == "__main__":
     assert "technique:moolatrikona" in f and "nakshatra:mula" not in f, f
     assert "planet:saturn" not in f, f  # शनिवार (Saturday) must not match Saturn
     assert house_refs(t) == {(7, "house"), (10, "lord")}, house_refs(t)
+    assert house_refs("saptamesh in the 8th; Lagnesh and dashamadhipati") == {(7, "lord"), (8, "house"), (1, "lord"), (10, "lord")}
     assert set(find_entities("chara karaka scheme")) == {"technique:chara-karaka"}
     assert house_refs("lagna lord in the 6th from the Moon") == {(1, "lord"), (6, "house")}
     assert house_refs("Venus in the 7th, Mars in 8th; 10th lord") == {(7, "house"), (8, "house"), (10, "lord")}

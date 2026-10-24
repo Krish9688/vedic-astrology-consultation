@@ -100,7 +100,7 @@ The local engine stands on its own; nothing in the project calls an outside calc
 - Removed: the `compare_engines` tool (MCP, REST `/api/v1/compare`, CLI `astro compare`), the VedAstro batch fetcher
   and adapter, the `vedastro_server` setting, the `hybrid` privacy mode (an old setting is read as `private`), the
   doctor's VedAstro check and all stored VedAstro output. The plugin now has 15 tools.
-- Kept: the generic comparator (`python -m astro.calc.compare --local calc.json --other facts.json`), offline only.
+- Kept: the generic comparator (`python -m astro.calc.compare --local calc.json --other facts.json --out OUT`), offline only.
 - Test fixtures A/B and their period packet regenerated with the local engine (positions unchanged within 0.1′; the old
   packet's dasha dates were wrong by up to 2½ years); test rubric dates updated; retrograde flags now included.
 - Independent dasha reference added: the dasha balance at birth is tested against one value of N. C. Lahiri's

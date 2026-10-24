@@ -4,7 +4,6 @@ import json
 import os
 
 import pytest
-import swisseph as swe
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
@@ -23,13 +22,13 @@ def chart(t, la, lo):
     return E.compute(t.date().isoformat(), t.strftime("%H:%M:%S"), 0, la, lo, on="2000-01-01", extras=False)
 
 
-def test_drik_bala_matches_raman_published_example(monkeypatch):
+def test_drik_bala_matches_raman_published_example():
     ref = json.load(open(os.path.join(REF, "raman_1918.json")))
     b = ref["birth"]
-    monkeypatch.setattr(E, "AYANAMSA", swe.SIDM_RAMAN)   # the book uses Raman's ayanamsa; the engine re-asserts its own
-    c = E.compute(b["date"], b["time"], b["tz"], b["lat"], b["lon"], on="2000-01-01", extras=False)
-    ut = dt.datetime.fromisoformat(f"{b['date']}T{b['time']}") - dt.timedelta(hours=b["tz"])
-    got = S.shadbala(c, ut, b["lat"], b["lon"], b["tz"])["planets"]
+    with E.using("raman"):                               # the book uses Raman's ayanamsa (P8-3c option)
+        c = E.compute(b["date"], b["time"], b["tz"], b["lat"], b["lon"], on="2000-01-01", extras=False)
+        ut = dt.datetime.fromisoformat(f"{b['date']}T{b['time']}") - dt.timedelta(hours=b["tz"])
+        got = S.shadbala(c, ut, b["lat"], b["lon"], b["tz"])["planets"]
     for p, want in ref["expected"]["drik_virupas"].items():
         assert abs(got[p]["virupas"]["drik"] - want) <= ref["tolerance"] + 1e-9, (p, got[p]["virupas"]["drik"], want)
 

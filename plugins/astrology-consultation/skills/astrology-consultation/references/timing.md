@@ -57,6 +57,16 @@ hindsight [LOL p354; R2-TP1].
 7. **Supporting only** (quality or fine placement, never occurrence): Ashtakavarga bindus of the transiting planet
    (quality: easy vs strained), double transit on the network (true most of the time — label it), eclipses/nodal
    contacts ("sensitised for about six months", not a timer), PD inside an earned band [R2-TP7–TP9].
+
+   **Engine support for steps 3-7** (facts only). `get_topic_network` (`astro network --topic …`) builds the step-3
+   network: Raman's (a)-(g) list plus the topic extras (marriage, career, finance, relocation, education; children is
+   theme-only and never laid over dates), each entry with its source and a sha256 hash. Build it before any date is
+   seen and pass it back unchanged: `get_activation` (`astro activation --network …`) refuses an edited network. Per
+   AD (or PD) segment it lists the period lords' roles from lagna and Moon (from chart_facts), D9/D10 and dignity, and
+   the contacts, Ju/Sa sign stays (with BAV/SAV) and station episodes that touch a period lord or the network. Variant
+   entries and unsourced extras are flagged, not merged. `astro retro --event career:2019-05 …` is the local-only
+   §8 calibration check ([consultation-reasoning.md](consultation-reasoning.md) §8): "consistent with N of M" against
+   networks frozen first. Nothing is stored, and calibration is not proof.
 8. **Show restraint even when finer windows exist**: give the broad activation and **at most one** "most
    concentrated" window (plus, if genuinely distinct, one secondary). Never list a run of pratyantardashas as
    separate bullets — the person needs the shape of the period, not the software table.
@@ -164,6 +174,20 @@ the Moon (PD XXVI good houses, vedha, condition) with the lagna frame beside it,
 exact slow-planet contacts and, for a day or week, the Moon's transit. `get_gochara` gives the table for one date.
   Gochara rows carry the bindus of the transited sign (the planet's own BAV and the SAV, BPHS tables): they qualify a
   transit, never time or predict on their own.
+  Year/month outlooks also list **vedha intervals** (dated spans in which a favourable transit is obstructed, sampled at
+  the sign changes of Sun, Mars, Mercury, Jupiter, Venus, Saturn; PD table; Moon vedha omitted) and **station-near-natal
+  episodes** (a station within 3° close, 7° wide of a natal point, one episode per retrograde loop; the orb is a
+  convention, not a classical rule). All are triggers inside an activated dasha period only, never predictions alone.
+  Every factor carries a `layer`: **event** (exact slow contact with a natal point, a station near one, a slow sign
+  change, sade sati), **texture** (faster planets' sign changes, bare stations, and for a month or longer the
+  chandrashtama spans [CRUX p99-100] and the Moon's daily tara from the birth star — low weight) or **backdrop** (dasha,
+  gochara snapshot, vedha).
+- **Written monthly or quarterly outlook** (report type `outlook`, 28-92 days): start from
+  `render_report.py --outlook-draft outlook.json` (dasha first, then event-level factors or the texture-only statement,
+  texture last), write the life meaning around those facts, and check with `--outlook outlook.json`: every unit names
+  its factor ids, every sentence about a planet carries a chart anchor (a house from your Moon or lagna, a natal point,
+  a dasha), a window without an event-level factor says "no event-level timing is indicated" and makes no event claim,
+  and the client text stays within two pages.
 - Every statement names the factor ids behind it and the tradition (Parashari gochara; Yogini is a secondary dasha).
   Lead with the running dasha, then the transits that touch its lords and houses (§0, §3); a favourable transit in an
   unfavourable period is a minor note.

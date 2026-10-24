@@ -22,6 +22,8 @@ the project's research notes (not part of this package). All structure here is *
 6. **Technical appendix last**: the chart basis of each conclusion, positions, periods, method, sources. Page and verse
    references live only here, and `appendix.sources` names **books** (author, title, page) — never the skill's own
    files, scripts or internal registers.
+   A rasi chart is drawn above the positions table when `appendix.positions` has an Ascendant row:
+   `chart_style` picks `north` (default) or `south`; only one style is drawn.
 7. **Proportionate length**: compact 2–4 pages, topic report 6–12, twelve-month forecast 8–15, complete life report
    15–30. A catalogue of techniques is not thoroughness.
 8. **Not in a report unless asked**: remedies (then only via remedy-safety.md), numerology, gemstones, lucky numbers,
@@ -37,6 +39,7 @@ Sections are defaults — drop what the chart or the request does not support, a
 | Type (`report_type`) | Default sections, in order | Timing depth |
 |---|---|---|
 | `compact` — consultation summary | the questions asked, answered (one unit each) · current chapter · what to watch. When the person asks for "one page", keep the client text to about 450 words and leave out the timeline and appendix (two to three printed pages; a true single page needs about 250 words) | windows named in units |
+| `outlook` — personal monthly/quarterly outlook | running dasha · event-level factors in the window, or the plain statement that no event-level timing is indicated · texture last, low weight (timing.md §3a; `--outlook-draft`, `--outlook`). 28-92 days, two pages at most; daily and sun-sign feeds are refused | every unit names its outlook factor ids |
 | `career` | working pattern · current chapter · next 2–3 years · money · decisions and choices | chapter + one or two windows |
 | `relationship` | the answer: the main window and its grade · how you relate · what draws you and to whom · the window ladder (promise → forming → formalising) · what to watch | one main forming window + fallback; formalising only as a later rung |
 | `marriage` | the answer: promise grade and the main commitment window · the partner, as themes and ranges · the window ladder (forming kept apart from formalising) · married life themes | one main commitment window + fallback |

@@ -95,9 +95,14 @@ def derive(chart):
 # definitions, sources and limits: references/yoga-definitions.md.
 BPHS_MAP = "source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked"
 # share of 4000 random charts (1950-2010) in which the condition holds; regenerate with tools/calc/yoga_baserates.py
-BASE_RATE = {"GK-BPHS36": "9%", "KEM-BARE": "45%", "KEM-BPHS": "3%", "KESARI-LOOSE": "34%", "KUJA-BPHS80": "15%",
-             "KUJA-PD11.3": "10%", "KUJA-POPULAR": "88%", "PMP-BPHS": "34%", "PMP-LOL": "48%", "RAJA-KK": "68%",
-             "RAJA-KKP": "61%"}
+BASE_RATE = {"ADHI-BPHS37": "45%", "ADHI-PD6": "72%", "AMALA-BPHS36": "21%", "AMALA-PD6": "34%", "ANAPHA-BPHS37": "21%",
+             "BUDHADITYA-LOL": "51%", "DURADHARA-BPHS37": "11%", "GK-BPHS36": "9%", "KEM-BARE": "45%", "KEM-BPHS": "3%",
+             "KESARI-LOOSE": "34%", "KUJA-BPHS80": "15%", "KUJA-HJH2": "78%", "KUJA-PD11.3": "10%", "KUJA-POPULAR": "88%",
+             "LAKSHMI-BPHS36": "5%", "LAKSHMI-PD6": "4%", "NB-ASP": "7%", "NB-D9": "6%", "NB-DISP": "27%", "NB-EXL": "27%",
+             "NB-EXP": "24%", "NB-MUT": "16%", "NB-SELF": "26%", "PMP-BPHS": "34%", "PMP-LOL": "48%", "RAJA-KK": "68%",
+             "RAJA-KKP": "61%", "SUNAPHA-BPHS37": "23%", "UBHAYACHARI-BPHS38": "34%", "UBHAYACHARI-PD6": "15%",
+             "VESI-BPHS38": "26%", "VESI-PD6": "29%", "VIPARITA-CRUX": "15%", "VIPARITA-HJH": "58%", "VIPARITA-LOL": "6%",
+             "VOSI-BPHS38": "29%", "VOSI-PD6": "32%"}
 KENDRA, KONA, DUSTHANA = {1, 4, 7, 10}, {1, 5, 9}, {6, 8, 12}
 MAHAPURUSHA = dict(Ma="Ruchaka", Me="Bhadra", Ju="Hamsa", Ve="Malavya", Sa="Sasa")
 
@@ -119,8 +124,9 @@ def _combust(D, p):
     return d <= COMBUST[p][1 if P[p].get("retro") else 0]
 
 
-def candidates(D):
-    """[(id, label, holds: True/False/None, detail, source)] for every definition whose planets are supplied."""
+def candidates(D, show_all=False):
+    """[(id, label, holds: True/False/None, detail, source)] for every definition whose planets are supplied.
+    show_all: also the P4-1 lines a chart would not print (tests read their citation)."""
     P, house, lord = D["P"], D["house"], D["lord"]
     benefic = {"Ju", "Ve", "Me", "Mo"} - D["malefic"]
     rows = []
@@ -202,6 +208,163 @@ def candidates(D):
             rows.append((f"RAJA-KKP-{q}", f"{'trinal' if kona_lord else 'angular'} lord {NAME[q]} placed in "
                          f"{'an angle' if kona_lord else 'a trine'} (BPHS 34.11-12)", True,
                          f"{NAME[q]} owns H{','.join(map(str, owns[q]))}, in H{house[q]}" + dispute((q,)), src))
+    return rows + _more_candidates(D, benefic, show_all)
+
+
+FIVE = ("Ma", "Me", "Ju", "Ve", "Sa")          # the planets the 2nd/12th yogas count: not the luminaries, not the nodes
+EXALTED_IN = {s: p for p, s in EXALT.items()}   # sign index -> the planet exalted there (seven planets)
+NOT_PC = "not page-checked"
+
+
+def _kendra_lm(D, x):
+    """Is x in a kendra from the lagna or the Moon? (holds True/False/None, text). None: x or the Moon not supplied, or
+    x is the Moon itself and only the 'from the Moon' frame would make it hold (the texts do not say it counts)."""
+    P, house = D["P"], D["house"]
+    if x not in P:
+        return None, f"{NAME[x]} not supplied"
+    if house[x] in KENDRA:
+        return True, f"{NAME[x]} H{house[x]} (kendra from the lagna)"
+    if x == "Mo":
+        return None, f"Moon H{house[x]}; holds only if the Moon counts as in a kendra from itself (the texts are silent)"
+    if "Mo" not in P:
+        return None, f"{NAME[x]} H{house[x]}; Moon not supplied"
+    mh = _from(D, x, P["Mo"]["s"])
+    return mh in KENDRA, f"{NAME[x]} H{house[x]}, M{mh}" + (" (kendra from the Moon)" if mh in KENDRA else "")
+
+
+def _more_candidates(D, benefic, show_all=False):
+    """The P4-1 definitions added after the first set (references/yoga-definitions.md). A yoga's lines print when one of
+    its variants holds or is undetermined, then every variant prints so the disagreement shows; neechabhanga prints
+    every clause for every debilitated planet."""
+    P, house, lord, occ = D["P"], D["house"], D["lord"], D["occ"]
+    grouped = []
+    if "Mo" in P:
+        m = P["Mo"]["s"]
+        s2, s12 = ([q for q in FIVE if q in P and _from(D, q, m) == k] for k in (2, 12))
+        det = f"2nd from the Moon: {','.join(s2) or 'empty'}; 12th: {','.join(s12) or 'empty'} (Sun and nodes not counted)"
+        src = ("BPHS 37.7-10 (p397), source map BPHS_part3.md; BJ XIII (p175) BJ.md; PD VI.5-7 (p78) PD_part2.md; "
+               f"LOL p326 (nodes excluded) LOL.md - {NOT_PC}")
+        grouped += [("SUNAPHA-BPHS37", "Sunapha: a planet other than the Sun in the 2nd from the Moon, none in the 12th",
+                     bool(s2) and not s12, det, src),
+                    ("ANAPHA-BPHS37", "Anapha: a planet other than the Sun in the 12th from the Moon, none in the 2nd",
+                     bool(s12) and not s2, det, src),
+                    ("DURADHARA-BPHS37", "Duradhara: planets other than the Sun in both the 2nd and the 12th from the Moon",
+                     bool(s2) and bool(s12), det, src)]
+        def adhi(ref, cands):
+            return [q for q in cands if q in P and q in benefic and _from(D, q, ref) in (6, 7, 8)]
+        am, al = adhi(m, ("Me", "Ju", "Ve")), adhi(D["asc"], ("Mo", "Me", "Ju", "Ve"))
+        mal = [q for q in P if q in D["malefic"] and _from(D, q, m) in (6, 7, 8)]
+        det = (f"benefics 6/7/8 from the Moon: {','.join(am) or 'none'}; from the lagna: {','.join(al) or 'none'}; "
+               f"malefics 6/7/8 from the Moon: {','.join(mal) or 'none'}; any of the seven fillings of 6/7/8 counts "
+               "(BJ translator); LOL p319: 6th and 8th only is 'a kind of' Adhi")
+        grouped += [("ADHI-BPHS37", "Chandra-Adhi (BPHS 37.5): benefics in the 6th, 7th or 8th from the Moon", bool(am), det,
+                     f"BPHS 37.5 (p397), source map BPHS_part3.md; seven fillings per BJ XIII translator (p174) BJ.md - {NOT_PC}"),
+                    ("ADHI-PD6", "Adhi (PD VI.42-43): benefics in the 6th, 7th or 8th from the Moon or the lagna",
+                     bool(am or al), det, f"PD VI.42-43 (p93-94), source map PD_part2.md; LOL p318 LOL.md - {NOT_PC}")]
+    if "Su" in P:
+        s = P["Su"]["s"]
+        v2, v12 = ([q for q in FIVE if q in P and _from(D, q, s) == k] for k in (2, 12))
+        b2, b12 = [q for q in v2 if q in benefic], [q for q in v12 if q in benefic]
+        cls = lambda qs: ",".join(f"{q} ({'benefic' if q in benefic else 'malefic'})" for q in qs) or "empty"
+        det = f"2nd from the Sun: {cls(v2)}; 12th: {cls(v12)} (Moon and nodes not counted)"
+        bsrc = (f"BPHS 38.1-4 (p398-399), source map BPHS_part3.md; LOL p326 LOL.md - {NOT_PC}; BPHS: benefics give the "
+                "stated effects, malefics the contrary")
+        psrc = f"PD VI.8-13 (p80-82), source map PD_part2.md - {NOT_PC}; PD counts benefics (malefics form its papa versions)"
+        for name, a, b in (("VESI", v2, v12), ("VOSI", v12, v2)):
+            grouped.append((f"{name}-BPHS38", f"{name.title()} (BPHS 38): a planet other than the Moon in the "
+                            f"{'2nd' if name == 'VESI' else '12th'} from the Sun, none in the {'12th' if name == 'VESI' else '2nd'}",
+                            bool(a) and not b, det, bsrc))
+        grouped.append(("UBHAYACHARI-BPHS38", "Ubhayachari (BPHS 38): planets other than the Moon in both the 2nd and the "
+                        "12th from the Sun", bool(v2) and bool(v12), det, bsrc))
+        for name, a, b in (("VESI", b2, b12), ("VOSI", b12, b2)):
+            grouped.append((f"{name}-PD6", f"{name.title()} (PD VI.8): a benefic in the {'2nd' if name == 'VESI' else '12th'} "
+                            f"from the Sun, none in the {'12th' if name == 'VESI' else '2nd'}", bool(a) and not b, det, psrc))
+        grouped.append(("UBHAYACHARI-PD6", "Ubhayachari (PD VI.8): benefics in both the 2nd and the 12th from the Sun",
+                        bool(b2) and bool(b12), det, psrc))
+    if "Su" in P and "Me" in P:
+        same = P["Su"]["s"] == P["Me"]["s"]
+        comb = _combust(D, "Me")
+        grouped.append(("BUDHADITYA-LOL", "Budhaditya (LOL): the Sun and Mercury in the same sign", same,
+                        f"Sun {SIGNS[P['Su']['s']]}, Mercury {SIGNS[P['Me']['s']]}" + (
+                            f"; H{house['Me']}; Mercury combust {'unknown (no degrees)' if comb is None else 'yes' if comb else 'no'}"
+                            "; LOL's further tests (a link to the 1st or 5th, both planets strong and unafflicted) are not "
+                            "judged" if same else ""), f"LOL p319-320, source map LOL.md - {NOT_PC}"))
+    frames = [("lagna", occ[10])] + ([("Moon", [q for q in P if _from(D, q, P["Mo"]["s"]) == 10])] if "Mo" in P else [])
+    only = [f for f, o in frames if o and all(q in benefic for q in o)]
+    anyb = [f for f, o in frames if any(q in benefic for q in o)]
+    det = "; ".join(f"10th from the {f}: {','.join(o) or 'empty'}" for f, o in frames)
+    grouped += [("AMALA-BPHS36", "Amala (BPHS 36.5-6): only benefics in the 10th from the lagna or the Moon", bool(only),
+                 det + (f"; only benefics from the {', '.join(only)}" if only else ""),
+                 f"BPHS 36.5-6 (p382), source map BPHS_part3.md - {NOT_PC}; translator: a malefic also there voids it"),
+                ("AMALA-PD6", "Amala (PD VI.19): a benefic in the 10th from the lagna or the Moon", bool(anyb),
+                 det + "; LOL p318 adds 'unafflicted' (not judged)",
+                 f"PD VI.19-20 (p84), source map PD_part2.md; LOL p318 LOL.md - {NOT_PC}")]
+    L9 = lord[9]
+    if L9 in P:
+        dig = lambda q: P[q]["s"] == EXALT[q] or SIGN_LORD[P[q]["s"]] == q
+        det = (f"9th lord {NAME[L9]} in {SIGNS[P[L9]['s']]} H{house[L9]}, own/exalted {'yes' if dig(L9) else 'no'}")
+        grouped.append(("LAKSHMI-BPHS36", "Lakshmi (BPHS 36.27-28): the 9th lord in a kendra in its own, exaltation or "
+                        "moolatrikona sign", dig(L9) and house[L9] in KENDRA,
+                        det + f"; the 'strong lagna lord' clause ({NAME[lord[1]]}) is not judged; at sign level the "
+                        "moolatrikona sign is already an own or exaltation sign",
+                        f"BPHS 36.27-28 (p389), source map BPHS_part3.md - {NOT_PC}"))
+        if "Ve" in P:
+            grouped.append(("LAKSHMI-PD6", "Lakshmi (PD VI.21-25): the 9th lord and Venus each in own or exaltation sign "
+                            "in a kendra or kona", dig(L9) and house[L9] in KENDRA | KONA and dig("Ve") and
+                            house["Ve"] in KENDRA | KONA, det + f"; Venus in {SIGNS[P['Ve']['s']]} H{house['Ve']}, own/exalted "
+                            f"{'yes' if dig('Ve') else 'no'}", f"PD VI.21-25 (p85-86), source map PD_part2.md; LOL p322 "
+                            f"LOL.md - {NOT_PC}"))
+    dl = {h: lord[h] for h in (6, 8, 12) if lord[h] in P}
+    if dl:
+        lol = [h for h, q in dl.items() if house[q] in DUSTHANA - {h}]
+        swap = {h for h in lol for k in lol if k != h and house[dl[h]] == k and house[dl[k]] == h}
+        hjh = [h for h, q in dl.items() if house[q] in {3, 6, 8, 12} - {h}]
+        l3 = {q for q in {lord[h] for h in (3, 6, 8, 12)} if q in P}
+        crux = [h for h in (3, 6, 8, 12) if len([q for q in l3 if house[q] == h]) >= 2]
+        det = "; ".join(f"{h}th lord {NAME[q]} H{house[q]}" for h, q in dl.items()) + (
+            f"; exchange between the {' and '.join(f'{h}th' for h in sorted(swap))} lords (not counted by LOL)" if swap else "")
+        grouped += [("VIPARITA-LOL", "Viparita (LOL p327): lords of at least two dusthanas each in another dusthana, "
+                     "not by exchange", len(set(lol) - swap) >= 2, det, f"LOL p327, source map LOL.md - {NOT_PC}"),
+                    ("VIPARITA-HJH", "Viparita (Raman): a dusthana lord in another dusthana (6th in 8th, 8th in 12th, "
+                     "12th in 3rd)", bool(hjh), det, f"HJH2 p296, p353 (HJH2_part2.md); HJH1 p307 (HJH1_part2.md) - {NOT_PC}"),
+                    ("VIPARITA-CRUX", "Viparita (CRUX p30-32): two lords of the 3rd/6th/8th/12th joined in the 3rd, 6th, "
+                     "8th or 12th", bool(crux), det + (f"; joined in H{','.join(map(str, crux))}" if crux else ""),
+                     f"CRUX p30-32, source map CRUX_part1.md - {NOT_PC}")]
+    live = {r[0].split("-")[0] for r in grouped if r[2] is not False}
+    rows = [r for r in grouped if show_all or r[0].split("-")[0] in live]
+    # Neechabhanga clause by clause (LOL p323; PD VII.26-30; HJH2): one line per clause, never one 'cancelled' flag
+    nsrc = {"LOL": f"LOL p323, source map LOL.md - {NOT_PC}", "PD": f"PD VII.26-30 (p110-112), source map PD_part2.md - {NOT_PC}",
+            "PDT": f"PD VII.26-30 translator's note (p110-112), source map PD_part2.md - {NOT_PC}",
+            "HJH2": f"HJH2 p45, p366-368, source maps HJH2_part1.md/HJH2_part2.md - {NOT_PC}"}
+    for q in [x for x in P7 if x in P and P[x]["s"] == (EXALT[x] + 6) % 12]:
+        ds = P[q]["s"]
+        dlord, elord, ex = SIGN_LORD[ds], SIGN_LORD[EXALT[q]], EXALTED_IN.get(ds)
+        head = f"{NAME[q]} debilitated in {SIGNS[ds]} H{house[q]}; "
+        kd, ke, ks = _kendra_lm(D, dlord), _kendra_lm(D, elord), _kendra_lm(D, q)
+        kx = _kendra_lm(D, ex) if ex else (False, f"no planet among the seven is exalted in {SIGNS[ds]}")
+        if dlord in P:
+            asp = house[q] in D["aspects_from"](dlord) and house[dlord] != house[q]
+            ka = (asp, f"{NAME[dlord]} H{house[dlord]}" + ("; with it, which is not an aspect" if house[dlord] == house[q] else ""))
+        else:
+            ka = (None, f"{NAME[dlord]} not supplied")
+        if dlord in P and elord in P:
+            gap = (house[elord] - house[dlord]) % 12
+            km = (gap in (0, 3, 6, 9), f"{NAME[dlord]} H{house[dlord]}, {NAME[elord]} H{house[elord]} (the same sign counts as the 1st)")
+        else:
+            km = (None, "a lord not supplied")
+        kn = (None, "no degree") if "deg" not in P[q] else (varga(ds, P[q]["deg"], 9) == EXALT[q],
+                                                           f"D9 {SIGNS[varga(ds, P[q]['deg'], 9)]}")
+        for cid, label, (holds, txt), srcs in (
+                ("DISP", f"lord of the debilitation sign ({NAME[dlord]}) in a kendra from the lagna or the Moon", kd, ("LOL", "PD", "HJH2")),
+                ("EXL", f"lord of its exaltation sign ({NAME[elord]}) in a kendra from the lagna or the Moon", ke, ("LOL", "PD", "HJH2")),
+                ("ASP", f"the debilitation-sign lord ({NAME[dlord]}) aspects it", ka, ("LOL", "PD")),
+                ("EXP", "the planet exalted in that sign in a kendra from the lagna or the Moon", kx, ("LOL", "PDT")),
+                ("MUT", "the debilitation-sign lord and the exaltation-sign lord in mutual kendras", km, ("PD",)),
+                ("SELF", "the debilitated planet itself in a kendra from the lagna or the Moon", ks, ("PDT",)),
+                ("D9", "exalted in the navamsa", kn, ("HJH2",))):
+            rows.append((f"NB-{cid}-{q}", f"neechabhanga clause {cid} for {NAME[q]}: {label}", holds,
+                         head + txt + ("; LOL counts it a raja yoga only with the planet in a kendra or kona" if cid == "DISP" else ""),
+                         "; ".join(nsrc[k] for k in srcs)))
     return rows
 
 
@@ -223,6 +386,9 @@ def kuja(D):
     pd_rasi = SIGN_LORD[seventh] == "Ma"
     pd = house["Ma"] == 7 or (pd_rasi and amsa is not None and SIGN_LORD[amsa] == "Ma")
     pd_holds = pd if (house["Ma"] == 7 or not pd_rasi or amsa is not None) else None
+    hj = [k for k, h in ref.items() if h in {2, 12, 4, 7, 8}]           # HJH2 p70 (CR-V16); exemptions are Raman's
+    hj_ex = [k for k in hj if P["Ma"]["s"] in {2: (2, 5), 12: (1, 6), 4: (0, 7), 7: (9, 3), 8: (8, 11)}[ref[k]]]
+    hj_with = [q for q in ("Ju", "Mo") if q in P and P[q]["s"] == P["Ma"]["s"]]
     return [("KUJA-BPHS80", "BPHS 80.47-49: Mars 12/4/7/8 from the lagna; a benefic aspect or association cancels",
              bphs and not contact, f"Mars H{house['Ma']}" + (f"; cancelled by {','.join(contact)}" if bphs and contact else "")
              + "; the 'partner has the same yoga' clause needs both charts", "source map BPHS_part6.md (BPHS p955), not page-checked"),
@@ -235,13 +401,20 @@ def kuja(D):
             ("KUJA-PD11.3", "Phaladeepika XI.3: Mars in the 7th, or the 7th sign and its navamsa both Mars's",
              pd_holds, f"Mars H{house['Ma']}; 7th sign {SIGNS[seventh]}" + (f", descendant navamsa {SIGNS[amsa]}"
              if amsa is not None else ", descendant navamsa unknown (no ascendant degree)"),
-             "PD p141-142 (XI.3), source map PD_part1.md, not page-checked")]
+             "PD p141-142 (XI.3), source map PD_part1.md, not page-checked"),
+            ("KUJA-HJH2", "HJH2 p70: Mars 2/12/4/7/8 from the lagna, Moon or Venus (the 1st not listed)", bool(hj),
+             "Mars from " + ", ".join(f"{k} {h}" for k, h in ref.items()) + (f"; meets it from {', '.join(hj)}" if hj else "")
+             + (f"; HJH2 sign exemption from {', '.join(hj_ex)}" if hj_ex else "")
+             + ("; HJH2: none in Leo or Aquarius" if hj and P["Ma"]["s"] in (4, 10) else "")
+             + (f"; HJH2: Mars with {','.join(hj_with)} cancels it" if hj and hj_with else "")
+             + "; HJH2 counts by bhava, here whole-sign", "HJH2 p70-71 (pr 63-64), source map HJH2_part1.md §3.7, not page-checked")]
 
 
 def family(rid):
-    """Base-rate key: PMP-Ve-BPHS -> PMP-BPHS (any Mahapurusha), RAJA-KK-MaMe -> RAJA-KK (any pair), else the id."""
+    """Base-rate key: PMP-Ve-BPHS -> PMP-BPHS (any Mahapurusha), RAJA-KK-MaMe -> RAJA-KK (any pair), NB-DISP-Ma -> NB-DISP
+    (any debilitated planet), else the id."""
     parts = rid.split("-")
-    return f"PMP-{parts[2]}" if parts[0] == "PMP" else f"RAJA-{parts[1]}" if parts[0] == "RAJA" else rid
+    return f"PMP-{parts[2]}" if parts[0] == "PMP" else f"{parts[0]}-{parts[1]}" if parts[0] in ("RAJA", "NB") else rid
 
 
 def candidates_kuja(chart):

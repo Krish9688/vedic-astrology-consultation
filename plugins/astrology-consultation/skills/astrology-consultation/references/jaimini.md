@@ -56,7 +56,10 @@ Rahu's degrees counted from the end of its sign [BPHS ch. 32, PDF p329–331; tr
 Jaimini timing runs through signs, not planets, and several calculation variants exist (K. N. Rao, Sanjay Rath and
 others differ on direction and length) [EXT]. **Use chara dasha only from a calculation engine that names its
 variant.** Never compute it by hand, and never mix its periods with Vimshottari as if they were one clock: report
-them as a separate timing opinion.
+them as a separate timing opinion. The local engine computes one named school: `get_chara_dasha` / `astro chara`,
+BPHS ch. 46 as translated by Santhanam (page-checked; first cycle; dates from birth in sidereal years, a labelled
+convention), with BPHS ch. 51 antardashas and ch. 50's start as the alternative. Rath's (JSR) Chara and PVR's
+Narayana dasha are not computed.
 
 ## 5. How to write the Jaimini layer
 

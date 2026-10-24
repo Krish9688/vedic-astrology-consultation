@@ -98,3 +98,4 @@ a { color: var(--forest); }
   .cover { height: auto; min-height: 0; }
   .cover .foot { position: static; margin-top: 24pt; }
 }
+.rasi{margin:1em 0;text-align:center;break-inside:avoid}.rasi figcaption{font-size:.85em;color:#555}

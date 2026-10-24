@@ -80,6 +80,12 @@ def place(name: str, country: str | None = None):
     return _wrap(lambda: S.find_place(name, country))
 
 
+def _mode(r, fn):
+    """Endpoints whose service call takes no Options still honour options.ayanamsa (P8-3c)."""
+    with S.engine.using(r.options.ayanamsa):
+        return fn()
+
+
 @app.post("/api/v1/chart")
 def chart(r: ChartRequest):
     return _wrap(lambda: S.calculate_chart(r.birth, r.options))
@@ -87,12 +93,12 @@ def chart(r: ChartRequest):
 
 @app.post("/api/v1/positions")
 def positions(r: ChartRequest):
-    return _wrap(lambda: S.planet_positions(r.birth))
+    return _wrap(lambda: _mode(r, lambda: S.planet_positions(r.birth)))
 
 
 @app.post("/api/v1/varga")
 def varga(r: VargaRequest):
-    return _wrap(lambda: S.divisional_chart(r.birth, r.division))
+    return _wrap(lambda: _mode(r, lambda: S.divisional_chart(r.birth, r.division)))
 
 
 class OutlookRequest(ChartRequest):
@@ -135,9 +141,34 @@ def yogini(r: ChartRequest):
     return _wrap(lambda: S.yogini_dasha(r.birth, r.options))
 
 
+@app.post("/api/v1/chara")
+def chara(r: ChartRequest):
+    return _wrap(lambda: S.chara_dasha(r.birth, r.options))
+
+
 @app.post("/api/v1/applicability")
 def applicability(r: ChartRequest):
     return _wrap(lambda: S.dasha_applicability(r.birth, r.options))
+
+
+class NetworkRequest(ChartRequest):
+    topic: str | None = None
+    planets: list[str] | None = None
+
+
+class ActivationRequest(ChartRequest):
+    network: str | dict = "career"
+    level: str = "ad"
+
+
+@app.post("/api/v1/network")
+def network(r: NetworkRequest):
+    return _wrap(lambda: _mode(r, lambda: S.topic_network(r.birth, r.topic, r.planets)))
+
+
+@app.post("/api/v1/activation")
+def activation(r: ActivationRequest):   # the retrospective helper is deliberately not served (personal event data)
+    return _wrap(lambda: S.activation(r.birth, r.options, r.network, r.level))
 
 
 @app.post("/api/v1/dasha")
@@ -152,17 +183,17 @@ def transits(r: ChartRequest):
 
 @app.post("/api/v1/shadbala")
 def shadbala(r: ChartRequest):
-    return _wrap(lambda: S.shadbala(r.birth))
+    return _wrap(lambda: _mode(r, lambda: S.shadbala(r.birth)))
 
 
 @app.post("/api/v1/ashtakavarga")
 def ashtakavarga(r: ChartRequest):
-    return _wrap(lambda: S.ashtakavarga(r.birth))
+    return _wrap(lambda: _mode(r, lambda: S.ashtakavarga(r.birth)))
 
 
 @app.post("/api/v1/jaimini")
 def jaimini(r: ChartRequest):
-    return _wrap(lambda: S.jaimini_factors(r.birth))
+    return _wrap(lambda: _mode(r, lambda: S.jaimini_factors(r.birth)))
 
 
 @app.post("/api/v1/sensitivity")

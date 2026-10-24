@@ -5,7 +5,7 @@
  "type": "object",
  "required": ["report_type", "title", "prepared_for", "prepared_on", "summary", "sections"],
  "properties": {
-  "report_type": {"enum": ["complete-life", "career", "relationship", "marriage", "dasha", "12-month", "relocation", "compact"]},
+  "report_type": {"enum": ["complete-life", "career", "relationship", "marriage", "dasha", "12-month", "relocation", "compact", "outlook"]},
   "title": {"type": "string"},
   "subtitle": {"type": "string"},
   "prepared_for": {"type": "string", "description": "first name or initials only"},
@@ -82,6 +82,8 @@
    }
   },
   "practical_summary": {"type": "array", "items": {"type": "string"}},
+  "period": {"type": "object", "required": ["from", "to"], "properties": {"from": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"}, "to": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"}}, "description": "outlook reports: the window, at most 92 days (P7-2)"},
+  "chart_style": {"enum": ["north", "south"], "description": "Rasi chart drawn above the positions table from appendix.positions (needs an Ascendant row); default north."},
   "appendix": {
    "type": "object",
    "properties": {
@@ -118,6 +120,7 @@
     "temporal_mode": {"enum": ["past", "current", "future", "timeless"], "description": "when the claim applies"},
     "history_status": {"enum": ["confirmed", "not confirmed", "contradicted"], "description": "for a past claim: what the person confirmed; without it a past claim is shown as not confirmed"},
     "rule_refs": {"type": "array", "items": {"type": "string"}, "description": "rule ids or book/page citations behind the unit (appendix only)"},
+    "factor_refs": {"type": "array", "items": {"type": "string", "pattern": "^F\\d+$"}, "description": "outlook factor ids (get_outlook) behind the unit; required in an outlook report"},
     "fact_refs": {"type": "array", "items": {"type": "string", "pattern": "^F\\.[A-Za-z0-9_]+(\\.[A-Za-z0-9_\\-]+)*$"}, "description": "derived-fact ids (chart_facts.py --json) behind the unit (appendix only)"}
    }
   }

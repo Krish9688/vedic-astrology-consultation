@@ -75,3 +75,67 @@ def test_outlook_is_dated_sourced_and_chart_specific(period):
         assert any(f["kind"] == "moon" for f in a["factors"])
     with pytest.raises(ValueError):
         S.outlook(S.BirthInput(**B), "fortnight", "2026-01-15")
+
+
+# --- P4-5(c) vedha intervals and (e) station-near-natal episodes (synthetic) -------------------------------------
+def ch(planet, date, to):
+    return {"planet": planet, "date": date, "from": "x", "to": to}
+
+
+S0, S1 = "2026-03-01", "2026-05-01"
+# natal Moon in Aries: Ju in Leo (5th, favourable) is obstructed by a planet in the 4th (Cancer) [VEDHA Ju 5: 4]
+BASE = {"Su": 6, "Ma": 6, "Me": 6, "Ve": 6, "Ju": 4, "Sa": 6}   # all others in the 7th: unfavourable, no vedha
+
+
+def test_vedha_interval_starts_and_ends_at_the_obstructors_sign_change():
+    ch_ = [ch("Ve", "2026-03-04", "Cancer"), ch("Ve", "2026-04-19", "Leo")]
+    out = TR.vedha_intervals(BASE, ch_, 0, S0, S1)
+    assert out == [{"planet": "Ju", "house": 5, "by": {"Ve": 4}, "start": "2026-03-04", "end": "2026-04-19"}]
+
+
+def test_vedha_interval_boundaries_and_open_ends():
+    v = TR.vedha_intervals(BASE | {"Ve": 3}, [ch("Ve", "2026-04-10", "Leo")], 0, S0, S1)       # obstructed from the start
+    assert [(x["start"], x["end"]) for x in v] == [(S0, "2026-04-10")]
+    v = TR.vedha_intervals(BASE | {"Ve": 3}, [], 0, S0, S1)                                    # never freed in the window
+    assert [(x["start"], x["end"]) for x in v] == [(S0, S1)]
+    v = TR.vedha_intervals(BASE, [ch("Ve", S0, "Cancer")], 0, S0, S1)                          # change on the first day
+    assert [(x["start"], x["end"]) for x in v] == [(S0, S1)]
+
+
+def test_vedha_interval_ends_when_the_transiting_planet_leaves_its_good_house():
+    v = TR.vedha_intervals(BASE | {"Ve": 3}, [ch("Ju", "2026-03-20", "Virgo")], 0, S0, S1)      # Jupiter 5th -> 6th
+    assert [(x["planet"], x["start"], x["end"]) for x in v] == [("Ju", S0, "2026-03-20")]
+
+
+def test_exempt_pairs_and_unfavourable_houses_never_obstruct():
+    # Sun in the 11th (favourable) with Saturn in the 5th: Sun-Saturn exempt; Mercury 2nd with Moon-side obstructor n/a
+    assert TR.vedha_intervals(BASE | {"Su": 10, "Sa": 4, "Ju": 6}, [], 0, S0, S1) == []
+    # Jupiter in the 4th (not favourable) with a planet in the 12th: no vedha is looked up
+    assert TR.vedha_intervals({"Su": 6, "Ma": 6, "Me": 6, "Ve": 11, "Ju": 3, "Sa": 6}, [], 0, S0, S1) == []
+    # Mars in the 11th with Saturn in the 5th (vedha Ma 11:5) is NOT exempt
+    out = TR.vedha_intervals(BASE | {"Ma": 10, "Sa": 4, "Ju": 6}, [], 0, S0, S1)
+    assert [(x["planet"], x["by"]) for x in out] == [("Ma", {"Sa": 5})]
+
+
+def test_station_two_degrees_from_a_natal_point_is_one_episode():
+    lon = {("Sa", "2026-02-01"): 102.0, ("Sa", "2026-06-20"): 98.5, ("Ju", "2026-03-01"): 200.0}
+    st = [{"planet": "Sa", "date": "2026-02-01", "station": "retrograde"},
+          {"planet": "Ju", "date": "2026-03-01", "station": "retrograde"},
+          {"planet": "Sa", "date": "2026-06-20", "station": "direct"}]
+    eps = TR.station_episodes(st, lambda p, d: lon[p, d], {"Su": 100.0})
+    assert len(eps) == 1 and eps[0]["planet"] == "Sa" and eps[0]["band"] == "close" and eps[0]["orb"] == 1.5
+    assert [s["date"] for s in eps[0]["stations"]] == ["2026-02-01", "2026-06-20"]
+    wide = TR.station_episodes(st[:1], lambda p, d: 105.0, {"Su": 100.0})                   # 5 deg: wide band
+    assert wide[0]["band"] == "wide" and TR.station_episodes(st[:1], lambda p, d: 108.0, {"Su": 100.0}) == []
+
+
+def test_outlook_carries_vedha_and_station_factors_with_conventions(monkeypatch):
+    b = S.BirthInput(**B)
+    o = S.outlook(b, "year", "2026-01-15")
+    assert "trigger inside" in o["note"] or "triggers inside" in o["note"]
+    assert "Moon vedha omitted" in o["sources"]["vedha_intervals"] and "Convention" in o["sources"]["station_natal"]
+    for f in o["factors"]:
+        if f["kind"] == "vedha":
+            assert "obstructed by vedha from" in f["fact"] and " to " in f["when"] and f["source"]
+        if f["kind"] == "station_natal":
+            assert f["orb"] <= 7 and "orb a convention" in f["fact"]

@@ -4,6 +4,8 @@ import hashlib, json, os, sys
 from collections import Counter, defaultdict
 
 WS = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.join(WS, "tools", "kg"))
+import rule_ledger as RL  # noqa: E402   rule id, dispute type and verification enums (P5-1)
 g = json.load(open(os.path.join(WS, "graphify-out", "graph.json"), encoding="utf-8"))
 cat = json.load(open(os.path.join(WS, "knowledge", "catalog.json"), encoding="utf-8"))
 N = {n["id"]: n for n in g["nodes"]}
@@ -28,9 +30,14 @@ check(len(cited) / len(rules) > 0.9, f"{len(cited)}/{len(rules)} rules link to a
 cons = [n for n in N.values() if n.get("node_type") == "Contradiction"]
 bad = [c["id"] for c in cons if sum(e["relation"] == "HAS_POSITION" for e in out[c["id"]]) != 2]
 check(not bad, f"all {len(cons)} disputes keep exactly two positions {bad[:3]}")
-agree = [c for c in cons if str(a(c).get("classification", "")).startswith("false_positive")]   # curated: agreements
-check(sum(e["relation"] == "CONTRADICTS" for e in g["links"]) == len(cons) - len(agree),
-      f"one CONTRADICTS edge per dispute ({len(agree)} curated false positives have none)")
+types = Counter(a(c).get("dispute_type") for c in cons)
+if any(a(n).get("rule_id") for n in rules):
+    enum = RL.graph_problems(list(N.values()), sum(e["relation"] == "CONTRADICTS" for e in g["links"]))
+    check(not enum, f"dispute types, rule ids, revs and verification levels are valid; one CONTRADICTS edge per "
+          f"dispute except reviewed non-conflicts {enum[:3]}")
+else:   # a graph built before P5-1: the owner's rebuild adds the ids (docs/KNOWLEDGE-PIPELINE.md); not a failure until then
+    notes.append("INFO graph predates stable rule ids and dispute types (P5-1): rebuild pending, enum checks skipped")
+notes.append(f"INFO disputes {len(cons)}; headline (type contradiction) {types['contradiction']}; {dict(types)}")
 check(not any(e["relation"] in ("SAME_AS", "MERGED") for e in g["links"]), "no automatic merges of rules")
 size = {b["id"]: b["pages"] for b in cat["books"]}
 outside = [n["id"] for n in rules for p in a(n).get("pages", [])

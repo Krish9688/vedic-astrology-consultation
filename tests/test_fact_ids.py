@@ -100,9 +100,15 @@ def test_no_lal_kitab_in_ids_and_conventions_named():
     assert {"houses", "node_aspects", "waning_moon"} <= set(j["conventions"])
 
 
+# candidate lines added by P4-1/P4-2 after the hash was frozen: removed before hashing, so every older line stays
+# byte-identical (their own fixtures: tests/test_yoga_definitions.py)
+P4_1_LINE = re.compile(r"^- \[(SUNAPHA|ANAPHA|DURADHARA|VESI|VOSI|UBHAYACHARI|ADHI|AMALA|BUDHADITYA|LAKSHMI|VIPARITA|NB|"
+                       r"KUJA-HJH2)\b.*\n", re.M)
+
+
 def test_text_output_unchanged():
     """Frozen Parashari text: the JSON refactor shared helpers with facts(); the words must not move."""
-    plain = lambda ch: _parashari(cf.facts(ch)).replace(cf.COMPUTED, "", 1)       # P3-1 added only the header tag
+    plain = lambda ch: P4_1_LINE.sub("", _parashari(cf.facts(ch)).replace(cf.COMPUTED, "", 1))   # P3-1: header tag
     got = {k: hashlib.sha256(plain(ch).encode()).hexdigest()[:16] for k, ch in (("full", FULL), ("nodeg", NO_DEG))}
     assert got == TEXT_HASH, got
 

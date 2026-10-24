@@ -64,7 +64,13 @@ SAFETY_MORE = re.compile(
     r"|\bharm(?:ing)? (?:your|him|her|them|my)sel(?:f|ves)\b"
     r"|\b(?:cannot|can't|can not|unable to|won't be able to|will not be able to|will never|never) (?:conceive|get pregnant|become (?:a )?(?:mother|father|parent)|have (?:a |any )?(?:child|children|kids|baby))\b"
     r"|\b(?:lose|losing|will lose) (?:all (?:your|of your) |everything|your (?:house|home|savings|money|job|business)\b)|\bbankrupt\w*|\bfinancial ruin\b|\bgo broke\b"
-    r"|\bsell (?:your|the) (?:house|home|property|business|shares|stocks|gold)\b|\b(?:invest|put) (?:all|everything|your savings)\b", re.I)
+    r"|\bsell (?:your|the) (?:house|home|property|business|shares|stocks|gold)\b|\b(?:invest|put) (?:all|everything|your savings)\b"
+    # Kuja (P4-2): conventions are listed, never a verdict on the person, and never harm to a spouse
+    r"|\b(?:you|he|she|they) (?:are|is|'re) (?:not |definitely |clearly )?(?:a )?mang(?:a)?lik\b"
+    r"|\b(?:your|his|her|their|the) (?:birth )?chart (?:has|shows|carries|is)(?: a| strong| severe| no)? (?:mang(?:a)?lik|mangal|kuja) ?(?:dosha|dosh)?\b"
+    r"|\b(?:mang(?:a)?lik|mangal|kuja) ?(?:dosha|dosh)? (?:will|would|is going to|could|can|may) (?:harm|hurt|endanger|kill|ruin|destroy|delay|break)\b"
+    r"|\b(?:will|would|is going to|could|may) (?:harm|hurt|endanger|kill|shorten the life of) (?:your|his|her|their) (?:spouse|husband|wife|partner|marriage)\b"
+    r"|\b(?:your|his|her|their) (?:spouse|husband|wife|partner) (?:will|would|is going to) (?:suffer|be harmed|fall ill|die)\b", re.I)
 # A negation excuses a match unless it is a verdict about a person ("you cannot conceive", "he will not survive",
 # "your partner won't …") — council 5 R7-2; disclaimers ("no infidelity claims", "a chart can't time conception") stay excused.
 VERDICT_NEG = re.compile(r"\b(?:you|he|she|they|your (?:\w+ ){0,2}?(?:partner|spouse|husband|wife|father|mother|parents?|child|"
@@ -98,7 +104,7 @@ AUDIT = [
     ("sales", r"\b(?:book (?:a|your|the)\b[^.]{0,20}\b(?:puja|pooja|ritual|homa|havan|consultation)|coupons?|discount|"
               r"limited[- ]time|order now|buy now|energi[sz]ed|certified (?:gem|stone|rudraksha)|"
               r"(?:our|the) (?:expert )?astrologers?|call (?:now|us)|whatsapp)\b"),
-    ("certainty", r"(?:\b100 ?%|\bguaranteed\b|\bscientifically proven\b|\bdefinitely will\b|\bno doubt\b)"),
+    ("certainty", r"(?:\b100 ?%|\bguaranteed\b|\bscientifically proven\b|\bdefinitely will\b|\bno doubt\b|\b\d{1,3}(?:\.\d+)? ?% (?:accura\w*|success|hit rate|correct)|\baccura\w+ (?:of|rate of|is|at) (?:about |around )?\d{1,3} ?%)"),
     ("money", r"\b(?:invest (?:in|your)|(?:buy|sell) (?:shares|stocks|property|gold)|(?:stock|share) market|"
               r"speculat\w*|lottery)\b"),
     ("costly-remedy", r"\b(?:gemstones?|(?:blue|yellow) sapphire|emerald|ruby|diamond|cat'?s eye|hessonite)\b"),

@@ -1,6 +1,7 @@
 """Local Vedic chart calculation on the Swiss Ephemeris (pyswisseph). Calculation only — it never interprets.
 
-Conventions (recorded in every result's ``meta``): Lahiri ayanamsa; mean nodes (true optional); whole-sign houses
+Conventions (recorded in every result's ``meta``): Lahiri ayanamsa (``using()`` selects one of ``AYANAMSAS`` to
+reproduce a chart made with another); mean nodes (true optional); whole-sign houses
 from the sidereal ascendant for the rasi chart, Sripati bhava cusps as a separate table; Parashari vargas
 (``VARGA_METHODS``); Vimshottari with 365.256363-day years (365.25 / 360 optional).
 Ephemeris: the Swiss Ephemeris files (sepl_18/semo_18) when found, otherwise the built-in Moshier fallback —
@@ -9,10 +10,13 @@ true nodes (benchmark in docs/CALCULATION-ENGINES.md).
 """
 from __future__ import annotations
 
+import contextlib
+import contextvars
 import datetime as dt
 import hashlib
 import json
 import os
+import threading
 
 import swisseph as swe
 
@@ -62,12 +66,43 @@ EPHE_DIR = _find_ephe()
 swe.set_ephe_path(EPHE_DIR)          # None → Moshier fallback
 AYANAMSA = swe.SIDM_LAHIRI
 AYANAMSA_NAME = swe.get_ayanamsa_name(AYANAMSA)
+# P8-3c / CALC-X4: a small closed set, Lahiri the default; no free-form or user-defined values
+AYANAMSAS = {"lahiri": swe.SIDM_LAHIRI, "true_chitra": swe.SIDM_TRUE_CITRA, "lahiri_icrc": swe.SIDM_LAHIRI_ICRC,
+             "lahiri_1940": swe.SIDM_LAHIRI_1940, "kp": swe.SIDM_KRISHNAMURTI, "raman": swe.SIDM_RAMAN}
+_MODE = contextvars.ContextVar("ayanamsa", default=AYANAMSA)
+_LOCK = threading.RLock()
 
 
 def _sid():
     """Re-assert the ayanamsa before every sidereal call: swisseph keeps it as process-global state that any other
-    caller in the same process can change (CALC-F1)."""
-    swe.set_sid_mode(AYANAMSA)
+    caller in the same process can change (CALC-F1). The mode is the one `using()` set for this context."""
+    swe.set_sid_mode(_MODE.get())
+
+
+def ayanamsa_name():
+    return swe.get_ayanamsa_name(_MODE.get())
+
+
+_OUTER = contextvars.ContextVar("ayanamsa_outer", default=False)
+
+
+@contextlib.contextmanager
+def using(name=None):
+    """Run a calculation under one of AYANAMSAS (None: keep the current mode). The outermost call decides; nested
+    calls only take the process lock, so two calls with different modes never interleave on swisseph's global state
+    (every service function enters here)."""
+    if name is not None and name not in AYANAMSAS:
+        raise ValueError(f"ayanamsa must be one of {', '.join(AYANAMSAS)}")
+    with _LOCK:   # ponytail: one process-wide lock; per-mode worker processes if parallel throughput ever matters
+        outer = not _OUTER.get()
+        tokens = (_MODE.set(AYANAMSAS[name]) if outer and name else None, _OUTER.set(True))
+        try:
+            yield
+        finally:
+            _OUTER.reset(tokens[1])
+            if tokens[0]:
+                _MODE.reset(tokens[0])
+            _sid()
 
 
 _sid()
@@ -407,7 +442,7 @@ def compute(date, time, tz, lat, lon, node="mean", year="sidereal", on=None, mon
                     "house_from_lagna": (int(p["lon"] // 30) - asc_i) % 12 + 1,
                     "house_from_moon": (int(p["lon"] // 30) - moon_i) % 12 + 1} for n, p in T.items()}
     meta = {"engine": f"astro {ENGINE_VERSION} on Swiss Ephemeris {swe.version} (pyswisseph, local)",
-            **ephemeris_info(jd), "ayanamsa": f"{AYANAMSA_NAME} {swe.get_ayanamsa_ut(jd):.4f}°", "nodes": node,
+            **ephemeris_info(jd), "ayanamsa": f"{ayanamsa_name()} {swe.get_ayanamsa_ut(jd):.4f}°", "nodes": node,
             "dasha_year_days": ylen, "houses": "whole sign from the sidereal ascendant; Sripati bhavas in 'bhavas'",
             "birth_local": f"{date} {time} UTC{fmt_offset(tz)}", "utc_offset": fmt_offset(tz), "lat": lat, "lon": lon, "transit_date": on,
             "transit_time": "12:00 local (birth UTC offset)", "vargas": "Parashari rules, engine.VARGA_METHODS",

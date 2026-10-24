@@ -42,12 +42,12 @@ def tool(description):
     return deco
 
 
-def _b(date, time, tz, lat, lon, zone=None, fold=None):
-    return S.BirthInput(date=date, time=time, tz=tz, lat=lat, lon=lon, zone=zone, fold=fold)
+def _b(date, time, tz, lat, lon, zone=None, fold=None, calendar="gregorian"):
+    return S.BirthInput(date=date, time=time, tz=tz, lat=lat, lon=lon, zone=zone, fold=fold, calendar=calendar)
 
 
-def _o(on=None, months=24, year="sidereal"):
-    return S.Options(on=on, months=months, year=year)
+def _o(on=None, months=24, year="sidereal", ayanamsa="lahiri"):
+    return S.Options(on=on, months=months, year=year, ayanamsa=ayanamsa)
 
 
 # --- calculation --------------------------------------------------------------------------------------------
@@ -65,11 +65,14 @@ def get_engine_info() -> dict:
                       "slow-planet contacts, Shadbala, Ashtakavarga, Jaimini factors, birth-time sensitivity. "
                       "tz = UTC offset at birth as +HH:MM, e.g. \"+05:30\" (include daylight saving), or zone = an IANA "
                       "time zone such as \"Asia/Kolkata\" (find_place gives it); fold=0/1 for a repeated clock time. "
-                      "Both given: tz overrides and the IANA value is flagged.")
+                      "Both given: tz overrides and the IANA value is flagged. ayanamsa: lahiri (default), true_chitra, "
+                      "lahiri_icrc, lahiri_1940, kp or raman, only to reproduce a chart made with that convention. "
+                      "calendar='julian' when the date is written in the Julian calendar (it is converted).")
 def calculate_birth_chart(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
                           on: Optional[dt.date] = None, months: int = 24,
-        zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.calculate_chart(_b(date, time, tz, lat, lon, zone, fold), _o(on, months))
+        zone: Optional[str] = None, fold: Optional[int] = None, ayanamsa: str = "lahiri",
+        calendar: str = "gregorian") -> dict:
+    return S.calculate_chart(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(on, months, ayanamsa=ayanamsa))
 
 
 @tool("Sidereal (Lahiri) positions with sign, degree, nakshatra, pada and retrograde flag.")
@@ -92,7 +95,7 @@ def get_gochara(date: dt.date, time: str, lat: float, lon: float, tz: Union[floa
     return S.gochara(_b(date, time, tz, lat, lon, zone, fold), _o(on))
 
 
-@tool("Personal outlook facts for a period (day, week, month, year) from `start`: running dashas, gochara, sade sati, "
+@tool("Personal outlook facts for a period (day, week, month, quarter, year) from `start`: running dashas, gochara, sade sati, "
       "sign changes, stations, exact slow-planet contacts and, for day/week, the Moon's transit. Every factor has an id, "
       "dates and a source; write the horoscope from these ids only (timing.md §3a).")
 def get_outlook(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None, period: str = "month",
@@ -115,12 +118,39 @@ def get_yogini_dasha(date: dt.date, time: str, lat: float, lon: float, tz: Union
     return S.yogini_dasha(_b(date, time, tz, lat, lon, zone, fold), _o(on, year=year))
 
 
+@tool("Chara (sign) dasha, BPHS ch. 46 as translated by Santhanam (one named school; first cycle, dates from birth "
+      "in sidereal years as a labelled convention), with BPHS ch. 51 antardashas and ch. 50's start as the "
+      "alternative. A separate sign-based timing opinion beside Vimshottari, never merged with it.")
+def get_chara_dasha(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
+                    zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
+    return S.chara_dasha(_b(date, time, tz, lat, lon, zone, fold), _o())
+
+
 @tool("Which BPHS ch. 46 conditional nakshatra dashas (Ashtottari, Shodashottari ...) have their chart condition "
       "met, each reading shown, overlaps and birth-time flips flagged. Vimshottari stays the default; information "
       "only, never a reason to switch clocks after seeing dates.")
 def get_dasha_applicability(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
                             zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
     return S.dasha_applicability(_b(date, time, tz, lat, lon, zone, fold))
+
+
+@tool("Significator network for a topic (marriage, career, finance, relocation, education, children): Raman's "
+      "(a)-(g) list plus topic extras, each entry source-tagged, frozen by a hash. Build it before looking at dates; "
+      "or pass planets for a custom (unsourced) network.")
+def get_topic_network(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
+                      topic: Optional[str] = None, planets: Optional[list[str]] = None,
+                      zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
+    return S.topic_network(_b(date, time, tz, lat, lon, zone, fold), topic, planets)
+
+
+@tool("Dasha activation table from `on` over `months`: per AD (level=pd: PD) segment, the period lords' natal roles "
+      "and the slow contacts, Ju/Sa sign stays and stations touching them or the network. network = a topic name or "
+      "the unchanged get_topic_network result (an edited one is refused). Facts only (timing.md §0).")
+def get_activation(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
+                   network: Union[str, dict] = "career", level: str = "ad", on: Optional[dt.date] = None,
+                   months: int = 24, year: str = "sidereal", zone: Optional[str] = None,
+                   fold: Optional[int] = None) -> dict:
+    return S.activation(_b(date, time, tz, lat, lon, zone, fold), _o(on, months, year), network, level)
 
 
 @tool("Tajika annual chart (PVR ch. 27-28, 31) for year of life `year` (default: the year running on `on`): solar "

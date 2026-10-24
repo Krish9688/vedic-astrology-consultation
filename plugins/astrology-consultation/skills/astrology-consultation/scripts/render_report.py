@@ -2,6 +2,8 @@
 """Structured Report Model (JSON) → checked HTML → PDF.
 
 usage: python3 render_report.py report.json [--out DIR] [--check-only] [--facts calc.json] [--fact-ids derived.json]
+                                [--outlook outlook.json]
+       python3 render_report.py --outlook-draft outlook.json      (checked skeleton of a personal outlook)
        python3 render_report.py --selftest
 Validates against assets/report/report.schema.json (a stdlib subset of JSON Schema), runs consistency and
 life-first checks, renders assets/report/template.html.j2 with Jinja2, and writes a PDF with WeasyPrint when it is
@@ -16,11 +18,13 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(HERE, "..", "assets", "report")
 sys.path.insert(0, HERE)
+import chart_svg  # noqa: E402
 from life_lint import BUDGET, FACT, lint, report_text  # noqa: E402
 
 TYPE_NAMES = {"complete-life": "Complete life report", "career": "Career report", "relationship": "Relationship report",
               "marriage": "Marriage report", "dasha": "Dasha report", "12-month": "Twelve-month forecast",
-              "relocation": "Relocation and foreign travel report", "compact": "Consultation summary"}
+              "relocation": "Relocation and foreign travel report", "compact": "Consultation summary",
+              "outlook": "Personal outlook"}
 HOW_TO_READ = ("Each section starts from what a theme means in your life, then how it is likely to show, when, what "
                "argues against it and what to watch for. Confidence words — Strong, Moderate, Weak, Contradictory, "
                "Unknown — describe how much of the chart agrees, not a probability. Dates are periods, never exact days. "
@@ -344,6 +348,117 @@ def fact_refs(r, fact_ids):
             for u in s.get("units", []) for x in u.get("fact_refs", []) if x not in known], []
 
 
+# ---- periodic outlook (P7-2): chart-anchored, texture last, nothing event-level when the window has no trigger ----
+OUTLOOK_DAYS = (28, 92)      # monthly to quarterly; daily and sun-sign feeds are refused (PRED-X10)
+OUTLOOK_WORDS = 900          # with the cover and appendix this keeps the PDF to two pages (tests/test_outlook_report.py)
+NAMES = {"Su": "Sun", "Mo": "Moon", "Ma": "Mars", "Me": "Mercury", "Ju": "Jupiter", "Ve": "Venus", "Sa": "Saturn",
+         "Ra": "Rahu", "Ke": "Ketu"}
+TRANSIT = re.compile(r"\b(?:Sun|Moon|Mars|Mercury|Jupiter|Venus|Saturn|Rahu|Ketu|transit\w*|retrograde|station\w*)\b", re.I)
+ANCHOR = re.compile(r"\b(?:\d{1,2}(?:st|nd|rd|th)\b|natal|birth star|your (?:moon|lagna|ascendant)|lagna|ascendant"
+                    r"|(?:maha|antar|pratyantar)?dasha|Vimshottari|Yogini)", re.I)
+NO_EVENT = re.compile(r"no event-level timing", re.I)
+
+
+def _nth(n):
+    return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
+
+
+def outlook_checks(r, o=None):
+    """Errors for an outlook report: window, factor anchors, generic transit sentences, length; with the get_outlook
+    output `o`, unknown factor ids and event-level claims in a window that has no event-level factor."""
+    if r.get("report_type") != "outlook":
+        return [], []
+    errs, units = [], [u for s in r["sections"] for u in s.get("units", [])]
+    p = r.get("period") or {}
+    if not p:
+        errs.append("an outlook report needs period.from and period.to")
+    elif not OUTLOOK_DAYS[0] <= (_d(p["to"]) - _d(p["from"])).days <= OUTLOOK_DAYS[1]:
+        errs.append(f"outlook window must be {OUTLOOK_DAYS[0]}-{OUTLOOK_DAYS[1]} days (monthly to quarterly)")
+    errs += [f"'{u['theme'][:50]}' names no outlook factor (factor_refs)" for u in units if not u.get("factor_refs")]
+    text = report_text(r)
+    for line in text.splitlines():
+        for sent in re.split(r"(?<=[.!?;])\s+", line):
+            if TRANSIT.search(sent) and not ANCHOR.search(sent):
+                errs.append(f"generic transit sentence (no chart anchor): '{sent[:70]}'")
+    if len(text.split()) > OUTLOOK_WORDS:
+        errs.append(f"outlook client text is {len(text.split())} words; the limit is {OUTLOOK_WORDS} (two pages)")
+    if o is not None:
+        by_id = {f["id"]: f for f in o["factors"]}
+        errs += [f"factor_ref {x} is not in the outlook" for u in units for x in u.get("factor_refs", []) if x not in by_id]
+        if not any(f.get("layer") == "event" for f in o["factors"]):
+            if not NO_EVENT.search(text):
+                errs.append("no event-level factor falls in this window: say plainly that no event-level timing is indicated")
+            for u in units:
+                c = u.get("confidence") or {}
+                if u.get("claim_type") == "prediction" or c.get("event") in ("Strong", "Moderate") \
+                        or c.get("timing") in ("Strong", "Moderate"):
+                    errs.append(f"'{u['theme'][:50]}' makes an event-level claim in a texture-only window")
+    return errs, []
+
+
+def outlook_draft(o, prepared_for="(name)", prepared_on=None):
+    """A checked skeleton from get_outlook output: dasha first, then event-level factors (or the texture-only
+    statement), texture last. Facts only; the consultant writes the meaning, in life terms, around them."""
+    fs = o["factors"]
+    unit = lambda theme, meaning, refs, **kw: dict(theme=theme, meaning=meaning, factor_refs=refs, claim_type="fact",
+                                                   claim_basis="COMPUTED", system="parashari", **kw)
+    ds = [f for f in fs if f["kind"] == "dasha"]
+    name = lambda f: f"{'Vimshottari' if 'Vimshottari' in f['fact'] else 'Yogini'} " + "-".join(NAMES.get(x, x) for x in f["lords"])
+    dasha = [unit("Running dasha periods", "; ".join(f"{name(f)}, {f['when']}" for f in ds) + ".", [f["id"] for f in ds])] if ds else []
+    def ev(f):
+        k, n = f["kind"], NAMES.get(f.get("planet") or f.get("transit"), "")
+        if k == "ingress":
+            return f"{n} moves into a new sign, the {_nth(f['house_from_moon'])} from your Moon and the " \
+                   f"{_nth(f['house_from_lagna'])} from your lagna"
+        if k == "station_natal":
+            return f"{n} turns {f['stations'][0]['station']} within {f['orb']} degrees of your natal {NAMES.get(f['natal'], f['natal'])}"
+        if k == "contact":
+            return f"{n} makes an exact {f['aspect']} to your natal {NAMES.get(f['natal'], f['natal'])}"
+        return f"Saturn and your natal Moon: {f['fact']}"
+    events = [unit(ev(f), f"Dated {f['when']}; a trigger only inside the running dasha.", [f["id"]],
+                   confidence={"event": "Weak", "timing": "Weak"}) for f in fs if f.get("layer") == "event"]
+    if not events:
+        events = [unit("No event-level timing", "No exact contact with a natal point, no turning point near one and no "
+                       "slow sign change falls in this window, so no event-level timing is indicated; what follows is texture.",
+                       [f["id"] for f in fs if f["kind"] == "dasha"][:1], confidence={"event": "Unknown"})]
+    near = {(f["planet"], s["date"]) for f in fs if f["kind"] == "station_natal" for s in f["stations"]}
+    groups = {}                                            # one unit per kind keeps a quarter inside two pages
+    for f in sorted(fs, key=lambda f: f["when"]):
+        if f.get("layer") != "texture" or (f["kind"] == "station" and (f["planet"], f["when"]) in near):
+            continue
+        if f["kind"] == "ingress":
+            line = (f"{f['when']} {NAMES[f['planet']]} into {f['fact'].split('-> ')[1].split(' (')[0]} "
+                    f"({_nth(f['house_from_moon'])} from your Moon, {_nth(f['house_from_lagna'])} from your lagna)")
+        elif f["kind"] == "station":
+            line = f"{f['when']} {NAMES[f['planet']]} turns {f['fact'].split('turns ')[1]} ({_nth(f['house_from_moon'])} from your Moon)"
+        elif f["kind"] == "chandrashtama":
+            line = f["when"]
+        elif f["kind"] == "tara":
+            hard = [d for d, t in f["days"].items() if t in ("Vipat", "Pratyak", "Naidhana")]
+            line = f"the Moon's tara is a harder one on {len(hard)} of {len(f['days'])} days"
+        else:
+            continue
+        groups.setdefault(f["kind"], ([], []))[0].append(line)
+        groups[f["kind"]][1].append(f["id"])
+    heads = {"ingress": ("Sign changes", "Faster planets change sign: "),
+             "station": ("Turning points", "Turning points away from your natal points: "),
+             "chandrashtama": ("Low-key spells", "The Moon in the 8th sign from your natal Moon, not a time to start "
+                               "something new: "),
+             "tara": ("Rhythm of the days", "Counted from your birth star, ")}
+    tex = [unit(heads[k][0], heads[k][1] + "; ".join(lines) + ". Low weight.", refs)
+           for k, (lines, refs) in sorted(groups.items(), key=lambda kv: list(heads).index(kv[0]))]
+    lead = f"{name(ds[0])} dasha" if ds else "running dasha (none in the outlook)"
+    return {"report_type": "outlook", "title": "Personal outlook", "prepared_for": prepared_for,
+            "prepared_on": prepared_on or o["from"], "period": {"from": o["from"], "to": o["to"]},
+            "how_to_read": "Every item is a dated fact from your chart. The running dasha is the backdrop; texture is low "
+                           "weight and never an event. Confidence words say how much of the chart agrees, not a probability.",
+            "summary": {"headline": f"{o['from']} to {o['to']} under the {lead}.",
+                        "key_points": [{"text": f"The {lead} sets the backdrop.", "confidence": "Moderate"}]},
+            "sections": [{"id": "period", "title": "The period you are in", "units": dasha},
+                         {"id": "events", "title": "What the window holds", "units": events},
+                         {"id": "texture", "title": "Texture (low weight)", "units": tex}]}
+
+
 def _strings(x):
     if isinstance(x, str):
         return [x]
@@ -361,11 +476,17 @@ def html_of(r):
         raise RuntimeError("render needs jinja2 (pip install jinja2); the JSON itself was valid")   # not sys.exit: callers are servers (council R3 M4)
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(ASSETS), autoescape=True)
     bases = [dict(theme=u["theme"], basis=u["basis"]) for s in r["sections"] for u in s.get("units", []) if u.get("basis")]
+    style = r.get("chart_style", "north")
+    chart = chart_svg.chart((r.get("appendix") or {}).get("positions", []), style)   # P7-1; None without a lagna row
+    calc = (r.get("engine") or {}).get("calculation", "")
+    extra = {}
+    caption = f"{style.capitalize()} Indian rasi chart (signs only; degrees in the table below)" + (f"; {calc}" if calc else "")
     return env.get_template("template.html.j2").render(
         r=r, css=open(os.path.join(ASSETS, "report.css")).read(), type_name=TYPE_NAMES[r["report_type"]],
         default_how_to_read=HOW_TO_READ, tl=timeline(r.get("timeline", [])), bases=bases,
-        appendix=bool(bases or r.get("appendix")), section_titles={s["id"]: s["title"] for s in r["sections"]},
-        claim_labels=CLAIM_LABELS, system_labels=SYSTEM_LABELS, basis_labels=BASIS_LABELS)
+        appendix=bool(bases or r.get("appendix") or extra.get("remedy_sources")), section_titles={s["id"]: s["title"] for s in r["sections"]},
+        claim_labels=CLAIM_LABELS, system_labels=SYSTEM_LABELS, basis_labels=BASIS_LABELS,
+        chart=chart, chart_caption=caption, **extra)
 
 
 def render(r, out_dir, base):
@@ -394,6 +515,9 @@ def _owner_only(path):
 def main():
     if "--selftest" in sys.argv:
         return selftest()
+    if "--outlook-draft" in sys.argv:
+        return print(json.dumps(outlook_draft(json.load(open(sys.argv[sys.argv.index("--outlook-draft") + 1], encoding="utf-8"))),
+                                indent=1, ensure_ascii=False))
     if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
         return print(__doc__.strip())
     src = sys.argv[1]
@@ -409,6 +533,8 @@ def main():
             extra.append(grounding(r, json.load(open(sys.argv[sys.argv.index("--facts") + 1], encoding="utf-8"))))
         else:
             warns.append("grounding not checked: pass --facts calc.json")
+        o = json.load(open(sys.argv[sys.argv.index("--outlook") + 1], encoding="utf-8")) if "--outlook" in sys.argv else None
+        extra.append(outlook_checks(r, o))
         if "--fact-ids" in sys.argv:
             extra.append(fact_refs(r, json.load(open(sys.argv[sys.argv.index("--fact-ids") + 1], encoding="utf-8"))))
         for e3, w3 in extra:

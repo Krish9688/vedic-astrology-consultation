@@ -19,8 +19,8 @@ FORBIDDEN = [r"\bLK1952\b|\bLKS\b|Shrimali", r"\bLK_[A-Z]+\b|(?i:\bpakka\b|\bdha
              r"\bKB\b|knowledge base v2|CR-L\d|CR-X1[5-8]\b", r"(?i)varshaphal\.py|varshaphal (?:csv|table)|\bsleeping planet",
              r"data/lal-kitab", r"\bLK1952[: ]p?\d|\bLKS[: ]p?\d|KB B\d+ p\d|\((?:KB )?B\d+ p\d",   # + FORBIDDEN_IN_REPO's citations
              r"_skill_workspace|Documents/Astrology Books"]   # the author's private folder layout (audit H4)
-KB_SHA256 = {   # the private knowledge base changes only together with its version number (v2.3 since 2026-10-19)
-    "LalKitab_Shrimali_Knowledge_Base_v2.2.md": "fe7528f0cc50f2589f3b6215f5b5774e65c64fd77410c9e6fc4cfa9f745d5b60",
+KB_SHA256 = {   # the private knowledge base changes only together with its version number (v2.4 since 2026-10-24)
+    "LalKitab_Shrimali_Knowledge_Base_v2.2.md": "39f55cca04d507f8a13099132fe38a2827411b3e3842b623491b6e39a1771cca",
     "LalKitab_Validation_Audit_Report_v2.2.md": "ceb251714fc64c6095776869b909ef71fb923e80a69b1d84680c9acbd47c358e",
     "LalKitab_Varshaphal_Table_v2.2.csv": "9cf7ea1e9ea3645d03f6f30764c1a9f606229c74f08055b789ab0eb0dd9b90ac",
 }

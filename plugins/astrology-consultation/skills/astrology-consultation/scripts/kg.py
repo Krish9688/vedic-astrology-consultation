@@ -143,6 +143,10 @@ def search_rules(N, out, inc, query, src=None, tier=None, system=None, text=None
                     scored[rid] = k
         sets = [{r for r, k in scored.items() if k >= i} for i in range(1, len(alts) + 1)]
         cand = set(scored)
+    # tie-breaks (C7-10, measured on the tune half of validation/retrieval_eval_cases.json): Lal Kitab rules rank
+    # after other traditions unless the question names a system, and rules that use the question's own words rank first
+    qalts = [{w} | {w.replace(a, b) for a, b in VARIANTS if a in w}
+             for w in re.findall(r"[a-z]{4,}", query.lower()) if w not in STOPWORDS]
     hits = []
     for rid in cand:
         at = attrs(N[rid])
@@ -161,7 +165,10 @@ def search_rules(N, out, inc, query, src=None, tier=None, system=None, text=None
         h_ents, h_houses, _ = parse(at.get("heading") or "")
         in_section = bool(ents or houses) and ents <= h_ents and all(any(n == h for n, _ in h_houses) for h, _ in houses)
         matched = sum(rid in s for s in sets)
-        hits.append((-matched, 0 if in_section else 1, min(window // 40, 5), -topic_hits, window,
+        low = (at.get("text", "") + " " + (at.get("heading") or "")).lower()
+        lex = sum(any(v in low for v in alt) for alt in qalts)
+        lk_last = 0 if system else int("Lal Kitab" in (at.get("system") or ""))
+        hits.append((-matched, lk_last, 0 if in_section else 1, -lex, min(window // 40, 5), -topic_hits, window,
                      TIER_ORDER.get(at.get("tier"), 9), at.get("source", ""), rid))
     hits.sort()
     return seeds, topics, hits

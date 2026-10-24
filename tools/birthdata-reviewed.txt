@@ -119,7 +119,7 @@ e8972ab9b7aacb12  synthetic-test-chart
 ea97689606c6e5d4  book-example
 f4db8836d8ca87d4  synthetic-test-chart
 fb2334cd979f06cc  reference-or-edge-chart
-77d44d946ef04990  book-example (knowledge graph)
+e0f9005d188d6c88  book-example (knowledge graph; rebuilt 2026-10-24 for KB v2.4, same 52 records)
 ba4cde5a985dabb7  book-example (knowledge graph)
 4bdc26cd11380b95  book-example (knowledge graph)
 bf4b6d29a676c415  book-example (knowledge graph)
@@ -236,3 +236,8 @@ c6fa0523ef8e6cef  synthetic-test-chart
 91dbb2d08c744dff  synthetic-test-chart
 2fc3e9ae265bf9c2  synthetic-test-chart
 fd407500f79c098b  synthetic-test-chart
+5b9f9ea2105d4388  book-example
+3f105696385400fe  synthetic-test-chart
+2be03f9b6df825f1  synthetic-test-chart
+64b2fff5bbe423ed  synthetic-test-chart
+54626d639093a47b  synthetic-test-chart

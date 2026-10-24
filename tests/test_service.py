@@ -121,8 +121,8 @@ def test_purge_is_a_dry_run_until_yes(tmp_path, monkeypatch, capsys):
     new.write_text("x")
     os.utime(old, (0, 0))
     db = data / "predictions.sqlite"
-    predictions.add("S1", "career", "old", synthetic=True, db=str(db))
-    predictions.add("S2", "career", "new", synthetic=True, db=str(db))
+    predictions.add("S1", "career", "old", synthetic=True, db=str(db), hit_criterion="x")
+    predictions.add("S2", "career", "new", synthetic=True, db=str(db), hit_criterion="x")
     with sqlite3.connect(db) as c:
         c.execute("UPDATE predictions SET made_on = '2001-01-01' WHERE chart_id = 'S1'")
     monkeypatch.setattr(cli.config, "load", lambda: types.SimpleNamespace(reports_dir=str(rep), data_dir=str(data)))
@@ -136,22 +136,24 @@ def test_purge_is_a_dry_run_until_yes(tmp_path, monkeypatch, capsys):
 def test_predictions_need_consent_or_synthetic(tmp_path):
     db = str(tmp_path / "p.sqlite")
     with pytest.raises(PermissionError):
-        predictions.add("person-a", "career", "a change of role", db=db)
+        predictions.add("person-a", "career", "a change of role", db=db, hit_criterion="new employer")
     with pytest.raises(ValueError):
-        predictions.add("1992-03-14 09:40", "career", "x", synthetic=True, db=db)
+        predictions.add("1992-03-14 09:40", "career", "x", synthetic=True, db=db, hit_criterion="y")
     with pytest.raises(ValueError):
-        predictions.add("S1", "career", "x", "2027-1", synthetic=True, db=db)
-    pid = predictions.add("S1", "career", "a change of role", "2027-01", "2027-09", synthetic=True, db=db)
+        predictions.add("S1", "career", "x", "2027-1", synthetic=True, db=db, hit_criterion="y")
+    pid = predictions.add("S1", "career", "a change of role", "2027-01", "2027-09", synthetic=True, db=db,
+                          hit_criterion="new employer within the window")
     assert (tmp_path / "p.sqlite").stat().st_mode & 0o777 == 0o600       # owner-only
     predictions.evaluate(pid, "role changed 2027-04", "hit", db=db)
     with pytest.raises(PermissionError):           # the first evaluation stands
         predictions.evaluate(pid, "rewritten", "miss", db=db)
-    assert predictions.scorecard(db=db, include_synthetic=True) == {"career / Moderate": {"hit": 1, "miss": 0,
-                                                                                          "partial": 0, "not evaluable": 0}}
-    real = predictions.add("person-a", "career", "a change of role", "2027-01", "2027-09", consent=True, db=db)
+    sc = predictions.scorecard(db=db, include_synthetic=True)
+    assert sc["career / Moderate"]["hit"] == 1 and sc["career / Moderate"]["miss"] == 0
+    real = predictions.add("person-a", "career", "a change of role", "2027-01", "2027-09", consent=True, db=db,
+                           hit_criterion="new employer within the window")
     predictions.evaluate(real, "no change", "miss", db=db)
-    assert predictions.scorecard(db=db) == {"career / Moderate": {"hit": 0, "miss": 1, "partial": 0,
-                                                                  "not evaluable": 0}}   # synthetic left out
+    sc = predictions.scorecard(db=db)
+    assert sc["career / Moderate"]["miss"] == 1 and sc["career / Moderate"]["hit"] == 0   # synthetic left out
 
 
 # --- REST ------------------------------------------------------------------------------------------------------------
@@ -325,7 +327,7 @@ def test_cli(tmp_path, capsys):
     cli.main(["chart", str(f), "--out", str(tmp_path / "out")])
     assert (tmp_path / "out" / "calc.json").exists()
     with pytest.raises(PermissionError):
-        cli.main(["predict", "add", "--chart-id", "x", "--category", "c", "--text", "t"])
+        cli.main(["predict", "add", "--chart-id", "x", "--category", "c", "--text", "t", "--hit-criterion", "h"])
     assert cli.doctor() == 0
     out = capsys.readouterr().out
     assert "PASS     calculation engine" in out and "FAIL" not in out

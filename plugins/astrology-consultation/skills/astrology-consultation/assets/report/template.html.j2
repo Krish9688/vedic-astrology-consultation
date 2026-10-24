@@ -6,7 +6,7 @@
 <title>{{ r.title }}</title>
 <style>{{ css|safe }}</style>
 </head>
-<body{% if r.report_type == "compact" %} class="compact"{% endif %}>
+<body{% if r.report_type in ("compact", "outlook") %} class="compact"{% endif %}>
 <section class="cover">
   <div class="kind">{{ type_name }}</div>
   <h1>{{ r.title }}</h1>
@@ -82,6 +82,7 @@
 </tbody></table>
 {% endif %}
 
+{{ remedy_cards|safe }}
 <h2 id="uncertain">What is uncertain</h2>
 {% set u = r.uncertainty or {} %}
 {% if u.birth_time %}<p><strong>Birth time.</strong> {{ u.birth_time }}</p>{% endif %}
@@ -104,12 +105,14 @@
 {% for b in bases %}<tr><td>{{ b.theme }}</td><td>{{ b.basis }}</td></tr>{% endfor %}
 </tbody></table>{% endif %}
 {% set a = r.appendix or {} %}
+{% if chart %}<figure class="rasi">{{ chart|safe }}<figcaption>{{ chart_caption }}</figcaption></figure>{% endif %}
 {% if a.positions %}<h3>Positions</h3><table><thead><tr>{% for k in a.positions[0].keys() %}<th>{{ k|capitalize }}</th>{% endfor %}</tr></thead><tbody>
 {% for p in a.positions %}<tr>{% for v in p.values() %}<td>{{ v }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>{% endif %}
 {% if a.periods %}<h3>Periods</h3><table><thead><tr>{% for k in a.periods[0].keys() %}<th>{{ k|capitalize }}</th>{% endfor %}</tr></thead><tbody>
 {% for p in a.periods %}<tr>{% for v in p.values() %}<td>{{ v }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>{% endif %}
 {% if a.method %}<h3>Method</h3><p>{{ a.method }}</p>{% endif %}
 {% if r.engine and r.engine.notes %}<ul>{% for n in r.engine.notes %}<li>{{ n }}</li>{% endfor %}</ul>{% endif %}
+{{ remedy_sources|safe }}
 {% if a.sources %}<h3>Sources</h3><ul>{% for s in a.sources %}<li>{{ s }}</li>{% endfor %}</ul>{% endif %}
 </section>
 {% endif %}

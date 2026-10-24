@@ -30,6 +30,9 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
 - [ ] Nothing that rests on a book (claim_basis TEXT or COMMENTARY) is called tested, proven or validated: a source's
       statement is not evidence that the event happens (`render_report.py` rejects it in reports). TESTED needs a
       prediction-log result.
+- [ ] No "scientifically proven", no accuracy or success percentage for astrology (own or anyone's), and no study figure
+      beyond [evidence-card.md](evidence-card.md) rows with `accessed: true`; Vedic timing and Lal Kitab are "no controlled
+      test located", never "refuted" or "validated" (`life_lint.py --mode audit` flags the wording).
 
 - [ ] Disputed rules from the contradiction register named when they decide the answer.
 - [ ] Citations (when given) are real pages retrieved from the index; source statement / inference / synthesis /

@@ -41,6 +41,18 @@ def book(cat, sid):
     sys.exit(f"{sid} is not in the catalog; run `register` first")
 
 
+def catalog_v2_unknown(a):
+    """Catalog v2 fields (schemas/catalog.v2.schema.json) for a new book: 'unknown' until the owner reads the title page."""
+    slug = re.sub(r"[^a-z0-9]+", "-", a.title.lower()).strip("-")
+    people = [p for p in (a.translator, a.author) if p][:1]
+    hint = {"publisher": "publisher (imprint) on the title page", "base_text": "source text the translation follows",
+            "tier_translation": "is this a translation, and of what layer"}
+    return dict(work_id=f"work:{slug}", volume=None, publisher="unknown", base_text="unknown", tier_translation="unknown",
+                rights={"checked_on": datetime.date.today().isoformat(), "sources": ["not yet checked (registered by add_book.py)"],
+                        "death_years": {p: "unknown" for p in people}, "redistribution": "metadata-only"},
+                owner_checks=hint)
+
+
 def cmd_register(a):
     import pymupdf
     cat = load_cat()
@@ -66,7 +78,8 @@ def cmd_register(a):
     cat["books"].append(dict(id=a.id, title=a.title, author=a.author, translator=a.translator or "", edition=a.edition or "",
                              year=a.year or "", language=a.language, system=a.system, tier=a.tier,
                              text_file=f"{a.id}.jsonl", text_layer="pending", page_convention="PDF p", pages=d.page_count,
-                             file=os.path.basename(path), sha256=h, added=datetime.date.today().isoformat()))
+                             file=os.path.basename(path), sha256=h, added=datetime.date.today().isoformat(),
+                             **catalog_v2_unknown(a)))
     save_cat(cat)
     print(f"registered {a.id}: {d.page_count} pages, sha256 {h[:16]}…  next: text {a.id}")
 

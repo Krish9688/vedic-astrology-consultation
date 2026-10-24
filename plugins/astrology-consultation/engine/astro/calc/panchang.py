@@ -23,7 +23,7 @@ YOGA = ("Vishkambha Priti Ayushman Saubhagya Shobhana Atiganda Sukarma Dhriti Sh
 MOVABLE = ["Bava", "Balava", "Kaulava", "Taitila", "Garaja", "Vanija", "Vishti"]
 VARA = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]   # Python weekday() order
 CONVENTIONS = {
-    "positions": "Swiss Ephemeris apparent geocentric Sun and Moon; sidereal (Lahiri) for nakshatra and yoga",
+    "positions": "Swiss Ephemeris apparent geocentric Sun and Moon; sidereal (the ayanamsa in meta; Lahiri by default) for nakshatra and yoga",
     "tithi_karana": "12° and 6° steps of the Moon's elongation from the Sun (independent of the ayanamsa)",
     "sunrise": "centre of the Sun's disc with standard refraction (Swiss Ephemeris rise_trans, BIT_DISC_CENTER); "
                "panchangs using the upper limb give sunrise about a minute earlier",
@@ -110,5 +110,5 @@ def day(date, lat, lon, tz):
     return {"date": date.isoformat(), "vara": VARA[dt.date(y, m, d).weekday()], "sunrise": local(r1),
             "sunset": local(s), "next_sunrise": local(r2), "polar_fallback": polar,
             "at_sunrise": elements(r1), "changes": changes, "conventions": CONVENTIONS,
-            "meta": {"engine": f"astro {E.ENGINE_VERSION}", **E.ephemeris_info(r1), "ayanamsa": E.AYANAMSA_NAME,
+            "meta": {"engine": f"astro {E.ENGINE_VERSION}", **E.ephemeris_info(r1), "ayanamsa": E.ayanamsa_name(),
                      "lat": lat, "lon": lon, "utc_offset": E.fmt_offset(tz)}}
