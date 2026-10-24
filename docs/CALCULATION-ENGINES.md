@@ -13,7 +13,7 @@ birth data ─► local engine (astro.calc, Swiss Ephemeris, private) ─► ada
 
 | Engine | Where it runs | Conventions | Role |
 |---|---|---|---|
-| **Local** — `astro.calc` (3.6.1) on pyswisseph 2.10.3.2 / Swiss Ephemeris 2.10.03 | on the machine; nothing leaves it | Lahiri; mean nodes (true optional); whole-sign houses + Sripati bhavas; 16 Parashari vargas; Vimshottari with 365.256363-day years (365.25 and 360 optional); local Shadbala, Ashtakavarga, Jaimini factors, birth-time sensitivity grid | preferred calculator; every interface (MCP, REST, CLI) uses it |
+| **Local** — `astro.calc` (3.6.1) on pyswisseph 2.10.3.2 / Swiss Ephemeris 2.10.03 | on the machine; nothing leaves it | Lahiri (optional: True Chitra, Lahiri ICRC, Lahiri 1940, KP, Raman — `--ayanamsa`, `Options.ayanamsa`); Julian-calendar dates converted (`calendar: julian`); mean nodes (true optional); whole-sign houses + Sripati bhavas; 16 Parashari vargas; Vimshottari with 365.256363-day years (365.25 and 360 optional); local Shadbala, Ashtakavarga, Jaimini factors, birth-time sensitivity grid | preferred calculator; every interface (MCP, REST, CLI) uses it |
 | **PyJHora 4.8.7** | local, separate `.venv-pyjhora` (AGPL — kept out of the package) | default ayanamsa TRUE_PUSHYA: call `set_ayanamsa_mode("LAHIRI")` | third opinion for Shadbala |
 
 No engine in this project sends birth data anywhere; there is no cloud calculator.

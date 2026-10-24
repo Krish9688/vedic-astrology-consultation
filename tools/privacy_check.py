@@ -81,6 +81,17 @@ TEXT_EXT = {".md", ".py", ".json", ".txt", ".toml", ".yaml", ".yml", ".j2", ".cs
             ".log", ""}
 
 
+def git_ignored(folder, rels):
+    """Paths (relative to folder) that git ignores there, so they can never be published (e.g. Finder's .DS_Store).
+    Tracked files are never reported by check-ignore, so a committed file is still scanned. Outside a git work
+    tree (e.g. an export staging folder) nothing is skipped."""
+    if not rels:
+        return set()
+    r = subprocess.run(["git", "-C", folder, "check-ignore", "--stdin", "-z"], input="\0".join(rels),
+                       capture_output=True, text=True)
+    return {p for p in r.stdout.split("\0") if p} if r.returncode in (0, 1) else set()
+
+
 def files(args):
     """(path to open, path to judge): a scanned folder's files are judged relative to that folder, so the folder's
     own location (e.g. /private/tmp/…) never matches a rule."""
@@ -88,8 +99,10 @@ def files(args):
         out = []
         for a in args:
             if os.path.isdir(a):
-                out += [(os.path.join(r, f), os.path.relpath(os.path.join(r, f), a)) for r, _, fs in os.walk(a)
-                        for f in fs if not CACHE_DIRS & set(os.path.relpath(r, a).split(os.sep)) and not f.endswith(".pyc")]
+                found = [(os.path.join(r, f), os.path.relpath(os.path.join(r, f), a)) for r, _, fs in os.walk(a)
+                         for f in fs if not CACHE_DIRS & set(os.path.relpath(r, a).split(os.sep)) and not f.endswith(".pyc")]
+                ignored = git_ignored(a, [rel for _, rel in found])
+                out += [x for x in found if x[1] not in ignored]
             else:
                 out.append((a, a))
         return out

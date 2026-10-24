@@ -1,4 +1,4 @@
-# Parashari D1 (whole-sign)  ascendant Sagittarius 27.999°
+# Parashari D1 (whole-sign)  ascendant Sagittarius 27.999°  [COMPUTED: calculated chart facts, not interpretation]
 Moon phase: waxing, 112° from Sun. Natural malefics here: Ke, Ma, Me, Ra, Sa, Su. Node aspects omitted (school-dependent).
 - Sun: Leo 5.869° H9; own sign; dispositor Sun (H9); owns H9; with Me,Ke; D9 Taurus, D10 Virgo
 - Moon: Scorpio 27.925° H12; DEBILITATED; neutral's sign; dispositor Mars (H4); owns H8; aspected by Ju; D9 Pisces, D10 Aries
@@ -23,6 +23,59 @@ Moon phase: waxing, 112° from Sun. Natural malefics here: Ke, Ma, Me, Ra, Sa, S
 - H10 Virgo: occ — | asp Ma,Ju,Sa | lord Mercury in H9 | malefics 4/8/12 from it: Sa,Su,Me,Ke
 - H11 Libra: occ — | asp Ma | lord Venus in H7 | malefics 5/9 from it: Ra
 - H12 Scorpio: occ Mo | asp Ju | lord Mars in H4 | malefics 4/8/12 from it: Ra; malefics 5/9 from it: Ma
+
+# Dignity detail (computed): moolatrikona | compound relation to the dispositor | D9 dignity
+- Sun: MOOLATRIKONA; D9 Taurus
+- Moon: towards dispositor Mars: enemy; D9 Pisces
+- Mars: towards dispositor Jupiter: great friend; D9 Sagittarius
+- Mercury: towards dispositor Sun: neutral; D9 Scorpio
+- Jupiter: towards dispositor Venus: neutral; D9 Aries
+- Venus: towards dispositor Mercury: great friend; D9 Aries
+- Saturn: towards dispositor Jupiter: enemy; D9 Aries DEBILITATED
+Moon as malefic, two conventions (B-20 open): waning = malefic (LOL p280): no; within 72° of the Sun: no. The tests above use the first.
+
+# From the Moon (Chandra lagna Scorpio): occupants | lord placement, counted from the Moon
+- M1 Scorpio: occ Mo | lord Mars in M5
+- M2 Sagittarius: occ Sa | lord Jupiter in M7
+- M3 Capricorn: occ — | lord Saturn in M2
+- M4 Aquarius: occ Ra | lord Saturn in M2
+- M5 Pisces: occ Ma | lord Jupiter in M7
+- M6 Aries: occ — | lord Mars in M5
+- M7 Taurus: occ Ju | lord Venus in M8
+- M8 Gemini: occ Ve | lord Mercury in M10
+- M9 Cancer: occ — | lord Moon in M1
+- M10 Leo: occ Su,Me,Ke | lord Sun in M10
+- M11 Virgo: occ — | lord Mercury in M10
+- M12 Libra: occ — | lord Venus in M8
+
+# Candidate yogas and Kuja conventions (computed; named definitions, candidates only - not results)
+Each line: definition id | holds? | details | source | how often the condition holds in random charts.
+- [GK-BPHS36] Gajakesari, strict: Jupiter in a kendra from the lagna or the Moon, joined or aspected by a benefic, not debilitated, combust or in an enemy's sign: does not hold. kendra from lagna no, from Moon yes; benefic contact Mo; debilitated no; enemy's sign yes; combust no. Source: BPHS 36.3-4, source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked. Base rate 9%.
+- [KESARI-LOOSE] Kesari (loose 'Gajakesari'): Jupiter in a kendra from the Moon: HOLDS. Jupiter M7. Source: Phaladeepika VI.14 per the BPHS translator (only 'Kesari'); called Gajakesari by CRUX p28-30 and HJH1 p118 - source map BPHS_part3.md, not page-checked. Base rate 34%.
+- [KEM-BARE] Kemadruma (Varahamihira): no planet other than the Sun (nodes not counted) in the 2nd or 12th from the Moon: does not hold. 2nd/12th from the Moon: Sa. Source: Brihat Jataka XIII (p175-178), source map BJ.md, not page-checked; Varahamihira rejects the other schools' versions. Base rate 45%.
+- [KEM-BPHS] Kemadruma (BPHS 37.11-13): besides the 2nd/12th, no planet but the Sun with the Moon or in a kendra from the lagna - the Moon itself in a kendra counts (LOL p322; Garga/Parasara via BJ): does not hold. 2nd/12th occupied. Source: BPHS p398 (ch. 37 sl. 11-13), source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked. Base rate 3%.
+- [RAJA-KK-MeSu] kendra-kona lord relation Mercury-Sun (BPHS 34.11-12): HOLDS. joined in a kendra/kona; Mercury owns H7,10, Sun owns H9. Source: BPHS p356-358 (ch. 34 sl. 11-15), source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked; PD XX.45 (p245) source map PD_part1.md, not page-checked. Base rate 68%.
+- [RAJA-KKP-Ma] trinal lord Mars placed in an angle (BPHS 34.11-12): HOLDS. Mars owns H5,12, in H4; DISPUTED - Mars also owns H12 (moolatrikona in the good house: the good lordship shows): BPHS 34.14-15 gives no yoga by relation alone, PD XX.45 gives yoga even so. Source: BPHS p356-358 (ch. 34 sl. 11-15), source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked; PD XX.45 (p245) source map PD_part1.md, not page-checked. Base rate 61%.
+- [RAJA-KKP-Me] angular lord Mercury placed in a trine (BPHS 34.11-12): HOLDS. Mercury owns H7,10, in H9. Source: BPHS p356-358 (ch. 34 sl. 11-15), source map BPHS_part3.md §5 (BPHS ch. 34-38), not page-checked; PD XX.45 (p245) source map PD_part1.md, not page-checked. Base rate 61%.
+- [SUNAPHA-BPHS37] Sunapha: a planet other than the Sun in the 2nd from the Moon, none in the 12th: HOLDS. 2nd from the Moon: Sa; 12th: empty (Sun and nodes not counted). Source: BPHS 37.7-10 (p397), source map BPHS_part3.md; BJ XIII (p175) BJ.md; PD VI.5-7 (p78) PD_part2.md; LOL p326 (nodes excluded) LOL.md - not page-checked. Base rate 23%.
+- [ADHI-BPHS37] Chandra-Adhi (BPHS 37.5): benefics in the 6th, 7th or 8th from the Moon: HOLDS. benefics 6/7/8 from the Moon: Ju,Ve; from the lagna: Ju,Ve; malefics 6/7/8 from the Moon: none; any of the seven fillings of 6/7/8 counts (BJ translator); LOL p319: 6th and 8th only is 'a kind of' Adhi. Source: BPHS 37.5 (p397), source map BPHS_part3.md; seven fillings per BJ XIII translator (p174) BJ.md - not page-checked. Base rate 45%.
+- [ADHI-PD6] Adhi (PD VI.42-43): benefics in the 6th, 7th or 8th from the Moon or the lagna: HOLDS. benefics 6/7/8 from the Moon: Ju,Ve; from the lagna: Ju,Ve; malefics 6/7/8 from the Moon: none; any of the seven fillings of 6/7/8 counts (BJ translator); LOL p319: 6th and 8th only is 'a kind of' Adhi. Source: PD VI.42-43 (p93-94), source map PD_part2.md; LOL p318 LOL.md - not page-checked. Base rate 72%.
+- [BUDHADITYA-LOL] Budhaditya (LOL): the Sun and Mercury in the same sign: HOLDS. Sun Leo, Mercury Leo; H9; Mercury combust no; LOL's further tests (a link to the 1st or 5th, both planets strong and unafflicted) are not judged. Source: LOL p319-320, source map LOL.md - not page-checked. Base rate 51%.
+- [VIPARITA-LOL] Viparita (LOL p327): lords of at least two dusthanas each in another dusthana, not by exchange: does not hold. 6th lord Venus H7; 8th lord Moon H12; 12th lord Mars H4. Source: LOL p327, source map LOL.md - not page-checked. Base rate 6%.
+- [VIPARITA-HJH] Viparita (Raman): a dusthana lord in another dusthana (6th in 8th, 8th in 12th, 12th in 3rd): HOLDS. 6th lord Venus H7; 8th lord Moon H12; 12th lord Mars H4. Source: HJH2 p296, p353 (HJH2_part2.md); HJH1 p307 (HJH1_part2.md) - not page-checked. Base rate 58%.
+- [VIPARITA-CRUX] Viparita (CRUX p30-32): two lords of the 3rd/6th/8th/12th joined in the 3rd, 6th, 8th or 12th: does not hold. 6th lord Venus H7; 8th lord Moon H12; 12th lord Mars H4. Source: CRUX p30-32, source map CRUX_part1.md - not page-checked. Base rate 15%.
+- [NB-DISP-Mo] neechabhanga clause DISP for Moon: lord of the debilitation sign (Mars) in a kendra from the lagna or the Moon: HOLDS. Moon debilitated in Scorpio H12; Mars H4 (kendra from the lagna); LOL counts it a raja yoga only with the planet in a kendra or kona. Source: LOL p323, source map LOL.md - not page-checked; PD VII.26-30 (p110-112), source map PD_part2.md - not page-checked; HJH2 p45, p366-368, source maps HJH2_part1.md/HJH2_part2.md - not page-checked. Base rate 27%.
+- [NB-EXL-Mo] neechabhanga clause EXL for Moon: lord of its exaltation sign (Venus) in a kendra from the lagna or the Moon: HOLDS. Moon debilitated in Scorpio H12; Venus H7 (kendra from the lagna). Source: LOL p323, source map LOL.md - not page-checked; PD VII.26-30 (p110-112), source map PD_part2.md - not page-checked; HJH2 p45, p366-368, source maps HJH2_part1.md/HJH2_part2.md - not page-checked. Base rate 27%.
+- [NB-ASP-Mo] neechabhanga clause ASP for Moon: the debilitation-sign lord (Mars) aspects it: does not hold. Moon debilitated in Scorpio H12; Mars H4. Source: LOL p323, source map LOL.md - not page-checked; PD VII.26-30 (p110-112), source map PD_part2.md - not page-checked. Base rate 7%.
+- [NB-EXP-Mo] neechabhanga clause EXP for Moon: the planet exalted in that sign in a kendra from the lagna or the Moon: does not hold. Moon debilitated in Scorpio H12; no planet among the seven is exalted in Scorpio. Source: LOL p323, source map LOL.md - not page-checked; PD VII.26-30 translator's note (p110-112), source map PD_part2.md - not page-checked. Base rate 24%.
+- [NB-MUT-Mo] neechabhanga clause MUT for Moon: the debilitation-sign lord and the exaltation-sign lord in mutual kendras: HOLDS. Moon debilitated in Scorpio H12; Mars H4, Venus H7 (the same sign counts as the 1st). Source: PD VII.26-30 (p110-112), source map PD_part2.md - not page-checked. Base rate 16%.
+- [NB-SELF-Mo] neechabhanga clause SELF for Moon: the debilitated planet itself in a kendra from the lagna or the Moon: undetermined. Moon debilitated in Scorpio H12; Moon H12; holds only if the Moon counts as in a kendra from itself (the texts are silent). Source: PD VII.26-30 translator's note (p110-112), source map PD_part2.md - not page-checked. Base rate 26%.
+- [NB-D9-Mo] neechabhanga clause D9 for Moon: exalted in the navamsa: does not hold. Moon debilitated in Scorpio H12; D9 Pisces. Source: HJH2 p45, p366-368, source maps HJH2_part1.md/HJH2_part2.md - not page-checked. Base rate 6%.
+- [KUJA-BPHS80] BPHS 80.47-49: Mars 12/4/7/8 from the lagna; a benefic aspect or association cancels: HOLDS. Mars H4; the 'partner has the same yoga' clause needs both charts. Source: source map BPHS_part6.md (BPHS p955), not page-checked. Base rate 15%.
+- [KUJA-POPULAR] popular rule (LOL: 'not in any authoritative text'): Mars 1/2/4/7/8/12 from lagna, Moon or Venus: HOLDS. Mars from lagna 4, Moon 5, Venus 10; meets it from lagna; the partner and age (about 28-30) exceptions need more than this chart. Source: LOL p329-331, source map LOL.md, not page-checked. Base rate 88%.
+- [KUJA-PD11.3] Phaladeepika XI.3: Mars in the 7th, or the 7th sign and its navamsa both Mars's: does not hold. Mars H4; 7th sign Gemini, descendant navamsa Gemini. Source: PD p141-142 (XI.3), source map PD_part1.md, not page-checked. Base rate 10%.
+- [KUJA-HJH2] HJH2 p70: Mars 2/12/4/7/8 from the lagna, Moon or Venus (the 1st not listed): HOLDS. Mars from lagna 4, Moon 5, Venus 10; meets it from lagna; HJH2 counts by bhava, here whole-sign. Source: HJH2 p70-71 (pr 63-64), source map HJH2_part1.md §3.7, not page-checked. Base rate 78%.
+Kuja lines are convention membership for comparison only, never a marriage verdict (CR-V16); several conventions fire in most charts.
 
 Dispositor chains: Su→Su; Mo→Ma→Ju→Ve→Me→Su→Su; Ma→Ju→Ve→Me→Su→Su; Me→Su→Su; Ju→Ve→Me→Su→Su; Ve→Me→Su→Su; Sa→Ju→Ve→Me→Su→Su; Ra→Sa→Ju→Ve→Me→Su→Su; Ke→Su→Su. Final dispositor(s) in own sign: Su
 

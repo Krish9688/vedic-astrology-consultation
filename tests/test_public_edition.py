@@ -2,6 +2,7 @@
 # all of it. In the private workspace these tests check the markers, the private files and a real export; in the public
 # repository (no tools/public_edition.py, no scripts/lal_kitab.py) they check the shipped skill folder itself.
 import hashlib
+import json
 import os
 import re
 import sys
@@ -16,9 +17,10 @@ PRIVATE = os.path.exists(os.path.join(SKILL, "scripts", "lal_kitab.py"))
 # The same patterns as tools/public_edition.py FORBIDDEN_IN_SKILL (that tool stays in the private workspace).
 FORBIDDEN = [r"\bLK1952\b|\bLKS\b|Shrimali", r"\bLK_[A-Z]+\b|(?i:\bpakka\b|\bdharmi\b|mangal-?bad|\bsleeping\?)",
              r"\bKB\b|knowledge base v2|CR-L\d|CR-X1[5-8]\b", r"(?i)varshaphal\.py|varshaphal (?:csv|table)|\bsleeping planet",
-             r"data/lal-kitab", r"\bLK1952[: ]p?\d|\bLKS[: ]p?\d|KB B\d+ p\d|\((?:KB )?B\d+ p\d"]   # + FORBIDDEN_IN_REPO's citations
-KB_SHA256 = {   # the private knowledge base changes only together with its version number (v2.3 since 2026-10-19)
-    "LalKitab_Shrimali_Knowledge_Base_v2.2.md": "fe7528f0cc50f2589f3b6215f5b5774e65c64fd77410c9e6fc4cfa9f745d5b60",
+             r"data/lal-kitab", r"\bLK1952[: ]p?\d|\bLKS[: ]p?\d|KB B\d+ p\d|\((?:KB )?B\d+ p\d",   # + FORBIDDEN_IN_REPO's citations
+             r"_skill_workspace|Documents/Astrology Books"]   # the author's private folder layout (audit H4)
+KB_SHA256 = {   # the private knowledge base changes only together with its version number (v2.4 since 2026-10-24)
+    "LalKitab_Shrimali_Knowledge_Base_v2.2.md": "39f55cca04d507f8a13099132fe38a2827411b3e3842b623491b6e39a1771cca",
     "LalKitab_Validation_Audit_Report_v2.2.md": "ceb251714fc64c6095776869b909ef71fb923e80a69b1d84680c9acbd47c358e",
     "LalKitab_Varshaphal_Table_v2.2.csv": "9cf7ea1e9ea3645d03f6f30764c1a9f606229c74f08055b789ab0eb0dd9b90ac",
 }
@@ -82,6 +84,8 @@ def test_real_public_export_passes_the_b2_gate(tmp_path):
     ex.catalog(str(tmp_path))                            # the exported catalog: no private KB record or KB codes
     cat = open(os.path.join(str(tmp_path), "knowledge", "catalog.json")).read()
     assert '"id": "KB"' not in cat and "KB R" not in cat and "lal-kitab/" not in cat and "library_root" not in cat
+    books = json.loads(cat)["books"]                     # owner's file names and fingerprints stay private (2026-10-21)
+    assert books and not [k for b in books for k in b if k in ("file", "sha256", "duplicates")]
     ex.b2_gate(str(tmp_path))                            # sys.exit on any finding
 
 
@@ -110,3 +114,38 @@ def test_vedic_calculation_and_chart_facts_work_in_this_edition():
     assert "# Parashari D1" in out and "Dispositor chains" in out and "# Houses:" in out
     assert ("Lal Kitab fixed-Aries chart" in out) == PRIVATE
     assert ("# Lal Kitab: not part of this edition" in out) == (not PRIVATE)
+
+
+def test_claude_code_config_never_reaches_the_public_export():
+    """The research agents, skills, hooks and CLAUDE.md are private-edition tooling: no public MAP entry may match them,
+    while the private archive export carries them from repo-root/ (approval checklist items 3-4)."""
+    import fnmatch
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    if not os.path.exists(os.path.join(ROOT, "tools", "export_public.py")):
+        pytest.skip("exporters stay in the private edition")
+    import export_public, export_repo
+    for path in (".claude/settings.json", ".claude/agents/vedic-researcher.md", ".claude/skills/verify-rule/SKILL.md",
+                 "CLAUDE.md", "research/ledger/findings.json"):
+        assert not any(fnmatch.fnmatch(path, g) for g, *_ in export_public.MAP), path
+    assert ("repo-root/.claude/**/*", ".") in export_repo.ALLOW
+
+
+@pytest.mark.skipif(not PRIVATE, reason="public edition")
+@pytest.mark.parametrize("name,body", [("docs/X.md", "a\n<!-- private-edition -->\nLK\n<!-- /private-edition -->\nb\n"),
+                                       ("tests/t.py", "x = 1\n# <private-edition>\nLK = 2\n# </private-edition>\ny = 3\n")])
+def test_markers_in_non_skill_exported_files_are_applied(tmp_path, name, body):
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import export_public as ex
+    ex.WS = str(tmp_path)                                # copy() reads rel paths against WS
+    try:
+        src = tmp_path / name
+        src.parent.mkdir(parents=True, exist_ok=True)
+        src.write_text(body)
+        dst = tmp_path / "out" / name
+        ex.copy(str(src), str(dst))
+        assert "LK" not in dst.read_text() and "edition" not in dst.read_text()
+        src.write_text(body.split("\n", 1)[0] + "\n<!-- private-edition -->\n# <private-edition>\nLK\n")   # unbalanced
+        with pytest.raises((ValueError, SyntaxError)):   # loud either way
+            ex.copy(str(src), str(dst))
+    finally:
+        ex.WS = ROOT

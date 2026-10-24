@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "catalog/2",
+  "title": "Library catalogue, version 2 (knowledge/catalog.json)",
+  "description": "One record per book edition. 'unknown' means the repository cannot establish the value; the field is then named in owner_checks until the owner reads the PDF's title page. The private catalogue also carries file and sha256, which the public export strips.",
+  "type": "object",
+  "required": ["version", "tiers", "books"],
+  "properties": {
+    "version": {"const": 2},
+    "tiers": {"type": "object"},
+    "books": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/book"}}
+  },
+  "$defs": {
+    "book": {
+      "type": "object",
+      "required": ["id", "title", "author", "tier", "pages", "work_id", "volume", "publisher", "base_text",
+                   "tier_translation", "rights", "owner_checks"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,11}$"},
+        "tier": {"enum": ["classical", "traditional", "modern", "experimental", "synthesis"]},
+        "pages": {"type": "integer", "minimum": 1},
+        "work_id": {"type": "string", "pattern": "^work:[a-z0-9]+(-[a-z0-9]+)*$"},
+        "volume": {"type": ["string", "null"], "description": "null: the catalogue title names no volume"},
+        "publisher": {"type": "string", "minLength": 1},
+        "base_text": {"type": ["string", "null"], "description": "null: not a translation"},
+        "tier_translation": {"enum": ["classical", "traditional", "modern", "experimental", "synthesis", "unknown", null],
+                             "description": "tier of the translator's layer; null: not a translation"},
+        "rights": {
+          "type": "object",
+          "required": ["checked_on", "sources", "death_years", "redistribution"],
+          "additionalProperties": false,
+          "properties": {
+            "checked_on": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+            "sources": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3}},
+            "death_years": {"type": "object", "minProperties": 1,
+                            "additionalProperties": {"oneOf": [{"type": "integer", "minimum": 1000, "maximum": 2100},
+                                                               {"const": "unknown"}]}},
+            "redistribution": {"enum": ["metadata-only", "quote", "full"]}
+          }
+        },
+        "owner_checks": {"type": "object", "additionalProperties": {"type": "string", "minLength": 3},
+                         "description": "field -> what the owner should read on the title page"}
+      }
+    }
+  }
+}

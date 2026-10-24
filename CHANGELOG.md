@@ -6,7 +6,41 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 ## [Unreleased]
 
-Nothing yet.
+Engine, plugin and skill text stay at 3.6.3 / v3.6 until the owner chooses the release number; the skill changes
+below add calculated inputs and source-checked definitions, and have not been through a blind benchmark round.
+
+### Added
+- **Historical time zones and places**: `zone` (IANA) beside the `+HH:MM` offset, resolved by the tz database for the
+  birth moment; a clock time skipped by daylight saving is refused, a repeated one needs `fold`, the pre-standard-time
+  era is refused (local mean time suggested), and offsets before 1970 (South Asia before 1948) are flagged for checking
+  against the birth record. Offline birthplace lookup (`astro place`, `find_place`) from GeoNames cities15000 (CC-BY
+  4.0, `astro setup --places`), ambiguous names reported, never guessed.
+- **Panchang** (`astro panchang`, `get_panchang`): tithi, vara (sunrise to sunrise), nakshatra and pada, yoga, karana
+  and every change until the next sunrise. Checked against USNO: 50 lunar phases within 0.66 min, sunrise within 0.6
+  min; elements equal PyJHora's on 12 of 12 test dates (PyJHora used out of process as an oracle only).
+- **Yogini dasha** (BPHS ch. 46 sl. 195–200): 180 mahadashas compared with PyJHora (oracle): no lord or length
+  difference; start dates within 0.28 day (a year-length convention).
+- **Transits** (`get_gochara`, `get_outlook`): Phaladeepika XXVI gochara from the natal Moon with vedha and the
+  planet's condition, the lagna frame shown separately, sade sati; a dated personal outlook for a day, week, month or
+  year whose every factor has an id and a source.
+- **Tajika annual chart** (`astro tajika`, `get_tajika`; PVR ch. 27–28, 31): solar return at the birthplace, day or
+  night year, muntha, harsha bala, year-lord candidates with Tajika aspects, sahams, Mudda dasha. Reproduces PVR
+  Examples 118 and 122 and Exercise 47; the year lord is named only when the aspect tiers settle it.
+- **Compatibility facts** (`get_compatibility`): Prasna Marga XXI Moon-sign, star and pada counts, each with the verse
+  and authority that reads it. No points and no verdict.
+- **Yoga candidates in the public edition**, with corrected definitions and base rates
+  (`references/yoga-definitions.md`).
+- `astro purge --older-than DAYS` (dry run without `--yes`) for reports and the prediction log.
+
+### Fixed
+- `kg.py` reads a gzip-compressed knowledge graph directly, so it is never unpacked into the working tree.
+- `tools/check_versions.py` also checks the package metadata (it caught a stale package version, 3.6.1).
+- Compatibility facts: exact star and pada boundaries now fall forward like the engine's own nakshatra; Tajika refuses
+  a date before birth (both found by an independent code review before release).
+
+### Blocked (recorded in [docs/ROADMAP.md](docs/ROADMAP.md))
+- Chara/Narayana dasha (garbled BPHS verse, competing schools), 36-point Ashtakoota (no source in the library),
+  pancha vargeeya bala (neutral-sign value missing).
 
 ## [3.6.3] — 2026-10-19 — identity check, sky events, report audit tools, content-integrity privacy checks
 
@@ -66,7 +100,7 @@ The local engine stands on its own; nothing in the project calls an outside calc
 - Removed: the `compare_engines` tool (MCP, REST `/api/v1/compare`, CLI `astro compare`), the VedAstro batch fetcher
   and adapter, the `vedastro_server` setting, the `hybrid` privacy mode (an old setting is read as `private`), the
   doctor's VedAstro check and all stored VedAstro output. The plugin now has 15 tools.
-- Kept: the generic comparator (`python -m astro.calc.compare --local calc.json --other facts.json`), offline only.
+- Kept: the generic comparator (`python -m astro.calc.compare --local calc.json --other facts.json --out OUT`), offline only.
 - Test fixtures A/B and their period packet regenerated with the local engine (positions unchanged within 0.1′; the old
   packet's dasha dates were wrong by up to 2½ years); test rubric dates updated; retrograde flags now included.
 - Independent dasha reference added: the dasha balance at birth is tested against one value of N. C. Lahiri's

@@ -5,7 +5,7 @@ description = "Local Vedic astrology calculation engine and service (MCP, REST, 
 license = "AGPL-3.0-or-later"
 requires-python = ">=3.11"
 readme = "README.md"
-dependencies = ["pyswisseph>=2.10", "pydantic>=2.7,<3"]
+dependencies = ["pyswisseph>=2.10", "pydantic>=2.7,<3", "tzdata>=2024.1"]
 
 # `uv sync --extra all --group dev` for everything; the core (calculation + CLI) needs only the two above.
 [project.optional-dependencies]

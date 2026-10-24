@@ -1,5 +1,7 @@
 # Professional reports (mode C), working record and continuity
 
+Contents: [1. Principles](#1-principles) · [2. Report types](#2-report-types) · [3. Producing a report](#3-producing-a-report) · [4. Consistency](#4-consistency) · [Lightweight per-report working record](#lightweight-per-report-working-record) · [Revision and outcome handling](#revision-and-outcome-handling) · [Final consistency and recovery](#final-consistency-and-recovery) · [When this reference helps](#when-this-reference-helps) · [The explanation unit](#the-explanation-unit) · [Past: explain the period without manufacturing a memory](#past-explain-the-period-without-manufacturing-a-memory) · [Present: give the current phase its own explanation](#present-give-the-current-phase-its-own-explanation) · [Future: develop the existing thread conditionally](#future-develop-the-existing-thread-conditionally) · [Join the periods without forcing a story](#join-the-periods-without-forcing-a-story) · [Final delivery check](#final-delivery-check)
+
 A report is a consultation written down for someone who will reread it: the same judgement as mode A, organised so
 the answer is found in the first page and the evidence last. The structure below comes from research into how
 practitioners and report producers work — what to copy and what to avoid is in
@@ -20,6 +22,8 @@ the project's research notes (not part of this package). All structure here is *
 6. **Technical appendix last**: the chart basis of each conclusion, positions, periods, method, sources. Page and verse
    references live only here, and `appendix.sources` names **books** (author, title, page) — never the skill's own
    files, scripts or internal registers.
+   A rasi chart is drawn above the positions table when `appendix.positions` has an Ascendant row:
+   `chart_style` picks `north` (default) or `south`; only one style is drawn.
 7. **Proportionate length**: compact 2–4 pages, topic report 6–12, twelve-month forecast 8–15, complete life report
    15–30. A catalogue of techniques is not thoroughness.
 8. **Not in a report unless asked**: remedies (then only via remedy-safety.md), numerology, gemstones, lucky numbers,
@@ -35,6 +39,7 @@ Sections are defaults — drop what the chart or the request does not support, a
 | Type (`report_type`) | Default sections, in order | Timing depth |
 |---|---|---|
 | `compact` — consultation summary | the questions asked, answered (one unit each) · current chapter · what to watch. When the person asks for "one page", keep the client text to about 450 words and leave out the timeline and appendix (two to three printed pages; a true single page needs about 250 words) | windows named in units |
+| `outlook` — personal monthly/quarterly outlook | running dasha · event-level factors in the window, or the plain statement that no event-level timing is indicated · texture last, low weight (timing.md §3a; `--outlook-draft`, `--outlook`). 28-92 days, two pages at most; daily and sun-sign feeds are refused | every unit names its outlook factor ids |
 | `career` | working pattern · current chapter · next 2–3 years · money · decisions and choices | chapter + one or two windows |
 | `relationship` | the answer: the main window and its grade · how you relate · what draws you and to whom · the window ladder (promise → forming → formalising) · what to watch | one main forming window + fallback; formalising only as a later rung |
 | `marriage` | the answer: promise grade and the main commitment window · the partner, as themes and ranges · the window ladder (forming kept apart from formalising) · married life themes | one main commitment window + fallback |
@@ -63,9 +68,13 @@ technical appendix.
 2. Write the **Structured Report Model** (`assets/report/report.schema.json`) as JSON: `summary`, `sections` of life
    `units` (put the chart relationships behind each unit in its `basis` field — the renderer moves them to the
    appendix), `timeline`, `watch_list`, `uncertainty`, `practical_summary`, `appendix`. Use first name or initials
-   only; birth data only if the person wants it printed. Optionally tag each unit with `system` (parashari, jaimini,
-   lal_kitab, combined), `claim_type` (fact, rule, interpretation, prediction, speculation) and `rule_refs`, so a
-   calculated fact is never presented with the weight of a prediction and every rule can be traced.
+   only; birth data only if the person wants it printed. Tag each unit with `system` (parashari, jaimini,
+   lal_kitab, combined) and `claim_type` (fact, rule, interpretation, prediction, speculation) — the report prints them
+   as a small label under the heading — and add `rule_refs`, so a calculated fact is never presented with the weight of
+   a prediction and every rule can be traced. Optionally add `claim_basis`, what the unit rests on: TEXT (a source's
+   statement), COMMENTARY (an author's explanation or worked case), DISPUTED, COMPUTED (engine output; every `fact`),
+   TESTED (only with a prediction-log `test_result`) or SPECULATIVE; `kg.py` prints the basis of every rule. A unit
+   about the past takes `temporal_mode: past` and `history_status`; without it the report prints "not confirmed".
 3. Check and render: `python3 scripts/render_report.py report.json --out <dir>` validates the model, checks that the
    summary's windows are argued in the body, that units carry a counter-factor and a sign to watch, and runs the
    life-first lint; then it writes HTML and, when WeasyPrint is installed, a PDF (cream and green, visuals.md). Without

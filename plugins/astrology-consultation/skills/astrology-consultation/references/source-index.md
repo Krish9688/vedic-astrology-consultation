@@ -1,7 +1,9 @@
 # Source index, citation format and retrieval
 
-The books in `~/Documents/Astrology Books` are the authoritative evidence. Page-cited source maps built from full reads of
-each book live in `_skill_workspace/sourcemaps/` (development material, not loaded at runtime).
+Contents: [1. Sources](#1-sources) · [2. Reliability notes](#2-reliability-notes) · [3. Citation format](#3-citation-format) · [4a. Knowledge graph (local, private)](#4a-knowledge-graph-local-private) · [4. Retrieving passages (local, private)](#4-retrieving-passages-local-private) · [5. Web sources inherited from v2.2](#5-web-sources-inherited-from-v22)
+
+The books in your own library (the folder set with `astro setup --knowledge-dir`) are the authoritative evidence.
+Page-cited source maps are development material and are not loaded at runtime.
 
 ## 1. Sources
 
@@ -24,7 +26,7 @@ each book live in `_skill_workspace/sourcemaps/` (development material, not load
 | DEVA2 | Deva Keralam (Chandra Kala Nadi) Vol. 2 | Nadi text, tr. R. Santhanam | Nadi (separate system) | Local OCR | PDF p; cite verse |
 | NAKS | The Nakshatras: The Stars Beyond the Zodiac | Komilla Sutton | Modern nakshatra teaching | PDF text | PDF p |
 
-Added 2026-09-25/26. Mapping status is tracked in `_skill_workspace/sourcemaps/STATUS.md`: books with validated
+Books with validated
 source maps contribute page-cited rules to `kg.py find/sources`; books still pending are searchable page by page with
 `search.py --src <ID>` and appear in the graph's page layer only. Nadi (DEVA2) and KP-style material stay in their own
 notes like Jaimini.
@@ -54,7 +56,7 @@ Mark each claim as **source statement**, **inference**, **synthesis** or **exter
 ## 4a. Knowledge graph (local, private)
 
 `scripts/kg.py` reads the Graphify graph built from the library's books and the contradiction register
-(`_skill_workspace/graphify-out/graph.json`, override with `ASTRO_KG`). Every rule node carries source, page (PDF and
+(in the configured library; override with `ASTRO_KG`). Every rule node carries source, page (PDF and
 printed), verse, section, tier and the date and method of extraction. Tiers:
 **classical** (verse or root text: PD, BJ, PM2 verses), **traditional** (translator/commentator notes),
 **modern** (Raman, LOL), **synthesis** (reader notes, this skill's inferences). Rules are paraphrases made
@@ -64,8 +66,8 @@ cross-book context, not as a better page finder (an earlier curated 16-of-17 fig
 
 ## 4. Retrieving passages (local, private)
 
-A full-text index of all eight books (one row per page, with source id and page) is at
-`~/Documents/Astrology Books/_skill_workspace/index/library.sqlite` (override with `ASTRO_LIBRARY_DB`).
+A full-text index of your books (one row per page, with source id and page) lives in the configured library
+(override with `ASTRO_LIBRARY_DB`).
 
 ```bash
 python3 scripts/search.py                                   # list sources
@@ -78,7 +80,7 @@ Search in each book's own vocabulary: Raman writes "Dasa/Bhukti", LOL "dasha/bhu
 Use it to confirm a rule before citing it, to fetch a disputed passage, or to answer "where does this come from?".
 Nothing leaves the machine. The index contains copyrighted text for the user's private use: quote briefly, paraphrase
 otherwise, and do not bundle it into distributable packages. Rebuild with
-`python3 _skill_workspace/tools/build_index.py` after adding books (procedure in `_skill_workspace/docs/ARCHITECTURE.md`).
+`astro add-book` after adding books (procedure in the repository's docs/ADD-A-BOOK.md).
 
 ## 5. Web sources inherited from v2.2
 

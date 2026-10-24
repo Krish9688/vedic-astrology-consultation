@@ -1,5 +1,5 @@
 {
- "version": 1,
+ "version": 2,
  "updated": "2026-09-26",
  "tiers": {
   "classical": "classical textual rule (verse or root text)",
@@ -23,9 +23,23 @@
    "text_layer": "Apple Vision OCR en-US",
    "page_convention": "PDF p; printed ≈ PDF − 30; cite Adhyaya.sloka",
    "pages": 350,
-   "file": "Phaladeepika (Tr. 1950).pdf",
-   "sha256": "4025915ca72ae06aa8e59bad8664a56b8d519953c387b973b3048fe4b9ca2f5f",
-   "copyright": "unclear: 1950 translation; translator's dates not verified — treated as restricted"
+   "copyright": "unclear: 1950 translation; translator's dates not verified — treated as restricted",
+   "work_id": "work:phaladeepika",
+   "volume": null,
+   "publisher": "author-published (V. Subrahmanya Sastri, Bangalore); printed at Aruna Press, Bangalore, 1950 (PDF p1-2)",
+   "base_text": "no edition named: translator assembled the text from Grantha and Devanagari sources (PDF p4-5)",
+   "tier_translation": "traditional",
+   "rights": {
+    "checked_on": "2026-10-03",
+    "sources": [
+     "docs/COPYRIGHT.md §1a (Internet Archive catalogue entries; Sri Jagannatha Jyotish article on the translator)"
+    ],
+    "death_years": {
+     "V. Subrahmanya Sastri": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "BJ",
@@ -41,9 +55,24 @@
    "text_layer": "old OCR layer in PDF",
    "page_convention": "PDF p; printed ≈ PDF − 38 from ch. III; cite ch.stanza",
    "pages": 286,
-   "file": "The Brihat Jataka of Varaha Mihira (N Chidambaram Iyer).pdf",
-   "sha256": "8ac9b8abca771f7106397f7e7679eeb01226f3f656dff7032606535000d18527",
-   "copyright": "likely public domain in the US (published 1905); status elsewhere depends on the translator's dates — not verified"
+   "copyright": "likely public domain in the US (published 1905); status elsewhere depends on the translator's dates — not verified",
+   "work_id": "work:brihat-jataka",
+   "volume": null,
+   "publisher": "Foster Press, 23 Rundall's Road, Vepery, Madras, 1885 (PDF p3)",
+   "base_text": "not stated in this PDF (owner title-page check 2026-10-24)",
+   "tier_translation": "traditional",
+   "rights": {
+    "checked_on": "2026-10-21",
+    "sources": [
+     "docs/COPYRIGHT.md §1a",
+     "research finding KB-F4 (Wellcome Collection record: Madras 1885, Public Domain Mark)"
+    ],
+    "death_years": {
+     "N. Chidambaram Iyer": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "PM2",
@@ -59,9 +88,23 @@
    "text_layer": "pdf text",
    "page_convention": "PDF p; cite ch.stanza; mark PRASHNA vs NATAL",
    "pages": 242,
-   "file": "Prasna Marga (Pt. 2) (B. V. Raman).pdf",
-   "sha256": "2a42fc31c8da1b72e545c586cc69fdb043f969dbf63da902c51ddf2a4815d41f",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:prasna-marga",
+   "volume": "2",
+   "publisher": "Motilal Banarsidass, Delhi (2nd ed., preface 1992, PDF p2)",
+   "base_text": "manuscripts: Oriental Library Madras and Mysore (1st-ed. preface p5: Madras Telugu-script, Mysore Kannada-script; 2nd-ed. preface p2 calls the Madras text Kannada-script), with Punnasseri Neelakanta Sarma's printed edition consulted; 2nd ed. adds a Devanagari copy from Mysore",
+   "tier_translation": "traditional",
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "B. V. Raman": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "HJH2",
@@ -77,9 +120,23 @@
    "text_layer": "pdf text",
    "page_convention": "PDF p; printed = PDF − 7",
    "pages": 482,
-   "file": "How to Judge a Horoscope (Vol 2) (Bangalore Venkata Raman).pdf",
-   "sha256": "36ce6bb52540ae162959a60640e795562284ab018fb24c71f7f847d1b1adfa93",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:how-to-judge-a-horoscope",
+   "volume": "2",
+   "publisher": "Motilal Banarsidass Publishers, Delhi (5th ed. 1995, reprint 2003; PDF p1-2)",
+   "base_text": null,
+   "tier_translation": null,
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "B. V. Raman": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "HPA",
@@ -95,9 +152,23 @@
    "text_layer": "Apple Vision OCR en-US",
    "page_convention": "PDF p (≈ two printed pages per PDF page)",
    "pages": 152,
-   "file": "Hindu Predictive Astrology (Bangalore V. Raman).pdf",
-   "sha256": "480b97138a612533982d548e64949873d02f7802bd4ee9b2b7e21c080149fbe8",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:hindu-predictive-astrology",
+   "volume": null,
+   "publisher": "UBS Publishers' Distributors (back cover, PDF p1; no title page in the scan)",
+   "base_text": null,
+   "tier_translation": null,
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "B. V. Raman": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "LOL",
@@ -113,9 +184,24 @@
    "text_layer": "pdf text",
    "page_convention": "PDF p; printed = PDF − 28",
    "pages": 468,
-   "file": "Light on life  an introduction to the astrology of India (Defouw, Hart, Svoboda, Robert, 1953-).pdf",
-   "sha256": "51cffe42e775ed0d59c9cfa38b28caf6f02dc418b829f7db01e90c79734f041e",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:light-on-life",
+   "volume": null,
+   "publisher": "Lotus Press (reprint 2003; first published 1996 by Penguin Books; PDF p6)",
+   "base_text": null,
+   "tier_translation": null,
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "Hart de Fouw": "unknown",
+     "Robert Svoboda": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "LKS",
@@ -131,9 +217,23 @@
    "text_layer": "pdf text",
    "page_convention": "PDF p (no printed pages)",
    "pages": 234,
-   "file": "Lal Kitab -- Pt. Radhakrishna Shrimali.pdf",
-   "sha256": "666455c5b1ecb50e6b53e320639e6bf5b13e533f534d3dd2a4ed495d81516aab",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:lal-kitab-shrimali",
+   "volume": null,
+   "publisher": "Diamond",
+   "base_text": null,
+   "tier_translation": null,
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "Radhakrishna Shrimali": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "LK1952",
@@ -149,9 +249,25 @@
    "text_layer": "Apple Vision OCR hi-IN (cleaned)",
    "page_convention": "PDF p + edition page (पेज नंबर)",
    "pages": 1245,
-   "file": "Lal Kitab 1952 Colour Merged (Pandit Sri Rupchand Joshi).pdf",
-   "sha256": "c0c1d9fc2c1f40359cf1c376b41b3a346bd18cc18acec70c911700f32394b8c3",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:lal-kitab-1952",
+   "volume": null,
+   "publisher": "Sharma Girdhari Lal, printer and publisher, Farwala, Jalandhar (PDF p4); digital edition by Vinit Nagpal (PDF p1, p7)",
+   "base_text": "Urdu original Lal Kitab 1952 by Pandit Roop Chand Joshi (PDF p3), transliterated into Devanagari (owner 2026-10-24: a transliteration, not a translation)",
+   "tier_translation": null,
+   "rights": {
+    "checked_on": "2026-10-21",
+    "sources": [
+     "research finding KB-F6 (Wikipedia: Roop Chand Joshi 1898-1982; authorship of the verses disputed)",
+     "docs/COPYRIGHT.md §1"
+    ],
+    "death_years": {
+     "Roop Chand Joshi": 1982,
+     "V. Nagpal": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "JSR",
@@ -167,10 +283,24 @@
    "text_layer": "pdf text",
    "page_convention": "PDF p",
    "pages": 520,
-   "file": "A course on Jaimini Maharṣis Upadeśa Sūtra.pdf",
-   "sha256": "f05759d39fa8b19200a51544130fcc1a1f51ffee321e7c8b255fb97b14f4487d",
    "added": "2026-09-25",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:jaimini-upadesa-sutra",
+   "volume": "1",
+   "publisher": "Sagittarius Publications",
+   "base_text": "no printed edition named: the four extant adhyayas of the Upadesa Sutra (preface, PDF p11-12)",
+   "tier_translation": "traditional",
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "Sanjay Rath": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "BPHS",
@@ -186,10 +316,25 @@
    "text_layer": "pdf text",
    "page_convention": "PDF p",
    "pages": 1033,
-   "file": "Brihat Parasara Hora Sastra by Maharshi Parasara.pdf",
-   "sha256": "de6cd341bf298e9f95c8c57a6a4cc2feaadea52403bcb5e0fd5cb1cbaeb4db63",
    "added": "2026-09-25",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:brihat-parasara-hora-sastra",
+   "volume": "1-2",
+   "publisher": "Ranjan Publications",
+   "base_text": "Sanskrit version rendered by Sitaram Jha (Master Khelari Lal, Varanasi edition), chosen after comparing four versions (translator's preface, PDF p23); year not printed",
+   "tier_translation": "traditional",
+   "rights": {
+    "checked_on": "2026-10-21",
+    "sources": [
+     "research finding KB-F3 (Wikipedia; edition history of the Santhanam translation)",
+     "docs/COPYRIGHT.md §1"
+    ],
+    "death_years": {
+     "R. Santhanam": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "CRUX",
@@ -205,10 +350,24 @@
    "text_layer": "Apple Vision OCR en-US",
    "page_convention": "PDF p",
    "pages": 600,
-   "file": "Crux of Vedic Astrology-Timing of Events (Sanjay Rath).pdf",
-   "sha256": "e3307ede78737e4e35e78b042a0cfd19cab6cd46234087173afd62203080af9a",
    "added": "2026-09-25",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:crux-of-vedic-astrology",
+   "volume": null,
+   "publisher": "Sagar Publications, New Delhi (PDF p2-3)",
+   "base_text": null,
+   "tier_translation": null,
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "Sanjay Rath": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "DEVA2",
@@ -224,10 +383,24 @@
    "text_layer": "Apple Vision OCR en-US",
    "page_convention": "PDF p",
    "pages": 292,
-   "file": "Deva Keralam (Chandra Kala Nadi) Vol. 2 (R. Santhanam).pdf",
-   "sha256": "b7713a050fe118d27b8e6f45a3ab0cc65b5ca453f79a482e8e0e0481e444488b",
    "added": "2026-09-25",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:deva-keralam",
+   "volume": "2",
+   "publisher": "Sagar Publications, New Delhi, 1993 (PDF p1-2)",
+   "base_text": "no manuscript named: preface gives sloka ranges by Achyuta and Venkatesa (PDF p3)",
+   "tier_translation": "traditional",
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "R. Santhanam": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "HJH1",
@@ -243,17 +416,31 @@
    "text_layer": "pdf text",
    "page_convention": "PDF p",
    "pages": 311,
-   "file": "How to Judge Horoscope, Vol 1 (B. V. Raman).pdf",
-   "sha256": "e1166bd112471174441dcaa21cb9c6ae1810994b971d8e4d800673702a61487d",
    "added": "2026-09-25",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:how-to-judge-a-horoscope",
+   "volume": "1",
+   "publisher": "Motilal Banarsidass Publishers, Delhi (reprint 2006; PDF p2-3)",
+   "base_text": null,
+   "tier_translation": null,
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "B. V. Raman": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "JP2",
    "title": "Jataka Parijata Vol. 2 (ch. 10–18)",
    "author": "Vaidyanatha Dikshita",
    "translator": "V. Subrahmanya Sastri",
-   "edition": "Mysore 1933",
+   "edition": "Bangalore City 1933 (title page; file name says Mysore)",
    "year": "1933",
    "language": "English translation with Sanskrit verses",
    "system": "Parashari",
@@ -262,10 +449,24 @@
    "text_layer": "Apple Vision OCR en-US",
    "page_convention": "PDF p",
    "pages": 682,
-   "file": "Jatak Parijata of Vaidya Natha Dikshita Eng Translation Vol 2 Chapter 10-18 Mysore 1933 - V Subrahmanya Sastri.pdf",
-   "sha256": "2019b6c890818facd89e17f2016e781f5c22ac689583870e4b5e29b06b4c99db",
    "added": "2026-09-25",
-   "copyright": "unclear: 1933 translation; translator's dates not verified — treated as restricted"
+   "copyright": "unclear: 1933 translation; translator's dates not verified — treated as restricted",
+   "work_id": "work:jataka-parijata",
+   "volume": "2",
+   "publisher": "printed by V. B. Soobbiah and Sons, Bangalore City, 1933 (PDF p5-6)",
+   "base_text": "not stated in this PDF (owner title-page check 2026-10-24)",
+   "tier_translation": "traditional",
+   "rights": {
+    "checked_on": "2026-10-03",
+    "sources": [
+     "docs/COPYRIGHT.md §1a (Internet Archive catalogue entries; Sri Jagannatha Jyotish article on the translator)"
+    ],
+    "death_years": {
+     "V. Subrahmanya Sastri": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "SAR1",
@@ -281,10 +482,24 @@
    "text_layer": "pdf text",
    "page_convention": "PDF p",
    "pages": 406,
-   "file": "Saravali I (Jyotish . Vedic Astrology) (Kalyan Verma, Manoj Kumar).pdf",
-   "sha256": "f74bdac0a0a5bafcd967063f49c981dfae99705089c4bc218958afdc0e98253f",
    "added": "2026-09-25",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:saravali",
+   "volume": "1",
+   "publisher": "not stated in this PDF (owner title-page check 2026-10-24)",
+   "base_text": "not stated in this PDF (owner title-page check 2026-10-24)",
+   "tier_translation": "modern",
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "Manoj Kumar": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "NAKS",
@@ -300,10 +515,24 @@
    "text_layer": "pdf text",
    "page_convention": "PDF p",
    "pages": 605,
-   "file": "The Nakshatras The Stars Beyond the Zodiac (Komilla Sutton).pdf",
-   "sha256": "4e2f617c57250107f739ec08ae5d581313b3c3ca3ca87764c25904af78ea4696",
    "added": "2026-09-25",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:the-nakshatras",
+   "volume": null,
+   "publisher": "The Wessex Astrologer Ltd (PDF p1)",
+   "base_text": null,
+   "tier_translation": null,
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "Komilla Sutton": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "KNRT",
@@ -319,10 +548,24 @@
    "text_layer": "Apple Vision OCR en-US",
    "page_convention": "PDF p",
    "pages": 127,
-   "file": "Timing through vimshottari dasha (K N Rao).pdf",
-   "sha256": "59463d55b9b4bfe3be52de67bcdceb4daff5e94169104a6d6141bcc46802d88f",
    "added": "2026-09-25",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:timing-events-through-vimshottari-dasha",
+   "volume": null,
+   "publisher": "Vani Publications, Delhi (PDF p1)",
+   "base_text": null,
+   "tier_translation": null,
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "K. N. Rao": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   },
   {
    "id": "PVR",
@@ -338,10 +581,24 @@
    "text_layer": "pdf text",
    "page_convention": "PDF p",
    "pages": 515,
-   "file": "Vedic Astrology An Integrated Approach (P. V. R. Narasimha Rao).pdf",
-   "sha256": "1cafa828f34764ed5e85816882df2e8f0bc014c5c57ccdb27169416e117fd4db",
    "added": "2026-09-25",
-   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed",
+   "work_id": "work:vedic-astrology-an-integrated-approach",
+   "volume": null,
+   "publisher": "none named: author's copyright, first published 2000, shared freely (PDF p1-2)",
+   "base_text": null,
+   "tier_translation": null,
+   "rights": {
+    "checked_on": "2026-09-27",
+    "sources": [
+     "docs/COPYRIGHT.md §1 (library audit)"
+    ],
+    "death_years": {
+     "P. V. R. Narasimha Rao": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {}
   }
  ],
  "derived": [

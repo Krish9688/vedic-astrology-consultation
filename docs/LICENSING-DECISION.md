@@ -22,7 +22,7 @@ repository (`LICENSE`, `LICENSES/`, `plugin.json` `license`, engine `pyproject.t
 |---|---|---|---|
 | pyswisseph 2.10.3.2 / Swiss Ephemeris | **AGPL-3.0** (or Astrodienst's paid Professional Licence) | dependency of `astro/` | code that links it and is distributed — or served to others over a network — must be AGPL-compatible, unless the professional licence is bought |
 | PyMuPDF 1.28 | **AGPL-3.0** or Artifex commercial | dependency of `tools/` ingestion | same as above for the ingestion tools |
-| PyJHora 4.8.7 | **AGPL-3.0** per its LICENSE file (its package metadata says MIT — inconsistent; treat as AGPL) | **not bundled**, validation only, separate environment | none, as long as it is never imported or shipped |
+| PyJHora 4.8.7 | **AGPL-3.0** per its LICENSE file (only its trove classifier says MIT — inconsistent; treat as AGPL) | **not bundled**, validation only, separate environment | none, as long as it is never imported or shipped |
 | Graphify 0.9.67 | Apache-2.0 (vendored copy also MIT) | used to build the graph; `vendor/` is not exported | keep its NOTICE if ever vendored |
 | Docling 2.130, docling-ibm-models | MIT; model weights are downloaded by the user at run time | optional, not bundled | check model cards before bundling any weights |
 | pypdfium2 | BSD-3-Clause / Apache-2.0 (+ PDFium licences) | optional | compatible |

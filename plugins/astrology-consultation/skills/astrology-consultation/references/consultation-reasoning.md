@@ -1,5 +1,7 @@
 # Consultation reasoning: from the client's question to a judgement
 
+Contents: [0. Two layers: the workbench and the answer](#0-two-layers-the-workbench-and-the-answer) · [1. Understand the question before touching the chart](#1-understand-the-question-before-touching-the-chart) · [2. Give every factor a role before a meaning](#2-give-every-factor-a-role-before-a-meaning) · [3. Establish the natal promise (a class, not yes/no)](#3-establish-the-natal-promise-a-class-not-yesno) · [4. Activation and trigger: "promised" is not "happening now"](#4-activation-and-trigger-promised-is-not-happening-now) · [5. Scenarios: what could this activation actually be?](#5-scenarios-what-could-this-activation-actually-be) · [6. Contradictions: decide what each factor controls](#6-contradictions-decide-what-each-factor-controls) · [7. Confidence: built from quality, not quantity](#7-confidence-built-from-quality-not-quantity) · [8. Past events as calibration, not as proof](#8-past-events-as-calibration-not-as-proof) · [9. Systems stay separate](#9-systems-stay-separate) · [10. Turning the judgement into the answer](#10-turning-the-judgement-into-the-answer)
+
 This is the thinking layer. The other references hold rules; this file decides **which rules matter for this
 question, what role each factor plays, and how they combine into one judgement**. The research behind it (how
 experienced practitioners actually reason, with sources and critiques) is in

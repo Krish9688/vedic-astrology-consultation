@@ -20,6 +20,21 @@ benchmarks use the owner's chart and stay private (only their scores are publish
 | Report audit lint (2026-10-18) | `life_lint.py --mode audit` flags fear, sales, certainty, money and gemstone language in someone else's report (paraphrased, invented sentences) | `tests/test_audit_lint.py` |
 | Privacy boundary (private, 2026-10-18) | private and third-party folders reach no export (archive, public, package) and are blocked by the privacy check; structural birth-record detection; manifest gates; packages scanned | `tests/test_privacy_boundary.py` |
 
+**Time-zone / DST / coordinate matrix (QA-X4, completed 2026-10-21, roadmap Phase 3):**
+
+| Case | Test |
+|---|---|
+| `+05:30` = 5.5 h; `5.30` and minute look-alikes refused; echoed as ±HH:MM | `test_regressions.py::test_utc_offset_forms_accepted`, `::test_utc_offset_minute_lookalikes_refused`, `::test_utc_offset_echoed_as_hh_mm` |
+| IANA history: Kolkata 1943 = +06:30 with pre-1948 / pre-1970 flags; London 1969 BST; New York DST | `test_timezones.py::test_zone_gives_the_offset_of_the_birth_moment` |
+| Kathmandu 1980 = +05:30, 1990 = +05:45 | `test_timezones.py::test_kathmandu_moved_from_0530_to_0545_in_1986` |
+| Spring-forward gap refused; fall-back overlap needs `fold` | `test_timezones.py::test_skipped_and_repeated_clock_times_are_refused_not_guessed` |
+| Pre-standard (local mean time) era refused with the LMT suggestion | `test_timezones.py::test_local_mean_time_era_needs_an_explicit_offset` |
+| Manual offset overrides the zone, IANA value flagged; a misspelt zone still refused | `test_timezones.py::test_explicit_offset_overrides_a_zone_and_says_so` |
+| Zone, offset and tzdb version in every output's meta | `test_timezones.py::test_zone_provenance_reaches_every_output` |
+| West longitude / negative offset, +05:45, +09:30, southern hemisphere: the offset only restates the instant | `test_edge_cases.py::test_offset_is_only_a_restatement_of_the_instant` |
+| Date line | `test_edge_cases.py::test_date_line_same_instant_same_chart` |
+| Polar latitude and pre-1582 dates flagged; poles and years after 2999 refused | `test_regressions.py::test_range_flags_and_refusals`, `test_panchang.py::test_polar_and_invalid_inputs` |
+
 Run everything: `.venv/bin/python -m pytest tests -q` (2026-10-18: 339 passed, 1 skipped; the full public gate
 `export_public.py --check` passes, its fresh-environment suite 220 passed, 9 skipped without ephemeris files).
 

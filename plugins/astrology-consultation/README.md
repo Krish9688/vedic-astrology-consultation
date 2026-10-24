@@ -9,7 +9,7 @@ on your own computer.
 | Component | Where it runs | Notes |
 |---|---|---|
 | Skill `astrology-consultation` | Claude Code; Cowork and claude.ai chat (documented, not yet verified) | the consultation and report method |
-| Local MCP server `astrology` (15 tools) | Claude Code; Cowork (expected, not yet verified) | started by `scripts/astro`; not available in web chat |
+| Local MCP server `astrology` (26 tools) | Claude Code; Cowork (expected, not yet verified) | started by `scripts/astro`; not available in web chat |
 | Commands `/astrology-consultation:setup`, `/astrology-consultation:doctor` | Claude Code; Cowork (not yet verified) | first-time setup and health check |
 
 The engine's Python environment is created on first use in the plugin's data folder (`~/.claude/plugins/data/…`),

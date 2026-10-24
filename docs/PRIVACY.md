@@ -16,6 +16,10 @@ the owner's machine unless the owner explicitly decides otherwise.
 | Service settings (`astro setup`) | `~/.config/astrology-consultation/config.toml`, mode 600 | no |
 | Prediction log (consent-gated) | `~/.local/share/astrology-consultation/predictions.sqlite`, mode 600; not exposed over MCP or REST | no |
 
+**Retention.** `astro purge --older-than DAYS` lists report files (`.html`, `.pdf` in the reports folder) and
+prediction-log rows older than DAYS; add `--yes` to delete them (the log is vacuumed so deleted text does not linger).
+Keep the data folder and the reports folder out of cloud sync and backups you do not control.
+
 ### Privacy modes of the `astro` service
 
 | Mode | Calculation | External calls |

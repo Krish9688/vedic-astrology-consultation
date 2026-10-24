@@ -22,15 +22,28 @@ Updated 2026-10-03 (final-completion review in progress; this file is revised ag
 3. **Blind retrieval evaluation** on unseen questions (done as a development set: full text 16/24, hybrid 17/24; an unseen holdout is still needed).
 4. **Calculation edge-case suite**: southern hemisphere, western longitudes and negative offsets, DST, +05:45/+09:30,
    equator, date line, outside 1800–2399, outer-planet stations, node sign boundaries.
-5. **Reports**: done in the 3.6 cycle — one-page summary type, Main-windows rule with a restatement warning, visual QA
+5. **Reports**: done in the 3.6 cycle — Main-windows rule (the one-page summary type was added, then removed in round 12; `compact` remains) with a restatement warning, visual QA
    of all nine types (`tools/report_qa.py`); remaining: blind re-test (round 10, S3).
 6. **Real-client verification**: Claude app plugin flow, a live model turn using the tools, ChatGPT/Codex migration.
 
 ## Later (deferred; decision and reasons recorded when the review ends)
 
-- Time-zone database for historical offsets (today the UTC offset at birth must be given, including daylight saving).
-- Chara / Yogini / Narayana dashas; ishta/kashta phala; bhava bala.
-- A compatibility (synastry / kuta) report type with its own research pass.
+- ~~Time-zone database for historical offsets~~ done 2026-10-21: IANA `zone` with fold, gap and pre-standard-time
+  refusals and pre-1970 / pre-1948 South Asia flags; offline GeoNames place lookup.
+- ~~Yogini dasha~~ done 2026-10-21 (BPHS ch. 46 mahadashas; the source gives no sub-period rule).
+- **Chara / Narayana dashas: blocked on a source decision.** BPHS ch. 46 sl. 155–167 gives a pada-based Chara dasha
+  whose verse is garbled (source map ❓), whose worked example does not settle whether the count is inclusive or what a
+  lord in its own sign gives, and which differs from the Narayana/Chara methods CRUX and KNRT use; the texts do not
+  reconcile them (BPHS_part4 reader note). Needs the owner's page check of BPHS p544–547 and a choice of school before
+  one variant-named implementation. Ishta/kashta phala and bhava bala remain deferred.
+- ~~Compatibility~~ done 2026-10-21 as facts, not a score: Prasna Marga XXI sign and star counts with their verses
+  (`get_compatibility`). **36-point Ashtakoota: blocked** — no point table in the library (PM2 assigns no unit scores;
+  NAKS prints 32 points, ❓); vasya, gana, yoni-animal, nadi, rajju and vedha tables are not in the source maps.
+- ~~Tajika annual chart core~~ done 2026-10-21 (PVR ch. 27–28, 31; reproduces Examples 118 and 122). Still open:
+  pancha vargeeya bala (neutral-sign value missing in the source), Patyayini and Varsha Narayana dashas, cusp-based
+  sahams; Tajaka Neelakanthi is not in the library.
+- Transit layer done 2026-10-21: PD XXVI gochara with vedha, sade sati, a dated personal outlook; Panchang (checked
+  against USNO) done the same day.
 - Hand-curated semantic graph relations (SUPPORTS, MODIFIED_BY).
 - Further ayanamsas and house systems.
 

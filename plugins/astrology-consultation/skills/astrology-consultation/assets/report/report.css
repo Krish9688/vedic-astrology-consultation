@@ -47,6 +47,7 @@ p { margin: 0 0 8pt; }
 .unit dt, .unit .theme { break-after: avoid; }   /* a unit title never ends a page */
 .unit dd { orphans: 3; widows: 3; }
 .unit .theme { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-weight: 600; font-size: 12.5pt; line-height: 1.35; color: var(--pine); margin-bottom: 4pt; }
+.unit .basis { font-size: 8pt; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: -2pt 0 5pt; }
 .unit dl { margin: 0; display: grid; grid-template-columns: 33mm 1fr; gap: 3pt 10pt; }
 .unit dt { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: .04em; text-transform: uppercase; color: var(--moss); padding-top: 2.5pt; }
 .unit dd { margin: 0; }
@@ -97,3 +98,4 @@ a { color: var(--forest); }
   .cover { height: auto; min-height: 0; }
   .cover .foot { position: static; margin-top: 24pt; }
 }
+.rasi{margin:1em 0;text-align:center;break-inside:avoid}.rasi figcaption{font-size:.85em;color:#555}

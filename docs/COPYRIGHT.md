@@ -9,7 +9,7 @@ project's synthesis, with short page references), synthetic test data and biblio
 
 | ID | Book | Translator / author | Status | In repository |
 |---|---|---|---|---|
-| BJ | Brihat Jataka (Varahamihira) | N. Chidambaram Iyer, 1905 | likely public domain in the US (published 1905); elsewhere depends on the translator's dates — not verified | metadata only |
+| BJ | Brihat Jataka (Varahamihira) | N. Chidambaram Iyer, 1885 (title page; catalogue metadata says 1905) | likely public domain in the US (published 1885); elsewhere depends on the translator's dates — not verified | metadata only |
 | PD | Phaladeepika (Mantreswara) | V. Subrahmanya Sastri, 1950 | unclear (translator's dates not verified) — treated as restricted | metadata only |
 | JP2 | Jataka Parijata Vol. 2 | V. Subrahmanya Sastri, 1933 | unclear — treated as restricted | metadata only |
 | BPHS | Brihat Parasara Hora Sastra | R. Santhanam | copyrighted translation | metadata only |
@@ -26,13 +26,14 @@ project's synthesis, with short page references), synthetic test data and biblio
 | DEVA2 | Deva Keralam Vol. 2 | R. Santhanam | copyrighted | metadata only |
 
 "Metadata only" = the entry in `knowledge/catalog.json`: title, author, translator, edition, language, system, tier,
-page convention, page count, expected file name and SHA-256 fingerprint.
+page convention and page count. The owner's file names and SHA-256 fingerprints stay in the private catalogue
+(decision 2026-10-21: they identify the exact copies in a private library); the public catalogue omits them.
 
 ## 1a. Public-domain research (2026-10-03; no change in treatment)
 
 | ID | Publication | United States | India (author's life + 60 years) | Treatment |
 |---|---|---|---|---|
-| BJ | N. Chidambaram Iyer, 1905 | public domain (published before 1931) | translator's death year not verified | still not redistributed (no need) |
+| BJ | N. Chidambaram Iyer, 1885 (title page) | public domain (published before 1931) | translator's death year not verified | still not redistributed (no need) |
 | JP2 | V. Subrahmanya Sastri, Mysore 1933 | not yet: a 1933 foreign publication stays protected until 1 Jan 2029 (95 years) | Sastri's death year not found in public sources checked (his output spans 1915–1950s) | restricted |
 | PD | V. Subrahmanya Sastri, 2nd ed. 1950 | protected until 2046 | as above | restricted |
 
@@ -76,9 +77,9 @@ paraphrase with page references. Re-run before each public release (the method a
 ## 3. Using your own copies
 
 Obtain the books legally, put the PDFs in the library folder and run the ingestion pipeline
-([ADD-A-BOOK.md](ADD-A-BOOK.md)). `tools/kg/add_book.py relink` matches files by SHA-256 against the catalogue, so an
-identical file is recognised whatever its name; a different edition is registered as a new source with its own page
-convention. Without the books, the skill still runs: search and graph lookups report that retrieval is unavailable.
+([ADD-A-BOOK.md](ADD-A-BOOK.md)). `tools/kg/add_book.py relink` matches files by SHA-256 against the private catalogue, so
+an identical file is recognised whatever its name; with the public catalogue (no fingerprints) register your copy as
+a new source with its own page convention. Without the books, the skill still runs: search and graph lookups report that retrieval is unavailable.
 
 ## 4. Code licences
 

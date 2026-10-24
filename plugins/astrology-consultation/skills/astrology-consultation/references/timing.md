@@ -1,5 +1,9 @@
 # Timing engine: dashas, transits, annual charts
 
+Contents: [0. The timing ladder (how a window is earned) — read first](#0-the-timing-ladder-how-a-window-is-earned--read-first) · [1. Vimshottari: identify the significators first](#1-vimshottari-identify-the-significators-first) · [2. Reading a dasha–bhukti pair](#2-reading-a-dashabhukti-pair) · [3. Transits (gochara): triggers inside an activated period](#3-transits-gochara-triggers-inside-an-activated-period) · [4. Parashari annual chart (Tajika / varshaphala) — separate from Lal Kitab](#4-parashari-annual-chart-tajika--varshaphala--separate-from-lal-kitab)
+[5. Building a window (short form of §0, with a worked report shape)](#5-building-a-window-short-form-of-0-with-a-worked-report-shape)
+[6. Temporal modes (carried over from v2.2)](#6-temporal-modes-carried-over-from-v22)
+
 Timing answers "when is the natal promise foregrounded?". It never creates a promise. Output a **window with its
 reasons** ("the strongest activation is X–Y because A, B and C converge"), graded Strong/Moderate/Weak/Contradictory/
 Unknown per [synthesis-method.md](synthesis-method.md). Never read current sky positions from memory; use supplied
@@ -42,9 +46,27 @@ hindsight [LOL p354; R2-TP1].
    *which way* — direction comes from the natal roles [R2-TP3, TP5].
 6. **Secondary confirmation**, each counted once: a pre-chosen Jaimini sign dasha variant; the Tajika year lord or
    muntha lord (only from a supplied or calculated return chart) being the AD lord or a network planet. Disagreement is reported.
+   **Secondary nakshatra dashas (rule for step 6).** Vimshottari is the default clock (BPHS 46.2-5) and stays
+   primary. At most one secondary dasha clock (Yogini, or a BPHS ch. 46 conditional system such as Ashtottari) is
+   used, chosen and named before any date is examined; it counts once, as one secondary confirmation, is never pooled
+   with Vimshottari and never rescues a window Vimshottari does not give. `get_dasha_applicability`
+   (`astro applicability`) reports which ch. 46 conditions hold: information, not a reason to switch clocks. State
+   overlaps as such (BPHS gives no rule for choosing), name the reading where the texts differ
+   ([contradiction-register.md](contradiction-register.md) CR-V23, CR-V24), and treat a condition that flips within
+   the birth-time window as Unknown. The engine computes no periods for the conditional systems.
 7. **Supporting only** (quality or fine placement, never occurrence): Ashtakavarga bindus of the transiting planet
    (quality: easy vs strained), double transit on the network (true most of the time — label it), eclipses/nodal
    contacts ("sensitised for about six months", not a timer), PD inside an earned band [R2-TP7–TP9].
+
+   **Engine support for steps 3-7** (facts only). `get_topic_network` (`astro network --topic …`) builds the step-3
+   network: Raman's (a)-(g) list plus the topic extras (marriage, career, finance, relocation, education; children is
+   theme-only and never laid over dates), each entry with its source and a sha256 hash. Build it before any date is
+   seen and pass it back unchanged: `get_activation` (`astro activation --network …`) refuses an edited network. Per
+   AD (or PD) segment it lists the period lords' roles from lagna and Moon (from chart_facts), D9/D10 and dignity, and
+   the contacts, Ju/Sa sign stays (with BAV/SAV) and station episodes that touch a period lord or the network. Variant
+   entries and unsourced extras are flagged, not merged. `astro retro --event career:2019-05 …` is the local-only
+   §8 calibration check ([consultation-reasoning.md](consultation-reasoning.md) §8): "consistent with N of M" against
+   networks frozen first. Nothing is stored, and calibration is not proof.
 8. **Show restraint even when finer windows exist**: give the broad activation and **at most one** "most
    concentrated" window (plus, if genuinely distinct, one secondary). Never list a run of pratyantardashas as
    separate bullets — the person needs the shape of the period, not the software table.
@@ -144,6 +166,36 @@ dates by hand when a calculated table exists. Periods nest: check containment an
   milder the second time [LOL p363–364; HPA p130]. Never a verdict by itself.
 - A transit never produces a major event without natal promise and dasha activation [HJH2 p119–122; HPA p134].
 
+### 3a. Personal outlook (daily, weekly, monthly, yearly)
+
+Build it only from `get_outlook` (or `astro outlook --period day|week|month|year --on DATE`): it returns dated,
+chart-specific factors, each with an id (F1, F2 …) and a source — running Vimshottari and Yogini periods, gochara from
+the Moon (PD XXVI good houses, vedha, condition) with the lagna frame beside it, sade sati, sign changes, stations,
+exact slow-planet contacts and, for a day or week, the Moon's transit. `get_gochara` gives the table for one date.
+  Gochara rows carry the bindus of the transited sign (the planet's own BAV and the SAV, BPHS tables): they qualify a
+  transit, never time or predict on their own.
+  Year/month outlooks also list **vedha intervals** (dated spans in which a favourable transit is obstructed, sampled at
+  the sign changes of Sun, Mars, Mercury, Jupiter, Venus, Saturn; PD table; Moon vedha omitted) and **station-near-natal
+  episodes** (a station within 3° close, 7° wide of a natal point, one episode per retrograde loop; the orb is a
+  convention, not a classical rule). All are triggers inside an activated dasha period only, never predictions alone.
+  Every factor carries a `layer`: **event** (exact slow contact with a natal point, a station near one, a slow sign
+  change, sade sati), **texture** (faster planets' sign changes, bare stations, and for a month or longer the
+  chandrashtama spans [CRUX p99-100] and the Moon's daily tara from the birth star — low weight) or **backdrop** (dasha,
+  gochara snapshot, vedha).
+- **Written monthly or quarterly outlook** (report type `outlook`, 28-92 days): start from
+  `render_report.py --outlook-draft outlook.json` (dasha first, then event-level factors or the texture-only statement,
+  texture last), write the life meaning around those facts, and check with `--outlook outlook.json`: every unit names
+  its factor ids, every sentence about a planet carries a chart anchor (a house from your Moon or lagna, a natal point,
+  a dasha), a window without an event-level factor says "no event-level timing is indicated" and makes no event claim,
+  and the client text stays within two pages.
+- Every statement names the factor ids behind it and the tradition (Parashari gochara; Yogini is a secondary dasha).
+  Lead with the running dasha, then the transits that touch its lords and houses (§0, §3); a favourable transit in an
+  unfavourable period is a minor note.
+- No sun-sign or Moon-sign text that would fit anyone: if the period has few factors, say it is a quiet period.
+- A daily outlook is mostly the Moon's transit: keep it short and low-stakes. Never forecast health crises, deaths,
+  accidents or legal outcomes (SKILL.md non-negotiable 6).
+- Grade each item (Strong … Unknown) and keep the computed facts visibly separate from the interpretation.
+
 ## 4. Parashari annual chart (Tajika / varshaphala) — separate from Lal Kitab
 
 Raman's simplified solar-return: chart for the Sun's return to its natal longitude; annual dashas (Sun 110, Moon 60,
@@ -151,6 +203,15 @@ Mars 32, Mercury 40, Jupiter 48, Venus 56, Saturn 4, Rahu 5, Lagna 10 days); jud
 first, then the annual chart, and combine** [HPA p128–131]. He himself calls this a snapshot and says his separate
 *Varshaphal* book is more correct (not in this library), and the return table uses an outdated year length
 [HPA p128]. Use only with a calculated return chart.
+
+**Calculated Tajika year** (`get_tajika` / `astro tajika`, PVR ch. 27–28, 31; reproduces PVR Examples 118 and 122):
+return moment at the birthplace, day or night year, muntha, harsha bala, the five year-lord candidates with their
+Tajika aspect on the annual lagna, sahams and Mudda dasha. The year lord is printed only when the aspect tiers settle it
+(pancha vargeeya bala is not computed); otherwise say "year lord undetermined" and list the shortlist. PVR notes that
+Tajika has no basis in Parasara or Jaimini and gates it by the natal promise [PVR p377–378]: it confirms a window the
+natal dasha and transits already show, counted once (§0 step 6), never creates one. Mudda dates follow PVR's stated
+definition (a solar day = the Sun moving 1°); his own Example 122 fits a clock day about two days earlier, so quote a
+Mudda boundary to the week, not the day.
 
 ## 5. Building a window (short form of §0, with a worked report shape)
 
@@ -181,7 +242,7 @@ rather than the event."
 - For long reports keep one authoritative period table ([reports.md](reports.md)); split any window that crosses an AD
   boundary by lord.
 
-Specialist modules need their own verified inputs and are otherwise omitted: Tajika details (Muntha, sahams, Tajika
-aspects), muhurta/tara, Jaimini sign dashas, Kalachakra (PD says use it only when the Moon's navamsa lord is strong and
+Specialist modules need their own verified inputs and are otherwise omitted: Tajika details beyond §4's calculated
+year, muhurta/tara, Jaimini sign dashas, Kalachakra (PD says use it only when the Moon's navamsa lord is strong and
 calls nakshatra dasha "always the best" [PD XXII.30]), numerology.
 

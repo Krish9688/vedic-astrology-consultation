@@ -38,7 +38,7 @@ v2.1.275+ one command does both (documented): `/plugin install astrology-consult
 | Component | Works in | Notes |
 |---|---|---|
 | Skill `astrology-consultation` | Claude Code; Cowork and claude.ai chat (documented, not yet verified) | the consultation, timing, safety and report method |
-| Local MCP server `astrology` (15 tools: chart, vargas, dashas, transits, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity, consultation context, reports, source lookup) | Claude Code; Cowork (expected, not yet verified) | started by the plugin's `scripts/astro`; **not available in web chat**, which cannot run programs on your computer |
+| Local MCP server `astrology` (26 tools: chart, vargas, dashas (Vimshottari, Yogini, Chara, applicability), transits, gochara and outlook, panchang, Tajika, compatibility facts, Shadbala, Ashtakavarga, Jaimini, birth-time sensitivity, consultation context, reports, source lookup) | Claude Code; Cowork (expected, not yet verified) | started by the plugin's `scripts/astro`; **not available in web chat**, which cannot run programs on your computer |
 | `/astrology-consultation:setup`, `/astrology-consultation:doctor` | Claude Code; Cowork (not yet verified) | first-time setup and health check |
 
 Tested: `claude plugin details` lists the three skills and the MCP server; about 250 tokens stay loaded in every

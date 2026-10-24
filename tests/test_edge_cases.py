@@ -31,7 +31,7 @@ def test_offset_is_only_a_restatement_of_the_instant(name, date, time, tz, lat, 
     a = E.compute(date, time, tz, lat, lon, on="2030-01-01", extras=False)
     b = E.compute(d0, t0, 0, lat, lon, on="2030-01-01", extras=False)
     assert core(a) == core(b), name
-    assert f"UTC{tz:+}" in a["meta"]["birth_local"]
+    assert a["meta"]["birth_local"].endswith(f"UTC{E.fmt_offset(tz)}")   # echoed as ±HH:MM (audit H1)
 
 
 def test_date_line_same_instant_same_chart():

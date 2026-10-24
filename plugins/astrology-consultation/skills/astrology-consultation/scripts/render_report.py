@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """Structured Report Model (JSON) → checked HTML → PDF.
 
-usage: python3 render_report.py report.json [--out DIR] [--check-only]
+usage: python3 render_report.py report.json [--out DIR] [--check-only] [--facts calc.json] [--fact-ids derived.json]
+                                [--outlook outlook.json]
+       python3 render_report.py --outlook-draft outlook.json      (checked skeleton of a personal outlook)
        python3 render_report.py --selftest
 Validates against assets/report/report.schema.json (a stdlib subset of JSON Schema), runs consistency and
 life-first checks, renders assets/report/template.html.j2 with Jinja2, and writes a PDF with WeasyPrint when it is
 installed (otherwise the HTML prints to PDF from any browser). Needs: jinja2; optional: weasyprint.
 """
+import datetime as dt
 import json
 import os
 import re
@@ -15,15 +18,31 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(HERE, "..", "assets", "report")
 sys.path.insert(0, HERE)
+import chart_svg  # noqa: E402
 from life_lint import BUDGET, FACT, lint, report_text  # noqa: E402
 
 TYPE_NAMES = {"complete-life": "Complete life report", "career": "Career report", "relationship": "Relationship report",
               "marriage": "Marriage report", "dasha": "Dasha report", "12-month": "Twelve-month forecast",
-              "relocation": "Relocation and foreign travel report", "compact": "Consultation summary"}
+              "relocation": "Relocation and foreign travel report", "compact": "Consultation summary",
+              "outlook": "Personal outlook"}
 HOW_TO_READ = ("Each section starts from what a theme means in your life, then how it is likely to show, when, what "
                "argues against it and what to watch for. Confidence words — Strong, Moderate, Weak, Contradictory, "
                "Unknown — describe how much of the chart agrees, not a probability. Dates are periods, never exact days. "
-               "The chart details behind each conclusion are in the technical appendix.")
+               "The chart details behind each conclusion are in the technical appendix. The small label under a "
+               "heading says what it rests on — a calculated fact, a cited rule or an interpretation; a source's text, "
+               "an author's commentary, a disputed point or a guess — and which system produced it. 'Source text' means "
+               "a book says so, not that it has been tested. A reading about your past is marked 'not confirmed' until "
+               "you confirm it.")
+# plain-language labels for unit.claim_type and unit.system (EVID-F11, REP-F1): computed facts, cited rules and
+# judgements must stay distinguishable on the page
+CLAIM_LABELS = {"fact": "Calculated fact", "rule": "Traditional rule (cited)", "interpretation": "Interpretation",
+                "prediction": "Prediction (interpretive)", "speculation": "Speculative"}
+BASIS_LABELS = {"TEXT": "Source text", "COMMENTARY": "Commentary", "DISPUTED": "Disputed between sources",
+                "COMPUTED": "Calculated", "TESTED": "Tested", "SPECULATIVE": "Speculative"}
+TEXT_KEYS = ("theme", "meaning", "manifestation", "timing", "nuance", "counter", "watch")   # what the client reads
+PROVEN = re.compile(r"\b(?:tested|proven|proved|proof|validated|statistically|scientifically|confirmed by (?:data|research|stud(?:y|ies)))\b", re.I)
+SYSTEM_LABELS = {"parashari": "Parashari", "jaimini": "Jaimini", "lal_kitab": "Lal Kitab",
+                 "combined": "Combined (each system separately)"}
 
 
 def validate(obj, schema, root=None, path="$"):
@@ -39,6 +58,8 @@ def validate(obj, schema, root=None, path="$"):
     types = {"object": dict, "array": list, "string": str}
     if t and not isinstance(obj, types[t]):
         return [f"{path}: expected {t}"]
+    if "pattern" in schema and isinstance(obj, str) and not re.search(schema["pattern"], obj):
+        errs.append(f"{path}: {obj!r} does not match {schema['pattern']}")
     if "enum" in schema and obj not in schema["enum"]:
         errs.append(f"{path}: {obj!r} not one of {schema['enum']}")
     if isinstance(obj, dict):
@@ -89,6 +110,13 @@ def timeline(rows):
     return dict(bars=bars, years=years)
 
 
+MON = r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
+MOD = r"(?:the (?:end|start|beginning) of |early |mid-?|late )?"
+SEP = r"\s?(?:–|-|—| to | until | through )\s?"
+WIN = re.compile(rf"\b{MOD}{MON}\.?(?: 20\d\d)?{SEP}{MOD}{MON}\.? 20\d\d\b"      # late January to June 2027
+                 rf"|\b{MOD}(?:{MON}\.? )?20\d\d{SEP}{MOD}(?:{MON}\.? )?20\d\d\b", re.I)  # 2027 – mid-2028
+
+
 def checks(r):
     """Consistency and life-first checks; returns (errors, warnings)."""
     errs, warns = [], []
@@ -107,6 +135,15 @@ def checks(r):
             ev = (u.get("confidence") or {}).get("event")
             if not u.get("counter") and ev not in ("Unknown", None):
                 warns.append(f"[{s['id']}] '{u['theme'][:50]}' has no counter-factor")
+            name, basis = f"[{s['id']}] '{u['theme'][:50]}'", u.get("claim_basis")
+            if basis == "TESTED" and not u.get("test_result"):
+                errs.append(f"{name} is TESTED but has no test_result (prediction-log results only)")
+            if u.get("claim_type") == "fact" and basis not in (None, "COMPUTED"):
+                errs.append(f"{name} is a calculated fact but its claim_basis is {basis}")
+            if basis in ("TEXT", "COMMENTARY") and (m := PROVEN.search(" ".join(str(u.get(k, "")) for k in TEXT_KEYS))):   # qc.md: a book is not a test
+                errs.append(f"{name} rests on {basis} but is phrased as tested or proven ('{m.group()}')")
+            if u.get("temporal_mode") == "past" and not u.get("history_status"):
+                warns.append(f"{name} is about the past but has no history_status: it is shown as not confirmed")
             if not u.get("watch") and u.get("timing"):
                 warns.append(f"[{s['id']}] '{u['theme'][:50]}' is timed but has nothing to watch")
         txt = report_text({"sections": [s]})
@@ -114,11 +151,6 @@ def checks(r):
         if facts > BUDGET["report"]:
             warns.append(f"[{s['id']}] {facts} chart-fact lines — move detail to the appendix")
     # one timing framework per report (reports.md): a window's dates appear in at most three places
-    MON = r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
-    MOD = r"(?:the (?:end|start|beginning) of |early |mid-?|late )?"
-    SEP = r"\s?(?:–|-|—| to | until | through )\s?"
-    WIN = re.compile(rf"\b{MOD}{MON}\.?(?: 20\d\d)?{SEP}{MOD}{MON}\.? 20\d\d\b"      # late January to June 2027
-                     rf"|\b{MOD}(?:{MON}\.? )?20\d\d{SEP}{MOD}(?:{MON}\.? )?20\d\d\b", re.I)  # 2027 – mid-2028
     places = [k.get("text", "") + " " + k.get("window", "") for k in r["summary"]["key_points"]]
     places += [report_text({"sections": [s]}) for s in r["sections"] if s["id"] != "windows"]
     places += r.get("practical_summary", []) + [w.get("when", "") + " " + w.get("meaning", "") for w in r.get("watch_list", [])]
@@ -151,6 +183,282 @@ def checks(r):
     return errs, warns
 
 
+# ---- grounding, citations, fact_refs (P3-3): invented dates and citations are caught before a report goes out ----
+# A window is grounded when a dasha boundary, ingress or exact contact lies within the window widened by this many days
+# each side: report windows are periods (months), the facts are exact days, and a window rounded to whole months
+# should not fail for sitting a few weeks off its trigger.
+TOLERANCE_DAYS = 45
+BROAD_YEARS = 5          # longer windows match almost any anchor, so they are flagged rather than trusted
+FACT_REF = re.compile(r"^F\.[A-Za-z0-9_]+(\.[A-Za-z0-9_\-]+)*$")
+MONTHS = {m: i + 1 for i, m in enumerate("jan feb mar apr may jun jul aug sep oct nov dec".split())}
+
+
+def _d(s):
+    return dt.date.fromisoformat(s[:10])
+
+
+def _half(text, year, start):
+    m, y = re.search(MON, text, re.I), re.search(r"20\d\d", text)
+    y = int(y.group()) if y else year
+    mo = MONTHS[m.group().lower()[:3]] if m else (1 if start else 12)
+    if start:
+        return dt.date(y, mo, 1)
+    return dt.date(y + (mo == 12), mo % 12 + 1, 1) - dt.timedelta(days=1)
+
+
+def _windows(r):
+    """(label, start, end) for every timeline row and every date window in client text and summary windows."""
+    out = [(f"{x['label']} {x['start']}..{x['end']}", _ym(x["start"], True),
+            _ym(x["end"], False)) for x in r.get("timeline", [])]
+    texts = [k.get("window", "") for k in r["summary"]["key_points"]] + [report_text(r)]
+    for t in texts:
+        found = list(WIN.finditer(t))
+        for m in found:
+            a, b = re.split(SEP, re.sub(r"\bmid-?", "", m.group(), flags=re.I), maxsplit=1, flags=re.I)
+            yb = int(re.search(r"20\d\d", b).group())
+            ya = re.search(r"20\d\d", a)
+            ya = int(ya.group()) if ya else yb
+            s, e = _half(a, ya, True), _half(b, yb, False)
+            if not re.search(r"20\d\d", a) and s > e:
+                s = _half(a, ya - 1, True)          # "November to February 2027"
+            out.append((m.group(), s, e))
+        if not found and t is not texts[-1] and (y := re.fullmatch(r"\s*(20\d\d)\s*", t)):
+            out.append((y.group(1), dt.date(int(y.group(1)), 1, 1), dt.date(int(y.group(1)), 12, 31)))
+    return out
+
+
+def _ym(s, start):
+    y, m = int(s[:4]), int(s[5:7])
+    return dt.date(y, m, 1) if start else dt.date(y + (m == 12), m % 12 + 1, 1) - dt.timedelta(days=1)
+
+
+PLANETS = "Sun|Moon|Mars|Mercury|Jupiter|Venus|Saturn|Rahu|Ketu"
+PERIOD = re.compile(rf"({PLANETS})(?:\s*[–-]\s*({PLANETS})| major period)\b")
+
+
+def grounding(r, facts):
+    """Every window must lie near a dasha/AD boundary, ingress or exact contact of the engine facts (calc.json)."""
+    dasha = [_d(x[k]) for md in facts["vimshottari"] for x in [md] + md.get("sub", []) for k in ("start", "end")]
+    other = [_d(x["date"]) for x in facts.get("ingresses", []) + facts.get("slow_contacts", [])]
+    first = _d(facts["meta"]["transit_date"])
+    last = max(other, default=first)             # calc.json does not store `months`; its last event bounds the horizon
+    if facts["meta"].get("months"):
+        last = max(last, first + dt.timedelta(days=30.44 * facts["meta"]["months"]))
+    tol = dt.timedelta(days=TOLERANCE_DAYS)
+    errs, warns, seen = [], [], set()
+    periods = {(md["lord"],): md for md in facts["vimshottari"]}
+    periods |= {(md["lord"], ad["lord"]): ad for md in facts["vimshottari"] for ad in md.get("sub", [])}
+    for x in r.get("timeline", []):           # a row that names its dasha period must match that period's own dates
+        m = PERIOD.match(x.get("basis", ""))
+        p = m and periods.get((m[1][:2], m[2][:2]) if m[2] else (m[1][:2],))     # engine lords: Su, Mo, Ma, Me ...
+        if p and not (abs(_ym(x["start"], True) - _d(p["start"])) <= tol
+                      and abs(_ym(x["end"], False) - _d(p["end"])) <= tol):
+            errs.append(f"row '{x['label']}' {x['start']}..{x['end']} does not match its {m.group()} "
+                        f"({str(p['start'])[:10]} → {str(p['end'])[:10]})")
+    for label, s, e in _windows(r):
+        if (label, s, e) in seen:
+            continue
+        seen.add((label, s, e))
+        if (e - s).days > 365.25 * BROAD_YEARS:
+            warns.append(f"broad window '{label}' (over {BROAD_YEARS} years): grounding is weak")
+        if any(s - tol <= a <= e + tol for a in dasha + other):
+            continue
+        if e > last or s < first and e < first:
+            warns.append(f"window '{label}' is beyond the facts' range: unverified")
+        else:
+            errs.append(f"window '{label}' matches no dasha boundary, ingress or exact contact in the facts")
+    return errs, warns
+
+
+BOOK_REST = re.compile(r"(?:(?:ch\.?\s*)?(?:\d+|[IVXLC]+)(?:\.\d+)?(?:\s*sl\.?\s*\d+)?|p\.?\s*\d+(?:\s*[–-]\s*\d+)?)(?:[,;]?\s+|$)")
+_CATALOG = os.path.join(HERE, "..", "..", "..", "knowledge", "catalog.json")
+
+
+def _catalog():
+    try:
+        from paths import knowledge_file
+        for p in (knowledge_file("ASTRO_CATALOG", "catalog.json"), _CATALOG):
+            if os.path.exists(p):
+                return {b["id"]: b for b in json.load(open(p, encoding="utf-8"))["books"]}
+    except (ImportError, OSError, ValueError, KeyError):
+        pass
+    return None
+
+
+def _graph():
+    try:
+        import kg
+        return kg.load()[0]
+    except (ImportError, SystemExit, OSError, ValueError, KeyError):
+        return None
+
+
+def citations(r, catalog=None, graph=None):
+    """Resolve every unit's rule_refs. catalog: {book id: {pages}}; graph: container of node ids (None = look them up)."""
+    refs = [(u, x) for s in r["sections"] for u in s.get("units", []) for x in u.get("rule_refs", [])]
+    errs, warns = [], []
+    for s in r["sections"]:
+        for u in s.get("units", []):
+            if u.get("claim_type") == "rule" and not u.get("rule_refs"):
+                errs.append(f"[{s['id']}] rule claim '{u['theme'][:50]}' has no rule_refs")
+    if not refs:
+        return errs, warns
+    register = open(os.path.join(HERE, "..", "references", "contradiction-register.md"), encoding="utf-8").read()
+    cr = set(re.findall(r"^\|\s*(CR-[A-Z]+\d+)\s*\|", register, re.M))
+    graph = _graph() if graph is None else graph
+    catalog = _catalog() if catalog is None else catalog
+    no_graph = no_cat = False
+    for _, x in refs:
+        x = x.strip()
+        if re.fullmatch(r"CR-[A-Z]+\d+", x):
+            if x not in cr:
+                errs.append(f"unresolvable citation '{x}': not in the contradiction register")
+        elif re.match(r"(?:rule|contradiction):|K[B]-", x):   # [B]: keeps the literal id prefix out of the shared scan
+            if graph is None:
+                no_graph = True
+            elif x not in graph:
+                errs.append(f"unresolvable citation '{x}': not in the knowledge graph")
+        else:
+            m = re.match(r"([A-Z][A-Za-z0-9]*)\s+(.+)$", x)
+            rest, pos = (m.group(2), 0) if m else ("", 0)
+            while m and pos < len(rest) and (t := BOOK_REST.match(rest, pos)):
+                pos = t.end()
+            if not m or pos != len(rest):
+                errs.append(f"unresolvable citation '{x}'")
+            elif catalog is None:
+                no_cat = True
+            elif m.group(1) not in catalog:
+                errs.append(f"unresolvable citation '{x}': '{m.group(1)}' is not a catalog book")
+            else:
+                pages = catalog[m.group(1)].get("pages")
+                for p in re.findall(r"\bp\.?\s*(\d+)", rest):
+                    if pages and int(p) > pages:
+                        errs.append(f"unresolvable citation '{x}': page {p} is beyond the book's {pages} pages")
+    if no_graph:
+        warns.append("citations unverified: no knowledge graph")
+    if no_cat:
+        warns.append("book citations unverified: no catalog")
+    return errs, warns
+
+
+def fact_refs(r, fact_ids):
+    """Every unit fact_ref must be a key of derived_facts/1 `facts` (chart_facts.py --json)."""
+    known = (fact_ids or {}).get("facts", {})
+    return [f"[{s['id']}] fact_ref '{x}' is not in the derived facts" for s in r["sections"]
+            for u in s.get("units", []) for x in u.get("fact_refs", []) if x not in known], []
+
+
+# ---- periodic outlook (P7-2): chart-anchored, texture last, nothing event-level when the window has no trigger ----
+OUTLOOK_DAYS = (28, 92)      # monthly to quarterly; daily and sun-sign feeds are refused (PRED-X10)
+OUTLOOK_WORDS = 900          # with the cover and appendix this keeps the PDF to two pages (tests/test_outlook_report.py)
+NAMES = {"Su": "Sun", "Mo": "Moon", "Ma": "Mars", "Me": "Mercury", "Ju": "Jupiter", "Ve": "Venus", "Sa": "Saturn",
+         "Ra": "Rahu", "Ke": "Ketu"}
+TRANSIT = re.compile(r"\b(?:Sun|Moon|Mars|Mercury|Jupiter|Venus|Saturn|Rahu|Ketu|transit\w*|retrograde|station\w*)\b", re.I)
+ANCHOR = re.compile(r"\b(?:\d{1,2}(?:st|nd|rd|th)\b|natal|birth star|your (?:moon|lagna|ascendant)|lagna|ascendant"
+                    r"|(?:maha|antar|pratyantar)?dasha|Vimshottari|Yogini)", re.I)
+NO_EVENT = re.compile(r"no event-level timing", re.I)
+
+
+def _nth(n):
+    return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
+
+
+def outlook_checks(r, o=None):
+    """Errors for an outlook report: window, factor anchors, generic transit sentences, length; with the get_outlook
+    output `o`, unknown factor ids and event-level claims in a window that has no event-level factor."""
+    if r.get("report_type") != "outlook":
+        return [], []
+    errs, units = [], [u for s in r["sections"] for u in s.get("units", [])]
+    p = r.get("period") or {}
+    if not p:
+        errs.append("an outlook report needs period.from and period.to")
+    elif not OUTLOOK_DAYS[0] <= (_d(p["to"]) - _d(p["from"])).days <= OUTLOOK_DAYS[1]:
+        errs.append(f"outlook window must be {OUTLOOK_DAYS[0]}-{OUTLOOK_DAYS[1]} days (monthly to quarterly)")
+    errs += [f"'{u['theme'][:50]}' names no outlook factor (factor_refs)" for u in units if not u.get("factor_refs")]
+    text = report_text(r)
+    for line in text.splitlines():
+        for sent in re.split(r"(?<=[.!?;])\s+", line):
+            if TRANSIT.search(sent) and not ANCHOR.search(sent):
+                errs.append(f"generic transit sentence (no chart anchor): '{sent[:70]}'")
+    if len(text.split()) > OUTLOOK_WORDS:
+        errs.append(f"outlook client text is {len(text.split())} words; the limit is {OUTLOOK_WORDS} (two pages)")
+    if o is not None:
+        by_id = {f["id"]: f for f in o["factors"]}
+        errs += [f"factor_ref {x} is not in the outlook" for u in units for x in u.get("factor_refs", []) if x not in by_id]
+        if not any(f.get("layer") == "event" for f in o["factors"]):
+            if not NO_EVENT.search(text):
+                errs.append("no event-level factor falls in this window: say plainly that no event-level timing is indicated")
+            for u in units:
+                c = u.get("confidence") or {}
+                if u.get("claim_type") == "prediction" or c.get("event") in ("Strong", "Moderate") \
+                        or c.get("timing") in ("Strong", "Moderate"):
+                    errs.append(f"'{u['theme'][:50]}' makes an event-level claim in a texture-only window")
+    return errs, []
+
+
+def outlook_draft(o, prepared_for="(name)", prepared_on=None):
+    """A checked skeleton from get_outlook output: dasha first, then event-level factors (or the texture-only
+    statement), texture last. Facts only; the consultant writes the meaning, in life terms, around them."""
+    fs = o["factors"]
+    unit = lambda theme, meaning, refs, **kw: dict(theme=theme, meaning=meaning, factor_refs=refs, claim_type="fact",
+                                                   claim_basis="COMPUTED", system="parashari", **kw)
+    ds = [f for f in fs if f["kind"] == "dasha"]
+    name = lambda f: f"{'Vimshottari' if 'Vimshottari' in f['fact'] else 'Yogini'} " + "-".join(NAMES.get(x, x) for x in f["lords"])
+    dasha = [unit("Running dasha periods", "; ".join(f"{name(f)}, {f['when']}" for f in ds) + ".", [f["id"] for f in ds])] if ds else []
+    def ev(f):
+        k, n = f["kind"], NAMES.get(f.get("planet") or f.get("transit"), "")
+        if k == "ingress":
+            return f"{n} moves into a new sign, the {_nth(f['house_from_moon'])} from your Moon and the " \
+                   f"{_nth(f['house_from_lagna'])} from your lagna"
+        if k == "station_natal":
+            return f"{n} turns {f['stations'][0]['station']} within {f['orb']} degrees of your natal {NAMES.get(f['natal'], f['natal'])}"
+        if k == "contact":
+            return f"{n} makes an exact {f['aspect']} to your natal {NAMES.get(f['natal'], f['natal'])}"
+        return f"Saturn and your natal Moon: {f['fact']}"
+    events = [unit(ev(f), f"Dated {f['when']}; a trigger only inside the running dasha.", [f["id"]],
+                   confidence={"event": "Weak", "timing": "Weak"}) for f in fs if f.get("layer") == "event"]
+    if not events:
+        events = [unit("No event-level timing", "No exact contact with a natal point, no turning point near one and no "
+                       "slow sign change falls in this window, so no event-level timing is indicated; what follows is texture.",
+                       [f["id"] for f in fs if f["kind"] == "dasha"][:1], confidence={"event": "Unknown"})]
+    near = {(f["planet"], s["date"]) for f in fs if f["kind"] == "station_natal" for s in f["stations"]}
+    groups = {}                                            # one unit per kind keeps a quarter inside two pages
+    for f in sorted(fs, key=lambda f: f["when"]):
+        if f.get("layer") != "texture" or (f["kind"] == "station" and (f["planet"], f["when"]) in near):
+            continue
+        if f["kind"] == "ingress":
+            line = (f"{f['when']} {NAMES[f['planet']]} into {f['fact'].split('-> ')[1].split(' (')[0]} "
+                    f"({_nth(f['house_from_moon'])} from your Moon, {_nth(f['house_from_lagna'])} from your lagna)")
+        elif f["kind"] == "station":
+            line = f"{f['when']} {NAMES[f['planet']]} turns {f['fact'].split('turns ')[1]} ({_nth(f['house_from_moon'])} from your Moon)"
+        elif f["kind"] == "chandrashtama":
+            line = f["when"]
+        elif f["kind"] == "tara":
+            hard = [d for d, t in f["days"].items() if t in ("Vipat", "Pratyak", "Naidhana")]
+            line = f"the Moon's tara is a harder one on {len(hard)} of {len(f['days'])} days"
+        else:
+            continue
+        groups.setdefault(f["kind"], ([], []))[0].append(line)
+        groups[f["kind"]][1].append(f["id"])
+    heads = {"ingress": ("Sign changes", "Faster planets change sign: "),
+             "station": ("Turning points", "Turning points away from your natal points: "),
+             "chandrashtama": ("Low-key spells", "The Moon in the 8th sign from your natal Moon, not a time to start "
+                               "something new: "),
+             "tara": ("Rhythm of the days", "Counted from your birth star, ")}
+    tex = [unit(heads[k][0], heads[k][1] + "; ".join(lines) + ". Low weight.", refs)
+           for k, (lines, refs) in sorted(groups.items(), key=lambda kv: list(heads).index(kv[0]))]
+    lead = f"{name(ds[0])} dasha" if ds else "running dasha (none in the outlook)"
+    return {"report_type": "outlook", "title": "Personal outlook", "prepared_for": prepared_for,
+            "prepared_on": prepared_on or o["from"], "period": {"from": o["from"], "to": o["to"]},
+            "how_to_read": "Every item is a dated fact from your chart. The running dasha is the backdrop; texture is low "
+                           "weight and never an event. Confidence words say how much of the chart agrees, not a probability.",
+            "summary": {"headline": f"{o['from']} to {o['to']} under the {lead}.",
+                        "key_points": [{"text": f"The {lead} sets the backdrop.", "confidence": "Moderate"}]},
+            "sections": [{"id": "period", "title": "The period you are in", "units": dasha},
+                         {"id": "events", "title": "What the window holds", "units": events},
+                         {"id": "texture", "title": "Texture (low weight)", "units": tex}]}
+
+
 def _strings(x):
     if isinstance(x, str):
         return [x]
@@ -161,17 +469,28 @@ def _strings(x):
     return []
 
 
-def render(r, out_dir, base):
+def html_of(r):
     try:
         import jinja2
     except ImportError:
         raise RuntimeError("render needs jinja2 (pip install jinja2); the JSON itself was valid")   # not sys.exit: callers are servers (council R3 M4)
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(ASSETS), autoescape=True)
     bases = [dict(theme=u["theme"], basis=u["basis"]) for s in r["sections"] for u in s.get("units", []) if u.get("basis")]
-    html = env.get_template("template.html.j2").render(
+    style = r.get("chart_style", "north")
+    chart = chart_svg.chart((r.get("appendix") or {}).get("positions", []), style)   # P7-1; None without a lagna row
+    calc = (r.get("engine") or {}).get("calculation", "")
+    extra = {}
+    caption = f"{style.capitalize()} Indian rasi chart (signs only; degrees in the table below)" + (f"; {calc}" if calc else "")
+    return env.get_template("template.html.j2").render(
         r=r, css=open(os.path.join(ASSETS, "report.css")).read(), type_name=TYPE_NAMES[r["report_type"]],
         default_how_to_read=HOW_TO_READ, tl=timeline(r.get("timeline", [])), bases=bases,
-        appendix=bool(bases or r.get("appendix")), section_titles={s["id"]: s["title"] for s in r["sections"]})
+        appendix=bool(bases or r.get("appendix") or extra.get("remedy_sources")), section_titles={s["id"]: s["title"] for s in r["sections"]},
+        claim_labels=CLAIM_LABELS, system_labels=SYSTEM_LABELS, basis_labels=BASIS_LABELS,
+        chart=chart, chart_caption=caption, **extra)
+
+
+def render(r, out_dir, base):
+    html = html_of(r)
     os.makedirs(out_dir, exist_ok=True)
     hp = os.path.join(out_dir, base + ".html")
     with _owner_only(hp) as f:          # reports hold birth details: 0600 from the first byte, also on errors
@@ -196,6 +515,9 @@ def _owner_only(path):
 def main():
     if "--selftest" in sys.argv:
         return selftest()
+    if "--outlook-draft" in sys.argv:
+        return print(json.dumps(outlook_draft(json.load(open(sys.argv[sys.argv.index("--outlook-draft") + 1], encoding="utf-8"))),
+                                indent=1, ensure_ascii=False))
     if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
         return print(__doc__.strip())
     src = sys.argv[1]
@@ -206,6 +528,18 @@ def main():
     if not errs:
         e2, warns = checks(r)
         errs += e2
+        extra = [citations(r)]
+        if "--facts" in sys.argv:
+            extra.append(grounding(r, json.load(open(sys.argv[sys.argv.index("--facts") + 1], encoding="utf-8"))))
+        else:
+            warns.append("grounding not checked: pass --facts calc.json")
+        o = json.load(open(sys.argv[sys.argv.index("--outlook") + 1], encoding="utf-8")) if "--outlook" in sys.argv else None
+        extra.append(outlook_checks(r, o))
+        if "--fact-ids" in sys.argv:
+            extra.append(fact_refs(r, json.load(open(sys.argv[sys.argv.index("--fact-ids") + 1], encoding="utf-8"))))
+        for e3, w3 in extra:
+            errs += e3
+            warns += w3
         for w in warns:
             print("warning:", w)
     if errs:
@@ -247,6 +581,16 @@ def selftest():
     assert any("window codes" in e for e in checks(coded)[0]) and not any("window codes" in e for e in checks(ex)[0])
     leak = dict(ex, appendix=dict(ex.get("appendix") or {}, sources=["fewer children (PD XII.3)"]))
     assert any(e.startswith("SAFETY") for e in checks(leak)[0]), "appendix safety"
+    try:
+        import jinja2  # noqa: F401
+    except ImportError:
+        pass                                   # labels are checked where jinja2 is installed (CI installs it)
+    else:
+        page = html_of(ex)
+        assert 'class="basis">Interpretation · Source text · Parashari<' in page and "Prediction (interpretive)" in page, "unit labels"
+        assert set(CLAIM_LABELS) == set(schema["$defs"]["unit"]["properties"]["claim_type"]["enum"])
+        assert set(BASIS_LABELS) == set(schema["$defs"]["unit"]["properties"]["claim_basis"]["enum"])
+        assert set(SYSTEM_LABELS) == set(schema["$defs"]["unit"]["properties"]["system"]["enum"])
     print(f"selftest ok ({len(warns)} advisory warnings on the example)")
 
 

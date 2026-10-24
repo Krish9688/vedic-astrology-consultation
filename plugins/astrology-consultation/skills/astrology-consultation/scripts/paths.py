@@ -5,7 +5,6 @@ import os
 import re
 import tomllib
 
-LEGACY = os.path.expanduser("~/Documents/Astrology Books/_skill_workspace")   # the original author's layout
 
 
 def knowledge_file(env, rel):
@@ -20,7 +19,7 @@ def knowledge_file(env, rel):
             roots.append(os.path.expanduser(kd))
     except (OSError, tomllib.TOMLDecodeError):
         pass
-    roots += [os.path.expanduser("~/.local/share/astrology-consultation/knowledge"), LEGACY]
+    roots.append(os.path.expanduser("~/.local/share/astrology-consultation/knowledge"))
     for r in roots:
         if os.path.exists(os.path.join(r, rel)):
             return os.path.join(r, rel)

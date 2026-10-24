@@ -2,6 +2,8 @@
 # either side of a boundary. Properties prove the edge behaves; golden values lock positions (regression).
 # Cross-checked on 2026-10-02 against PyJHora 4.8.7 (Lahiri): 20/20 charts agree on Moon nakshatra, pada, ascendant
 # sign, D9 lagna, first mahadasha lord and weekday lord; PyJHora cannot compute the two polar charts.
+import datetime as dt
+import math
 import json
 import os
 
@@ -22,11 +24,25 @@ def full(cid):
 
 @pytest.mark.parametrize("cid", list(C))
 def test_golden(cid):
+    # Every key stored in the golden file is asserted. Longitudes are stored to 4 decimals (0.36″ rounding), so they
+    # get TOL (a few arc-seconds; see above). Signs, nakshatra, pada, D9 lagna, retrogression and the first
+    # mahadasha lord are exact. The first dasha's end follows from the Moon's longitude: a Moon error of TOL° moves it
+    # by TOL / 13°20′ × the lord's years (Mercury, 17 y: 0.93 day at TOL = 0.002°), so the end date may differ from the
+    # golden by at most that, rounded up to whole days — derived from TOL, never a free slack.
     c = C[cid]
     out = engine.compute(c["date"], c["time"], c["tz"], c["lat"], c["lon"], on="2026-01-01", extras=False)
-    g = c["golden"]
+    g, B = c["golden"], out["bodies"]
     for k, body in (("asc", "Asc"), ("moon", "Mo"), ("sun", "Su")):
-        assert abs((out["bodies"][body]["lon"] - g[k] + 180) % 360 - 180) < TOL, (cid, k)
+        assert abs((B[body]["lon"] - g[k] + 180) % 360 - 180) < TOL, (cid, k)
+    assert B["Mo"]["nakshatra"] == g["moon_nak"], cid
+    assert B["Mo"]["pada"] == g["moon_pada"], cid
+    assert B["Asc"]["vargas"]["D9"] == g["d9_asc"], cid
+    assert B["Me"]["retro"] == g["me_retro"], cid
+    assert out["vimshottari"][0]["lord"] == g["first_md"], cid
+    years = dict(engine.DASA)[g["first_md"]]
+    slack = math.ceil(TOL / (40 / 3) * years * 365.25)
+    got = dt.date.fromisoformat(str(out["vimshottari"][0]["end"])[:10])
+    assert abs((got - dt.date.fromisoformat(g["first_md_end"])).days) <= slack, (cid, got, g["first_md_end"], slack)
 
 
 def test_edges_flip():

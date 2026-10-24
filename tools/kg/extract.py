@@ -1,12 +1,15 @@
 # Deterministic, local extraction of the astrology library into Graphify's extraction schema.
 # No LLM, no network. Reads: knowledge/catalog.json, text/*.jsonl, sourcemaps/*.md, the skill's contradiction
 # register and (private edition only) the Lal Kitab KB v2.2. Writes: knowledge/extraction.json + validation/*.md reports.
+# Rule ids: reads and rewrites knowledge/curation/rule_ids.json; the owner's page checks: knowledge/curation/page_checks.json
+# (both explained in docs/KNOWLEDGE-PIPELINE.md).
 # usage: .venv-graphify/bin/python tools/kg/extract.py
 import datetime, hashlib, json, os, re, sys
 from collections import Counter, defaultdict
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "astrology-prediction", "scripts"))  # the one vocab copy ships with the skill
 import vocab
+import rule_ledger as RL   # stable rule ids, dispute types, verification ladder (tools/kg/rule_ledger.py)
 
 WS = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 CAT = json.load(open(os.path.join(WS, "knowledge", "catalog.json"), encoding="utf-8"))
@@ -15,6 +18,8 @@ SRC_IDS = "|".join(sorted(list(BOOKS) + ["KB"], key=len, reverse=True))
 VAL = os.path.join(WS, "validation")
 CR_PATH = os.path.join(WS, "astrology-prediction", "references", "contradiction-register.md")
 CURATION = os.path.join(WS, "knowledge", "curation", "xb_curation.json")   # manual review of the automatic disputes
+IDS = os.path.join(WS, "knowledge", "curation", "rule_ids.json")        # rule id ledger: read, then rewritten each build
+CHECKS = os.path.join(WS, "knowledge", "curation", "page_checks.json")  # the owner's page checks (private anchors)
 SYSTEM = {"PD": "Parashari", "BJ": "Parashari", "HJH2": "Parashari", "HPA": "Parashari", "LOL": "Parashari",
           "PM2": "Prashna/Parashari", "LKS": "Lal Kitab", "LK1952": "Lal Kitab",
           "BPHS": "Parashari", "KNRT": "Parashari", "CRUX": "Parashari + Jaimini (SJC)", "PVR": "Parashari",
@@ -185,6 +190,7 @@ def add_entities():
 # ---------- rules ----------
 problems = defaultdict(list)
 rules = {}  # id -> (src, text)
+rule_keys = {}  # id -> first cited page ("PD p191") or "§ <section>": where an edited bullet may keep its R-id
 
 
 def tier_for(tag, src):
@@ -270,6 +276,7 @@ def add_rule(src, text, source_file, section, kind, tag, extracted, default_src,
     a["evidence_role"] = evidence_role(a)
     node(rid, f"[{src}] {body}", "Rule", BOOKS.get(src, {}).get("file", source_file), loc, **a)
     rules[rid] = (src, body)
+    rule_keys[rid] = f"{first[0]} p{first[1]}" if first else f"§ {section}"
     link_rule(rid, clean, BOOKS.get(src, {}).get("file", source_file), cites, default_src)
     if heading:
         link_heading(rid, heading, BOOKS.get(src, {}).get("file", source_file))
@@ -349,9 +356,33 @@ def table_rows(lines, prefix):
 
 
 
+def assign_rule_ids(today):
+    """Stable R-ids carried over from the last build's ledger (rule_ledger.assign), plus each rule's verification
+    level. Graph node ids stay rule:<SRC>:<hash>; former hashes of an edited rule are kept in former_ids."""
+    items = [dict(node=rid, src=src, key=rule_keys[rid], wording=RL.wording(body, SRC_IDS))
+             for rid, (src, body) in rules.items()]
+    ledger, got, review = RL.assign(RL.load(IDS), items, today)
+    checks = {c["rule_id"]: c for c in json.load(open(CHECKS, encoding="utf-8"))["checks"]} if os.path.exists(CHECKS) else {}
+    for rid, e in got.items():
+        a = nodes[rid]["attributes"]
+        a.update(rule_id=e["rule_id"], rev=e["rev"], **({"supersedes": e["supersedes"]} if e.get("supersedes") else {}))
+        if len(e["nodes"]) > 1:
+            a["former_ids"] = e["nodes"][:-1]
+        texts = [page_texts.get((x.split(" p")[0], int(x.split(" p")[1]))) for x in a.get("pages", [])]
+        a["verification"], problem = RL.verification(e["rule_id"], a.get("flags", []), a["text"], [t for t in texts if t],
+                                                     checks.get(e["rule_id"]), a.get("extraction_date"), today)
+        if problem:
+            problems["page check not applied"].append(problem)
+    live = {e["rule_id"] for e in got.values()}
+    problems["page check for an unknown or withdrawn rule id"] += sorted(set(checks) - live)
+    problems["rule id changes since the last build (REVIEW lines: check the successor)"] += review
+    return ledger
+
+
 def add_contradiction(cid, topic, side_a, side_b, klass, default, path, default_src, date):
+    dtype = RL.dispute_type(cid, klass)
     nid = node(f"contradiction:{cid}", f"{cid}: {topic}", "Contradiction", path, cid, ft="rationale", topic=topic,
-               classification=klass, working_default=default, extracted_from=os.path.relpath(path, WS),
+               classification=klass, dispute_type=dtype, working_default=default, extracted_from=os.path.relpath(path, WS),
                extraction_date=date, note="curated register entry; both positions are preserved, none is deleted")
     pos = []
     for side, txt in (("A", side_a), ("B", side_b)):
@@ -362,7 +393,8 @@ def add_contradiction(cid, topic, side_a, side_b, klass, default, path, default_
         for x in re.findall(r"\bX(\d{1,2})\b", txt):
             edge(nid, f"contradiction:KB-X{x}", "REFERS_TO", source_file=path)
         pos.append(pid)
-    edge(pos[0], pos[1], "CONTRADICTS", source_file=path, classification=klass)
+    if dtype != "reviewed_non_conflict":
+        edge(pos[0], pos[1], "CONTRADICTS", source_file=path, classification=klass)
     for eid in vocab.find_entities(topic):
         edge(nid, eid, "APPLIES_TO", "INFERRED", path, method="vocab-match")
 
@@ -397,7 +429,7 @@ def add_crossbook_disputes():
                     edge(rid, page_id(s2, p), "SUPPORTED_BY", "INFERRED", nodes[rid]["source_file"],
                          method="agreement noted in a source map", printed_page=pr)
             continue
-        cid = "XB-" + rid.split(":")[-1]
+        cid = "XB-" + (a.get("former_ids") or [rid])[0].split(":")[-1]   # first hash: survives edits (KB-F1)
         cur = curated.get(cid, {})
         if cur.get("duplicate_of") and f"contradiction:{cur['duplicate_of']}" in nodes:
             edge(rid, f"contradiction:{cur['duplicate_of']}", "DISCUSSED_IN", source_file=nodes[rid]["source_file"],
@@ -406,8 +438,10 @@ def add_crossbook_disputes():
         klass = (f"{cur['class']} (curated {curation_date})" + (f" — {cur['note']}" if cur.get("note") else "")
                  if cur else "uncurated (from a source map; review before relying)")
         left, right = (body.split(" vs ", 1) + [""])[:2] if " vs " in body else (body, "")
+        dtype = RL.dispute_type(cid, klass, cur.get("class"))
+        note = (cur.get("note") or "curated: no rule dispute") if dtype == "reviewed_non_conflict" else None
         nid = node(f"contradiction:{cid}", f"{cid}: {body[:90]}", "Contradiction", nodes[rid]["source_file"], cid,
-                   ft="rationale", topic=body[:160], classification=klass,
+                   ft="rationale", topic=body[:160], classification=klass, dispute_type=dtype, review_note=note,
                    working_default="", extracted_from=a.get("extracted_from"), extraction_date=a.get("extraction_date"),
                    note="automatic cross-book dispute from a source map §7; both sides preserved")
         pos = []
@@ -421,7 +455,7 @@ def add_crossbook_disputes():
             for eid in vocab.find_entities(body):
                 edge(pid, eid, "APPLIES_TO", "INFERRED", nodes[rid]["source_file"], method="vocab-match")
             pos.append(pid)
-        if cur.get("class") != "false_positive":
+        if dtype != "reviewed_non_conflict":
             edge(pos[0], pos[1], "CONTRADICTS", source_file=nodes[rid]["source_file"],
                  classification=cur.get("class", "uncurated"))
         edge(rid, nid, "DISCUSSED_IN", source_file=nodes[rid]["source_file"], method="same note")
@@ -479,8 +513,7 @@ def similar_rules(same_src_cut=90, cross_cut=85):
         return []
     ids = list(rules)
     # compare wording only: citations and digits removed (tables of house numbers are not duplicates)
-    texts = [re.sub(r"[\d\W_]+", " ", re.sub(rf"\s*—\s*(?:(?:{SRC_IDS})\s*)?pp?\.?\s?\d.*$", "", rules[i][1])).lower().strip()
-             for i in ids]
+    texts = [RL.wording(rules[i][1], SRC_IDS) for i in ids]
     M = process.cdist(texts, texts, scorer=fuzz.token_sort_ratio, score_cutoff=min(same_src_cut, cross_cut), workers=-1)
     out = []
     for i in range(len(ids)):
@@ -572,7 +605,14 @@ def write_reports(dup_pages, sim):
          f"{sum(1 for n in n_rules if n['attributes'].get('confidence') == 'EXTRACTED')}", "",
          "By source: " + ", ".join(f"{k} {v}" for k, v in sorted(per.items())), "",
          "By tier: " + ", ".join(f"{k} {v}" for k, v in tiers.most_common()), ""]
-    for k, v in problems.items():
+    dtypes = Counter(n["attributes"].get("dispute_type") for n in nodes.values() if n["node_type"] == "Contradiction")
+    L += [f"Disputes: {sum(dtypes.values())}; headline (type contradiction): {dtypes['contradiction']}; by type: "
+          + ", ".join(f"{k} {dtypes[k]}" for k in RL.DISPUTE_TYPES), "",
+          "## Verification ladder per book", "",
+          "Verified = image-checked or human-page-checked with a supported result. text-layer is an automatic word "
+          "match, not a reading check.", ""]
+    L += RL.verification_table([(n["attributes"].get("source"), n["attributes"].get("verification", {})) for n in n_rules]) + [""]
+    for k, v in [(k, v) for k, v in problems.items() if v]:
         L += [f"## {k}: {len(v)}", ""] + [f"- {x}" for x in v[:150]] + [""]
     open(os.path.join(VAL, "provenance.md"), "w").write("\n".join(L) + "\n")
     # entity-linking review: ambiguous vocabulary hits with sample contexts
@@ -623,6 +663,7 @@ def main():
     add_entities()
     add_books_and_pages()
     add_sourcemaps()
+    ledger = assign_rule_ids(datetime.date.today().isoformat())
     add_register()
     add_crossbook_disputes()
     link_rules_to_contradictions()
@@ -635,9 +676,11 @@ def main():
     keep = merge_parallel([e for e in edges if e["source"] in ids and e["target"] in ids])
     write_reports(dup_pages, sim)
     out = {"nodes": list(nodes.values()), "edges": keep, "hyperedges": [], "input_tokens": 0, "output_tokens": 0,
-           "meta": {"built": datetime.datetime.now().isoformat(timespec="seconds"), "catalog_version": CAT["version"]}}
+           "meta": {"built": datetime.datetime.now().isoformat(timespec="seconds"), "catalog_version": CAT["version"],
+                    "extract_sha256": hashlib.sha256(open(__file__, "rb").read()).hexdigest()}}
     path = os.path.join(WS, "knowledge", "extraction.json")
     json.dump(out, open(path, "w", encoding="utf-8"), ensure_ascii=False)
+    RL.save(ledger, IDS)   # only after a complete build: a failed run leaves the previous ledger in place
     c = Counter(n["node_type"] for n in nodes.values())
     print(f"nodes {len(nodes)} {dict(c)}\nedges {len(keep)} {dict(Counter(e['relation'] for e in keep))}\n"
           f"near-duplicate pages {len(dup_pages)}; similar rules {len(sim)}; dropped edges {len(dangling)}\n→ {path}")

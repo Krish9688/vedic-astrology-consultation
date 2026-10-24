@@ -1,7 +1,7 @@
 """Jaimini factors computed locally: chara karakas (7- and 8-karaka schemes), arudha padas, upapada, karakamsa,
 rasi drishti. Conventions follow BPHS ch. 29–32 as used by the skill's references/jaimini.md; the choices that
-schools dispute are named in CONVENTIONS. Chara dasha is not calculated (its sign-direction and year rules vary by
-school and the reasoning layer does not use it yet).
+schools dispute are named in CONVENTIONS. Chara dasha (BPHS/Santhanam school only) is in calc/chara.py; the Rath
+(JSR) and Narayana (PVR) variants are not calculated.
 """
 from __future__ import annotations
 

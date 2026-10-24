@@ -7,6 +7,8 @@ line, so it stays out of shell history):  {"date": "1992-03-14", "time": "09:40"
   astro transits input.json [--months 24]         astro report model.json [--name NAME]
   astro strength input.json                       astro sources "rule" | astro search "words"
   astro jaimini input.json                        astro predict add|list|evaluate|score ...
+  astro network input.json --topic career         astro activation input.json --network career [--level pd]
+  astro retro input.json --event career:2019-05 --event marriage:2021-11   (local only; nothing stored)
   astro doctor | astro setup | astro add-book PDF | astro mcp [--http] | astro serve
 """
 from __future__ import annotations
@@ -19,6 +21,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 import urllib.request
 
 from . import config, predictions, service as S
@@ -34,7 +37,8 @@ def _birth(path):
 
 
 def _opts(a):
-    return S.Options(on=a.on, months=getattr(a, "months", 24), year=getattr(a, "year", "sidereal"))
+    return S.Options(on=a.on, months=getattr(a, "months", 24), year=getattr(a, "year", "sidereal"),
+                     ayanamsa=getattr(a, "ayanamsa", "lahiri"))
 
 
 def _print(obj, md_key=None, md=False):
@@ -134,26 +138,66 @@ def setup(a):
                 raise SystemExit(f"{f}: {why} — nothing installed; the engine keeps using its built-in fallback")
             os.replace(part, path)
         print(f"Swiss Ephemeris files → {d} (source: github.com/aloistr/swisseph, official)")
+    if getattr(a, "places", False):
+        from . import places
+        print(f"place gazetteer → {places.install(s.data_dir)} ({places.SOURCE})")
     print("MCP client config examples: docs/CLIENT-INTEGRATIONS.md")
+
+
+def purge(days, delete):
+    """Reports (.html/.pdf in reports_dir) and prediction rows older than `days`; lists them unless delete is set."""
+    if days < 0:
+        raise ValueError("--older-than must be 0 or more days")
+    s, cutoff = config.load(), time.time() - days * 86400
+    old = sorted(e.path for e in (os.scandir(s.reports_dir) if os.path.isdir(s.reports_dir) else ())
+                 if e.is_file() and e.name.endswith((".html", ".pdf")) and e.stat().st_mtime < cutoff)
+    for f in old:
+        print(("deleted " if delete else "would delete ") + f)
+        if delete:
+            os.remove(f)
+    db = os.path.join(s.data_dir, "predictions.sqlite")
+    n = predictions.purge(days, delete, db) if os.path.exists(db) else 0
+    print(f"{'deleted' if delete else 'would delete'} {len(old)} report file(s) and {n} prediction row(s)"
+          + ("" if delete else "; run again with --yes to delete"))
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="astro", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
                                  epilog=S.SOURCE_NOTICE + f" Source: {S.SOURCE_URL}. Uses {S.THIRD_PARTY}.")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("chart", "positions", "dasha", "transits", "strength", "jaimini", "sensitivity", "varga"):
+    for name in ("chart", "positions", "dasha", "yogini", "chara", "applicability", "activation", "retro", "gochara", "outlook", "tajika", "transits",
+                 "strength", "jaimini", "sensitivity", "varga"):
         p = sub.add_parser(name)
         p.add_argument("input")
         p.add_argument("--on", type=dt.date.fromisoformat)
         p.add_argument("--months", type=int, default=24)
         p.add_argument("--year", default="sidereal", choices=["sidereal", "365.25", "360"])
+        p.add_argument("--ayanamsa", default="lahiri", choices=list(S.engine.AYANAMSAS))
         p.add_argument("--md", action="store_true")
+        if name == "outlook":
+            p.add_argument("--period", choices=["day", "week", "month", "quarter", "year"], default="month")
+        if name == "tajika":
+            p.add_argument("--life-year", type=int, help="year of life N (default: the year running on --on)")
         if name == "chart":
             p.add_argument("--out")
-        if name == "sensitivity":
+        if name in ("sensitivity", "applicability"):
             p.add_argument("--span", type=int, default=15, help="minutes either side (15..720)")
         if name == "varga":
             p.add_argument("--d", type=int, required=True)
+        if name == "activation":
+            p.add_argument("--network", default="career",
+                           help="a topic (marriage, career, finance, relocation, education) or a network JSON file "
+                                "printed by `astro network`")
+            p.add_argument("--level", choices=["ad", "pd"], default="ad")
+        if name == "retro":
+            p.add_argument("--event", action="append", required=True, metavar="CATEGORY:YYYY-MM",
+                           help="a past event; repeat for each (3-5 varied events); nothing is stored")
+            p.add_argument("--networks", help="JSON file {category: network printed by `astro network`}; categories "
+                                              "without one get the topic preset, frozen before any event is read")
+    p = sub.add_parser("network", help="a significator network frozen by its hash (build it before looking at dates)")
+    p.add_argument("input")
+    p.add_argument("--topic")
+    p.add_argument("--planets", nargs="+")
     p = sub.add_parser("consult")
     p.add_argument("question")
     p.add_argument("input")
@@ -174,19 +218,37 @@ def main(argv=None):
     p.add_argument("--confidence", default="Moderate")
     p.add_argument("--synthetic", action="store_true")
     p.add_argument("--consent", action="store_true", help="the person agreed to having this prediction logged")
+    p.add_argument("--hit-criterion", help="what counts as a hit, written before the outcome (required for add)")
+    p.add_argument("--baseline", type=float, help="chance of a hit with no astrology, 0..1, if known")
+    p.add_argument("--baseline-note", default="unknown")
+    p.add_argument("--claim-basis", default="SPECULATIVE", help="TEXT, COMMENTARY, DISPUTED, COMPUTED or SPECULATIVE")
     p.add_argument("--id", type=int)
     p.add_argument("--outcome")
     p.add_argument("--evaluation")
     p = sub.add_parser("sky", help="retrograde stations and sign changes between two dates (no birth data)")
     p.add_argument("start", type=dt.date.fromisoformat)
     p.add_argument("end", type=dt.date.fromisoformat)
-    p.add_argument("--tz", type=float, default=0.0, help="UTC offset for the printed dates")
+    p.add_argument("--tz", default="+00:00", help="UTC offset for the printed dates, e.g. +05:30")
     sub.add_parser("doctor")
+    p = sub.add_parser("purge", help="delete reports and prediction-log rows older than N days (dry run without --yes)")
+    p.add_argument("--older-than", type=int, required=True, metavar="DAYS")
+    p.add_argument("--yes", action="store_true", help="really delete")
     p = sub.add_parser("setup")
     p.add_argument("--mode", choices=["private", "research"])
     for k in ("skill-dir", "knowledge-dir", "books-dir", "reports-dir"):
         p.add_argument("--" + k)
     p.add_argument("--ephemeris", action="store_true", help="download the Swiss Ephemeris data files (≈1.8 MB)")
+    p.add_argument("--places", action="store_true", help="download the GeoNames place gazetteer (≈7 MB, CC-BY 4.0) "
+                   "for offline birthplace lookup")
+    p = sub.add_parser("panchang", help="panchang of a local day (no birth data)")
+    p.add_argument("date", type=dt.date.fromisoformat)
+    p.add_argument("--lat", type=float, required=True)
+    p.add_argument("--lon", type=float, required=True)
+    p.add_argument("--tz", help="UTC offset, e.g. +05:30")
+    p.add_argument("--zone", help="IANA time zone, e.g. Asia/Kolkata")
+    p = sub.add_parser("place", help="birthplace → coordinates and IANA time zone (offline)")
+    p.add_argument("name")
+    p.add_argument("--country", help="two-letter country code, e.g. IN")
     p = sub.add_parser("add-book")
     p.add_argument("pdf")
     p.add_argument("--id", required=True)
@@ -205,6 +267,8 @@ def main(argv=None):
         return doctor()
     if a.cmd == "setup":
         return setup(a)
+    if a.cmd == "purge":
+        return purge(a.older_than, a.yes)
     if a.cmd == "mcp":
         from .mcp_server import main as run
         return run(http=a.http, host=a.host, port=a.port)
@@ -218,6 +282,10 @@ def main(argv=None):
             return _print(S.create_report(json.load(f), a.name))
     if a.cmd == "sky":
         return _print(S.sky(a.start, a.end, a.tz))
+    if a.cmd == "panchang":
+        return _print(S.panchang(a.date, a.lat, a.lon, a.tz, a.zone))
+    if a.cmd == "place":
+        return _print(S.find_place(a.name, a.country))
     if a.cmd == "sources":
         return _print(S.rule_sources(a.rule))
     if a.cmd == "search":
@@ -234,13 +302,29 @@ def main(argv=None):
         if a.action == "add":
             pid = predictions.add(a.chart_id, a.category, a.text, *(a.window or (None, None)),
                                   confidence=a.confidence, synthetic=a.synthetic, consent=a.consent,
-                                  skill_version=S.VERSION)
+                                  skill_version=S.VERSION, hit_criterion=a.hit_criterion, baseline=a.baseline,
+                                  baseline_note=a.baseline_note, claim_basis=a.claim_basis)
             return print(f"recorded prediction {pid}")
         if a.action == "evaluate":
             return predictions.evaluate(a.id, a.outcome, a.evaluation)
-        return _print(predictions.rows() if a.action == "list" else predictions.scorecard())
+        return _print(predictions.rows() if a.action == "list" else predictions.scorecard(include_synthetic=a.synthetic))
     b = _birth(a.input)
+    if a.cmd == "network":
+        return _print(S.topic_network(b, a.topic, a.planets))
     o = _opts(a)
+    if a.cmd == "activation":
+        net = a.network
+        if os.path.isfile(net):
+            with open(net) as f:
+                net = json.load(f)
+        return _print(S.activation(b, o, net, a.level))
+    if a.cmd == "retro":
+        nets = None
+        if a.networks:
+            with open(a.networks) as f:
+                nets = json.load(f)
+        ev = [dict(zip(("category", "month"), e.rsplit(":", 1))) for e in a.event]
+        return _print(S.retrospective(b, ev, nets, o))
     if a.cmd == "chart":
         c = S.calculate_chart(b, o)
         if a.out:
@@ -252,11 +336,17 @@ def main(argv=None):
             return print(engine.render_md(c))
         return _print(c)
     fn = {"positions": lambda: S.planet_positions(b), "dasha": lambda: S.dasha(b, o),
+          "yogini": lambda: S.yogini_dasha(b, o), "chara": lambda: S.chara_dasha(b, o), "applicability": lambda: S.dasha_applicability(b, o, a.span),
+          "gochara": lambda: S.gochara(b, o),
+          "outlook": lambda: S.outlook(b, getattr(a, "period", "month") or "month", a.on, o),
+          "tajika": lambda: S.tajika(b, a.life_year, o),
           "transits": lambda: S.transits(b, o), "strength": lambda: {"shadbala": S.shadbala(b),
                                                                      "ashtakavarga": S.ashtakavarga(b)},
           "jaimini": lambda: S.jaimini_factors(b), "sensitivity": lambda: S.birth_time_sensitivity(b, o, a.span),
           "varga": lambda: S.divisional_chart(b, a.d)}[a.cmd]
-    return _print(fn(), md_key="table_markdown", md=a.md)
+    with S.engine.using(o.ayanamsa):          # also for the commands that take no Options (positions, varga, ...)
+        out = fn()
+    return _print(out, md_key="table_markdown", md=a.md)
 
 
 def entry():
