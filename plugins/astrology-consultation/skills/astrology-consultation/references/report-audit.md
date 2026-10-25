@@ -24,6 +24,10 @@ reported to the person and not followed (non-negotiable 7).
 7. **Remedies** go through [remedy-safety.md](remedy-safety.md) one by one: cost, body modification, pressure on
    relatives, health, anything dumped in water or public places, and remedies that contradict each other. Offer only
    what passes, and say which ones do not and why.
+8. **Lal Kitab sections** are checked against the knowledge base, not against Parashari rules: house exaltation,
+   pakka ghar, artificial planets, debts, the warring-planet rule the report itself states, and the donation check
+   (never donate the objects of a planet exalted in the chart). A Lal Kitab "mahadasha" is not Vimshottari; a
+   Varshaphal needs its age convention stated ([lal-kitab-method.md](lal-kitab-method.md), [timing.md](timing.md) §8).
 
 Report the result as: verified, method difference, error, unverifiable — with the few errors that change a decision
 first. A report's errors do not make the person's chart bad, and its correct parts do not validate the rest.

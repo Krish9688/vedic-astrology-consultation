@@ -90,6 +90,7 @@ TECHNIQUES = [
     ("Argala", [r"argala"], []),
     ("Jaimini", [r"jaimini"], []),
     ("Tajika / Varshaphala (Parashari annual)", [r"tajik", r"varsha ?phala", r"muntha", r"saham"], []),
+    ("Lal Kitab Varshaphal", [r"varshaphal\b", r"annual chart"], ["वर्षफल", "वर्ष फल"]),
     ("Sade sati", [r"sade ?sati", r"elarata", r"ashtama shani"], ["साढ़ेसाती", "साढ़े साती"]),
     ("Vedha", [r"vedha"], []),
     ("Vargottama", [r"vargottama"], []),
@@ -113,6 +114,18 @@ TECHNIQUES = [
     ("Karaka (significator)", [r"\bkaraka\b", r"significator"], []),
 ]
 
+LAL_KITAB = [
+    ("Pakka ghar", [r"pakka ?ghar", r"permanent house"], ["पक्का घर", "पक्के घर"]),
+    ("Sleeping planet/house", [r"sleeping", r"so(?:ya|ta) hua"], ["सोया हुआ", "सोए हुए", "सोया"]),
+    ("Rin (ancestral debt)", [r"\brin\b", r"ancestral debt", r"pitri ?rin"], ["ऋण"]),
+    ("Masnui (artificial) planet", [r"masnui", r"artificial planet"], ["मसनूई"]),
+    ("Dharmi planet", [r"dharmi"], ["धर्मी"]),
+    ("Blind horoscope", [r"blind (?:horoscope|chart)", r"andha teva"], ["अंधा टेवा", "अन्धा टेवा"]),
+    ("35-year cycle", [r"35[- ]year cycle", r"35 years? cycle"], []),
+    ("Lal Kitab remedy (upay)", [r"\bupay", r"remed(?:y|ies)"], ["उपाय"]),
+    ("Grah-phal / Rashi-phal", [r"grah[a]?[ -]?phal", r"rash[i]?[ -]?phal"], ["ग्रह फल", "राशि फल"]),
+    ("Kalpurush (fixed Aries) chart", [r"kal ?purush", r"kalapurusha"], ["काल पुरुष"]),
+]
 
 TOPICS = [
     ("Marriage & spouse", [r"marriage", r"marital\w*", r"spouse", r"wife", r"husband", r"kalatra"], ["विवाह", "शादी", "स्त्री", "पत्नी"]),
@@ -152,6 +165,8 @@ def entities():
         yield "varga:" + d.lower(), "DivisionalChart", l, lat, []
     for l, lat, dev in TECHNIQUES:
         yield "technique:" + _slug(l), "Technique", l, lat, dev
+    for l, lat, dev in LAL_KITAB:
+        yield "lk:" + _slug(l), "LalKitabConcept", l, lat, dev
     for l, lat, dev in TOPICS:
         yield "topic:" + _slug(l), "Topic", l, lat, dev
 

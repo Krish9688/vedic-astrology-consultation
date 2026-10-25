@@ -1,6 +1,8 @@
-# Option B2 (council 2026-10-12): the public edition carries no Lal Kitab-derived content; the private edition keeps
-# all of it. In the private workspace these tests check the markers, the private files and a real export; in the public
-# repository (no tools/public_edition.py, no scripts/lal_kitab.py) they check the shipped skill folder itself.
+# Lal Kitab rules, code and remedies are public since 3.7 (owner decision 2026-10-25, reversing council option B2).
+# What stays private is the book-derived material: the knowledge base, its audit and the Varshaphal table
+# (data/lal-kitab/), book and page text, source maps, the extraction, the graph and the index. In the private workspace
+# these tests check the markers, the KEEP-OUT list and a real export; in the public repository (no
+# tools/public_edition.py, no data/lal-kitab/) they check the shipped skill folder itself.
 import hashlib
 import json
 import os
@@ -13,12 +15,10 @@ from astro import config
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 SKILL = config.load().skill_dir
-PRIVATE = os.path.exists(os.path.join(SKILL, "scripts", "lal_kitab.py"))
-# The same patterns as tools/public_edition.py FORBIDDEN_IN_SKILL (that tool stays in the private workspace).
-FORBIDDEN = [r"\bLK1952\b|\bLKS\b|Shrimali", r"\bLK_[A-Z]+\b|(?i:\bpakka\b|\bdharmi\b|mangal-?bad|\bsleeping\?)",
-             r"\bKB\b|knowledge base v2|CR-L\d|CR-X1[5-8]\b", r"(?i)varshaphal\.py|varshaphal (?:csv|table)|\bsleeping planet",
-             r"data/lal-kitab", r"\bLK1952[: ]p?\d|\bLKS[: ]p?\d|KB B\d+ p\d|\((?:KB )?B\d+ p\d",   # + FORBIDDEN_IN_REPO's citations
-             r"_skill_workspace|Documents/Astrology Books"]   # the author's private folder layout (audit H4)
+PRIVATE = os.path.exists(os.path.join(SKILL, "data", "lal-kitab"))
+# The same content signatures as tools/public_edition.py KEEP_OUT_CONTENT (that tool stays in the private workspace).
+KEEP_OUT = [r"KB Part 0\.2 Validation Register|\bkb-register\b|lk-planet-in-hous[e]|\bB8-\{", r"RECOMMENDED_house_[1],|lk1952_house_[1],",
+            r"(?m)^#{2,4} B\d+\. ", r"_skill_[w]orkspace|Documents/Astrology Book[s]"]   # [x] classes: this file never matches itself
 KB_SHA256 = {   # the private knowledge base changes only together with its version number (v2.4 since 2026-10-24)
     "LalKitab_Shrimali_Knowledge_Base_v2.2.md": "39f55cca04d507f8a13099132fe38a2827411b3e3842b623491b6e39a1771cca",
     "LalKitab_Validation_Audit_Report_v2.2.md": "ceb251714fc64c6095776869b909ef71fb923e80a69b1d84680c9acbd47c358e",
@@ -36,14 +36,21 @@ def _skill_files():
 
 
 @pytest.mark.skipif(not PRIVATE, reason="public edition")
-def test_private_edition_keeps_the_lal_kitab_material():
+def test_private_edition_keeps_the_book_derived_material():
     kb = os.path.join(SKILL, "data", "lal-kitab")
     for name, sha in KB_SHA256.items():
         assert hashlib.sha256(open(os.path.join(kb, name), "rb").read()).hexdigest() == sha, name
-    for f in ("scripts/lal_kitab.py", "scripts/varshaphal.py"):
-        assert os.path.exists(os.path.join(SKILL, f)), f
     method = open(os.path.join(SKILL, "references", "lal-kitab-method.md")).read()
-    assert "## 3. Reading procedure" in method          # the full private method is still there
+    assert "## 3. Reading procedure" in method
+
+
+def test_lal_kitab_code_and_notes_are_in_this_edition():
+    for f in ("scripts/lal_kitab.py", "scripts/varshaphal.py", "scripts/lk_remedies.py", "references/lal-kitab-method.md",
+              "references/remedy-safety.md"):
+        assert os.path.exists(os.path.join(SKILL, f)), f
+    skill_md = open(os.path.join(SKILL, "SKILL.md")).read()
+    assert "Lal Kitab is not part of this edition" not in skill_md and "Lal Kitab Varshaphal and remedies" in skill_md
+    assert "does not provide Lal Kitab analysis" not in open(os.path.join(SKILL, "references", "lal-kitab-method.md")).read()
 
 
 @pytest.mark.skipif(not PRIVATE, reason="public edition")
@@ -57,15 +64,21 @@ def test_public_view_of_every_skill_file_is_clean():
             continue
         pub = pe.public_text(rel, text)                  # raises on unbalanced markers
         if pub is not None:
-            assert not pe.violations(pub, pe.FORBIDDEN_IN_SKILL), (rel, pe.violations(pub, pe.FORBIDDEN_IN_SKILL)[:5])
+            assert not pe.violations(pub, pe.KEEP_OUT_CONTENT), (rel, pe.violations(pub, pe.KEEP_OUT_CONTENT)[:5])
             if rel.endswith(".py"):
                 compile(pub, rel, "exec")
-    assert pe.public_text("scripts/lal_kitab.py", "x") is None and pe.public_text("scripts/varshaphal.py", "x") is None
+        else:
+            assert rel.startswith("data/lal-kitab/"), rel          # only the private data folder is left out
+    assert pe.public_text("data/lal-kitab/LalKitab_Varshaphal_Table_v2.2.csv", "x") is None
+    for f in ("scripts/lal_kitab.py", "scripts/varshaphal.py", "scripts/lk_remedies.py"):
+        assert pe.public_text(f, "x = 1\n") == "x = 1\n"       # Lal Kitab code is public
 
 
-@pytest.mark.skipif(not PRIVATE, reason="public edition")
-def test_real_public_export_passes_the_b2_gate(tmp_path):
-    # the exporter itself (not only the transform) must leave out every private-edition file and pass the B2 gate
+@pytest.mark.skipif(not (PRIVATE and os.path.isdir(os.path.join(ROOT, "astrology-prediction"))),
+                    reason="needs the workspace layout the public exporter reads")
+def test_real_public_export_passes_the_keep_out_gate(tmp_path):
+    # the exporter itself (not only the transform) must leave out every KEEP-OUT file, carry the Lal Kitab code and
+    # pass the gate
     sys.path.insert(0, os.path.join(ROOT, "tools"))
     import export_public as ex
     files = ex.pairs(str(tmp_path))
@@ -73,8 +86,9 @@ def test_real_public_export_passes_the_b2_gate(tmp_path):
         ex.copy(src, dst)
     shipped = {os.path.relpath(d, str(tmp_path)) for d in files}
     skill = f"{ex.PLUG}/skills/astrology-consultation/"
-    for rel in ("scripts/lal_kitab.py", "scripts/varshaphal.py"):
-        assert skill + rel not in shipped, rel
+    for rel in ("scripts/lal_kitab.py", "scripts/varshaphal.py", "scripts/lk_remedies.py", "references/lal-kitab-method.md"):
+        assert skill + rel in shipped, rel
+    assert "tests/test_lal_kitab.py" in shipped and "tests/lk_golden/lk_golden.json" in shipped
     assert not [s for s in shipped if "data/lal-kitab" in s or s in ("tools/clean_lk1952.py", "validation/retrieval_eval.py")]
     kg_pub = open(os.path.join(str(tmp_path), "tools", "kg", "extract.py")).read()   # private KB parser left out
     assert "def add_kb" not in kg_pub and "KB_PATH" not in kg_pub and "def add_kb" in open(os.path.join(ROOT, "tools", "kg", "extract.py")).read()
@@ -86,23 +100,52 @@ def test_real_public_export_passes_the_b2_gate(tmp_path):
     assert '"id": "KB"' not in cat and "KB R" not in cat and "lal-kitab/" not in cat and "library_root" not in cat
     books = json.loads(cat)["books"]                     # owner's file names and fingerprints stay private (2026-10-21)
     assert books and not [k for b in books for k in b if k in ("file", "sha256", "duplicates")]
-    ex.b2_gate(str(tmp_path))                            # sys.exit on any finding
+    ex.keep_out_gate(str(tmp_path))                      # sys.exit on any finding
+
+
+@pytest.mark.skipif(not PRIVATE, reason="public edition")
+@pytest.mark.parametrize("plant,path", [
+    ("age_year,RECOMMENDED_house" "_1,RECOMMENDED_house_2\n1,1,9\n", "plugins/x/notes.csv"),                 # the table under another name
+    ("", "plugins/x/skills/y/data/lal-kitab/LalKitab_Shrimali_Knowledge_Base_v2.2.md"),                   # the knowledge base
+    ("", "sourcemaps/LK1952_A.md"), ("{}", "text/LKS.jsonl"), ("x", "index/library.sqlite"),
+    ("a\n<!-- private-edition -->\nsecret\n", "docs/leaked.md"),                                          # an unclosed marker
+    ("### B8. Planet in house\n", "docs/kb-copy.md")])                                                  # a KB section heading
+def test_keep_out_gate_fails_on_planted_private_material(tmp_path, plant, path):
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import export_public as ex
+    p = tmp_path / path
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(plant)
+    with pytest.raises(SystemExit):
+        ex.keep_out_gate(str(tmp_path))
+
+
+@pytest.mark.skipif(not PRIVATE, reason="public edition")
+def test_book_text_gate_catches_a_long_verbatim_passage(tmp_path):
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import export_public as ex
+    if not os.path.exists(os.path.join(ROOT, "text", "LKS.jsonl")):
+        pytest.skip("book text not present in this checkout")
+    page = next(json.loads(line)["text"] for line in open(os.path.join(ROOT, "text", "LKS.jsonl"), encoding="utf-8")
+                if len(json.loads(line)["text"].split()) > 120)
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "quote.md").write_text(" ".join(page.split()[20:60]))      # 40 consecutive words of the book
+    assert ex.book_text_gate(str(tmp_path))
+    (tmp_path / "docs" / "quote.md").write_text(" ".join(page.split()[20:26]))      # a short phrase is fine
+    assert not ex.book_text_gate(str(tmp_path))
 
 
 @pytest.mark.skipif(PRIVATE, reason="private edition")
-def test_public_skill_folder_has_no_lal_kitab_material():
-    for rel in ("scripts/lal_kitab.py", "scripts/varshaphal.py", "data/lal-kitab"):
-        assert not os.path.exists(os.path.join(SKILL, rel)), rel
+def test_public_skill_folder_has_no_book_derived_material():
+    assert not os.path.exists(os.path.join(SKILL, "data", "lal-kitab"))
     for rel in _skill_files():
         try:
             text = open(os.path.join(SKILL, rel), encoding="utf-8").read()
         except UnicodeDecodeError:
             continue
-        hits = [m.group(0) for rx in FORBIDDEN for m in re.finditer(rx, text)]
+        hits = [m.group(0) for rx in KEEP_OUT for m in re.finditer(rx, text)]
         assert not hits, (rel, hits[:5])
-    assert "does not provide Lal Kitab analysis" in open(os.path.join(SKILL, "references", "lal-kitab-method.md")).read()
-    skill_md = open(os.path.join(SKILL, "SKILL.md")).read()
-    assert "Lal Kitab is not part of this edition" in skill_md and "ships the Varshaphal" not in skill_md
+        assert not re.search(r"(?im)^[ \t]*(?:<!--\s*/?\s*(?:private|public)[\s_-]*edition|#\s*</?\s*(?:private|public)[\s_-]*edition>)", text), rel
 
 
 def test_vedic_calculation_and_chart_facts_work_in_this_edition():
@@ -112,8 +155,7 @@ def test_vedic_calculation_and_chart_facts_work_in_this_edition():
     import chart_facts
     out = chart_facts.facts(E.chart_facts_input(E.compute("1992-03-14", "09:40", 0, 51.5, -0.12, extras=False)))
     assert "# Parashari D1" in out and "Dispositor chains" in out and "# Houses:" in out
-    assert ("Lal Kitab fixed-Aries chart" in out) == PRIVATE
-    assert ("# Lal Kitab: not part of this edition" in out) == (not PRIVATE)
+    assert "Lal Kitab fixed-Aries chart" in out and "# Lal Kitab: scripts/lal_kitab.py is missing" not in out
 
 
 def test_claude_code_config_never_reaches_the_public_export():

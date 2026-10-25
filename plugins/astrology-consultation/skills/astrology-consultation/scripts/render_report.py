@@ -19,6 +19,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(HERE, "..", "assets", "report")
 sys.path.insert(0, HERE)
 import chart_svg  # noqa: E402
+import lk_remedies  # noqa: E402  (REP-X7 remedy cards)
 from life_lint import BUDGET, FACT, lint, report_text  # noqa: E402
 
 TYPE_NAMES = {"complete-life": "Complete life report", "career": "Career report", "relationship": "Relationship report",
@@ -177,6 +178,7 @@ def checks(r):
     rest = lint("\n".join(_strings(r)), "report")   # every string, incl. unit basis and section titles (council 5 R7-1)
     errs += [i for i in rest["issues"] if i.startswith("SAFETY") and i not in errs]
     warns += [f"life-first: {i}" for i in res["issues"] if not i.startswith("SAFETY")]
+    errs += lk_remedies.card_checks(r)
     cites = re.findall(r"\bp\.?\s?\d{1,4}\b|\bsl\.\s?\d+", report_text(r))
     if cites:
         warns.append(f"page/verse references in client text ({', '.join(cites[:4])}) — keep them in appendix.sources")
@@ -480,6 +482,7 @@ def html_of(r):
     chart = chart_svg.chart((r.get("appendix") or {}).get("positions", []), style)   # P7-1; None without a lagna row
     calc = (r.get("engine") or {}).get("calculation", "")
     extra = {}
+    extra["remedy_cards"], extra["remedy_sources"] = lk_remedies.cards_html(r)
     caption = f"{style.capitalize()} Indian rasi chart (signs only; degrees in the table below)" + (f"; {calc}" if calc else "")
     return env.get_template("template.html.j2").render(
         r=r, css=open(os.path.join(ASSETS, "report.css")).read(), type_name=TYPE_NAMES[r["report_type"]],

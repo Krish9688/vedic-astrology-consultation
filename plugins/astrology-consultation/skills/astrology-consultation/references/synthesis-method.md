@@ -3,7 +3,7 @@
 Contents: [1. The senior-practitioner sequence](#1-the-senior-practitioner-sequence) · [2. The triad test (house, lord, karaka) — Phaladeepika XV](#2-the-triad-test-house-lord-karaka--phaladeepika-xv) · [3. Weighing: what dominates](#3-weighing-what-dominates) · [4. Convergence and the evidence hierarchy](#4-convergence-and-the-evidence-hierarchy) · [5. Contradiction procedure](#5-contradiction-procedure) · [6. Distinguish what you are saying](#6-distinguish-what-you-are-saying) · [7. Before answering, the four checks](#7-before-answering-the-four-checks)
 
 This is the core of the skill. Every other reference feeds this procedure. Source tags: `[PD]` Phaladeepika,
-`[BJ]` Brihat Jataka, `[HJH2]`/`[HPA]` B. V. Raman, `[LOL]` Light on Life, `[PM2]` Prasna Marga II,
+`[BJ]` Brihat Jataka, `[HJH2]`/`[HPA]` B. V. Raman, `[LOL]` Light on Life, `[PM2]` Prasna Marga II, `[LK]` Lal Kitab,
 `[DESIGN]` this skill's own policy. Page citations resolve through [source-index.md](source-index.md).
 
 ## 1. The senior-practitioner sequence
@@ -28,7 +28,8 @@ silently is how single-placement predictions happen.
 8. **Yogas and cancellations** — verified definition, constituents, bhanga, and whether the yoga's planets get a dasha
    at a usable age [LOL p310].
 9. **Divisional confirmation** — the relevant varga only ([vargas.md](vargas.md)).
-10. **Dasha activation** → 11. **Transit trigger** → 12. (this edition has no Lal Kitab layer)
+10. **Dasha activation** → 11. **Transit trigger** → 12. **Lal Kitab layer**, if in scope
+    ([lal-kitab-method.md](lal-kitab-method.md), [timing.md](timing.md)).
 13. **Convergence**: does the theme repeat through independent channels? (section 4)
 14. **Strongest evidence, secondary evidence, strongest contradiction.**
 15. **Timing window** supported by activation plus trigger.
@@ -54,6 +55,7 @@ skip many). None of them is a verdict alone; conclusions need two or more indepe
 | 15–16 | Vimshottari dasha, bhukti, pratyantar | timing.md | no period table |
 | 17 | Current transits (engine data only), vedha, AV bindus | timing.md | no transit data |
 | 18 | Jaimini karakas/arudha as a separate labelled note | jaimini.md | not asked / would double count |
+| 19 | Lal Kitab layer as a separate note | lal-kitab-method.md | not in scope |
 | 20 | Supporting vs contradicting factors, recorded disputes | §5; `kg.py contradictions` | never |
 | 21 | Timing convergence (promise → dasha → transit → annual) | timing.md | untimed question |
 | 22 | Source check for any rule you cite | `kg.py sources` / `search.py` | — |
@@ -139,10 +141,12 @@ dependencies — each item below is **one** channel, however many names it carri
 - Shadbala and its dignity component; an Ashtakavarga total and its planet tables;
 - MD and AD (nested periods); two reports of the same Saturn transit;
 - Rahu and Ketu (one axis);
+- a Lal Kitab reading of a planet-in-house and a Parashari reading of the *same* planet-in-house (same fact, two
+  traditions) — see 4.4.
 
 Distinct channels are things like: the house's own condition; its lord's condition; the karaka; the same network from
-the Moon; a stable relevant varga; the dasha link; a transit link. Distinct is not the same as statistically
-independent; it only means the
+the Moon; a stable relevant varga; the dasha link; a transit link; a Lal Kitab rule that uses a *different* mechanism
+(pakka ghar, sleeping, annual chart). Distinct is not the same as statistically independent; it only means the
 astrological reasoning does not merely restate itself.
 
 ### 4.2 The five-level hierarchy (use these words)
@@ -168,6 +172,21 @@ career change in this period, Moderate on timing, Weak for it being a promotion 
 - Several equally plausible manifestations → manifestation at most Moderate.
 - Never attach a percentage, "accuracy score" or probability. The labels describe internal convergence within a
   traditional framework, not measured odds. [carried over from v2.2 confidence.md]
+
+### 4.4 Cross-system agreement (Lal Kitab + Parashari) [DESIGN]
+
+Two traditions reaching the same conclusion by different rules raises *interpretive* confidence, and you may say so.
+Rules:
+
+- Count it as corroboration only when each branch reaches its conclusion through its own mechanism (e.g. Parashari
+  7th lord + D9 + Venus dasha, and Lal Kitab Venus/Mercury house states + annual chart). If both merely read "Saturn in
+  the 7th", that is one fact read twice.
+- Agreement can lift **Moderate → Strong** only if each branch alone is at least Moderate. It never lifts Weak to
+  Strong, and it cannot rescue missing activation.
+- Both branches use the same birth data (and usually the same whole-sign houses), so agreement is not independent
+  proof. Phrase it as "both systems point the same way", not "confirmed".
+- Disagreement is reported, never averaged: "Parashari timing favours 2027; the Lal Kitab annual chart for that
+  age-year puts Venus in a difficult house. I read that as…" State which you weight more *for this question* and why.
 
 ## 5. Contradiction procedure
 

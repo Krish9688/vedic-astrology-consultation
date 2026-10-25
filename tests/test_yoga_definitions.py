@@ -240,7 +240,7 @@ def test_neechabhanga_is_clause_by_clause_never_one_flag():
     assert not any("cancelled" in x[1].lower() or "cancelled" in x[3].lower() for k, x in r.items() if k.startswith("NB-"))
 
 
-# 52 synthetic inputs of the Lal Kitab golden test (tests/test_lal_kitab_private.py, seed 20261018): the same signs,
+# 52 synthetic inputs of the Lal Kitab golden test (tests/test_lal_kitab.py, seed 20261018): the same signs,
 # repeated here because that file is private-only; the Lal Kitab house maps are left out (candidates do not use them).
 SIGNS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn",
          "Aquarius", "Pisces"]
@@ -269,7 +269,7 @@ RESULT_WORDS = re.compile(r"(?i)\b(fame|famous|king|kings|kingly|royal|wealth\w*
 
 
 def test_golden_inputs_match_the_private_generator():
-    path = os.path.join(os.path.dirname(__file__), "test_lal_kitab_private.py")
+    path = os.path.join(os.path.dirname(__file__), "test_lal_kitab.py")
     if not os.path.exists(path):
         pytest.skip("public edition: no Lal Kitab golden test")
     import importlib.util

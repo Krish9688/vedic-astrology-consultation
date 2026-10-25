@@ -15,6 +15,10 @@ Page-cited source maps are development material and are not loaded at runtime.
 | HJH2 | How to Judge a Horoscope Vol. 2 (houses 7–12) | B. V. Raman, 5th ed. reprint | Modern Parashari teaching, ~230 worked charts | Clean | PDF p; printed = PDF − 7 |
 | HPA | Hindu Predictive Astrology | B. V. Raman | Modern Parashari teaching; simplified Tajika annual | Scan; local OCR | PDF p (≈ two printed pages per PDF page) |
 | LOL | Light on Life | H. de Fouw & R. Svoboda, 1996 | Modern Parashari teaching (+ Jaimini notes), 8 case charts | Clean | PDF p; printed = PDF − 28 |
+| LKS | Lal Kitab (English) | Pt. Radhakrishna Shrimali, Diamond 2013 | Modern Lal Kitab popularisation; mixes Vedic rules | Clean | PDF p (no printed pages) |
+| KB | LalKitab_Shrimali_Knowledge_Base_v2.2 (private, not distributed in the public edition) | the owner's notes derived from LKS, audited v2–v2.2 | Lal Kitab (tagged LK/VED/AUTH/MIXED) | — | Section id + LKS PDF page |
+| VT | LalKitab_Varshaphal_Table_v2.2.csv (private data file, not distributed) | Shrimali + LK1952 reconciliation | Lal Kitab annual table | — | age_year row |
+| LK1952 | Lal Kitab 1952 | Pt. Roop Chand Joshi; Hindi re-typeset of the Urdu original by V. Nagpal | Primary Lal Kitab (transliteration, not facsimile) | Glyph-broken layer; local Hindi OCR | PDF p + edition page ("पेज नंबर"), ≈ PDF − 21 early |
 | BPHS | Brihat Parasara Hora Sastra, Vols 1–2 | Parasara, tr. R. Santhanam (Ranjan) | Classical Parashari (verse + translator notes) | PDF text layer (Sanskrit garbled; English readable) | PDF p; cite ch./sloka |
 | JSR | A Course on Jaimini's Upadesa Sutra, Vol. 1 | Sanjay Rath (translation + commentary) | Jaimini (SJC) | PDF text | PDF p; cite sutra no. |
 | CRUX | Crux of Vedic Astrology: Timing of Events | Sanjay Rath, 1998 | Modern SJC timing (Parashari + Jaimini) | Local OCR | PDF p |
@@ -29,7 +33,7 @@ Page-cited source maps are development material and are not loaded at runtime.
 Books with validated
 source maps contribute page-cited rules to `kg.py find/sources`; books still pending are searchable page by page with
 `search.py --src <ID>` and appear in the graph's page layer only. Nadi (DEVA2) and KP-style material stay in their own
-notes like Jaimini.
+notes like Jaimini and Lal Kitab.
 
 In the library since v3.3 (searchable page by page; see the table above): BPHS, Saravali Vol 1, Jataka Parijata Vol 2,
 K. N. Rao's *Timing through Vimshottari Dasha*, Sanjay Rath's *Crux*, P. V. R. Narasimha Rao's *Integrated Approach*.
@@ -44,6 +48,8 @@ works of these authors (v2.2 used some via web pages — see §5).
   50+ charts) show the limits he acknowledges.
 - **OCR**: PD and HPA were OCR'd locally; tables may be damaged — the source maps mark `[image-checked]` where a page
   image was read. BJ digits are sometimes garbled (e.g. Saturn's 19 read as 9).
+- **Lal Kitab**: KB/VT fidelity is to Shrimali's English book (plus LK1952 for the table), not to the Urdu original.
+  LK1952 in this folder is a Hindi re-typeset with its own errors (e.g. VT rows 21, 78). Authorship is disputed (R52).
 - **No source here establishes predictive validity.** Textual authority shows what a tradition teaches.
 
 ## 3. Citation format
@@ -58,8 +64,8 @@ Mark each claim as **source statement**, **inference**, **synthesis** or **exter
 `scripts/kg.py` reads the Graphify graph built from the library's books and the contradiction register
 (in the configured library; override with `ASTRO_KG`). Every rule node carries source, page (PDF and
 printed), verse, section, tier and the date and method of extraction. Tiers:
-**classical** (verse or root text: PD, BJ, PM2 verses), **traditional** (translator/commentator notes),
-**modern** (Raman, LOL), **synthesis** (reader notes, this skill's inferences). Rules are paraphrases made
+**classical** (verse or root text: PD, BJ, PM2 verses, LK1952), **traditional** (translator/commentator notes),
+**modern** (Raman, LOL, Shrimali), **synthesis** (reader notes, this skill's inferences). Rules are paraphrases made
 from full reads of each book, so confirm wording with `search.py --page` before quoting. On a blind set of 24 questions the
 graph + full-text combination found a right page for 17, full-text search alone for 16: use the graph for disputes and
 cross-book context, not as a better page finder (an earlier curated 16-of-17 figure overstated it).
@@ -73,10 +79,12 @@ A full-text index of your books (one row per page, with source id and page) live
 python3 scripts/search.py                                   # list sources
 python3 scripts/search.py '"seventh lord" dasa' --src HJH2 -n 5
 python3 scripts/search.py 'NEAR(Jupiter transit marriage, 20)' --src PM2,HJH2
+python3 scripts/search.py 'कुंडली सोया' --src LK1952            # Devanagari works
 python3 scripts/search.py --page PD:184                     # read the whole page
 ```
 
-Search in each book's own vocabulary: Raman writes "Dasa/Bhukti", LOL "dasha/bhukti", PD "Dasa/Apahara".
+Search in each book's own vocabulary: Shrimali (LKS) writes "permanent house" (not *pakka ghar*), "debt" (not *rin*);
+LK1952 is Hindi (पक्का घर, ऋण, वर्षफल); Raman writes "Dasa/Bhukti", LOL "dasha/bhukti", PD "Dasa/Apahara".
 Use it to confirm a rule before citing it, to fetch a disputed passage, or to answer "where does this come from?".
 Nothing leaves the machine. The index contains copyrighted text for the user's private use: quote briefly, paraphrase
 otherwise, and do not bundle it into distributable packages. Rebuild with

@@ -10,8 +10,9 @@ allowlist exporter. Nothing reaches either repository except through these expor
 | Built by | `python3 tools/export_public.py --repo <clone> --check` | `python3 tools/export_repo.py --archive --repo <clone>` |
 | Layout | marketplace root; plugin at `plugins/astrology-consultation/` (skill, engine source, launcher, commands, MCP config) | workspace layout: `astro/`, `skill/`, `tools/`, `plugin/`, `public-root/`, `sourcemaps/`, `knowledge/`, `releases/`, `legacy/`, `archive/` |
 | Licence | split: AGPL-3.0-or-later (engine, service, tools), Apache-2.0 (skill scripts, templates, plugin files), CC BY 4.0 (method text, docs) | same, plus material that is not licensed for redistribution (below) |
-| Lal Kitab knowledge base, rules, tables, method and Varshaphal | **excluded** — from 3.6.1 the public edition carries no Lal Kitab rules, tables, method notes, remedies, annual chart or knowledge-base content (council option B2, edition markers + export gate; 3.5.0 and 3.6.0 shipped rule tables and method notes, and 3.5.0 the Varshaphal table) | included (the owner's derived material, whose redistribution status is unresolved) |
-| Book-derived analysis (source maps, chapter maps, knowledge graph, extraction) | excluded | included; the graph and extraction gzip-compressed (3.9 MB and 3.4 MB) |
+| Lal Kitab rules, code and remedies (`lal_kitab.py`, `varshaphal.py`, `lk_remedies.py`, method, timing, remedy-safety and contradiction notes, tests and synthetic fixtures) | **included from 3.7.0** (owner decision 2026-10-25, reversing council option B2 of 2026-10-12, which had removed them in 3.6.1). They are the owner's own wording of books still in copyright; their redistribution status is not legally cleared and the owner accepts that risk ([COPYRIGHT.md](COPYRIGHT.md)) | included |
+| Lal Kitab knowledge base (Shrimali notes, audit) and Varshaphal table (`data/lal-kitab/`) | **excluded** — the KEEP-OUT list in `tools/public_edition.py`; `varshaphal.py` says the table is not installed | included (the owner's derived material) |
+| Book-derived analysis (source maps, chapter maps, knowledge graph, extraction), book and page text, PDFs, full-text index | excluded (KEEP-OUT gate) | included; the graph and extraction gzip-compressed (3.9 MB and 3.4 MB) |
 | Release packages (`.skill`) | the current public package is attached to the public release | every historical package, byte-identical |
 | Books (PDFs), page text, full-text index | never | never — local only, listed with SHA-256 in `archive/local-only-manifest.json` |
 | Personal charts, reports, private benchmarks, prediction log | never | never — the owner's rule; counts only in the manifest |
@@ -23,6 +24,7 @@ allowlist exporter. Nothing reaches either repository except through these expor
 
 | Gate | Public | Private |
 |---|---|---|
+| KEEP-OUT gate (`export_public.py`: fails on any KEEP-OUT path, knowledge-base or table signature, leftover edition marker, or a verbatim run of book text) | yes | — |
 | `tools/privacy_check.py` (personal terms from a local untracked list, home paths, e-mails, blocked folders/extensions, > 5 MB) | public rules | `--archive` rules: also allows source/chapter maps, the compressed graph and historical packages — packages are opened and scanned member by member for personal terms |
 | Gitleaks | `gitleaks dir` on the export + history in CI | `gitleaks git` on the full history, locally |
 | Version consistency (`tools/check_versions.py`) | yes | yes |

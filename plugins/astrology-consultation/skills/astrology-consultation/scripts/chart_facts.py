@@ -2,7 +2,7 @@
 """Derive structural chart facts from SUPPLIED positions. No ephemeris: it never computes where a planet is.
 
 It removes hand-arithmetic errors (house counting, lordship, aspects, D9/D10, dispositors). It does NOT interpret.
-The private edition adds a Lal Kitab block from scripts/lal_kitab.py; the public edition has no Lal Kitab part.
+scripts/lal_kitab.py adds a separate Lal Kitab block (both editions since 3.7); without that file the block is left out.
 
 usage:  chart_facts.py chart.json            chart_facts.py --json chart.json (Parashari fact ids, schemas/derived_facts.schema.json)
         chart_facts.py --selftest
@@ -10,7 +10,7 @@ chart.json (degrees optional; without degrees D9/D10/combustion/Moon phase are s
   {"asc": {"sign": "Cancer", "deg": 12.5},
    "planets": {"Su": {"sign": "Cancer", "deg": 10.2}, "Mo": {"sign": "Pisces", "deg": 3.1}, "Ma": {...},
                "Me": {...}, "Ju": {...}, "Ve": {...}, "Sa": {..., "retro": true}, "Ra": {...}, "Ke": {...}},
-   "lk_houses": {"Su": 1, ...}   # optional, private edition only (see scripts/lal_kitab.py)
+   "lk_houses": {"Su": 1, ...}   # optional Lal Kitab house override (see scripts/lal_kitab.py)
   }
 Houses are whole-sign from the ascendant sign (Parashari baseline).
 """
@@ -588,10 +588,10 @@ def facts(chart):
     chains, finals = _chains(P)
     W("\nDispositor chains: " + "; ".join(chains) + (f". Final dispositor(s) in own sign: {', '.join(finals)}" if finals else ". No planet in own sign (chains end in a cycle)."))
 
-    # Lal Kitab: scripts/lal_kitab.py exists only in the private edition (council B2, 2026-10-12)
+    # Lal Kitab block: scripts/lal_kitab.py (separate module so the Parashari facts never depend on it)
     lk = _lal_kitab()
     if lk is None:
-        W("\n# Lal Kitab: not part of this edition (no Lal Kitab chart, flags, rules or remedies).")
+        W("\n# Lal Kitab: scripts/lal_kitab.py is missing from this installation (no Lal Kitab chart, flags, rules or remedies).")
     elif isinstance(lk, str):
         W(f"\n# Lal Kitab: scripts/lal_kitab.py not used ({lk}). No Lal Kitab output; the facts above are unaffected.")
     else:
@@ -680,19 +680,13 @@ def facts_json(chart):
 
 
 def _lal_kitab():
-    """The private edition's Lal Kitab module, loaded by path (callers may import this file by path too).
-    Returns the module, None when absent (public edition), or a reason string when the file is present but unusable:
-    it fails to load, lacks section()/selftest(), or sits in a public skill folder (a leftover private file)."""
+    """The Lal Kitab module, loaded by path (callers may import this file by path too).
+    Returns the module, None when absent, or a reason string when the file is present but unusable:
+    it fails to load or lacks section()/selftest() (a stale or foreign file)."""
     here = os.path.dirname(os.path.abspath(__file__))
     path = os.path.join(here, "lal_kitab.py")
     if not os.path.exists(path):
         return None
-    try:
-        desc = re.search(r"^description: .*$", open(os.path.join(here, "..", "SKILL.md"), encoding="utf-8").read(), re.M)
-        if desc and "Lal Kitab is not part of this edition" in desc.group():   # the public edition's description
-            return "ignored: this skill folder is the public edition — a file left over from the private edition? remove it"
-    except OSError:
-        pass
     import importlib.util
     try:
         spec = importlib.util.spec_from_file_location("lal_kitab", path)
@@ -709,7 +703,7 @@ def selftest():
     lk = _lal_kitab()
     assert not isinstance(lk, str), f"scripts/lal_kitab.py unusable: {lk}"
     if lk:
-        lk.selftest(facts)   # private edition: the Lal Kitab block checks itself
+        lk.selftest(facts)   # the Lal Kitab block checks itself
     assert varga(0, 3 + 1 / 3, 9) == 1, "exactly 3°20' Aries -> second navamsa (Taurus)"
     assert varga(1, 0.5, 9) == 9, "Taurus 0°30' -> Capricorn navamsa"
     assert varga(1, 0.5, 10) == 9, "Taurus (even) D10 starts at 9th = Capricorn"
@@ -722,7 +716,7 @@ def selftest():
     t3 = facts(ch3)   # whole-sign houses from a non-Aries lagna: Aquarius is the 8th from Cancer, Gemini the 12th
     assert "H8 Aquarius: occ Sa" in t3 and "H12 Gemini: occ Mo" in t3, t3
     if not lk:
-        assert "# Lal Kitab: not part of this edition" in t2, t2
+        assert "# Lal Kitab: scripts/lal_kitab.py is missing" in t2, t2
     # dignity detail: MT boundaries, compound relation, D9 dignity; Moon block from a non-Aries Moon
     ch4 = {"asc": {"sign": "Aries"}, "planets": {"Su": {"sign": "Leo", "deg": 20.0}, "Ma": {"sign": "Aries", "deg": 12.5},
                                                   "Ju": {"sign": "Gemini", "deg": 1.0}, "Me": {"sign": "Sagittarius", "deg": 5.0},
