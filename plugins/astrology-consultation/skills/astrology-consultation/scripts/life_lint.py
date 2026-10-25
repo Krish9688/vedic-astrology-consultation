@@ -109,6 +109,13 @@ AUDIT = [
               r"speculat\w*|lottery)\b"),
     ("costly-remedy", r"\b(?:gemstones?|(?:blue|yellow) sapphire|emerald|ruby|diamond|cat'?s eye|hessonite)\b"),
 ]
+AUDIT += [   # Lal Kitab-style remedy wording (LAL-KITAB-ROADMAP §4): check each against remedy-safety.md first
+    ("unsafe-remedy", r"\b(?:float\w*|immers\w*|throw\w*|drop\w*|pour\w*)\b[^.]{0,60}\b(?:river|running water|"
+                      r"flowing water|stream|sea|drain|canal)\b|\bbur(?:y|ied|ying)\b|\bnose[- ]?(?:piercing|pierced)\b|"
+                      r"\bwithout water\b|\b(?:collect|take|accept)\w* money from\b|\bivory\b|\b(?:deer|animal) skin\b|"
+                      r"\bmilk to (?:a )?snakes?\b|\b(?:liquor|alcohol)\b"),
+    ("donation-check", r"\b(?:donat\w*|give away)\b"),   # X17: never donate the objects of an exalted planet
+]
 AUDIT = [(cat, re.compile(rx, re.I)) for cat, rx in AUDIT]
 
 

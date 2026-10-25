@@ -1,7 +1,7 @@
 # Career, business, income and wealth
 
 Contents: [1. Split the question](#1-split-the-question) · [2. Capacities first](#2-capacities-first) · [3. Vocation (type of work)](#3-vocation-type-of-work) · [4. Rank, recognition and setbacks](#4-rank-recognition-and-setbacks) · [5. Income and wealth](#5-income-and-wealth) · [6. Timing career and money events](#6-timing-career-and-money-events)
-[7. Lal Kitab](#7-lal-kitab)
+[7. Lal Kitab layer](#7-lal-kitab-layer)
 [8. Alternatives and boundaries](#8-alternatives-and-boundaries)
 
 Load for questions about vocation, job change, promotion, business, income, savings, windfalls, debt or financial
@@ -49,7 +49,7 @@ the Moon for career judgement in Raman's experience [HJH2 p249].
 Markers of rise: 9th–10th lord link; lagna lord–10th lord relationship ("always fortifying"); mahapurusha yoga by the
 10th lord; 10th lord exalted aspecting the 10th [HJH2 p304–321]. Markers of fall or instability: Saturn in the 10th
 (rise then fall) [HJH2 p362]; raja yoga in the 12th or 6th, or 12th from the Moon [HJH2 p357–366]; Saturn–Venus mutual
-periods break raja yogas [HJH2 p364].
+periods break raja yogas [HJH2 p364]. Lal Kitab's "deceitful 10th" says the same kind of thing in its own terms (below).
 
 ## 5. Income and wealth
 
@@ -74,9 +74,22 @@ lagna, the planet in the 10th, or the strongest planet; it is lost in periods of
 p379–382, p434–438 (retrieve with `scripts/search.py` when needed). Transit Jupiter over the natal dasha and bhukti
 lords often starts the good results within a long bhukti [LOL p364–365].
 
-## 7. Lal Kitab
+## 7. Lal Kitab layer
 
-Not part of this edition ([lal-kitab-method.md](lal-kitab-method.md)).
+- **10th house**: Saturn's pakka ghar; "foundation of luck"; depends on houses 3, 5 and 9 [KB B3]. **Deceitful 10th**
+  [KB B7 p47–48]: bad in 8 means bad in 10; a benefic in 2 makes 10 benefic; good 2 with bad 8 gives good results first,
+  then bad; empty 10 → the 4th-house planet gives no effect; Mercury, Rahu or Ketu in 10 depend on Saturn. Debilitated,
+  mutually hostile planets in 10 make a "blind chart" [KB B7 p41]; p48 states it more simply: enemy planets together
+  in 10 fight and turn blind, and their effect then depends on the Moon [p48] (chart_facts prints both checks).
+- **2nd house**: Jupiter's seat; 8 empty is good, 2 and 8 both empty excellent; weak 2 rescued by 4 (Moon/mother); if 10
+  is empty, 2 sleeps [KB B3 H2].
+- **11th house**: any planet here acts like Saturn; "place of justice"; bridge from 9 to 2 [KB B3 H11].
+- **6th**: planets in 2 go dormant if 6 is empty or nothing aspects 12 [KB B3 H6].
+- **Planet-effect vs house-effect** decides whether a problem is treated as remediable [KB B7 p47].
+- Planet-in-house entries (KB B8) give work/wealth themes per placement with conditions; read the conditions, not just
+  the headline. Planet years (Jupiter 16, Sun 22, Moon 24, Venus 25, Mars 28, Mercury 34, Saturn 36, Rahu 42, Ketu 48)
+  mark ages when a planet's matters mature in Lal Kitab [KB B7 p51] — a supporting timing signal only.
+- Annual chart: where the natal 10th/2nd/11th planets and Saturn/Jupiter fall in the age-year's Varshaphal.
 
 ## 8. Alternatives and boundaries
 

@@ -52,8 +52,6 @@ EXPECT = {"T01": ["relationships-marriage"], "T02": ["relationships-marriage"], 
           "T13": ["career-money"], "T14": ["career-money"], "T15": [], "T16": ["home-family-children"], "T17": [],
           "T18": ["relationships-marriage"], "T19": [], "T20": [], "T21": [], "T22": ["relationships-marriage"],
           "T23": [], "T24": []}
-if not os.path.exists(os.path.join(SKILL, "scripts", "lal_kitab.py")):   # public edition: its own T16 wording
-    EXPECT["T16"] = []
 TIMED = {"T02", "T03", "T04", "T06", "T08", "T12", "T13", "T14", "T23"}
 
 

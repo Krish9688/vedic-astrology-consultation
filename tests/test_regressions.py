@@ -74,9 +74,8 @@ def test_range_flags_and_refusals():
             S.BirthInput(**(dict(date="1992-03-14", time="09:40", tz=0, lat=51.5, lon=-0.12) | bad))
 
 
-def test_lal_kitab_without_kb_says_so(tmp_path):
-    """B2 (2026-10-12): without scripts/lal_kitab.py (the public edition) chart_facts prints no Lal Kitab part and
-    says so, and the method file tells the assistant to decline Lal Kitab analysis."""
+def test_chart_facts_without_the_lal_kitab_module_says_so(tmp_path):
+    """Without scripts/lal_kitab.py chart_facts prints no Lal Kitab part and says so; the Parashari facts are unaffected."""
     import importlib.util
     skill = config.load().skill_dir
     (tmp_path / "scripts").mkdir()
@@ -85,30 +84,26 @@ def test_lal_kitab_without_kb_says_so(tmp_path):
     cf = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(cf)
     out = cf.facts(E.chart_facts_input(E.compute("1992-03-14", "09:40", 0, 51.5, -0.12, extras=False)))
-    assert "# Lal Kitab: not part of this edition" in out and "Lal Kitab fixed-Aries" not in out
+    assert "# Lal Kitab: scripts/lal_kitab.py is missing" in out and "Lal Kitab fixed-Aries" not in out
     assert "# Parashari D1" in out
-    assert "does not provide Lal Kitab analysis" in open(os.path.join(skill, "references", "lal-kitab-method.md")).read()
 
 
 
-@pytest.mark.parametrize("module,desc,expect", [
-    ("raise ImportError('broken')", "private", "failed to load: ImportError: broken"),
-    ("x = 1", "private", "no section()/selftest()"),
+@pytest.mark.parametrize("module,expect", [
+    ("raise ImportError('broken')", "failed to load: ImportError: broken"),
+    ("x = 1", "no section()/selftest()"),
     ("def selftest(f):\n    pass\ndef section(c, h, out, W, A, N):\n    W('# Lal Kitab partial')\n    raise KeyError('bad')",
-     "private", "the Lal Kitab block failed (KeyError"),
-    ("def selftest(f):\n    pass\ndef section(c, h, out, W, A, N):\n    W('# Lal Kitab LEAK')", "public", "ignored: this skill folder is the public edition"),
+     "the Lal Kitab block failed (KeyError"),
 ])
-def test_chart_facts_survives_an_unusable_lal_kitab_module(tmp_path, module, desc, expect):
-    """v3.6.2 (council 5 R5 C3 / R4 S3): a broken, stale or leftover lal_kitab.py never crashes chart_facts, never
-    leaves partial Lal Kitab lines, never prints Lal Kitab output in a public skill folder; Parashari facts unaffected."""
+def test_chart_facts_survives_an_unusable_lal_kitab_module(tmp_path, module, expect):
+    """v3.6.2 (council 5 R5 C3 / R4 S3): a broken or stale lal_kitab.py never crashes chart_facts and never leaves
+    partial Lal Kitab lines; Parashari facts unaffected."""
     import importlib.util
     skill = config.load().skill_dir
     (tmp_path / "scripts").mkdir()
     shutil.copy(os.path.join(skill, "scripts", "chart_facts.py"), tmp_path / "scripts" / "chart_facts.py")
     (tmp_path / "scripts" / "lal_kitab.py").write_text(module + "\n")
-    text = "Lal Kitab is not part of this edition." if desc == "public" else "Parashari/Vedic astrology and Lal Kitab."
-    (tmp_path / "SKILL.md").write_text(f"---\nname: x\ndescription: Consultation ... {text}\n---\n")
-    spec = importlib.util.spec_from_file_location("cf_lk_" + desc, tmp_path / "scripts" / "chart_facts.py")
+    spec = importlib.util.spec_from_file_location("cf_lk_unusable", tmp_path / "scripts" / "chart_facts.py")
     cf = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(cf)
     ch = E.chart_facts_input(E.compute("1992-03-14", "09:40", 0, 51.5, -0.12, extras=False))
@@ -141,7 +136,7 @@ def test_consultation_context_carries_derived_facts():
                                                                             lat=51.5, lon=-0.12))
     d = ctx["derived_facts"]
     assert "# Parashari D1" in d and ctx["facts"]["transit_sign_aspects"]
-    assert ("Lal Kitab fixed-Aries chart" in d) == _private_edition() and ("not part of this edition" in d) != _private_edition()
+    assert "Lal Kitab fixed-Aries chart" in d
 
 
 def test_retrieval_text_fixes():
@@ -163,10 +158,6 @@ def test_skill_scripts_answer_help(script):
     r = subprocess.run([sys.executable, path, "--help"], capture_output=True, text=True)
     assert r.returncode == 0 and "usage" in r.stdout.lower(), r.stderr[-300:]
 
-
-
-def _private_edition():
-    return os.path.exists(os.path.join(config.load().skill_dir, "scripts", "lal_kitab.py"))
 
 
 def _chart_facts():
@@ -244,9 +235,7 @@ def test_dasha_lord_follows_reported_nakshatra(monkeypatch):
 
 def test_kg_contradictions_respect_system():
     """AI-F3: a named non-Lal-Kitab system must not get Lal Kitab disputes (and a Lal Kitab question gets only those).
-    The filter is private-edition code: the public graph carries no Lal Kitab disputes."""
-    if not os.path.exists(os.path.join(config.load().skill_dir, "scripts", "lal_kitab.py")):
-        pytest.skip("public edition")
+    """
     sys.path.insert(0, os.path.join(config.load().skill_dir, "scripts"))
     import kg
     from collections import defaultdict

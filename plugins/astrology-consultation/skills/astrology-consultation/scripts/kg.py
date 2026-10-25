@@ -207,11 +207,19 @@ def find_contradictions(N, out, query, system=None):
     ents, houses, topics = parse(query)
     want = ents | topics | {f"house:{h}" for h, _ in houses}
     words = [w[:5] for w in re.findall(r"\w{4,}", query.lower())]  # stems: "exaltation" also matches "exalted"
+    if not system and re.search(r"lal ?kitab", query, re.I):
+        system = "Lal Kitab"
+    lk_only = bool(system) and "lal kitab" in system.lower()
+    no_lk = bool(system) and not lk_only
     found = []
     for cid, n in N.items():
         if n.get("node_type") != "Contradiction":
             continue
         pos = [N[e["target"]] for e in out[cid] if e["relation"] == "HAS_POSITION"]
+        is_lk = (cid.split(":")[1].startswith(("KB-", "CR-L", "CR-S"))
+                 or any(re.match(r"LK", pg) for p in pos for pg in attrs(p).get("pages", [])))
+        if (lk_only and not is_lk) or (no_lk and is_lk):
+            continue  # a Lal Kitab question gets Lal Kitab disputes only; another named system gets none (AI-F3)
         topic_links = {e["target"] for e in out[cid] if e["relation"] == "APPLIES_TO"}
         linked = topic_links | {e["target"] for p in pos for e in out[p["id"]] if e["relation"] == "APPLIES_TO"}
         blob = " ".join([n["label"]] + [attrs(p).get("text", "") for p in pos]).lower()

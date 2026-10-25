@@ -4,7 +4,7 @@ Contents: [Two valid starting points](#two-valid-starting-points) · [Record onl
 
 ## Two valid starting points
 
-The whole-sign calculation below is a declared **Parashari default**, not an automatic substitute for a user-supplied bhava/chalit house map.
+For Lal Kitab, read `lal-kitab-method.md` before converting houses. The whole-sign calculation below is a declared **Parashari default**, not an automatic substitute for a user-supplied bhava/chalit house map or an agreed Lal Kitab natal-house source.
 
 **Chart-first:** accept a transcribed chart, legible chart image or positions table plus relevant period data. Identify the chart format before interpreting numbers: North Indian charts fix houses; South Indian charts fix signs. Ask when a legend, digit or label is ambiguous. Confirm the transcription with the user if ambiguity would change the answer.
 
@@ -12,7 +12,7 @@ The whole-sign calculation below is a declared **Parashari default**, not an aut
 
 **Calculation tools and privacy.** Use the local engine below; it runs on this machine and sends nothing anywhere. If some other calculation service is available in a session, tell the user that birth data would leave the machine and get a yes before the first call; pass explicit coordinates and UTC offset, never a saved default profile. Report any engine's output as calculated data with ayanamsa and source; never fill gaps it leaves. Keep calculation, retrieval and interpretation separate in the answer.
 
-**Deterministic helpers (local, no network):** `scripts/chart_facts.py` derives houses, lordships, aspects, dignity, combustion, D9/D10, dispositors and Phaladeepika XV tests from supplied positions. Use it instead of hand arithmetic; it never invents positions.
+**Deterministic helpers (local, no network):** `scripts/chart_facts.py` derives houses, lordships, aspects, dignity, combustion, D9/D10, dispositors, Phaladeepika XV tests and Lal Kitab house states from supplied positions; `scripts/varshaphal.py` does the Lal Kitab annual-table lookup. Use them instead of hand arithmetic; they never invent positions.
 
 ## Record only what the question needs
 

@@ -78,18 +78,12 @@ CHARTS = sorted(glob.glob(os.path.join(ROOT, "tests", "fixtures", "**", "chart.j
                 + glob.glob(os.path.join(SKILL, "tests", "fixtures", "chart_*.json")))
 
 
-def lk_split(text):
-    """Text before the Lal Kitab block: the public edition's stored file ends in a one-line notice instead of the block."""
-    return text.replace("\r\n", "\n").partition("\n# Lal Kitab")[0].rstrip("\n")
-
-
 @pytest.mark.parametrize("path", CHARTS, ids=lambda p: os.path.relpath(p, ROOT))
 def test_fixture_facts_reproduce(path):
     stored = open(path[:-5] + ".facts.txt", encoding="utf-8").read()
     now = cf.facts(json.load(open(path, encoding="utf-8")))
-    assert lk_split(now) == lk_split(stored), "chart_facts output changed: review the diff, then regenerate the .facts.txt"
-    if "# Lal Kitab" in stored:   # private edition: the whole file, Lal Kitab block included
-        assert now.rstrip("\n") == stored.replace("\r\n", "\n").rstrip("\n")
+    assert now.rstrip("\n") == stored.replace("\r\n", "\n").rstrip("\n"), \
+        "chart_facts output changed: review the diff, then regenerate the .facts.txt"
 
 
 # ---- 3. life_lint safety ------------------------------------------------------------------------------------------------

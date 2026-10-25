@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from . import config, places, routing as ROUTING
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
-VERSION = "3.6.3"
+VERSION = "3.7.0"
 SOURCE_URL = "https://github.com/Krish9688/vedic-astrology-consultation"
 SOURCE_NOTICE = ("This service is free software under the GNU Affero General Public License v3 or later, with NO "
                  "WARRANTY. The Corresponding Source of the version running here is available at the 'source' URL. "

@@ -1,6 +1,7 @@
 # Contradiction register
 
 Contents: [A. Parashari / Vedic](#a-parashari--vedic)
+[B. Lal Kitab (Shrimali knowledge base, audited)](#b-lal-kitab-shrimali-knowledge-base-audited) · [C. Lal Kitab 1952 vs Shrimali (new in v3)](#c-lal-kitab-1952-vs-shrimali-new-in-v3) · [D. Between systems](#d-between-systems)
 [E. Disputes introduced by the new books (v3.3; curated from the source maps' §7)](#e-disputes-introduced-by-the-new-books-v33-curated-from-the-source-maps-7) · [F. Curated from the automatic cross-book disputes (v3.5)](#f-curated-from-the-automatic-cross-book-disputes-v35) · [G. Empirical-test disputes (CR-E)](#g-empirical-test-disputes-cr-e)
 
 Disputed rules that can change a reading. For each: both versions with pages, a classification, the default this
@@ -49,6 +50,68 @@ working choice only). Source ids: [source-index.md](source-index.md).
 Other intra-source inconsistencies (dates, chart numbers, duplicated passages, garbled tables) are listed in each source
 map's §7 and do not change readings.
 
+## B. Lal Kitab (Shrimali knowledge base, audited)
+
+The 23 audited internal contradictions X1–X23 of Shrimali's book are recorded with pages, classification and defaults
+in Part A5 of the owner's private knowledge base (`data/lal-kitab/`, not distributed in the public edition; section codes below are provenance notes). Most consequential
+for readings (per the audit): **X3–X5, X10** (Rahu/Ketu exaltation houses; two unreconciled auspicious-house lists),
+**X17** (donation logic), **X16** (Mangal table column). Also R10 (LK aspect table rows 8–12 missing; "5→9,11"
+doubtful), R21 (planet special-year units), R42 (month counting), R44 (running vs completed age-year).
+
+**Varshaphal**: years **67, 99, 104** are unresolved valid-row conflicts between Shrimali and the 1952 re-typeset —
+always show both (the private table's `lk1952_house_k` columns); year **17** is a cell-wise majority reconstruction; 28 Shrimali misprint rows
+use the recorded RECOMMENDED values. Never overwrite the private table.
+
+## C. Lal Kitab 1952 vs Shrimali (new in v3)
+
+LK1952 = Hindi re-typeset of the 1952 book (library index). KB = Shrimali-based knowledge base. Default rule: when the
+two differ and the point is decisive, **state both**; prefer LK1952 only where the KB is plausibly a translation slip
+(noted), because LK1952 is closer to the original but is itself a transliteration with typesetting errors.
+
+| ID | Topic | KB (Shrimali) | LK1952 | Class | Default [confidence] |
+|---|---|---|---|---|---|
+| CR-L01 | **Which planets can be remedied** | Remedies work only for "house effect"; a planet in its pakka ghar "cannot be stopped"; Sun/Moon/Jupiter in 6 give own effect, no remedy works — KB A4, B7 p42, p47, p67 | *Rashi-phal* (doubtful, remediable) = planet in own house, exaltation/debilitation or pakka ghar, or a *sathi*; *grah-phal* (fixed, beyond remedy) = none of these (p59–60, p176); in H6 every planet **except** Sun, Jupiter, Moon is grah-phal (p91). The p59 wording is itself ambiguous (first sentence reads the other way) | R/U | Never tell a user "no remedy is possible" on this basis alone; say the sources disagree on remediability [Low] |
+| CR-L02 | LK aspect table | 1→7, 2→6, 3→9/11, 4→10, 5→9(,11?), 6→12, 7→2; rows 8–12 missing — KB B5, R10 | Printed arrows 1→7, 3→9/11, 4→10, 5→9, 6→12, 8→2; no 2→6 or 7→2 arrow (prose p81, p83 says H2 sees H6) — p123 | T/U | Use arrows common to both; flag 2→6 and 7→2 as disputed [Medium] |
+| CR-L03 | Exaltation in house 8 | Mars exalted in 8 (and 10) — KB X1 | No planet exalted in 8 (p72–73), yet Mars shown exalted in 8 in examples (p189); H6 adds Rahu exalted (p72) | R/U | Mars exalted in 10 certain; in 8 disputed [Medium] |
+| CR-L04 | Rin formation | Enemy in a planet's **pakka** house — KB B12 | Enemy in the **root (own-sign) house**; rin exists only if 2/5/9/12 are also afflicted; exactly two planets (p143–150) | R | Show both; require the 2/5/9/12 gate before naming a rin [Medium] |
+| CR-L05 | Matri rin signature | Ketu in 4 — KB B12 | Table leaves the enemy blank; p150 lists Venus/Mercury/Saturn in 4 | U | Cite both [Low] |
+| CR-L06 | Month of an annual effect | Shrimali p209–210: each planet's own varshaphal house = its month, counting the birth month as 1; p219: the year's effect in the annual Sun's month (R42) | Occupied-house arrivals act in fixed Vikrami months (H1 = Vaisakh … H12 = Chaitra); empty-house arrivals in the month counted from the birthday by the annual Sun's house (p239, p241) | R | Page-checked 2026-10-24 (LK-F35). Show both editions' months side by side (varshaphal.py), never merged; never as exact dates [Medium] |
+| CR-L07 | Two planets in H1 | Venus decides if 8 is empty — KB B3 | Venus decides; no "8 empty" condition (p79) | T/U | Cite both [Low] |
+| CR-L08 | Empty 2nd house | 2 and 8 both empty excellent — KB B3 | H2 empty → everything excellent; Jupiter in 2 with 8 empty → Jupiter bad (p81) | R | Cite both [Low] |
+| CR-L09 | Malefics in 3 and 8 | Death "certain" — KB B3 | death, or failing that an occasion for it (p86) | R | Never forecast either (C5) [High] |
+| CR-L10 | Invisible-planet houses for Jupiter | 2, 4, 5, 7 — KB B13 p208 | 6, 7, 10, 11 (p205) | U | Cite both [Low] |
+| CR-L11 | Saturn in 9 and house-building | KB B15 reads building during the wife's or mother's pregnancy | A house built during the wife's/mother's pregnancy harms the father (p1205) | T (KB likely inverted) | Follow LK1952 wording; deterministic either way, don't forecast [Medium] |
+| CR-L12 | House effect after foundation | 3–12 years — KB B15 | 3 or 18 years (p1203) | T/U | Cite both [Low] |
+| CR-L13 | Venus in 9 charity prohibition | Don't adopt a child — KB B13 | Don't give stipends to orphans/widows (p1158) | U | Neither as an obligation [Medium] |
+| CR-L14 | Artificial Moon | Sun + Jupiter — KB B7 | Venus + Mars also treated as Moon (p925–926, p947), besides Sun+Jupiter (p1176) | R | Mention both constructions [Low] |
+| CR-L15 | Pole-Star death sign | "40 days" — KB B11 | "40 years" (p1225 image) | T | Deterministic; never use [High] |
+| CR-L16 | Rahu's period length | 12 years — LK1952 p54 (table) | 18 years — LK1952 p163, p167 (text, stated twice) | T | 18, as the text states it twice; the p54 table figure is likely a slip [Medium] |
+| CR-L18 | Moon bad in 11: newborn restriction | The wife (the baby's mother) does not see the baby's face for 52 days — KB B13 p200 | The **native's mother** (the baby's grandmother), and the wife's mother if the wife also has Moon in 11, leaves at labour and does not see or hold the baby for 43 days (p480, verified); Moon+Ketu variant 40/43 days (p924) | T (Shrimali appears to have turned a grandmother rule into mother–infant separation) | KB version ⛔ never; LK1952 version ⚠️ — mention only as the book's tradition, never as an obligation [High] |
+| CR-L19 | Lonely (unaspected) Jupiter | Has bad houses 2, 4, 5, 7 — KB B13 p208 | A Jupiter with no conjunction or aspect never harms the native (LK1952 part B, Jupiter chapter) | R | Cite both [Low] |
+| CR-L20 | Sun in 7 burial remedy / Mars in 1 Jupiter remedy | Bury square silver; Jupiter remedy for houses 1 and 11 — KB B8 p77, p90 | Bury square **copper** pieces; Jupiter remedy for houses 9 and 11 (LK1952 part B) | T/U | Cite both if a remedy is requested [Low] |
+| CR-L21 | Saturn in 7 flute remedy | Bury a sugar-filled flute **if Saturn is asleep** (H1 empty) — KB B8 p126 | Flute only **if Saturn is not asleep**; honey pot if asleep (p691, verified) | T (KB reversed) | Follow LK1952 if asked; bury only on private land [Medium] |
+| CR-L22 | Piercing duration | Nose/ear piercing with metal for 96 **days** (Mercury H2, Ketu H8) — KB B8 | 96 **hours** (LK1952 part C, Mercury-2 and Ketu-8 chapters) | T/U | Piercing is a personal choice only (⚠️); cite both [Low] |
+| CR-L23 | Mars's helpers | Saturn counted among helping planets for Mars (KB B7 Mars nek conditions p89) | Sun, Moon and Jupiter help Mars; Saturn spoils (LK1952 p563–566) | R | Cite both [Low] |
+| CR-L24 | Debilitation by house | No planet debilitated in 2, 5, 11 — KB B3 | Debilitated planets listed in houses 2, 5 and 11 (p636) | U | Cite both; ❓ image check pending [Low] |
+| CR-L25 | Ivory / elephant tusk | Keep a real elephant tusk for Rahu in 4 (and Mars in 3) — KB B8 p91, p133 | Ivory is inauspicious for Rahu in 3 (LK1952 part C, Rahu chapter) | R | Never recommend ivory in any case (⛔) [High] |
+| CR-L17 | Attribution (KB R52) | Girdhari Lal Sharma named as original author (Shrimali p5) | Pt. Roop Chand Joshi author; Girdhari Lal Sharma printer/publisher (p1–4) | — | Resolved in favour of LK1952's title pages [High] |
+| CR-L26 | Jupiter's pakka ghar | Jupiter 2, 5, 9, 12; Rahu 12 — KB B7 p40 (X24) | Jupiter 2, 5, 9, **11**; house 12 = Rahu only — p72 table (image-checked 2026-10-19) | R | Keep p40 for rival/ally logic; show the LK1952 reading for Jupiter in 11 or 12 [Low] |
+| CR-L27 | What "sleeping" means | A planet sleeps when the 7th from it is empty (KB B7 p44); no general sleeping-house definition (house cases in B3); awakeners by house KB B7 p45 | A planet sleeps when the house it aspects is empty; a house is asleep if empty or unaspected; H11 fully awake only when both H1 and H3 hold planets (LK1952 p101, p117–119, source map, not owner-checked); awakeners identical | T/U | Print both tests side by side (they split for planets in H5, H11 and partly H3); never choose; houses 9/11/12 have no arrow in either table, so no aspect-target test is made for them [Medium] |
+
+Other LK1952-internal inconsistencies (21 in part A, more in parts B–D) are listed in the source maps' §7.
+
+## D. Between systems
+
+| ID | Issue | Lal Kitab | Parashari | Default |
+|---|---|---|---|---|
+| CR-S01 | House lords | Fixed Kalpurush lords (1 Mars … 12 Jupiter) regardless of lagna — KB R02 | Lords by the actual sign on each house | Never mix; each branch uses its own |
+| CR-S02 | Exaltation | By house (Sun exalted in house 1, etc.) — KB B3/B4 | By sign (Sun exalted in Aries) | Keep separate; Shrimali itself mixes them in places ([MIXED], KB A5) |
+| CR-S03 | Aspects | Forward-only house aspects, table incomplete — KB B5 | Graha drishti by sign | Never fill LK gaps from Parashari |
+| CR-S04 | Annual chart | Fixed 120-row permutation table by age-year — KB B17 | Tajika solar return with annual dashas — HPA p128 | Separate modules; neither substitutes for the other |
+| CR-S05 | Mangalik | Reproduced by Shrimali as a [VED] rule; he criticises customs — KB B9 | Not in authoritative texts — LOL p329 | Treat as a disputed modern rule |
+| CR-S06 | Agreement between systems | Lal Kitab and Parashari reach a theme by different mechanisms, so agreement is a second channel — synthesis-method §4.4 | Both read the same birth data and largely the same whole-sign houses, so agreement is not independent and can be one fact read twice — synthesis-method §4.4 | Corroboration only when each branch alone is at least Moderate and no fact is shared; never lifts Weak |
+| CR-S07 | "Mahadasha" | Lal Kitab mahadasha = one planet's continuous bad stretch, from debilitated "equal" planets (LK1952 p163–170) | Vimshottari MD = a fixed-length period of every planet in sequence | Always say "Lal Kitab mahadasha" vs "Vimshottari dasha" |
+
 ## E. Disputes introduced by the new books (v3.3; curated from the source maps' §7)
 
 | # | Topic | Position A (pages) | Position B (pages) | Class | Working default [confidence] |
@@ -94,6 +157,10 @@ reading and were not already in the register.
 | CR-X12 | Venus–Saturn mutual periods | transformational; good when the two are badly placed from each other — NAKS p586–587 | "fatal to raja yogas" (a standard rule, with an example) — HJH2 p364 | R | Expect reorganisation rather than a verdict; judge each lord's own condition [Low] |
 | CR-X13 | Venus transiting the 8th/12th from the Moon | 8th bad; 12th labelled bad though its results are gains — PVR p329 | both good, with vedha points 8/5 and 12/6 — PD p313–314 | R | Venus transits are minor triggers; follow PD with vedha, and never let one decide timing [Medium] |
 | CR-X14 | Rectification by formula | formulas mostly fail (twins test); only nature and past events — PVR p433, p450 | formula rules to adjust the time — HPA p29–30 | R | The skill does not rectify; it reports birth-time sensitivity (inputs.md) [High] |
+| CR-X15 | Lal Kitab remediability | only "house effect" is remediable; a planet in its pakka house cannot be stopped — LKS p72 | own house, exaltation, debilitation and pakka ghar fall in the remediable class — LK1952 p59–60 | R | Say the scope of remedies is disputed; never promise a fixed result [Medium] |
+| CR-X16 | Lal Kitab debts (rin) | formed by an enemy in the root (own-sign) house — LK1952 p144, p150 | in the pakka house — LKS p146, p149 | R | Name the convention when a debt is diagnosed [Medium] |
+| CR-X17 | Lal Kitab Mars helpers | Sun, Jupiter or Saturn in 3, 4, 8, 9 — LKS p89 | Sun, Moon, Jupiter as friends; Saturn/Ketu override the help — LK1952 p564, p566 | R | Treat "help" claims as weak either way [Low] |
+| CR-X18 | Lal Kitab weekday (birth-day) planet houses | Sun 1, Mars 3, Mercury 7 — the pakka houses, used to find the birth-day planet's pakka house; Moon 4, Jupiter 9, Venus 7, Saturn 10, Rahu 12, Ketu 6 — LK1952 p63 | Sun 5, Mars 1 and 8, Mercury 6 — natural-zodiac sign houses; other rows identical — LKS p44 | T (editorial; page images checked) | Use LK1952's pakka-house table for the birth-day/birth-time method [Medium-High] |
 
 ## G. Empirical-test disputes (CR-E)
 
