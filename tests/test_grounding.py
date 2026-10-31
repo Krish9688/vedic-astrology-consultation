@@ -57,16 +57,28 @@ def test_narrow_ungrounded_window_errors(facts):
         d = (d + dt.timedelta(days=32)).replace(day=1)
     assert d < dt.date.fromisoformat(facts["ingresses"][-1]["date"]) + dt.timedelta(days=400), "no gap found in range"
     r = copy.deepcopy(EX)
-    r["timeline"] = [{"start": d.strftime("%Y-%m"), "end": d.strftime("%Y-%m"), "label": "gap", "kind": "window", "basis": "x"}]
+    r["timeline"] = [{"start": d.strftime("%Y-%m"), "end": d.strftime("%Y-%m"), "label": "gap", "kind": "window", "basis": "Jupiter"}]
     assert any("matches no dasha boundary" in e for e in rr.grounding(r, facts)[0])
 
 
 def test_window_beyond_horizon_and_broad(facts):
     r = copy.deepcopy(EX)
-    r["timeline"] = [{"start": "2040-02", "end": "2040-05", "label": "far", "kind": "window", "basis": "x"},
-                     {"start": "2026-10", "end": "2034-01", "label": "long", "kind": "chapter", "basis": "x"}]
+    r["timeline"] = [{"start": "2040-02", "end": "2040-05", "label": "far", "kind": "window", "basis": "Jupiter"},
+                     {"start": "2026-10", "end": "2034-01", "label": "long", "kind": "chapter", "basis": "Jupiter"}]
     errs, warns = rr.grounding(r, facts)
     assert errs == [] and any("unverified" in w for w in warns) and any("broad window" in w for w in warns)
+
+
+def test_window_must_name_a_planet_and_use_its_anchors(facts):
+    import datetime as dt
+    c = next(x for x in facts["slow_contacts"] if x["transit"] == "Ju")          # a Jupiter contact: only Jupiter may ground it
+    d = dt.date.fromisoformat(c["date"])
+    row = lambda basis: dict(EX, timeline=[{"start": d.strftime("%Y-%m"), "end": d.strftime("%Y-%m"), "label": "w", "kind": "window", "basis": basis}])
+    assert rr.grounding(row("Jupiter"), facts)[0] == []
+    assert any("cites no dasha period or planet" in e for e in rr.grounding(row("a good spell"), facts)[0])
+    kp = copy.deepcopy(EX)
+    kp["summary"]["key_points"][1]["text"] = "A step up arrives."          # window kept, planet removed
+    assert any("cites no dasha period or planet" in e for e in rr.grounding(kp, facts)[0])
 
 
 def test_cr_ids():

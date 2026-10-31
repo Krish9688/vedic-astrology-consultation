@@ -26,13 +26,13 @@
     "section": "pattern"
    },
    {
-    "text": "From October 2026 the chapter turns toward consolidation — a settled role, property or a home base may matter as much as a title.",
+    "text": "From October 2026, as the Mercury–Jupiter period begins, the chapter turns toward consolidation — a settled role, property or a home base may matter as much as a title.",
     "confidence": "Moderate",
     "window": "Oct 2026 – Jan 2029",
     "section": "next"
    },
    {
-    "text": "The most concrete opening for a step up falls from mid-2027 into 2028.",
+    "text": "The most concrete opening for a step up falls from mid-2027 into 2028, when Jupiter returns to the 4th.",
     "confidence": "Moderate",
     "window": "mid-2027 – 2028",
     "section": "next"
@@ -62,7 +62,7 @@
      },
      "basis": "Saturn, which rules both the 9th and 10th houses for a Taurus ascendant, sits in its own sign with exalted Mars; the ascendant lord Venus occupies the 10th, aspected by Jupiter.",
      "claim_type": "interpretation",
-     "claim_basis": "TEXT",
+     "claim_basis": "COMMENTARY",
      "system": "parashari"
     }
    ]
@@ -70,7 +70,7 @@
   {
    "id": "chapter",
    "title": "The chapter you are in",
-   "text": "You are in a long chapter (mid-2014 to late 2031) that favours learning, trade in ideas, and income through networks and groups. Its first half was about finding footing; the sub-period that ends in early October 2026 has been restless, with more change of direction than you probably wanted.\n\nThe next sub-period, from October 2026 to January 2029, keeps the same backdrop but changes the tone: less scattering, more building. It is a period for choosing one base and deepening it."
+   "text": "You are in a long Mercury chapter (mid-2014 to late 2031) that favours learning, trade in ideas, and income through networks and groups. Its first half was about finding footing; the sub-period that ends in early October 2026 has been restless, with more change of direction than you probably wanted.\n\nThe next sub-period, from October 2026 to January 2029, keeps the same backdrop but changes the tone: less scattering, more building. It is a period for choosing one base and deepening it."
   },
   {
    "id": "next",
@@ -91,7 +91,7 @@
      },
      "basis": "Mercury–Jupiter sub-period 2026-10-03 → 2029-01-07 (local engine); Jupiter rules the 11th and occupies the 4th. Jupiter enters Leo (4th) on 2026-10-31, returns to Cancer 2027-01-24, re-enters Leo 2027-06-26. Saturn enters Aries (12th) 2027-06-03, returns 2027-10-20, re-enters 2028-02-23.",
      "claim_type": "prediction",
-     "claim_basis": "TEXT",
+     "claim_basis": "COMMENTARY",
      "temporal_mode": "future",
      "system": "parashari"
     }
@@ -113,7 +113,7 @@
      },
      "basis": "Sun and debilitated Mercury (2nd and 5th lord) in the 11th; 11th lord Jupiter in the 4th, vargottama.",
      "claim_type": "interpretation",
-     "claim_basis": "TEXT",
+     "claim_basis": "COMMENTARY",
      "system": "parashari"
     }
    ]

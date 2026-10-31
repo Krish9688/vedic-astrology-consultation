@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Career and the question of a job change</title>
+<style>/* Cream and green report system — tokens from references/visuals.md. Print-first (A4, WeasyPrint); also readable
+   as a web page. Colour is never the only carrier of meaning: every tint has a text label beside it. */
+:root {
+  --paper: #F7F3E8; --ivory: #FFFDF7; --parchment: #E9E0CE;
+  --botanical: #3F6B52; --forest: #2F503E; --pine: #203629;
+  --mint: #ECF0EE; --pistachio: #CFDAD4; --eucalyptus: #A9BCB1; --sage: #6E7E75; --moss: #5C7768;
+  --ink: #26342C; --muted: #58685A; --clay: #8B5039; --bronze: #9A783E;
+}
+@page { size: A4; margin: 22mm 21mm 24mm; background: #FFFDF7;
+  @bottom-left { content: string(doctitle); font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #58685A; }
+  @bottom-right { content: counter(page) " / " counter(pages); font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 8.5pt; color: #58685A; } }
+@page cover { margin: 0; background: #F7F3E8; @bottom-left { content: none; } @bottom-right { content: none; } }
+html { background: var(--ivory); }
+body { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10.5pt; line-height: 1.45; color: var(--ink); margin: 0 auto; max-width: 820px; padding: 0 16px; }
+@media print { body { max-width: none; padding: 0; } }
+h1, h2, h3 { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; color: var(--forest); font-weight: 600; line-height: 1.2; }
+h1 { string-set: doctitle content(); }
+h2 { font-size: 18pt; margin: 30pt 0 8pt; padding-top: 6pt; border-top: 1.5pt solid var(--botanical); break-after: avoid; }
+h3 { font-size: 13pt; margin: 18pt 0 4pt; break-after: avoid; }
+p { margin: 0 0 8pt; }
+.muted { color: var(--muted); }
+
+/* cover */
+.cover { page: cover; height: 297mm; box-sizing: border-box; padding: 58mm 26mm 30mm; background: var(--paper);
+  position: relative; break-after: page; }
+.cover .kind { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 9.5pt; letter-spacing: .14em; text-transform: uppercase; color: var(--moss); }
+.cover h1 { font-size: 30pt; margin: 10pt 0 6pt; }
+.cover .sub { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-size: 14pt; line-height: 1.4; color: var(--forest); margin-bottom: 26pt; }
+.cover .rule { width: 60mm; border-top: 1pt solid var(--bronze); margin: 0 0 18pt; }
+.cover dl { display: grid; grid-template-columns: 34mm 1fr; gap: 3pt 10pt; font-size: 10pt; color: var(--muted); margin: 0; }
+.cover dt { font-weight: 600; color: var(--forest); }
+.cover .foot { position: absolute; bottom: 26mm; left: 26mm; font-size: 8.5pt; color: var(--muted); max-width: 120mm; }
+@media screen { .cover { height: auto; min-height: 60vh; margin: 24px 0; border-radius: 6px; } }
+
+/* summary */
+.headline { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-size: 15pt; line-height: 1.4; color: var(--pine); margin: 6pt 0 14pt; }
+.keypoints { list-style: none; padding: 0; margin: 0; }
+.keypoints li { background: var(--mint); border-left: 3pt solid var(--botanical); padding: 8pt 11pt; margin-bottom: 6pt;
+  break-inside: avoid; }
+.keypoints .meta { display: block; font-size: 9pt; color: var(--muted); margin-top: 2pt; }
+.grade { font-weight: 600; color: var(--forest); }
+.grade.Weak, .grade.Unknown { color: var(--muted); }
+.grade.Contradictory { color: var(--clay); }
+
+/* life units */
+.unit { margin: 10pt 0 16pt; }
+.unit dt, .unit .theme { break-after: avoid; }   /* a unit title never ends a page */
+.unit dd { orphans: 3; widows: 3; }
+.unit .theme { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-weight: 600; font-size: 12.5pt; line-height: 1.35; color: var(--pine); margin-bottom: 4pt; }
+.unit .basis { font-size: 8pt; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: -2pt 0 5pt; }
+.unit dl { margin: 0; display: grid; grid-template-columns: 33mm 1fr; gap: 3pt 10pt; }
+.unit dt { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: .04em; text-transform: uppercase; color: var(--moss); padding-top: 2.5pt; }
+.unit dd { margin: 0; }
+.unit dd.counter { border-left: 2pt dashed var(--clay); padding-left: 7pt; }
+.conf { display: flex; gap: 6pt; margin-top: 6pt; font-size: 9pt; }
+.conf span { flex: 1; background: var(--ivory); border: .75pt solid var(--pistachio); padding: 3pt 6pt; }
+@media screen and (max-width: 560px) { .unit dl, .cover dl { grid-template-columns: 1fr; } .conf { flex-direction: column; } }
+
+/* timeline: label column + track. Kinds differ by fill AND border style, never colour alone. */
+.timeline { margin: 8pt 0 4pt; break-inside: avoid; }
+.tl-row { display: flex; align-items: center; min-height: 18pt; }
+.tl-name { width: 38%; font-size: 8.5pt; padding-right: 8pt; box-sizing: border-box; }
+.tl-track { position: relative; width: 62%; height: 14pt; border-left: .5pt solid var(--eucalyptus); border-right: .5pt solid var(--eucalyptus); }
+.tl-scale .tl-track { height: 12pt; border: none; border-bottom: .75pt solid var(--eucalyptus); font-size: 7.5pt; color: var(--muted); }
+.tl-scale .tl-track span { position: absolute; top: 0; transform: translateX(-50%); }
+.tl-bar { position: absolute; top: 2pt; height: 10pt; box-sizing: border-box; }
+.tl-bar.chapter { background: var(--pistachio); }
+.tl-bar.window { background: var(--eucalyptus); border: 1.5pt solid var(--pine); }
+.tl-bar.pressure { background: #EAD9CF; border: 1.2pt dashed var(--clay); }
+.tl-bar.watch { background: var(--ivory); border: 1pt dotted var(--pine); }
+.tl-bar.cut-l { border-left: 2pt dashed var(--pine); }
+.tl-bar.cut-r { border-right: 2pt dashed var(--pine); }
+.tl-legend { font-size: 8.5pt; color: var(--muted); margin: 6pt 0 10pt; }
+.tl-key { display: inline-block; width: 16pt; height: 7pt; vertical-align: middle; margin: 0 3pt 0 8pt; position: static; }
+table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 6pt 0 12pt; }
+th, td { text-align: left; padding: 4pt 6pt; border-bottom: .5pt solid var(--pistachio); vertical-align: top; }
+th { color: var(--forest); font-weight: 600; background: var(--mint); }
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+.callout { background: var(--mint); padding: 10pt 12pt; margin: 8pt 0 14pt; }
+.appendix { font-size: 10pt; }
+.appendix h2 { break-before: page; }
+a { color: var(--forest); }
+.toc a { text-decoration: none; }
+.toc li { margin: 2pt 0; }
+
+/* compact summary: no cover page, no forced breaks — the client text should fit about one page */
+.compact .cover { page: auto; height: auto; padding: 0 0 8pt; background: none; break-after: auto; }
+.compact .cover h1 { font-size: 20pt; margin: 4pt 0 2pt; }
+.compact .cover .sub { font-size: 11pt; margin-bottom: 8pt; }
+.compact .cover .rule { display: none; }
+.compact .cover .foot { position: static; margin-top: 6pt; }
+.compact h2 { font-size: 14pt; margin: 14pt 0 4pt; }
+.compact .appendix h2 { break-before: auto; }
+
+/* on screen (HTML viewed in a browser) the cover is not a fixed A4 page: let the disclaimer follow the details */
+@media screen {
+  .cover { height: auto; min-height: 0; }
+  .cover .foot { position: static; margin-top: 24pt; }
+}
+.rasi{margin:1em 0;text-align:center;break-inside:avoid}.rasi figcaption{font-size:.85em;color:#555}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="kind">Career report</div>
+  <h1>Career and the question of a job change</h1>
+  <div class="sub">A sample report on an invented person, Asha. Not a real chart.</div>
+  <div class="rule"></div>
+  <dl>
+    <dt>Prepared for</dt><dd>Asha</dd>
+    <dt>Prepared on</dt><dd>2026-10-30</dd>
+
+    <dt>Calculated with</dt><dd>local Swiss Ephemeris (Lahiri, mean nodes, whole-sign houses)</dd>
+  </dl>
+  <p class="foot">A traditional Vedic astrological interpretation using documented methods. It describes tendencies and
+  timing within that tradition; it is not a guarantee, and it is not medical, legal or financial advice.</p>
+</section>
+
+<h2 id="summary">The short version</h2>
+<p class="headline">Work in this chart is built on steady service and effort. A job change fits 2027 better than the last weeks of 2026: use the coming months to prepare and look around, and expect the clearer opening between June and October 2027.</p>
+
+<ul class="keypoints">
+
+  <li>A working life built on skill, service and steady effort rather than sudden luck; Jupiter and Saturn both support it, and Mars, the ruler of the work house, is the strongest planet by the engine&#39;s measure.<span class="meta"><span class="grade Moderate">Moderate</span> · see <a href="#pattern">Your working pattern</a></span></li>
+
+  <li>With Jupiter entering Leo and Rahu changing sign, the next three months bring conversations and possibly offers, but the terms are likely to be unclear. Preparing and exploring suits this stretch better than signing and leaving.<span class="meta"><span class="grade Moderate">Moderate</span> · Oct 2026 – Jan 2027 · see <a href="#next">The next two to three years</a></span></li>
+
+  <li>The clearer opening for a move comes when Saturn enters Aries and Jupiter returns to Leo; it can be delayed or partly reversed when Saturn steps back in October.<span class="meta"><span class="grade Moderate">Moderate</span> · Jun 2027 – Oct 2027 · see <a href="#next">The next two to three years</a></span></li>
+
+  <li>A change of long chapter begins in January 2028, when Saturn&#39;s period starts: a longer-lasting, more responsible phase of work.<span class="meta"><span class="grade Moderate">Moderate</span> · Nov 2027 – Mar 2028 · see <a href="#next">The next two to three years</a></span></li>
+
+  <li>Income follows skill and service steadily; negotiating the pay is the weaker link and needs deliberate attention.<span class="meta"><span class="grade Moderate">Moderate</span> · see <a href="#money">Money</a></span></li>
+
+</ul>
+
+<h3>How to read this report</h3>
+<p>Each section starts from what a theme means in your life, then how it is likely to show, when, what argues against it and what to watch for. Confidence words — Strong, Moderate, Weak, Contradictory, Unknown — describe how much of the chart agrees, not a probability. Dates are periods, never exact days. The chart details behind each conclusion are in the technical appendix. The small label under a heading says what it rests on — a calculated fact, a cited rule or an interpretation; a source&#39;s text, an author&#39;s commentary, a disputed point or a guess — and which system produced it. &#39;Source text&#39; means a book says so, not that it has been tested. A reading about your past is marked &#39;not confirmed&#39; until you confirm it.</p>
+
+<ol class="toc"><li><a href="#windows">Main windows</a></li><li><a href="#pattern">Your working pattern</a></li><li><a href="#chapter">The chapter you are in</a></li><li><a href="#next">The next two to three years</a></li><li><a href="#money">Money</a></li><li><a href="#decisions">Decisions and choices</a></li><li><a href="#timeline">Timeline</a></li><li><a href="#uncertain">What is uncertain</a></li><li><a href="#appendix">Technical appendix</a></li></ol>
+
+
+
+<h2 id="windows">Main windows</h2>
+
+<p>Three windows carry the timing in this report. Each is a period of months, not a day.</p><p>The sorting-out stretch, October 2026 to January 2027. Jupiter moves into Leo on 31 October 2026 and Rahu into Capricorn on 5 December 2026. Offers and conversations can start, but the picture is not yet settled.</p><p>The clearer opening, June 2027 to October 2027. Saturn enters Aries on 3 June 2027 and meets the natal Venus three days later, and Jupiter returns to Leo on 26 June 2027. This is the best-supported time for a move.</p><p>The handover, November 2027 to March 2028. The Rahu sub-period ends and Saturn&#39;s long period begins on 10 January 2028, with Saturn back in Aries on 23 February 2028. This is a change of tone, not only of job.</p>
+
+
+<h2 id="pattern">Your working pattern</h2>
+
+
+
+<div class="unit">
+  <div class="theme">Authority built through service and steady effort</div>
+
+  <div class="basis">Interpretation · Commentary · Parashari</div>
+  <dl>
+    <dt>What it means</dt><dd>You do best where responsibility grows with competence and the work has a clear purpose: roles that help people or systems function. Effort here tends to be quiet and sustained.</dd>
+    <dt>Likely form</dt><dd>Most likely a salaried or institutional path in a skilled or advisory field, with growth by taking on more responsibility rather than by a sudden leap.</dd>
+
+    <dt>Nuance</dt><dd>Both Saturn and Jupiter are strong: Saturn is in its own sign, and Jupiter is in the sign where it is strongest. The work drive is real.</dd>
+    <dt>Against it</dt><dd class="counter">Saturn sits in the twelfth house with Rahu, so much of the effort goes on behind the scenes. Recognition and pay can arrive later than the work deserves.</dd>
+    <dt>What to watch</dt><dd>Being given responsibility before the title or the pay changes. That is this pattern at work, not a sign of being overlooked.</dd>
+  </dl>
+  <div class="conf"><span>That it happens: <span class="grade Moderate">Moderate</span></span><span>In what form: <span class="grade Moderate">Moderate</span></span></div>
+</div>
+
+<div class="unit">
+  <div class="theme">A work base tied to a place, a home or a structure</div>
+
+  <div class="basis">Interpretation · Commentary · Parashari</div>
+  <dl>
+    <dt>What it means</dt><dd>The ruler of the work house, Mars, sits in the house of home and roots. Work that gives you a stable base matters more than a title, and being settled supports your best work.</dd>
+    <dt>Likely form</dt><dd>A role that is anchored in one location or institution, or a move that keeps your home life steady, is more likely to suit you than constant travel or a loosely defined job.</dd>
+
+    <dt>Nuance</dt><dd>Mars is the strongest planet in the chart by the engine&#39;s measure, so the drive and technical or practical skill are not in doubt.</dd>
+    <dt>Against it</dt><dd class="counter">The same placement can bring friction at home or with a senior when the base feels threatened. Hasty decisions are the risk.</dd>
+    <dt>What to watch</dt><dd>How a possible move affects your home arrangements. If it unsettles them, the role is a poorer fit than it looks.</dd>
+  </dl>
+  <div class="conf"><span>That it happens: <span class="grade Moderate">Moderate</span></span><span>In what form: <span class="grade Weak">Weak</span></span></div>
+</div>
+
+
+<h2 id="chapter">The chapter you are in</h2>
+
+<p>You are in the long Jupiter chapter, which runs from January 2012 to January 2028. It is a period of learning, service and slow growth, and it ends in about fourteen months. Within it, the Rahu sub-period has run since August 2025 and ends on 10 January 2028. Rahu tends to make things restless and to open unfamiliar doors, which fits a person asking whether to change jobs.</p><p>The Mercury inner period, which runs to 10 January 2027, adds a note of paperwork, contracts and negotiation. Mercury is weak in this chart, so the details need checking twice.</p><p>Saturn is also in the last phase of what is traditionally called the seven-and-a-half-year period of Saturn, which ends when Saturn moves into Aries on 3 June 2027. Read it as a stretch that asks for patience, not as a bad sign in itself.</p>
+
+
+<h2 id="next">The next two to three years</h2>
+
+
+
+<div class="unit">
+  <div class="theme">Late 2026: look around, do not leap yet</div>
+
+  <div class="basis">Prediction (interpretive) · Commentary · Parashari</div>
+  <dl>
+    <dt>What it means</dt><dd>The coming months open some doors and ask you to wait before walking through them. It is better used to find out what is possible than to commit.</dd>
+    <dt>Likely form</dt><dd>Approaches, conversations or a clearer sense of what you want are more likely than a finished move. An offer that arrives may have terms that are not yet clear.</dd>
+    <dt>Timing</dt><dd>Jupiter enters Leo on 31 October 2026, the seventh house, and looks at both your first house and the house of gains. Rahu enters Capricorn on 5 December 2026. Both fall inside the sorting-out stretch from October 2026 to January 2027.</dd>
+    <dt>Nuance</dt><dd>This is encouraging for opportunities arriving, and less so for signing quickly while the Mercury period still runs to January.</dd>
+    <dt>Against it</dt><dd class="counter">Jupiter returns to Cancer on 25 January 2027, so any momentum from the first weeks does not carry on unchanged.</dd>
+    <dt>What to watch</dt><dd>An approach or an offer between November 2026 and January 2027 that is vague on role, pay or start date. Ask for the details in writing and give yourself time.</dd>
+  </dl>
+  <div class="conf"><span>That it happens: <span class="grade Moderate">Moderate</span></span><span>When: <span class="grade Moderate">Moderate</span></span><span>In what form: <span class="grade Weak">Weak</span></span></div>
+</div>
+
+<div class="unit">
+  <div class="theme">Mid-2027: the clearer opening for a move</div>
+
+  <div class="basis">Prediction (interpretive) · Commentary · Parashari</div>
+  <dl>
+    <dt>What it means</dt><dd>This is the best-supported stretch for changing role. Saturn moves into the third house, the house of effort and initiative, and Jupiter looks again at the gains.</dd>
+    <dt>Likely form</dt><dd>A change of employer or a move to a bigger version of your present role is likelier here than in late 2026. It is more likely to come through your own initiative and contacts than through a sudden offer.</dd>
+    <dt>Timing</dt><dd>Saturn enters Aries on 3 June 2027 and meets the natal Venus on 6 June 2027. Jupiter returns to Leo on 26 June 2027, and stands opposite your ascendant on 3 October 2027. These agree on the months from June to October 2027.</dd>
+    <dt>Nuance</dt><dd>Venus rules the houses of home and of luck for you, and Saturn meeting it is a supportive contact for a considered change.</dd>
+    <dt>Against it</dt><dd class="counter">Saturn steps back into Pisces on 20 October 2027 and does not return to Aries until 23 February 2028. Some of the movement can be delayed or reversed, and a decision made in October may need revisiting.</dd>
+    <dt>What to watch</dt><dd>A concrete offer between June and October 2027 that fits the base described above and states pay and role clearly. If it comes, it is the main window working. If nothing comes, treat the stretch as preparation for early 2028.</dd>
+  </dl>
+  <div class="conf"><span>That it happens: <span class="grade Moderate">Moderate</span></span><span>When: <span class="grade Moderate">Moderate</span></span><span>In what form: <span class="grade Weak">Weak</span></span></div>
+</div>
+
+<div class="unit">
+  <div class="theme">Early 2028: a change of long chapter</div>
+
+  <div class="basis">Prediction (interpretive) · Commentary · Parashari</div>
+  <dl>
+    <dt>What it means</dt><dd>The Jupiter chapter ends and Saturn&#39;s begins. Saturn rules your first house, so this is a nineteen-year chapter about your own responsibility and standing, and work tends to become heavier, more structured and more durable.</dd>
+    <dt>Likely form</dt><dd>Whatever role you hold in early 2028 is likely to set the pattern for years, so choosing it deliberately in 2027 matters more than the exact month.</dd>
+    <dt>Timing</dt><dd>The Rahu sub-period ends and Saturn&#39;s period begins on 10 January 2028; the Mars inner period before it starts on 20 November 2027. The handover window runs from November 2027 to March 2028.</dd>
+    <dt>Nuance</dt><dd>A new long chapter changes the tone of work more than any single event does.</dd>
+    <dt>Against it</dt><dd class="counter">Saturn&#39;s chapter asks for patience and steady work, not speed.</dd>
+    <dt>What to watch</dt><dd>A change in responsibility or scope between November 2027 and March 2028, with or without a change of employer.</dd>
+  </dl>
+  <div class="conf"><span>That it happens: <span class="grade Moderate">Moderate</span></span><span>When: <span class="grade Moderate">Moderate</span></span><span>In what form: <span class="grade Weak">Weak</span></span></div>
+</div>
+
+
+<h2 id="money">Money</h2>
+
+
+
+<div class="unit">
+  <div class="theme">Income follows skill and service, but pay negotiation lags</div>
+
+  <div class="basis">Interpretation · Commentary · Parashari</div>
+  <dl>
+    <dt>What it means</dt><dd>Income comes from steady skilled or service work and from the people or institutions you serve. Windfalls are not the story.</dd>
+    <dt>Likely form</dt><dd>Gradual raises, better-paid roles over time, or income that grows as responsibility grows.</dd>
+
+
+    <dt>Against it</dt><dd class="counter">Mercury, which sits in the house of earnings, is weak here. Negotiating pay, reading contract terms and asking for what the work is worth is the weaker link.</dd>
+    <dt>What to watch</dt><dd>Whether a new role brings a clear pay change. If the terms are vague, negotiate them rather than hoping they improve.</dd>
+  </dl>
+  <div class="conf"><span>That it happens: <span class="grade Moderate">Moderate</span></span><span>In what form: <span class="grade Moderate">Moderate</span></span></div>
+</div>
+
+
+<h2 id="decisions">Decisions and choices</h2>
+
+
+
+<div class="unit">
+  <div class="theme">Should you change jobs this year?</div>
+
+  <div class="basis">Interpretation · Commentary · Parashari</div>
+  <dl>
+    <dt>What it means</dt><dd>The chart does not point to this year, which has only two months left. It does point to preparing now and to a better-supported stretch next year.</dd>
+    <dt>Likely form</dt><dd>Explore, update your work and contacts, and clarify what you want from a next role. If a good offer arrives before January, check its terms carefully before deciding.</dd>
+    <dt>Timing</dt><dd>The sorting-out stretch from October 2026 to January 2027 favours looking around; the clearer opening in 2027 favours moving.</dd>
+    <dt>Nuance</dt><dd>Staying is not a failure. The Jupiter chapter is one of service and steady growth, and a considered move later is more in keeping with it than a quick exit.</dd>
+    <dt>Against it</dt><dd class="counter">Rahu in the twelfth house can make the present job feel more restrictive than it is. Restlessness alone is not a reason to move.</dd>
+    <dt>What to watch</dt><dd>Whether the wish to leave is about the role or about the time of year. If it is the role, the 2027 window is the place to act.</dd>
+  </dl>
+  <div class="conf"><span>That it happens: <span class="grade Moderate">Moderate</span></span><span>When: <span class="grade Moderate">Moderate</span></span><span>In what form: <span class="grade Weak">Weak</span></span></div>
+</div>
+
+
+
+
+<h2 id="timeline">Timeline</h2>
+<div class="timeline">
+  <div class="tl-row tl-scale"><div class="tl-name"></div><div class="tl-track"><span style="left: 0.0%">2025</span><span style="left: 25.0%">2026</span><span style="left: 50.0%">2027</span><span style="left: 75.0%">2028</span><span style="left: 100.0%">2029</span></div></div>
+
+  <div class="tl-row"><div class="tl-name">Long chapter: service and slow growth</div><div class="tl-track"><div class="tl-bar chapter cut-l " style="left: 0.0%; width: 75.0%"></div></div></div>
+
+  <div class="tl-row"><div class="tl-name">Restless, unsettled sub-period</div><div class="tl-track"><div class="tl-bar chapter " style="left: 14.58%; width: 60.42%"></div></div></div>
+
+  <div class="tl-row"><div class="tl-name">Last phase of Saturn&#39;s seven-and-a-half years</div><div class="tl-track"><div class="tl-bar pressure " style="left: 43.75%; width: 16.67%"></div></div></div>
+
+  <div class="tl-row"><div class="tl-name">Sorting out: look around, do not leap</div><div class="tl-track"><div class="tl-bar window " style="left: 43.75%; width: 6.25%"></div></div></div>
+
+  <div class="tl-row"><div class="tl-name">The clearer opening for a move</div><div class="tl-track"><div class="tl-bar window " style="left: 60.42%; width: 8.33%"></div></div></div>
+
+  <div class="tl-row"><div class="tl-name">Handover to a new long chapter</div><div class="tl-track"><div class="tl-bar window " style="left: 70.83%; width: 8.33%"></div></div></div>
+
+</div>
+<p class="tl-legend">Key:<span class="tl-bar chapter tl-key"></span>calculated period<span class="tl-bar window tl-key"></span>interpretive window<span class="tl-bar pressure tl-key"></span>pressure period<span class="tl-bar watch tl-key"></span>something to watch. Edges are approximate; a dashed end means the period continues beyond the chart.</p>
+<table><thead><tr><th>When</th><th>What</th><th>Why this period</th></tr></thead><tbody>
+<tr><td>2012-01 – 2028-01</td><td>Long chapter: service and slow growth</td><td>Jupiter major period</td></tr><tr><td>2025-08 – 2028-01</td><td>Restless, unsettled sub-period</td><td>Jupiter–Rahu</td></tr><tr><td>2026-10 – 2027-06</td><td>Last phase of Saturn&#39;s seven-and-a-half years</td><td>Saturn leaves Pisces on 2027-06-03</td></tr><tr><td>2026-10 – 2027-01</td><td>Sorting out: look around, do not leap</td><td>Jupiter into Leo 2026-10-31; Rahu into Capricorn 2026-12-05</td></tr><tr><td>2027-06 – 2027-10</td><td>The clearer opening for a move</td><td>Saturn into Aries 2027-06-03; Jupiter opposite the ascendant 2027-10-03</td></tr><tr><td>2027-11 – 2028-03</td><td>Handover to a new long chapter</td><td>Rahu sub-period ends 2028-01-10 and Saturn&#39;s long period begins; Saturn into Aries 2028-02-23</td></tr>
+</tbody></table>
+
+
+
+<h2 id="watch">What to watch for</h2>
+<table><thead><tr><th>When</th><th>Sign</th><th>What it would mean</th></tr></thead><tbody>
+<tr><td>Nov 2026 – Jan 2027</td><td>An approach or offer with vague terms</td><td>The sorting-out stretch is working; ask for details in writing and do not rush</td></tr><tr><td>Jun 2027 – Oct 2027</td><td>A concrete offer with clear role and pay</td><td>The main window is working; if nothing comes, treat the stretch as preparation for early 2028</td></tr><tr><td>Nov 2027 – Mar 2028</td><td>A change of scope or responsibility</td><td>Saturn&#39;s long chapter is setting its tone</td></tr>
+</tbody></table>
+
+
+
+<h2 id="uncertain">What is uncertain</h2>
+
+<p><strong>Birth time.</strong> The birth time is taken as exact to the minute. Within the usual margin of 15 minutes the ascendant sign does not change: it would take about 67 minutes earlier or 31 later. Dasha dates also hold. The sign of the career divisional chart&#39;s ascendant would change within 8 minutes earlier or 2 later, so that chart is not used in this report.</p>
+
+<p><strong>Calculation differences.</strong></p><ul><li>Programs that count 360-day dasha years place the January 2028 change of period earlier; the sidereal-year dates are used here.</li></ul>
+<p><strong>Not assessed.</strong></p><ul><li>The career divisional chart (its ascendant is not stable within the birth-time margin).</li><li>Employers, salary figures and offer counts: a chart does not show these.</li><li>Health, family and relationships are outside the scope of this report.</li></ul>
+
+
+
+<h2 id="practical">In practice</h2>
+<div class="callout"><ul><li>Treat the coming three months as a time to look around and prepare, not to leave.</li><li>If you want a move, aim for the months between June and October 2027, and get role and pay stated clearly.</li><li>Choose your early-2028 role deliberately: it will set the tone for Saturn&#39;s long chapter.</li></ul></div>
+
+
+
+
+<section class="appendix">
+<h2 id="appendix">Technical appendix</h2>
+<h3>Why each conclusion</h3>
+<table><thead><tr><th>Conclusion</th><th>Chart basis</th></tr></thead><tbody>
+<tr><td>Authority built through service and steady effort</td><td>Saturn, lord of the 1st and 12th, in its own sign in the 12th with Rahu (strength ratio 1.34). Jupiter, lord of the 2nd and 11th, in Cancer in the 6th (ratio 1.13). Mars, lord of the 10th, in the 4th (ratio 1.54).</td></tr><tr><td>A work base tied to a place, a home or a structure</td><td>Mars, lord of the 3rd and 10th, in Taurus in the 4th, strength ratio 1.54. The 10th house, Scorpio, holds no planet.</td></tr><tr><td>Late 2026: look around, do not leap yet</td><td>Jupiter into Leo (7th) on 2026-10-31, aspecting the 1st and the 11th; Rahu into Capricorn (12th) on 2026-12-05; Mercury inner period in the Rahu sub-period of Jupiter ends 2027-01-10; Jupiter back into Cancer 2027-01-25 (local engine).</td></tr><tr><td>Mid-2027: the clearer opening for a move</td><td>Saturn into Aries (3rd) 2027-06-03 and conjunct natal Venus 2027-06-06; Jupiter into Leo 2027-06-26 and opposite the natal ascendant 2027-10-03; Saturn back into Pisces 2027-10-20 and into Aries again 2028-02-23 (local engine).</td></tr><tr><td>Early 2028: a change of long chapter</td><td>Jupiter–Rahu sub-period ends 2028-01-10 and the Saturn major period begins the same day; Mars inner period from 2027-11-20; Saturn into Aries 2028-02-23 (local engine).</td></tr><tr><td>Income follows skill and service, but pay negotiation lags</td><td>Jupiter, lord of the 2nd and 11th, in Cancer in the 6th (ratio 1.13); Mercury, lord of the 5th and 8th, debilitated in Pisces in the 2nd (ratio 1.03).</td></tr><tr><td>Should you change jobs this year?</td><td>Rahu in the 12th (restlessness, distance); Mercury inner period to 2027-01-10; Saturn and Jupiter ingresses of June 2027 (local engine).</td></tr>
+</tbody></table>
+
+<figure class="rasi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300" role="img" aria-labelledby="ct cd" class="chart"><title id="ct">North Indian rasi chart</title><desc id="cd">Lagna Aquarius. Aries: Ve; Taurus: Ma; Cancer: Ju, Ke; Capricorn: Sa, Ra; Aquarius: Su, Mo; Pisces: Me.</desc><style>line,rect,path{stroke:#333;stroke-width:1.2;fill:none}.b{font-family:sans-serif;font-size:12px;fill:#111}.n{font-family:sans-serif;font-size:9px;fill:#777}.a{font-family:sans-serif;font-size:12px;font-weight:bold;fill:#a33}</style><rect x="0" y="0" width="300" height="300"/><line x1="0" y1="0" x2="300" y2="300"/><line x1="300" y1="0" x2="0" y2="300"/><path d="M150.0 0L300 150.0L150.0 300L0 150.0Z"/><text x="150.0" y="51.0" class="n" text-anchor="middle">11</text><text x="150.0" y="79.0" class="a" text-anchor="middle">Asc Su Mo</text><text x="75.0" y="14.0" class="n" text-anchor="middle">12</text><text x="75.0" y="34.0" class="b" text-anchor="middle">Me</text><text x="30.0" y="59.0" class="n" text-anchor="middle">1</text><text x="30.0" y="79.0" class="b" text-anchor="middle">Ve</text><text x="75.0" y="126.0" class="n" text-anchor="middle">2</text><text x="75.0" y="154.0" class="b" text-anchor="middle">Ma</text><text x="30.0" y="209.0" class="n" text-anchor="middle">3</text><text x="75.0" y="254.0" class="n" text-anchor="middle">4</text><text x="75.0" y="274.0" class="b" text-anchor="middle">Ju Ke</text><text x="150.0" y="201.0" class="n" text-anchor="middle">5</text><text x="225.0" y="254.0" class="n" text-anchor="middle">6</text><text x="270.0" y="209.0" class="n" text-anchor="middle">7</text><text x="225.0" y="126.0" class="n" text-anchor="middle">8</text><text x="270.0" y="59.0" class="n" text-anchor="middle">9</text><text x="225.0" y="14.0" class="n" text-anchor="middle">10</text><text x="225.0" y="34.0" class="b" text-anchor="middle">Sa Ra</text></svg><figcaption>North Indian rasi chart (signs only; degrees in the table below); local Swiss Ephemeris (Lahiri, mean nodes, whole-sign houses)</figcaption></figure>
+<h3>Positions</h3><table><thead><tr><th>Body</th><th>Sign</th><th>Degree</th><th>Nakshatra</th></tr></thead><tbody>
+<tr><td>Ascendant</td><td>Aquarius</td><td>20°25′</td><td>PurvaBhadrapada 1</td></tr><tr><td>Sun</td><td>Aquarius</td><td>29°12′</td><td>PurvaBhadrapada 3</td></tr><tr><td>Moon</td><td>Aquarius</td><td>1°17′</td><td>Dhanishtha 3</td></tr><tr><td>Mars</td><td>Taurus</td><td>26°04′</td><td>Mrigashira 1</td></tr><tr><td>Mercury</td><td>Pisces</td><td>10°18′</td><td>UttaraBhadrapada 3</td></tr><tr><td>Jupiter</td><td>Cancer</td><td>10°15′</td><td>Pushya 3 (retrograde)</td></tr><tr><td>Venus</td><td>Aries</td><td>0°21′</td><td>Ashwini 1</td></tr><tr><td>Saturn</td><td>Capricorn</td><td>9°58′</td><td>UttaraAshadha 4</td></tr><tr><td>Rahu</td><td>Capricorn</td><td>1°35′</td><td>UttaraAshadha 2</td></tr><tr><td>Ketu</td><td>Cancer</td><td>1°35′</td><td>Punarvasu 4</td></tr></tbody></table>
+<h3>Periods</h3><table><thead><tr><th>Level</th><th>Lord</th><th>Start</th><th>End</th></tr></thead><tbody>
+<tr><td>Major</td><td>Jupiter</td><td>2012-01-10</td><td>2028-01-10</td></tr><tr><td>Sub</td><td>Rahu</td><td>2025-08-17</td><td>2028-01-10</td></tr><tr><td>Inner</td><td>Mercury</td><td>2026-09-08</td><td>2027-01-10</td></tr></tbody></table>
+<h3>Method</h3><p>Parashari, whole-sign houses from the sidereal ascendant; Vimshottari with 365.256-day years; transit sign changes calculated, not estimated.</p>
+<ul><li>Dasha dates use sidereal years (365.256 days); programs that count 360-day years give earlier dates.</li><li>Planet strength figures are the engine&#39;s Shadbala ratios (strength divided by the minimum required).</li></ul>
+
+<h3>Sources</h3><ul><li>Mantreswara, Phaladeepika, chapter 26, verses 1–2: transits counted from the Moon, and the seven-and-a-half-year period of Saturn.</li></ul>
+</section>
+
+</body>
+</html>

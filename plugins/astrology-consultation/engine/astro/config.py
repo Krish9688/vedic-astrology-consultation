@@ -70,6 +70,28 @@ def load() -> Settings:
     return s
 
 
+FOLDER_REFUSAL = ("That folder is inside a code project or the plugin, and reports contain personal details. "
+                  "Please choose another folder.")
+
+
+def folder_refusal(path: str, skill_dir: str = "") -> str:
+    """"" if `path` is a fit place for reports, else the V-FOLDER message: never inside a git work tree, the plugin root
+    or the skill folder (reports hold birth details and would be committed, exported or wiped on update)."""
+    rp = os.path.realpath(os.path.expanduser(path))
+    roots = [os.path.realpath(r) for r in (skill_dir, os.environ.get("CLAUDE_PLUGIN_ROOT", "")) if r]
+    if skill_dir and os.path.basename(os.path.dirname(os.path.realpath(skill_dir))) == "skills":
+        roots.append(os.path.dirname(os.path.dirname(os.path.realpath(skill_dir))))      # <plugin>/skills/<skill>
+    if any(rp == r or rp.startswith(r + os.sep) for r in roots):
+        return FOLDER_REFUSAL
+    d = rp
+    while True:           # shortcut: looks for a .git entry only, not `git rev-parse`; fine for work trees and worktrees
+        if os.path.exists(os.path.join(d, ".git")):
+            return FOLDER_REFUSAL
+        if os.path.dirname(d) == d:
+            return ""
+        d = os.path.dirname(d)
+
+
 def write(s: Settings) -> str:
     os.makedirs(os.path.dirname(CONFIG_PATH), mode=0o700, exist_ok=True)
     skip = {"extra", "api_token"} | ({"skill_dir"} if os.environ.get("ASTRO_SKILL_DIR") else set())   # don't pin a plugin path

@@ -30,6 +30,8 @@ class ConsultationRequest(ChartRequest):
 class ReportRequest(BaseModel):
     model: dict
     name: str = "report"
+    birth: Optional[S.BirthInput] = None      # recomputed server-side to check the dates; never printed
+    options: S.Options = S.Options()
 
 
 def _auth(request: Request, authorization: Optional[str] = Header(default=None)):
@@ -80,12 +82,6 @@ def place(name: str, country: str | None = None):
     return _wrap(lambda: S.find_place(name, country))
 
 
-def _mode(r, fn):
-    """Endpoints whose service call takes no Options still honour options.ayanamsa (P8-3c)."""
-    with S.engine.using(r.options.ayanamsa):
-        return fn()
-
-
 @app.post("/api/v1/chart")
 def chart(r: ChartRequest):
     return _wrap(lambda: S.calculate_chart(r.birth, r.options))
@@ -93,12 +89,16 @@ def chart(r: ChartRequest):
 
 @app.post("/api/v1/positions")
 def positions(r: ChartRequest):
-    return _wrap(lambda: _mode(r, lambda: S.planet_positions(r.birth)))
+    return _wrap(lambda: S.planet_positions(r.birth, r.options))
 
 
 @app.post("/api/v1/varga")
 def varga(r: VargaRequest):
-    return _wrap(lambda: _mode(r, lambda: S.divisional_chart(r.birth, r.division)))
+    return _wrap(lambda: S.divisional_chart(r.birth, r.division, r.options))
+
+
+class SpanRequest(ChartRequest):
+    span_min: int = 15
 
 
 class OutlookRequest(ChartRequest):
@@ -147,8 +147,8 @@ def chara(r: ChartRequest):
 
 
 @app.post("/api/v1/applicability")
-def applicability(r: ChartRequest):
-    return _wrap(lambda: S.dasha_applicability(r.birth, r.options))
+def applicability(r: SpanRequest):
+    return _wrap(lambda: S.dasha_applicability(r.birth, r.options, r.span_min))
 
 
 class NetworkRequest(ChartRequest):
@@ -163,7 +163,7 @@ class ActivationRequest(ChartRequest):
 
 @app.post("/api/v1/network")
 def network(r: NetworkRequest):
-    return _wrap(lambda: _mode(r, lambda: S.topic_network(r.birth, r.topic, r.planets)))
+    return _wrap(lambda: S.topic_network(r.birth, r.topic, r.planets, r.options))
 
 
 @app.post("/api/v1/activation")
@@ -183,22 +183,22 @@ def transits(r: ChartRequest):
 
 @app.post("/api/v1/shadbala")
 def shadbala(r: ChartRequest):
-    return _wrap(lambda: _mode(r, lambda: S.shadbala(r.birth)))
+    return _wrap(lambda: S.shadbala(r.birth, r.options))
 
 
 @app.post("/api/v1/ashtakavarga")
 def ashtakavarga(r: ChartRequest):
-    return _wrap(lambda: _mode(r, lambda: S.ashtakavarga(r.birth)))
+    return _wrap(lambda: S.ashtakavarga(r.birth, r.options))
 
 
 @app.post("/api/v1/jaimini")
 def jaimini(r: ChartRequest):
-    return _wrap(lambda: _mode(r, lambda: S.jaimini_factors(r.birth)))
+    return _wrap(lambda: S.jaimini_factors(r.birth, r.options))
 
 
 @app.post("/api/v1/sensitivity")
-def sensitivity(r: ChartRequest):
-    return _wrap(lambda: S.birth_time_sensitivity(r.birth, r.options))
+def sensitivity(r: SpanRequest):
+    return _wrap(lambda: S.birth_time_sensitivity(r.birth, r.options, r.span_min))
 
 
 @app.post("/api/v1/consultation")
@@ -208,7 +208,7 @@ def consultation(r: ConsultationRequest):
 
 @app.post("/api/v1/report")
 def report(r: ReportRequest):
-    return _wrap(lambda: S.create_report(r.model, r.name))
+    return _wrap(lambda: S.create_report(r.model, r.name, r.birth, r.options))
 
 
 def main(host: str = "127.0.0.1", port: int = 8766):
