@@ -77,9 +77,21 @@ def test_report_name_sanitized():
         S.create_report({}, "../../evil")
 
 
+def _grounded(model, name, **kw):      # the example's own chart (S1): dates are checked against it
+    return S.create_report(model, name, S.BirthInput(**S1), S.Options(on=model["prepared_on"], months=60), **kw)
+
+
+def _shift_months(model, n=5):         # move a timeline row that names its dasha period by n months
+    row = next(x for x in model["timeline"] if x.get("basis", "").startswith(tuple("SMJRKV")))
+    for k in ("start", "end"):
+        y, m = int(row[k][:4]), int(row[k][5:7]) - 1 + n
+        row[k] = f"{y + m // 12}-{m % 12 + 1:02d}"
+    return model
+
+
 def test_report_folder_is_owner_only(isolated_config):
     model = json.load(open(f"{config.load().skill_dir}/assets/report/example-synthetic.json"))
-    res = S.create_report(model, "synthetic")
+    res = _grounded(model, "synthetic")
     assert res["ok"] and (isolated_config / "reports").stat().st_mode & 0o777 == 0o700
     assert os.stat(res["html"]).st_mode & 0o777 == 0o600                 # the report file itself is owner-only
 
@@ -93,7 +105,7 @@ def test_report_file_owner_only_when_pdf_step_fails(isolated_config, monkeypatch
     model = json.load(open(f"{config.load().skill_dir}/assets/report/example-synthetic.json"))
     old = os.umask(0o022)                # the regression only shows under a permissive umask
     try:
-        res = S.create_report(model, "failing")
+        res = _grounded(model, "failing")
     finally:
         os.umask(old)
     assert not res["ok"] and "pdf failed" in res["errors"][0]          # the reason reaches the client (3.6.2)
@@ -105,8 +117,18 @@ def test_report_safety_covers_unit_basis_and_titles(isolated_config):
     model = json.load(open(f"{config.load().skill_dir}/assets/report/example-synthetic.json"))
     unit = next(u for sec in model["sections"] for u in sec.get("units", []) if "basis" in u)
     unit["basis"] = "The native will die young."
-    res = S.create_report(model, "unsafe-basis")
+    res = _grounded(model, "unsafe-basis")
     assert not res["ok"] and any("SAFETY" in e for e in res["errors"])
+
+def test_report_refuses_shifted_dates_and_needs_the_birth_input(isolated_config):
+    ok = _grounded(_example_model(), "grounded")
+    assert ok["ok"], ok
+    bad = _grounded(_shift_months(_example_model()), "shifted")
+    assert not bad["ok"] and any("does not match" in e for e in bad["errors"]), bad
+    assert not (isolated_config / "reports" / "shifted.html").exists()
+    none = S.create_report(_example_model(), "nobirth")
+    assert not none["ok"] and "birth input" in none["errors"][0]
+
 
 # --- predictions ---------------------------------------------------------------------------------------------------
 def test_purge_is_a_dry_run_until_yes(tmp_path, monkeypatch, capsys):
@@ -218,6 +240,9 @@ def _example_model():
     return json.load(open(f"{config.load().skill_dir}/assets/report/example-synthetic.json"))
 
 
+_ARGS = S1 | {"on": "2026-09-27", "months": 60}
+
+
 def test_mcp_create_report_tool(isolated_config):
     """The real MCP tool (not only the service function) writes the report into an owner-only folder."""
     from mcp import ClientSession, StdioServerParameters
@@ -228,10 +253,15 @@ def test_mcp_create_report_tool(isolated_config):
                                   env={"ASTRO_CONFIG": str(isolated_config / "config.toml"), "PATH": ""})
         async with stdio_client(p) as (r, w), ClientSession(r, w) as s:
             await s.initialize()
-            res = await s.call_tool("create_report", {"model": _example_model(), "name": "mcp-synthetic"})
+            res = await s.call_tool("create_report", {"model": _example_model(), "name": "mcp-synthetic"} | _ARGS)
             out = json.loads(res.content[0].text)
             assert not res.is_error and out["ok"] and os.path.exists(out["html"])
-            bad = await s.call_tool("create_report", {"model": _example_model(), "name": "../escape"})
+            bad = json.loads((await s.call_tool("create_report", {"model": _shift_months(_example_model()), "name": "mcp-bad"}
+                                                | _ARGS)).content[0].text)
+            assert not bad["ok"] and any("does not match" in e for e in bad["errors"])
+            none = json.loads((await s.call_tool("create_report", {"model": _example_model(), "name": "mcp-none"})).content[0].text)
+            assert not none["ok"] and "birth input" in none["errors"][0]
+            bad = await s.call_tool("create_report", {"model": _example_model(), "name": "../escape"} | _ARGS)
             assert bad.is_error
     asyncio.run(run())
     assert (isolated_config / "reports").stat().st_mode & 0o777 == 0o700
@@ -296,10 +326,14 @@ def test_rest_report_and_remaining_endpoints(isolated_config):
     from fastapi.testclient import TestClient
     from astro.rest import app
     c = TestClient(app)
-    r = c.post("/api/v1/report", json={"model": _example_model(), "name": "rest-synthetic"})
+    ctx = {"birth": S1, "options": {"on": "2026-09-27", "months": 60}}
+    r = c.post("/api/v1/report", json={"model": _example_model(), "name": "rest-synthetic"} | ctx)
     assert r.status_code == 200 and r.json()["ok"] and os.path.exists(r.json()["html"])
+    bad = c.post("/api/v1/report", json={"model": _shift_months(_example_model()), "name": "rest-bad"} | ctx).json()
+    assert not bad["ok"] and any("does not match" in e for e in bad["errors"])
+    assert not c.post("/api/v1/report", json={"model": _example_model(), "name": "rest-none"}).json()["ok"]
     assert (isolated_config / "reports").stat().st_mode & 0o777 == 0o700
-    assert c.post("/api/v1/report", json={"model": _example_model(), "name": "../x"}).status_code == 400
+    assert c.post("/api/v1/report", json={"model": _example_model(), "name": "../x"} | ctx).status_code == 400
     assert c.get("/api/v1/version").status_code == 200
     for ep in ("positions", "dasha", "transits", "shadbala", "ashtakavarga", "jaimini", "sensitivity", "chart"):
         assert c.post(f"/api/v1/{ep}", json={"birth": S1}).status_code == 200, ep
@@ -317,6 +351,19 @@ def test_setup_rejects_tampered_ephemeris(tmp_path, monkeypatch):
 
 
 
+def test_cli_report_checks_dates_against_the_birth_input(isolated_config, tmp_path, capsys):
+    from astro import cli
+    b = tmp_path / "b.json"
+    b.write_text(json.dumps(S1))
+    for name, model, want in (("ok", _example_model(), True), ("bad", _shift_months(_example_model()), False)):
+        m = tmp_path / f"{name}.json"
+        m.write_text(json.dumps(model))
+        cli.main(["report", str(m), "--input", str(b), "--on", "2026-09-27", "--months", "60", "--name", f"cli-{name}"])
+        assert json.loads(capsys.readouterr().out)["ok"] is want
+    cli.main(["report", str(tmp_path / "ok.json"), "--name", "cli-none"])
+    assert "birth input" in capsys.readouterr().out
+
+
 def test_cli(tmp_path, capsys):
     f = tmp_path / "s1.json"
     f.write_text(json.dumps(S1))
@@ -331,6 +378,17 @@ def test_cli(tmp_path, capsys):
     assert cli.doctor() == 0
     out = capsys.readouterr().out
     assert "PASS     calculation engine" in out and "FAIL" not in out
+
+
+def test_doctor_places_row(tmp_path, monkeypatch, capsys):
+    from astro import places
+    monkeypatch.setattr(places, "folder", lambda d: str(tmp_path / "places"))
+    cli.doctor()
+    assert "OPTIONAL place gazetteer (find_place) — not installed" in capsys.readouterr().out
+    (tmp_path / "places").mkdir()
+    (tmp_path / "places" / "places.json").write_text(json.dumps({"downloaded": "2026-01-01"}))
+    cli.doctor()
+    assert "PASS     place gazetteer (find_place) — GeoNames" in capsys.readouterr().out
 
 
 def test_doctor_fails_on_tampered_ephemeris(monkeypatch, capsys):

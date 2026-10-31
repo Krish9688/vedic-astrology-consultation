@@ -175,8 +175,11 @@ career change in this period, Moderate on timing, Weak for it being a promotion 
 
 ### 4.4 Cross-system agreement (Lal Kitab + Parashari) [DESIGN]
 
-Two traditions reaching the same conclusion by different rules raises *interpretive* confidence, and you may say so.
-Rules:
+Two traditions reaching the same conclusion by different rules raises *interpretive* confidence, and you may say so
+**in conversation**. **In a written report each system keeps its own grade and agreement never lifts a grade**
+(REPORT-STANDARD §7; owner decision D1): a report may add a closing "where the systems agree" paragraph in words,
+with no upgraded grade, and a Lal Kitab unit carries its `edition` (`render_report.py` checks both).
+Rules for conversation:
 
 - Count it as corroboration only when each branch reaches its conclusion through its own mechanism (e.g. Parashari
   7th lord + D9 + Venus dasha, and Lal Kitab Venus/Mercury house states + annual chart). If both merely read "Saturn in

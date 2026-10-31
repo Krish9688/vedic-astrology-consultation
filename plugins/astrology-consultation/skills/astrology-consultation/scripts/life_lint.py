@@ -83,6 +83,13 @@ WHEN = re.compile(r"\b(?:1[89]|2\d)\d\d\b|\b\d{1,3} years?\b|\bage \d|\bby (?:yo
 NEGATION = re.compile(r"\b(?:not|cannot|can't|won't|don't|never|no|nor|without)\b(?:[\s,]+\S+){0,3}[\s,]*$", re.I)
 
 
+# Report-mode certainty/legal-outcome promises (spec item 32): reuses the audit "certainty" probe; hedged wording
+# ("may", "is likely", "tends to") and negated uses ("not guaranteed") never match or are excused below.
+LEGAL = re.compile(
+    r"\b(?:you|he|she|they)\s+(?:will|are going to|'ll)\s+(?:definitely |certainly |surely )?(?:win|lose|be (?:acquitted|convicted|found (?:guilty|innocent)))\b[^.;]{0,30}?\b(?:case|court|lawsuit|litigation|appeal|trial|suit|dispute)\b"
+    r"|\b(?:court|judge|case|verdict|judg(?:e)?ment|ruling|appeal|lawsuit|litigation)\b[^.;]{0,30}?\b(?:will|is going to)\s+(?:definitely |certainly |surely )?(?:go|rule|decide|be decided|be settled|end|come out)\b[^.;]{0,25}?\b(?:in your favou?r|against you|your way)\b", re.I)
+
+
 def _excused(s, m):
     """A safety match is excused only by a close negation ('I can't time a pregnancy'), an explicit refusal, or a
     medical referral that carries no date or age — never by 'no doubt' or a doctor mention next to a forecast."""
@@ -154,6 +161,10 @@ def lint(text, mode="chat"):
               "advice, divorce/infidelity verdict, self-harm content without a crisis referral, or financial-ruin/investment call"
               for n, s, _ in S for m in [SAFETY.search(s) or CHILD_TIMING.search(s) or SAFETY_MORE.search(s)]   # every section
               if m and not _excused(s, m) and not HEADING.match(s)]
+    cert = dict(AUDIT)["certainty"]
+    issues += [f"CERTAINTY: '{m.group()}' (line {n}) — no guarantee or legal-outcome promise; use hedged wording"
+               for n, s, _ in S if not HEADING.match(s) for m in [cert.search(s) or LEGAL.search(s)]
+               if m and not NEGATION.search(s[:m.start()].split(";")[-1])]
     if len(facts) > BUDGET[mode]:
         issues.append(f"{len(facts)} chart-fact sentences in the main text (budget ~{BUDGET[mode]} for {mode})")
     share = len(first) / max(1, len(main))
@@ -255,6 +266,11 @@ def selftest():
     flagged = lambda t: any(i.startswith("SAFETY") for i in lint(t)["issues"])
     assert all(flagged(t) for t in unsafe), [t for t in unsafe if not flagged(t)]
     assert not any(flagged(t) for t in safe), [t for t in safe if flagged(t)]
+    for t in ("Success in this role is guaranteed.", "You will win the court case.", "The court will rule in your favour."):
+        assert any(i.startswith("CERTAINTY") for i in lint(t, "report")["issues"]), t
+    for t in ("Success is not guaranteed.", "No outcome is guaranteed.", "You may win the case, and it tends to go well.",
+              "The case is likely to settle in your favour."):
+        assert not any(i.startswith("CERTAINTY") for i in lint(t, "report")["issues"]), t
     print("selftest ok")
 
 
