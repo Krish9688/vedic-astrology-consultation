@@ -89,6 +89,7 @@ def elements(jd):
             "nakshatra": nk, "pada": pada}
 
 
+@E.locked
 def day(date, lat, lon, tz):
     """The Hindu day that begins with the sunrise of the civil `date` at (lat, lon); tz = UTC offset in hours.
     Elements prevailing at sunrise, and every change until the next sunrise, in local time."""
@@ -110,5 +111,6 @@ def day(date, lat, lon, tz):
     return {"date": date.isoformat(), "vara": VARA[dt.date(y, m, d).weekday()], "sunrise": local(r1),
             "sunset": local(s), "next_sunrise": local(r2), "polar_fallback": polar,
             "at_sunrise": elements(r1), "changes": changes, "conventions": CONVENTIONS,
-            "meta": {"engine": f"astro {E.ENGINE_VERSION}", **E.ephemeris_info(r1), "ayanamsa": E.ayanamsa_name(),
+            "meta": {"engine": f"astro {E.ENGINE_VERSION}", **E.ephemeris_info(r1),
+                     "ayanamsa": f"{E.ayanamsa_name()} {E.ayanamsa_values(r1)[0]:.4f}°",   # name + degrees (F-18)
                      "lat": lat, "lon": lon, "utc_offset": E.fmt_offset(tz)}}

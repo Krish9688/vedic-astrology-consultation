@@ -282,14 +282,59 @@ PLANETS = "Sun|Moon|Mars|Mercury|Jupiter|Venus|Saturn|Rahu|Ketu"
 PERIOD = re.compile(rf"({PLANETS})(?:\s*[–-]\s*({PLANETS})| major period)\b")
 
 
+def event_index(facts):
+    """Stable ids for the engine events a key point can cite (#46) → the dates that anchor them.
+    DSH.<MD> / DSH.<MD>-<AD> (start and end), ING.<planet>.<date>, CON.<transit>.<natal>.<aspect>.<date>."""
+    ev = {}
+    for md in facts.get("vimshottari", []):
+        ev[f"DSH.{md['lord']}"] = [_d(md["start"]), _d(md["end"])]
+        for ad in md.get("sub", []):
+            ev[f"DSH.{md['lord']}-{ad['lord']}"] = [_d(ad["start"]), _d(ad["end"])]
+    for x in facts.get("ingresses", []):
+        ev[f"ING.{x['planet']}.{x['date'][:10]}"] = [_d(x["date"])]
+    for x in facts.get("slow_contacts", []):
+        ev[f"CON.{x['transit']}.{x['natal']}.{x.get('aspect', 'contact')}.{x['date'][:10]}"] = [_d(x["date"])]
+    return ev
+
+
+def _key_point_refs(r, facts, tol):
+    """Key points that cite engine events are checked exactly: each event_ref must exist and fall inside the key point's
+    window (± tol). Returns (errors, windows already settled, so proximity is not used for them)."""
+    ev, errs, settled = event_index(facts), [], set()
+    for k in r["summary"].get("key_points", []):
+        refs = k.get("event_refs") or []
+        if not refs:
+            continue
+        unknown = [x for x in refs if x not in ev]
+        if unknown:
+            errs.append(f"key point cites unknown engine event(s): {', '.join(unknown)}")
+        if not k.get("window"):
+            errs.append(f"key point cites engine events ({', '.join(refs)}) but has no window")
+            continue
+        # Only the key point's own `window` is settled by its refs (council RC-02): other dates in its text are still
+        # grounded by proximity. A ref may fall in any of the window's ranges (RC-03); one message per ref.
+        ctx = f"{k.get('text', '')} {k.get('window', '')}"
+        own = [(lab, s, e, ctx) for lab, s, e, _ in
+               _windows({"timeline": [], "summary": {"headline": "", "key_points": [{"text": "", "window": k["window"]}]},
+                         "sections": []})]
+        settled |= set(own)
+        off = [x for x in refs if x in ev and not any(s - tol <= a <= e + tol for _, s, e, _ in own for a in ev[x])]
+        if off:
+            errs.append(f"window '{k['window']}' does not contain the engine event(s) it cites: {', '.join(off)}")
+    return errs, settled
+
+
 def grounding(r, facts):
-    """Every window must lie near a dasha/AD boundary, ingress or exact contact of a planet its own text names (calc.json)."""
+    """Every window must lie near a dasha/AD boundary, ingress or exact contact of a planet its own text names (calc.json).
+    A key point with event_refs is checked exactly against those events instead (#46)."""
     first = _d(facts["meta"]["transit_date"])
     last = max([_d(x["date"]) for x in facts.get("ingresses", []) + facts.get("slow_contacts", [])], default=first)
     if facts["meta"].get("months"):         # calc.json does not store `months`; its last event bounds the horizon otherwise
         last = max(last, first + dt.timedelta(days=30.44 * facts["meta"]["months"]))
     tol = dt.timedelta(days=TOLERANCE_DAYS)
     errs, warns, seen = [], [], set()
+    ref_errs, seen = _key_point_refs(r, facts, tol)
+    errs += ref_errs
     periods = {(md["lord"],): md for md in facts["vimshottari"]}
     periods |= {(md["lord"], ad["lord"]): ad for md in facts["vimshottari"] for ad in md.get("sub", [])}
     for x in r.get("timeline", []):           # a row that names its dasha period must match that period's own dates

@@ -73,8 +73,9 @@ def version():
 
 
 @app.get("/api/v1/panchang")
-def panchang(date: str, lat: float, lon: float, tz: str | None = None, zone: str | None = None):
-    return _wrap(lambda: S.panchang(date, lat, lon, tz, zone))
+def panchang(date: str, lat: float, lon: float, tz: str | None = None, zone: str | None = None,
+             ayanamsa: str = "lahiri", calendar: str = "gregorian"):
+    return _wrap(lambda: S.panchang(date, lat, lon, tz, zone, ayanamsa=ayanamsa, calendar=calendar))
 
 
 @app.get("/api/v1/place")

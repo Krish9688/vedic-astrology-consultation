@@ -52,7 +52,7 @@ def test_every_message_id_and_the_confirmation_line_are_present():
     ids = set(re.findall(r"^\| (V-[A-Z0-9-]+) \|", TEXT, re.M))
     need = {"V-TYPE", "V-DATE-1", "V-DATE-2", "V-DATE-3", "V-DATE-4", "V-DATE-5", "V-DATE-6", "V-TIME-1", "V-TIME-2",
             "V-TIME-3", "V-STATUS", "V-PLACE-1", "V-PLACE-2", "V-PLACE-3", "V-COORD", "V-OFFSET-1", "V-ZONE-UNKNOWN",
-            "V-ZONE-GAP", "V-ZONE-OVERLAP", "V-ZONE-LMT", "V-ZONE-1948", "V-ZONE-1970", "V-ZONE-MISMATCH",
+            "V-ZONE-GAP", "V-ZONE-OVERLAP", "V-ZONE-PRESTD", "V-ZONE-1948", "V-ZONE-1970", "V-ZONE-MISMATCH",
             "V-ZONE-UNCONF", "V-CONSENT-OTHER", "V-IDENT", "V-OUTLOOK", "V-FOLDER", "V-SAFE-GUARANTEE",
             "V-SAFE-MEDICAL", "V-SAFE-CRISIS", "V-ENGINE", "V-RENDER"}
     assert need <= ids, need - ids

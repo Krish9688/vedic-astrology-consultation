@@ -62,7 +62,7 @@ Use these ids and texts (fill the braces). They are the project's own wording.
 | V-ZONE-UNKNOWN | unknown time zone | "I don't recognise the time zone '{x}'. Examples: Asia/Kolkata, Europe/London. Or give the offset as +HH:MM." |
 | V-ZONE-GAP | skipped clock time | "On {date}, clocks in {place} jumped forward, so {time} didn't exist that day. The record may be using a different clock. Which offset did it use: {A} or {B}?" |
 | V-ZONE-OVERLAP | repeated hour | "On {date}, clocks in {place} went back, so {time} happened twice: once at {A} and once at {B}. Does the record say which one?" |
-| V-ZONE-LMT | before standard time | "On {date}, {place} had no standard time yet, and the time zone database's old local time isn't dependable for a birth chart. If the record used local mean time, I can use {lmt} for this longitude. Or give the offset the record states." |
+| V-ZONE-PRESTD | before standard time | "On {date}, {place} had no standard time yet, so the time zone database can't give a dependable offset. What UTC offset does the birth record state (+HH:MM)?" |
 | V-ZONE-1948 | South Asia before 1948 | "Clock times in this region before 1948 were not uniform (railway, local and war time). Which clock does the record use?" |
 | V-ZONE-1970 | any place before 1970 | "Time zone records before 1970 are less reliable. Does the birth record state an offset?" |
 | V-ZONE-MISMATCH | record offset differs from zone | "The record says {A}; the time zone database says {B} for {place} on that date. I'll use {A} and note the difference in the report. OK?" |
@@ -180,11 +180,11 @@ Engine refusals, each asked, never auto-resolved, and never by silently shifting
 - **Repeated hour (DST overlap):** V-ZONE-OVERLAP; ask **The first one** / **The second one** / **It doesn't say**; pass `fold`
   0 or 1. "Doesn't say" is never resolved by you: an hour is far outside the birth-time test, so offer a Consultation
   summary showing only what is the same either way, or come back after checking the record.
-- **Before standard time (local mean time):** V-ZONE-LMT using the offset the tool quoted; if used it is passed as `tz`, and the
-  uncertainty section says local mean time was used and why.
+- **Before standard time:** V-ZONE-PRESTD. Never propose or calculate a local mean time. Only an offset the person states
+  from the record is passed as `tz`; the engine flags a non-standard one, and the uncertainty section reports that flag.
 - **Pre-1948 South Asia:** the clock must be CONFIRMED, always asked (V-ZONE-1948), even when the engine only flags it. The
-  engine can resolve an early date (for example 1895, Asia/Kolkata) to a historic local time and only flag it; do not
-  accept that silently. If the clock stays unknown: unconfirmed, say so in the report.
+  engine refuses the tz database's city mean times (for example 1895, Asia/Kolkata = Madras time +05:21:10): ask for the
+  offset the record states (V-ZONE-PRESTD); never accept a mean time silently. If the clock stays unknown: unconfirmed, say so in the report.
 - **Any place before 1970:** V-ZONE-1970 together with the 1948 flag where both apply.
 
 ### 8. Birth-time sensitivity (decided now, run after "Start")
@@ -271,7 +271,8 @@ One line per stage, this wording, no numbers and no chart content:
 No position, house, period date, ingress, transit or strength may be written from memory. Every such figure must appear
 in a tool output from this conversation; if one is missing, write "not calculated" or leave it out. Dates in client text
 are periods, not days: a window may be rounded to whole months but must sit near a real dasha boundary, sign change or
-exact contact from the tool outputs. Name the engine conventions (ayanamsa, node type, year length, ephemeris in use).
+exact contact from the tool outputs. Give every dated key point `event_refs` naming those events (`DSH.Sa`, `DSH.Ju-Sa`,
+`ING.Sa.2027-06-03`, `CON.Ju.Mo.opposition.2027-01-13`); the engine refuses a window that does not contain them. Name the engine conventions (ayanamsa, node type, year length, ephemeris in use).
 Quote strength and sensitivity from the tool, never estimate. Never hand-edit the HTML or PDF.
 
 ### Two traditions, never merged

@@ -15,3 +15,4 @@ select = ["F", "E9", "B006", "B008", "B023"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+pythonpath = ["plugins/astrology-consultation/engine"]   # bare pytest in a fresh clone finds the engine (#14)
