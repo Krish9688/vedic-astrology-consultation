@@ -134,11 +134,17 @@ def test_19_dst_overlap_names_both_offsets_and_fold_settles_it():
     assert (first["utc_offset"], second["utc_offset"]) == ("+01:00", "+00:00")
 
 
-@pytest.mark.parametrize("date,want", [("1938-06-01", {"1948", "1970"}), ("1895-06-01", {"1948", "1970"})])
+@pytest.mark.parametrize("date,want", [("1938-06-01", {"1948", "1970"})])
 def test_20_pre_1948_india_carries_both_flags(date, want):
-    """1895 Asia/Kolkata (GAP G9): the tz database resolves it to a historic local time; it must at least be flagged."""
     flags = S.BirthInput(date=date, time="12:00", **NAGPUR).tz_flags
     assert {y for y in ("1948", "1970") if any(y in f for f in flags)} == want
+
+
+def test_20_1895_india_city_mean_time_is_refused():
+    """1895 Asia/Kolkata (GAP G9): the tz database gives Madras mean time +05:21:10; since audit F-06 (owner rule: never
+    LMT) a mean-time offset is refused instead of being used with a flag."""
+    with pytest.raises(ValueError, match="before standard time"):
+        S.BirthInput(date="1895-06-01", time="12:00", **NAGPUR)
 
 
 def test_20_pre_1970_elsewhere_carries_only_the_1970_flag():
@@ -146,11 +152,13 @@ def test_20_pre_1970_elsewhere_carries_only_the_1970_flag():
     assert len(flags) == 1 and "1970" in flags[0]
 
 
-def test_21_lmt_era_is_refused_with_the_lmt_offset_and_an_explicit_offset_is_recorded():
-    with pytest.raises(ValueError, match=r"before standard time.*local mean time at this longitude: -00:00:29"):
+def test_21_lmt_era_is_refused_without_an_lmt_suggestion_and_an_explicit_offset_is_flagged():
+    """Owner rule (2026-11-01, audit F-06): local mean time is never offered; a stated offset is used with a flag."""
+    with pytest.raises(ValueError, match=r"before standard time.*Give the UTC offset the birth record states") as e:
         S.BirthInput(date="1840-06-01", time="12:00", **LONDON)
+    assert "local mean time at this longitude" not in str(e.value)
     b = S.BirthInput(date="1840-06-01", time="12:00", tz="-00:00:29", **LONDON)
-    assert b.tz_source.startswith("manual UTC offset") and any("local mean time" in f for f in b.tz_flags)
+    assert b.tz_source.startswith("manual UTC offset") and any(f.startswith("non-standard offset") for f in b.tz_flags)
 
 
 # --- 23: Julian date ----------------------------------------------------------------------------------------------------

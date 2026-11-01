@@ -38,17 +38,41 @@ TOPICS = ROUTING.TOPICS   # question → the skill's topic reference; the manife
 
 
 OFFSET = re.compile(r"^(?:UTC|GMT)?([+-])?(\d{1,2}):([0-5]\d)(?::([0-5]\d))?$", re.I)
+OFFSET_COMPACT = re.compile(r"^(?:UTC|GMT)?([+-])(\d{2})([0-5]\d)$", re.I)   # ISO 8601 basic form, sign required: +0530
+MAX_OFFSET_H = 14                                     # real civil offsets lie within -12..+14 (audit F-03)
+
+
+def standard_offset(seconds) -> bool:
+    """A standard-time offset is a whole number of quarter hours, or of 20 minutes (the historical Pacific -10:40,
+    -11:20, +12:20). Anything else (e.g. +05:53:20, +04:51) is a local or city mean time (audit F-06)."""
+    s = round(abs(seconds))
+    return s % 900 == 0 or s % 1200 == 0
+
+
+def nonstandard_flag(hours) -> list:
+    """Flag for an explicitly stated offset that is not a standard time (owner decision 2026-11-01: accepted as stated,
+    never suggested)."""
+    if standard_offset(hours * 3600):
+        return []
+    return [f"non-standard offset {utc_offset_str(dt.timedelta(hours=hours))}: not a standard time-zone offset (a local "
+            "or city mean time); used exactly as stated - confirm it with the birth record"]
 
 
 def utc_offset_hours(v) -> float:
     """'+05:30', '-03:00', 'UTC+05:45' or '+05:53:20'; decimal hours only in whole or quarter steps (5.5, -3.75).
     A decimal such as 5.30 is refused: it would silently mean 5 h 18 min, a 3.6° ascendant shift (audit H1)."""
     if isinstance(v, str):
-        m = OFFSET.match(v.strip().replace(" ", ""))
+        s = v.strip().replace(" ", "")
+        m = OFFSET.match(s) or OFFSET_COMPACT.match(s)
         if m:
-            sign, h, mi, se = m.groups()
+            sign, h, mi, se = (m.groups() + (None,))[:4]
             hours = int(h) + int(mi) / 60 + int(se or 0) / 3600
-            return -hours if sign == "-" else hours
+            hours = -hours if sign == "-" else hours
+            if abs(hours) > MAX_OFFSET_H:
+                raise ValueError(f"UTC offset {v!r} is outside -14:00..+14:00; write it as +HH:MM, e.g. +05:30")
+            return hours
+        if re.fullmatch(r"[+-]?\d{3,4}", s):
+            raise ValueError(f"UTC offset {v!r}: write it as +HH:MM, e.g. +05:30 (or with a sign, +0530)")
         try:
             v = float(v)
         except ValueError:
@@ -58,6 +82,8 @@ def utc_offset_hours(v) -> float:
     if abs(v * 4 - round(v * 4)) > 1e-9:
         raise ValueError(f"UTC offset {v}: decimal hours must be whole or .25/.5/.75 (5.30 would mean 5 h 18 min); "
                          "write it as +HH:MM, e.g. +05:30")
+    if abs(v) > MAX_OFFSET_H:
+        raise ValueError(f"UTC offset {v} is outside -14:00..+14:00; write it as +HH:MM, e.g. +05:30")
     return float(v)
 
 
@@ -94,10 +120,12 @@ def resolve_zone(date, time, zone, lon, fold=None):
         raise ValueError(f"{date} {time} occurs twice in {zone} (clocks went back): pass fold=0 for the first "
                          f"({utc_offset_str(a.utcoffset())}) or fold=1 for the second ({utc_offset_str(b.utcoffset())})")
     t = b if fold == 1 else a
-    if t.tzname() == "LMT":
-        lmt = utc_offset_str(dt.timedelta(seconds=round(lon * 240)))
-        raise ValueError(f"{zone} on {date} is before standard time; the tz database's local mean time is not meaningful "
-                         f"for a birth place. Give the offset explicitly (local mean time at this longitude: {lmt})")
+    if t.tzname() == "LMT" or not standard_offset(t.utcoffset().total_seconds()):
+        # No local mean time is ever offered or derived (owner rule: civil time with a stated offset, never LMT). The tz
+        # database's LMT and its city mean times (e.g. Asia/Kolkata +05:53:20 before 1870, +05:21:10 to 1906) are refused.
+        raise ValueError(f"{zone} on {date} is before standard time (tz database: {utc_offset_str(t.utcoffset())} "
+                         f"{t.tzname()}, a mean time, not a standard offset). Give the UTC offset the birth record states "
+                         "(+HH:MM)")
     flags = []
     if date.year < 1970:
         flags.append("IANA offsets before 1970 often come from unreliable sources (tz theory.html): confirm with the "
@@ -199,6 +227,8 @@ class BirthInput(BaseModel):
             raise ValueError("give the UTC offset at birth (+HH:MM) or an IANA time zone (zone)")
         else:
             self.tz_source = self.tz_source or "explicit UTC offset"
+        if self.tz is not None and (f := nonstandard_flag(self.tz)) and not any(x.startswith("non-standard") for x in self.tz_flags):
+            self.tz_flags = f + list(self.tz_flags)
         return self
 
 
@@ -313,7 +343,8 @@ def panchang(date, lat: float, lon: float, tz=None, zone: Optional[str] = None) 
         if tz is not None and abs(utc_offset_hours(tz) - hours) > 1 / 3600:
             raise ValueError(f"tz disagrees with {zone} on {d}: give one")
     elif tz is not None:
-        hours, flags = utc_offset_hours(tz), []
+        hours = utc_offset_hours(tz)
+        flags = nonstandard_flag(hours)
     else:
         raise ValueError("give the UTC offset (+HH:MM) or an IANA time zone (zone)")
     out = P.day(d, lat, lon, hours)

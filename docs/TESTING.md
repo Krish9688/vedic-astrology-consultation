@@ -28,7 +28,7 @@ benchmarks use the owner's chart and stay private (only their scores are publish
 | IANA history: Kolkata 1943 = +06:30 with pre-1948 / pre-1970 flags; London 1969 BST; New York DST | `test_timezones.py::test_zone_gives_the_offset_of_the_birth_moment` |
 | Kathmandu 1980 = +05:30, 1990 = +05:45 | `test_timezones.py::test_kathmandu_moved_from_0530_to_0545_in_1986` |
 | Spring-forward gap refused; fall-back overlap needs `fold` | `test_timezones.py::test_skipped_and_repeated_clock_times_are_refused_not_guessed` |
-| Pre-standard (local mean time) era refused with the LMT suggestion | `test_timezones.py::test_local_mean_time_era_needs_an_explicit_offset` |
+| Pre-standard era (tzdb LMT and city mean times) refused, no LMT suggested; a stated non-standard offset is flagged | `test_timezones.py::test_local_mean_time_era_needs_an_explicit_offset` |
 | Manual offset overrides the zone, IANA value flagged; a misspelt zone still refused | `test_timezones.py::test_explicit_offset_overrides_a_zone_and_says_so` |
 | Zone, offset and tzdb version in every output's meta | `test_timezones.py::test_zone_provenance_reaches_every_output` |
 | West longitude / negative offset, +05:45, +09:30, southern hemisphere: the offset only restates the instant | `test_edge_cases.py::test_offset_is_only_a_restatement_of_the_instant` |
