@@ -191,7 +191,7 @@ def path_exempt(rel):
     return any(rel == e or rel.endswith("/" + e) for e in PATH_EXEMPT)
 
 
-def scan_text(rel, text, T, paths=True):
+def scan_text(rel, text, T, paths=True, where=None):
     bad, low = [], normalise(text).lower()
     new = [h for h, _ in records(text) if h not in REVIEWED]
     if new:
@@ -199,7 +199,9 @@ def scan_text(rel, text, T, paths=True):
                    f"or published, review with --records and add to tools/birthdata-reviewed.txt")
     for rx, what in ((HOME, "absolute home path"), (EMAIL, "e-mail address")) if paths else ():
         m = rx.search(text)
-        if m and not path_exempt(rel):
+        # RP-06: exempt only the checker and its test themselves: judged by the path relative to the working directory
+        # (a scanned folder's own privacy_check.py at another location is not exempt)
+        if m and not path_exempt(os.path.relpath(where) if where else rel):
             bad.append(f"{rel}: {what} '{m.group()}'")
     if any(t in low for t in T):
         bad.append(f"{rel}: contains a personal term from the local privacy list")
@@ -257,7 +259,7 @@ def check(paths, archive=False):
         if text is None:   # fail closed: an unreadable file is never waved through
             bad.append(f"{rel}: cannot be read as UTF-8/UTF-16 text, so it cannot be checked")
             continue
-        bad += scan_text(rel, text, T)
+        bad += scan_text(rel, text, T, where=f)
     return bad, len(T)
 
 

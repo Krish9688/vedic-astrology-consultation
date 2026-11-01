@@ -291,3 +291,11 @@ def test_rp06_folder_scan_does_not_exempt_a_bare_privacy_check(tmp_path):
                                       ("https://api.github.com/" + "users/someone/repos", False)])
 def test_rp07_home_paths_any_case(text, hit):
     assert bool(P.HOME.search(text)) is hit
+
+
+def test_rp06_ci_folder_scan_still_exempts_the_checker_itself():
+    """CI runs `privacy_check.py --archive tools tests …` from the repo root: the checker and its test are judged by
+    their repo-relative paths and stay exempt (a bare relative-to-folder name would not be)."""
+    r = subprocess.run([sys.executable, os.path.join("tools", "privacy_check.py"), "--archive",
+                        os.path.join("tools", "privacy_check.py"), "tests"], cwd=WS, capture_output=True, text=True)
+    assert "privacy_check.py: absolute home path" not in r.stdout, r.stdout
