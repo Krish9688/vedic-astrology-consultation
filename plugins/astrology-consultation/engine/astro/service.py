@@ -252,7 +252,8 @@ def _calc(fn):
     @functools.wraps(fn)
     def run(*a, **k):
         o = k.get("o") or next((x for x in a if isinstance(x, Options)), None)
-        with engine.using(o.ayanamsa if o else None):   # no Options: keep the caller's mode (e.g. CLI --ayanamsa)
+        name = o.ayanamsa if o else k.get("ayanamsa")   # Options-less tools (panchang) take a keyword ayanamsa (#47)
+        with engine.using(name):   # None: keep the caller's mode (e.g. CLI --ayanamsa)
             return fn(*a, **k)
     return run
 
@@ -331,11 +332,24 @@ def dasha(b: BirthInput, o: Options = DEFAULTS) -> dict:
                           "running": running, "periods": c["vimshottari"]})
 
 
+def julian_to_gregorian(d: dt.date) -> dt.date:
+    """A date written in the Julian calendar → the Gregorian date (Swiss Ephemeris julday/revjul), as BirthInput does."""
+    jd = engine.swe.julday(d.year, d.month, d.day, 0.0, engine.swe.JUL_CAL)
+    if engine.swe.revjul(jd, engine.swe.JUL_CAL)[:3] != (d.year, d.month, d.day):
+        raise ValueError(f"{d} is not a date in the Julian calendar")
+    return dt.date(*engine.swe.revjul(jd, engine.swe.GREG_CAL)[:3])
+
+
 @_calc
-def panchang(date, lat: float, lon: float, tz=None, zone: Optional[str] = None) -> dict:
-    """Panchang of the Hindu day that begins at the sunrise of `date` at (lat, lon). No birth data needed."""
+def panchang(date, lat: float, lon: float, tz=None, zone: Optional[str] = None, *, ayanamsa: Optional[str] = None,
+             calendar: str = "gregorian") -> dict:
+    """Panchang of the Hindu day that begins at the sunrise of `date` at (lat, lon). No birth data needed.
+    ayanamsa: None keeps the caller's mode (Lahiri by default); calendar='julian' converts the date first (#47)."""
     from .calc import panchang as P
-    d = dt.date.fromisoformat(str(date))
+    if calendar not in ("gregorian", "julian"):
+        raise ValueError("calendar must be gregorian or julian")
+    written = dt.date.fromisoformat(str(date))
+    d = julian_to_gregorian(written) if calendar == "julian" else written
     if not (-89.9 <= lat <= 89.9 and -180 <= lon <= 180):
         raise ValueError("latitude must be within ±89.9° and longitude within ±180°")
     if zone:
@@ -349,6 +363,8 @@ def panchang(date, lat: float, lon: float, tz=None, zone: Optional[str] = None) 
         raise ValueError("give the UTC offset (+HH:MM) or an IANA time zone (zone)")
     out = P.day(d, lat, lon, hours)
     out["meta"] |= {k: v for k, v in (("zone", zone), ("utc_offset_flags", flags)) if v}
+    if calendar == "julian":
+        out["meta"]["date_source"] = f"Julian calendar {written}, converted to Gregorian {d}"
     return out
 
 

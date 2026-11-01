@@ -9,8 +9,9 @@ KW = dict(date=RAW["date"], time=RAW["time"], zone=RAW["zone"], lat=RAW["lat"], 
 
 
 def _birth_tools():
+    # every tool that takes a place (lat), not only those that also take a time: get_panchang too (#47)
     return {n: f for n, f in vars(M).items() if n.startswith(("get_", "create_", "prepare_")) and callable(f)
-            and {"time", "lat"} <= set(inspect.signature(f).parameters)}
+            and "lat" in inspect.signature(f).parameters and n != "get_place"}
 
 
 def test_every_birth_tool_takes_ayanamsa_and_calendar():

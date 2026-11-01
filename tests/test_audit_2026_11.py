@@ -155,3 +155,37 @@ def test_f07_adapter_offset_and_ayanamsa(mode, label):
     E._sid()
     assert f.provenance.ayanamsa_deg == pytest.approx(c["meta"]["ayanamsa_deg_mean"])
     assert swe.get_ayanamsa_name(E._MODE.get()).startswith("Lahiri")
+
+# --- #47: panchang takes ayanamsa and calendar on every interface ------------------------------------------------------
+MUMBAI = dict(lat=19.07, lon=72.88, tz="+05:30")
+
+
+def _pada(p):
+    return [x for x in p["changes"] if x["element"] == "nakshatra"], p["at_sunrise"]
+
+
+def test_i47_panchang_ayanamsa_service_mcp_rest_cli(capsys):
+    from fastapi.testclient import TestClient
+    from astro import cli, mcp_server as M, rest
+    lah = S.panchang("2026-01-15", **MUMBAI)
+    ram = S.panchang("2026-01-15", **MUMBAI, ayanamsa="raman")
+    assert re.fullmatch(r"Lahiri 24\.2\d{3}°", lah["meta"]["ayanamsa"]) and re.fullmatch(r"Raman 22\.\d{4}°", ram["meta"]["ayanamsa"])
+    assert lah["at_sunrise"] != ram["at_sunrise"]                    # nakshatra pada differs (audit probe C-07)
+    assert M.get_panchang("2026-01-15", ayanamsa="raman", **MUMBAI)["meta"]["ayanamsa"].startswith("Raman ")
+    r = TestClient(rest.app).get("/api/v1/panchang", params=dict(date="2026-01-15", ayanamsa="raman", **MUMBAI))
+    assert r.status_code == 200 and r.json()["meta"]["ayanamsa"].startswith("Raman ")
+    cli.main(["panchang", "2026-01-15", "--lat", "19.07", "--lon", "72.88", "--tz", "+05:30", "--ayanamsa", "raman"])
+    import json
+    assert json.loads(capsys.readouterr().out)["meta"]["ayanamsa"].startswith("Raman ")
+    assert E.ayanamsa_name().startswith("Lahiri")                 # nothing leaks after the calls
+
+
+def test_i47_panchang_julian_calendar_is_converted():
+    j = S.panchang("2026-01-02", **MUMBAI, calendar="julian")      # Julian 2 Jan 2026 = Gregorian 15 Jan 2026
+    g = S.panchang("2026-01-15", **MUMBAI)
+    assert j["date"] == "2026-01-15" and j["at_sunrise"] == g["at_sunrise"] and "Julian" in j["meta"]["date_source"]
+
+
+def test_i47_unknown_ayanamsa_refused():
+    with pytest.raises(ValueError):
+        S.panchang("2026-01-15", **MUMBAI, ayanamsa="lahiri_icrc")

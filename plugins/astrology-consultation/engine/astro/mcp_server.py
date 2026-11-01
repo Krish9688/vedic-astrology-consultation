@@ -108,10 +108,11 @@ def get_outlook(date: dt.date, time: str, lat: float, lon: float, tz: Union[floa
 
 
 @tool("Panchang of a local day (no birth data): tithi, vara, nakshatra and pada, yoga, karana at sunrise and every "
-      "change until the next sunrise, with sunrise/sunset. Give tz (+HH:MM) or zone (IANA).")
+      "change until the next sunrise, with sunrise/sunset. Give tz (+HH:MM) or zone (IANA). ayanamsa: lahiri "
+      "(default); true_chitra, kp or raman only when asked for by name. calendar='julian' converts the date.")
 def get_panchang(date: dt.date, lat: float, lon: float, tz: Union[float, str, None] = None,
-                 zone: Optional[str] = None) -> dict:
-    return S.panchang(date, lat, lon, tz, zone)
+                 zone: Optional[str] = None, ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.panchang(date, lat, lon, tz, zone, ayanamsa=ayanamsa, calendar=calendar)
 
 
 @tool("Yogini mahadashas (BPHS ch. 46; opening yogini from the birth nakshatra; no sub-periods in the source) "

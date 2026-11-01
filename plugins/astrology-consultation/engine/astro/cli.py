@@ -253,6 +253,8 @@ def main(argv=None):
     p.add_argument("--lon", type=float, required=True)
     p.add_argument("--tz", help="UTC offset, e.g. +05:30")
     p.add_argument("--zone", help="IANA time zone, e.g. Asia/Kolkata")
+    p.add_argument("--ayanamsa", default="lahiri", choices=list(S.engine.AYANAMSAS))      # #47
+    p.add_argument("--calendar", default="gregorian", choices=["gregorian", "julian"])   # #47
     p = sub.add_parser("place", help="birthplace → coordinates and IANA time zone (offline)")
     p.add_argument("name")
     p.add_argument("--country", help="two-letter country code, e.g. IN")
@@ -290,7 +292,7 @@ def main(argv=None):
     if a.cmd == "sky":
         return _print(S.sky(a.start, a.end, a.tz))
     if a.cmd == "panchang":
-        return _print(S.panchang(a.date, a.lat, a.lon, a.tz, a.zone))
+        return _print(S.panchang(a.date, a.lat, a.lon, a.tz, a.zone, ayanamsa=a.ayanamsa, calendar=a.calendar))
     if a.cmd == "place":
         return _print(S.find_place(a.name, a.country))
     if a.cmd == "sources":
