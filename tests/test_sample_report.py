@@ -48,3 +48,29 @@ def test_shipped_files_are_present_and_hold_no_birth_data():
     html = open(os.path.join(SAMPLE, "asha-career-20261030-1015.html"), encoding="utf-8").read()
     assert not [w for w in ("1991", "Pune", "06:20") if w in html]
     assert "birth" not in MODEL and len(open(os.path.join(SAMPLE, "README.md")).read().splitlines()) <= 15
+
+
+@pytest.mark.parametrize("i", [1, 2, 3])
+def test_i46_each_key_point_window_shifted_five_months_is_refused(tmp_path, monkeypatch, i):
+    """#46: key points carry event_refs, so a window shifted ~5 months fails even for Saturn/Jupiter, which have many
+    ingresses and contacts that proximity alone would still find."""
+    m = copy.deepcopy(MODEL)
+    k = m["summary"]["key_points"][i]
+    assert k.get("event_refs"), "the sample's dated key points cite engine events"
+    a, b = k["window"].split(" – ")
+    mon = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
+
+    def sh(t):
+        mo, y = t.split()
+        n = mon.index(mo) + 5
+        return f"{mon[n % 12]} {int(y) + n // 12}"
+    k["window"] = f"{sh(a)} – {sh(b)}"
+    r = create(m, tmp_path, monkeypatch)
+    assert r["ok"] is False and any("does not contain the engine event" in e for e in r["errors"]), r
+
+
+def test_i46_unknown_event_ref_is_refused(tmp_path, monkeypatch):
+    m = copy.deepcopy(MODEL)
+    m["summary"]["key_points"][1]["event_refs"] = ["ING.Ju.2026-10-30"]           # off by a day: not an engine event
+    r = create(m, tmp_path, monkeypatch)
+    assert r["ok"] is False and any("unknown engine event" in e for e in r["errors"])

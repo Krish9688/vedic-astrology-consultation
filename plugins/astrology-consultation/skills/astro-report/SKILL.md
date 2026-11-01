@@ -271,7 +271,8 @@ One line per stage, this wording, no numbers and no chart content:
 No position, house, period date, ingress, transit or strength may be written from memory. Every such figure must appear
 in a tool output from this conversation; if one is missing, write "not calculated" or leave it out. Dates in client text
 are periods, not days: a window may be rounded to whole months but must sit near a real dasha boundary, sign change or
-exact contact from the tool outputs. Name the engine conventions (ayanamsa, node type, year length, ephemeris in use).
+exact contact from the tool outputs. Give every dated key point `event_refs` naming those events (`DSH.Sa`, `DSH.Ju-Sa`,
+`ING.Sa.2027-06-03`, `CON.Ju.Mo.opposition.2027-01-13`); the engine refuses a window that does not contain them. Name the engine conventions (ayanamsa, node type, year length, ephemeris in use).
 Quote strength and sensitivity from the tool, never estimate. Never hand-edit the HTML or PDF.
 
 ### Two traditions, never merged
