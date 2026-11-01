@@ -808,6 +808,29 @@ def _derived_facts(c, ids=False):
     return cf.facts_json(chart) if ids else cf.facts(chart)
 
 
+TIME_BOUND_REF = re.compile(r"^F\.(asc|H\d+)\.|^F\.\w+\.(house|dispositor_house)$")   # need the exact birth time
+
+
+def unknown_time_problems(model: dict, b: Optional["BirthInput"] = None) -> list:
+    """ASTRO-REPORT-SPEC item 26 enforced in the engine, not only in SKILL.md (#48): with an unknown birth time only a
+    compact report is allowed, with no ascendant/house claims (fact_refs) and no dated windows or dasha timeline."""
+    unknown = re.compile(r"^\s*unknown", re.I)
+    src = (b.time_source if b else None) or (model.get("birth") or {}).get("time_source") or ""
+    rel = str((model.get("birth") or {}).get("time_reliability") or "")
+    if not (unknown.match(src) or unknown.match(rel)):
+        return []
+    errs = []
+    if model.get("report_type") != "compact":
+        errs.append(f"birth time unknown: only a compact report is allowed (got {model.get('report_type')!r})")
+    refs = sorted({x for s in model.get("sections", []) for u in s.get("units", []) for x in u.get("fact_refs", [])
+                   if TIME_BOUND_REF.search(x)})
+    if refs:
+        errs.append(f"birth time unknown: ascendant/house facts cannot be cited: {', '.join(refs[:8])}")
+    if model.get("timeline") or any(k.get("window") for k in (model.get("summary") or {}).get("key_points", [])):
+        errs.append("birth time unknown: no dated windows or dasha timeline (dasha dates depend on the birth time)")
+    return errs
+
+
 @_calc   # audit F-04: the grounding recompute runs under the requested ayanamsa and the process lock
 def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = None, o: Options = DEFAULTS) -> dict:
     """Validate and render a Structured Report Model (assets/report/report.schema.json) to HTML (+PDF). Dates are checked
@@ -817,6 +840,8 @@ def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = N
         raise ValueError("report name: letters, digits, dot, dash, underscore; ≤ 64 characters")
     if refusal := config.folder_refusal(s.reports_dir, s.skill_dir):
         return {"ok": False, "errors": [refusal]}        # V-FOLDER: nothing is written, not even the folder
+    if problems := unknown_time_problems(model, b):
+        return {"ok": False, "errors": problems}         # #48: refused before anything is rendered
     spec = importlib.util.spec_from_file_location("render_report", os.path.join(s.skill_dir, "scripts", "render_report.py"))
     rr = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(rr)

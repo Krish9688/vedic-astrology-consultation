@@ -1,17 +1,18 @@
 """Regression tests for the 2026-11-01 audit findings (notes/hermes-audit-2026-11-01, Audit-Report F-xx).
 Synthetic charts only."""
-import re  # noqa: F401
-import sys  # noqa: F401
-import threading  # noqa: F401
+import re
+import sys
+import threading
 
-import pytest  # noqa: F401
-import swisseph as swe  # noqa: F401
+import pytest
+import swisseph as swe
 
-from astro import service as S  # noqa: F401
-from astro.calc import adapters  # noqa: F401
-from astro.calc import engine as E  # noqa: F401
+from astro import service as S
+from astro.calc import adapters
+from astro.calc import engine as E
 
 B = dict(date="2000-01-01", time="12:00", lat=28.6, lon=77.2)
+
 
 # --- F-03: offset parser -----------------------------------------------------------------------------------------------
 @pytest.mark.parametrize("given,hours", [("+0530", 5.5), ("-0300", -3.0), ("UTC+0545", 5.75), ("+05:30", 5.5),
@@ -44,6 +45,7 @@ def test_f03_panchang_over_rest_is_refused():
     r = TestClient(rest.app).get("/api/v1/panchang", params={"date": "2000-01-01", "lat": 28.6, "lon": 77.2, "tz": "0530"})
     assert r.status_code in (400, 422), r.text
 
+
 # --- F-06: no LMT, mean times refused, stated non-standard offsets flagged ----------------------------------------------
 @pytest.mark.parametrize("date", ["1860-01-01", "1900-06-01"])
 def test_f06_tzdb_city_mean_times_refused(date):
@@ -71,6 +73,7 @@ def test_f06_no_lmt_offer_in_skill_text():
             t = open(p, encoding="utf-8").read()
             assert "{lmt}" not in t and "it suggests local mean time" not in t and "V-ZONE-LMT" not in t
 
+
 # --- Q7 / F-17 / F-19: ayanamsa set, nested requests, mean/true fields -------------------------------------------------
 def test_q7_owner_ayanamsa_set():
     assert list(E.AYANAMSAS) == ["lahiri", "true_chitra", "kp", "raman"]
@@ -93,6 +96,7 @@ def test_f19_meta_has_mean_and_true_values():
     assert m["ayanamsa"] == "Lahiri 23.8571°"
     assert m["ayanamsa_deg_mean"] == pytest.approx(23.857092, abs=2e-6)
     assert m["ayanamsa_deg_true"] == pytest.approx(23.853222, abs=2e-6)
+
 
 # --- F-04: create_report under the requested mode; locks ---------------------------------------------------------------
 def test_f04_create_report_recompute_uses_requested_ayanamsa(monkeypatch):
@@ -145,6 +149,7 @@ def test_f04_threaded_modes_never_mix():
         sys.setswitchinterval(old)
     assert bad == [] and abs(raman - lahiri) > 1
 
+
 # --- F-07: adapter --------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize("mode,label", [("lahiri", "Lahiri"), ("raman", "Raman")])
 def test_f07_adapter_offset_and_ayanamsa(mode, label):
@@ -155,6 +160,7 @@ def test_f07_adapter_offset_and_ayanamsa(mode, label):
     E._sid()
     assert f.provenance.ayanamsa_deg == pytest.approx(c["meta"]["ayanamsa_deg_mean"])
     assert swe.get_ayanamsa_name(E._MODE.get()).startswith("Lahiri")
+
 
 # --- #47: panchang takes ayanamsa and calendar on every interface ------------------------------------------------------
 MUMBAI = dict(lat=19.07, lon=72.88, tz="+05:30")
@@ -189,3 +195,57 @@ def test_i47_panchang_julian_calendar_is_converted():
 def test_i47_unknown_ayanamsa_refused():
     with pytest.raises(ValueError):
         S.panchang("2026-01-15", **MUMBAI, ayanamsa="lahiri_icrc")
+
+
+# --- #48: unknown birth time → compact only, enforced by the engine; time_source reaches it over MCP ---------------------
+def _example():
+    import json
+    import os
+    from astro import config
+    return json.load(open(os.path.join(config.load().skill_dir, "assets", "report", "example-synthetic.json"),
+                          encoding="utf-8"))
+
+
+UNKNOWN = S.BirthInput(**B, tz="+05:30", time_source="unknown; 12:00 used as a placeholder")
+
+
+def test_i48_non_compact_report_refused_for_unknown_time():
+    m = _example()
+    assert m["report_type"] != "compact"
+    errs = S.unknown_time_problems(m, UNKNOWN)
+    assert any("only a compact report" in e for e in errs)
+
+
+def test_i48_compact_report_with_time_bound_claims_refused():
+    m = {"report_type": "compact", "sections": [{"id": "s", "title": "t", "units": [
+        {"fact_refs": ["F.asc.sign", "F.Mo.sign", "F.H10.lord", "F.Ju.house"]}]}],
+         "timeline": [{"start": "2027-01"}]}
+    errs = S.unknown_time_problems(m, UNKNOWN)
+    assert any("F.asc.sign" in e and "F.H10.lord" in e and "F.Ju.house" in e and "F.Mo.sign" not in e for e in errs)
+    assert any("no dated windows" in e for e in errs)
+
+
+def test_i48_compact_moon_only_report_passes_and_known_time_unaffected():
+    ok = {"report_type": "compact", "sections": [{"id": "s", "title": "t", "units": [{"fact_refs": ["F.Mo.sign"]}]}]}
+    assert S.unknown_time_problems(ok, UNKNOWN) == []
+    assert S.unknown_time_problems(_example(), S.BirthInput(**B, tz="+05:30", time_source="birth certificate")) == []
+    assert S.unknown_time_problems({"report_type": "career", "birth": {"time_reliability": "unknown"}})
+
+
+def test_i48_create_report_refuses_over_mcp_with_time_source(tmp_path, monkeypatch):
+    from astro import config, mcp_server as M
+    s = config.load()
+    s.reports_dir = str(tmp_path / "reports")
+    monkeypatch.setattr(config, "load", lambda: s)
+    r = M.create_report(_example(), "i48", date="1992-03-14", time="12:00", tz=0, lat=51.5, lon=-0.12,
+                        time_source="unknown; 12:00 used as a placeholder")
+    assert r["ok"] is False and any("only a compact report" in e for e in r["errors"])
+    assert not (tmp_path / "reports").exists() or not any((tmp_path / "reports").iterdir())
+
+
+def test_i48_time_source_reaches_mcp_chart_tools():
+    import inspect
+    from astro import mcp_server as M
+    tools = [f for n, f in vars(M).items() if n.startswith(("get_", "create_", "prepare_")) and callable(f)
+             and "time" in inspect.signature(f).parameters and "date" in inspect.signature(f).parameters]
+    assert tools and all("time_source" in inspect.signature(f).parameters for f in tools)
