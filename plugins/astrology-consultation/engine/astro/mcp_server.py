@@ -77,30 +77,34 @@ def calculate_birth_chart(date: dt.date, time: str, lat: float, lon: float, tz: 
 
 @tool("Sidereal (Lahiri) positions with sign, degree, nakshatra, pada and retrograde flag.")
 def get_planet_positions(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
-        zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.planet_positions(_b(date, time, tz, lat, lon, zone, fold))
+        zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.planet_positions(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(ayanamsa=ayanamsa))
 
 
 @tool("One divisional chart (D1, D2, D3, D4, D7, D9, D10, D12, D16, D20, D24, D27, D30, D40, D45, "
                       "D60) with the rule used.")
 def get_divisional_chart(date: dt.date, time: str, lat: float, lon: float, division: int, tz: Union[float, str, None] = None,
-        zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.divisional_chart(_b(date, time, tz, lat, lon, zone, fold), division)
+        zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.divisional_chart(_b(date, time, tz, lat, lon, zone, fold, calendar), division, _o(ayanamsa=ayanamsa))
 
 
 @tool("Transits on `on` against the natal chart: houses from the Moon (classical frame) and the lagna, Phaladeepika "
       "XXVI good houses, vedha, condition, sade sati. Rule lookups, not interpretation.")
 def get_gochara(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
-                on: Optional[dt.date] = None, zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.gochara(_b(date, time, tz, lat, lon, zone, fold), _o(on))
+                on: Optional[dt.date] = None, zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.gochara(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(on, ayanamsa=ayanamsa))
 
 
 @tool("Personal outlook facts for a period (day, week, month, quarter, year) from `start`: running dashas, gochara, sade sati, "
       "sign changes, stations, exact slow-planet contacts and, for day/week, the Moon's transit. Every factor has an id, "
       "dates and a source; write the horoscope from these ids only (timing.md §3a).")
 def get_outlook(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None, period: str = "month",
-                start: Optional[dt.date] = None, zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.outlook(_b(date, time, tz, lat, lon, zone, fold), period, start)
+                start: Optional[dt.date] = None, zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.outlook(_b(date, time, tz, lat, lon, zone, fold, calendar), period, start, _o(ayanamsa=ayanamsa))
 
 
 @tool("Panchang of a local day (no birth data): tithi, vara, nakshatra and pada, yoga, karana at sunrise and every "
@@ -114,24 +118,27 @@ def get_panchang(date: dt.date, lat: float, lon: float, tz: Union[float, str, No
       "and the one running on `on`. A secondary dasha: use it to cross-check Vimshottari, not to replace it.")
 def get_yogini_dasha(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
                      on: Optional[dt.date] = None, year: str = "sidereal",
-                     zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.yogini_dasha(_b(date, time, tz, lat, lon, zone, fold), _o(on, year=year))
+                     zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.yogini_dasha(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(on, year=year, ayanamsa=ayanamsa))
 
 
 @tool("Chara (sign) dasha, BPHS ch. 46 as translated by Santhanam (one named school; first cycle, dates from birth "
       "in sidereal years as a labelled convention), with BPHS ch. 51 antardashas and ch. 50's start as the "
       "alternative. A separate sign-based timing opinion beside Vimshottari, never merged with it.")
 def get_chara_dasha(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
-                    zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.chara_dasha(_b(date, time, tz, lat, lon, zone, fold), _o())
+                    zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.chara_dasha(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(ayanamsa=ayanamsa))
 
 
 @tool("Which BPHS ch. 46 conditional nakshatra dashas (Ashtottari, Shodashottari ...) have their chart condition "
       "met, each reading shown, overlaps and birth-time flips flagged. Vimshottari stays the default; information "
       "only, never a reason to switch clocks after seeing dates.")
 def get_dasha_applicability(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
-                            zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.dasha_applicability(_b(date, time, tz, lat, lon, zone, fold))
+                            zone: Optional[str] = None, fold: Optional[int] = None, span_min: int = 15,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.dasha_applicability(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(ayanamsa=ayanamsa), span_min)
 
 
 @tool("Significator network for a topic (marriage, career, finance, relocation, education, children): Raman's "
@@ -139,8 +146,9 @@ def get_dasha_applicability(date: dt.date, time: str, lat: float, lon: float, tz
       "or pass planets for a custom (unsourced) network.")
 def get_topic_network(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
                       topic: Optional[str] = None, planets: Optional[list[str]] = None,
-                      zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.topic_network(_b(date, time, tz, lat, lon, zone, fold), topic, planets)
+                      zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.topic_network(_b(date, time, tz, lat, lon, zone, fold, calendar), topic, planets, _o(ayanamsa=ayanamsa))
 
 
 @tool("Dasha activation table from `on` over `months`: per AD (level=pd: PD) segment, the period lords' natal roles "
@@ -149,8 +157,9 @@ def get_topic_network(date: dt.date, time: str, lat: float, lon: float, tz: Unio
 def get_activation(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
                    network: Union[str, dict] = "career", level: str = "ad", on: Optional[dt.date] = None,
                    months: int = 24, year: str = "sidereal", zone: Optional[str] = None,
-                   fold: Optional[int] = None) -> dict:
-    return S.activation(_b(date, time, tz, lat, lon, zone, fold), _o(on, months, year), network, level)
+                   fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.activation(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(on, months, year, ayanamsa=ayanamsa), network, level)
 
 
 @tool("Tajika annual chart (PVR ch. 27-28, 31) for year of life `year` (default: the year running on `on`): solar "
@@ -158,8 +167,9 @@ def get_activation(date: dt.date, time: str, lat: float, lon: float, tz: Union[f
       "dasha. Secondary: it confirms what the natal chart promises, never overrides it.")
 def get_tajika(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
                year: Optional[int] = None, on: Optional[dt.date] = None, zone: Optional[str] = None,
-               fold: Optional[int] = None) -> dict:
-    return S.tajika(_b(date, time, tz, lat, lon, zone, fold), year, _o(on))
+               fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.tajika(_b(date, time, tz, lat, lon, zone, fold, calendar), year, _o(on, ayanamsa=ayanamsa))
 
 
 @tool("Compatibility facts (Prasna Marga ch. XXI): Moon-sign and birth-star counts between two charts, each with "
@@ -168,52 +178,59 @@ def get_tajika(date: dt.date, time: str, lat: float, lon: float, tz: Union[float
 def get_compatibility(date1: dt.date, time1: str, lat1: float, lon1: float, date2: dt.date, time2: str, lat2: float,
                       lon2: float, tz1: Union[float, str, None] = None, tz2: Union[float, str, None] = None,
                       zone1: Optional[str] = None, zone2: Optional[str] = None, fold1: Optional[int] = None,
-                      fold2: Optional[int] = None) -> dict:
-    return S.compatibility(_b(date1, time1, tz1, lat1, lon1, zone1, fold1), _b(date2, time2, tz2, lat2, lon2, zone2,
-                                                                                 fold2))
+                      fold2: Optional[int] = None, ayanamsa: str = "lahiri", calendar1: str = "gregorian",
+                      calendar2: str = "gregorian") -> dict:
+    return S.compatibility(_b(date1, time1, tz1, lat1, lon1, zone1, fold1, calendar1),
+                           _b(date2, time2, tz2, lat2, lon2, zone2, fold2, calendar2), _o(ayanamsa=ayanamsa))
 
 
 @tool("Vimshottari periods (3 levels) and the periods running on `on`. year: sidereal (default), "
                       "365.25 or 360 (a convention some programs use).")
 def get_dasha(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None, on: Optional[dt.date] = None,
               year: str = "sidereal",
-        zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.dasha(_b(date, time, tz, lat, lon, zone, fold), _o(on, year=year))
+        zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.dasha(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(on, year=year, ayanamsa=ayanamsa))
 
 
 @tool("Transits on `on` (houses from lagna and Moon), slow-planet sign changes and exact "
                       "conjunctions of Jupiter/Saturn/Rahu/Ketu with natal points over `months`.")
 def get_transits(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None, on: Optional[dt.date] = None,
                  months: int = 24,
-        zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.transits(_b(date, time, tz, lat, lon, zone, fold), _o(on, months))
+        zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.transits(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(on, months, ayanamsa=ayanamsa))
 
 
 @tool("Local Shadbala (BPHS/Raman) with all components and the conventions used.")
 def get_shadbala(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
-        zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.shadbala(_b(date, time, tz, lat, lon, zone, fold))
+        zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.shadbala(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(ayanamsa=ayanamsa))
 
 
 @tool("Local Ashtakavarga: bhinnashtakavarga per planet and sarvashtakavarga, by sign and house.")
 def get_ashtakavarga(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
-        zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.ashtakavarga(_b(date, time, tz, lat, lon, zone, fold))
+        zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.ashtakavarga(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(ayanamsa=ayanamsa))
 
 
 @tool("Jaimini factors: chara karakas (7 and 8 schemes), arudha padas, upapada, karakamsa, "
                       "rasi drishti.")
 def get_jaimini_factors(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
-        zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.jaimini_factors(_b(date, time, tz, lat, lon, zone, fold))
+        zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.jaimini_factors(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(ayanamsa=ayanamsa))
 
 
 @tool("How far the birth time can move (±0.5 to ±15 min) before each factor changes, with "
                       "classes robust / moderate / high / very high.")
 def get_birth_time_sensitivity(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
                                on: Optional[dt.date] = None,
-        zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.birth_time_sensitivity(_b(date, time, tz, lat, lon, zone, fold), _o(on))
+        zone: Optional[str] = None, fold: Optional[int] = None, span_min: int = 15,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.birth_time_sensitivity(_b(date, time, tz, lat, lon, zone, fold, calendar), _o(on, ayanamsa=ayanamsa), span_min)
 
 
 # --- knowledge --------------------------------------------------------------------------------------------------
@@ -237,14 +254,20 @@ def analyze_question(question: str) -> dict:
                       "sensitivity classes. Read each listed path as skill://<path>, then answer.")
 def prepare_consultation(question: str, date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
                          on: Optional[dt.date] = None,
-        zone: Optional[str] = None, fold: Optional[int] = None) -> dict:
-    return S.consultation_context(question, _b(date, time, tz, lat, lon, zone, fold), _o(on))
+        zone: Optional[str] = None, fold: Optional[int] = None,
+        ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    return S.consultation_context(question, _b(date, time, tz, lat, lon, zone, fold, calendar), _o(on, ayanamsa=ayanamsa))
 
 
 @tool("Validate and render a Structured Report Model (skill://assets/report/report.schema.json) "
-                      "to HTML and, when WeasyPrint is installed, PDF in the reports folder.")
-def create_report(model: dict, name: str = "report") -> dict:
-    return S.create_report(model, name)
+                      "to HTML and, when WeasyPrint is installed, PDF in the reports folder. Dates are checked against "
+                      "the chart recomputed from the birth input (not printed); a model with dates needs it.")
+def create_report(model: dict, name: str = "report", date: Optional[dt.date] = None, time: Optional[str] = None,
+                  lat: Optional[float] = None, lon: Optional[float] = None, tz: Union[float, str, None] = None,
+                  on: Optional[dt.date] = None, months: int = 24, zone: Optional[str] = None, fold: Optional[int] = None,
+                  ayanamsa: str = "lahiri", calendar: str = "gregorian") -> dict:
+    b = None if date is None or time is None or lat is None or lon is None else _b(date, time, tz, lat, lon, zone, fold, calendar)
+    return S.create_report(model, name, b, _o(on, months, ayanamsa=ayanamsa))
 
 
 @mcp.resource("skill://{+path}", description="A document of the astrology-consultation skill (SKILL.md, "

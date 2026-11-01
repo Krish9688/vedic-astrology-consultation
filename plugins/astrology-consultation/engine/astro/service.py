@@ -271,8 +271,8 @@ def calculate_chart(b: BirthInput, o: Options = DEFAULTS, full: bool = True) -> 
 
 
 @_calc
-def planet_positions(b: BirthInput) -> dict:
-    c = _compute(b, Options(), extras=False)
+def planet_positions(b: BirthInput, o: Options = DEFAULTS) -> dict:
+    c = _compute(b, o, extras=False)
     return {"meta": c["meta"], "bodies": {k: {x: v[x] for x in ("sign", "deg", "lon", "nakshatra", "pada", "retro")}
                                           for k, v in c["bodies"].items()}}
 
@@ -283,10 +283,10 @@ def _with_meta(c: dict, out: dict) -> dict:
 
 
 @_calc
-def divisional_chart(b: BirthInput, division: int) -> dict:
+def divisional_chart(b: BirthInput, division: int, o: Options = DEFAULTS) -> dict:
     if division not in engine.VARGAS:
         raise ValueError(f"supported divisions: {engine.VARGAS}")
-    c = _compute(b, Options(), extras=False)
+    c = _compute(b, o, extras=False)
     return _with_meta(c, {"division": f"D{division}", "method": engine.VARGA_METHODS[f"D{division}"],
                           "signs": {k: v["vargas"][f"D{division}"] for k, v in c["bodies"].items()}})
 
@@ -478,12 +478,13 @@ def _facts_ids(c):
 
 
 @_calc
-def topic_network(b: BirthInput, topic: Optional[str] = None, planets: Optional[list] = None) -> dict:
+def topic_network(b: BirthInput, topic: Optional[str] = None, planets: Optional[list] = None,
+                  o: Options = DEFAULTS) -> dict:
     """A significator network frozen by its hash (timing.md §0 step 3): Raman's (a)-(g) list plus the topic extras
     (marriage, career, finance, relocation, education, children), every entry source-tagged, or a caller-supplied
     planet list (flagged unsourced). Build it before looking at any dates."""
     from .calc import activation as A
-    c = _compute(b, Options(), extras=False)
+    c = _compute(b, o, extras=False)
     F, key = _facts_ids(c), _chart_key(c)
     if (topic is None) == (planets is None):
         raise ValueError("give a topic or a planet list, not both")
@@ -623,21 +624,21 @@ def transits(b: BirthInput, o: Options = DEFAULTS) -> dict:
 
 
 @_calc
-def shadbala(b: BirthInput) -> dict:
-    c = _compute(b, Options(), extras=False)
+def shadbala(b: BirthInput, o: Options = DEFAULTS) -> dict:
+    c = _compute(b, o, extras=False)
     ut = dt.datetime.fromisoformat(f"{b.date}T{b.time}") - dt.timedelta(hours=b.tz)
     return _with_meta(c, strength.shadbala(c, ut, b.lat, b.lon, b.tz))
 
 
 @_calc
-def ashtakavarga(b: BirthInput) -> dict:
-    c = _compute(b, Options(), extras=False)
+def ashtakavarga(b: BirthInput, o: Options = DEFAULTS) -> dict:
+    c = _compute(b, o, extras=False)
     return _with_meta(c, strength.ashtakavarga(c))
 
 
 @_calc
-def jaimini_factors(b: BirthInput) -> dict:
-    c = _compute(b, Options(), extras=False)
+def jaimini_factors(b: BirthInput, o: Options = DEFAULTS) -> dict:
+    c = _compute(b, o, extras=False)
     return _with_meta(c, jaimini.jaimini(c))
 
 
@@ -760,21 +761,29 @@ def _derived_facts(c, ids=False):
     return cf.facts_json(chart) if ids else cf.facts(chart)
 
 
-def create_report(model: dict, name: str = "report") -> dict:
-    """Validate and render a Structured Report Model (assets/report/report.schema.json) to HTML (+PDF)."""
+def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = None, o: Options = DEFAULTS) -> dict:
+    """Validate and render a Structured Report Model (assets/report/report.schema.json) to HTML (+PDF). Dates are checked
+    against facts recomputed here from the birth input `b` (never client-supplied, never printed); a dated model needs it."""
     s = config.load()
     if not SAFE_NAME.match(name):
         raise ValueError("report name: letters, digits, dot, dash, underscore; ≤ 64 characters")
+    if refusal := config.folder_refusal(s.reports_dir, s.skill_dir):
+        return {"ok": False, "errors": [refusal]}        # V-FOLDER: nothing is written, not even the folder
     spec = importlib.util.spec_from_file_location("render_report", os.path.join(s.skill_dir, "scripts", "render_report.py"))
     rr = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(rr)
     schema = json.load(open(os.path.join(s.skill_dir, "assets", "report", "report.schema.json")))
-    errs = rr.validate(model, schema)
-    if not errs:
-        e2, warns = rr.checks(model)
-        errs += e2
+    if b is None:
+        if model.get("timeline") or any(k.get("window") for k in (model.get("summary") or {}).get("key_points", [])):
+            return {"ok": False, "errors": ["grounding needs the birth input: pass the birth details (not printed) so the dates can be checked"]}
+        errs, warns = rr.report_checks(model, schema)
     else:
-        warns = []
+        c = _compute(b, o)
+        c["meta"]["months"] = o.months      # calc.json carries no horizon; without it later windows fall to "unverified"
+        ids = _derived_facts(c, ids=True)
+        if not isinstance(ids, dict) and any(u.get("fact_refs") for x in model.get("sections", []) for u in x.get("units", [])):
+            return {"ok": False, "errors": [f"fact_refs cannot be checked: derived facts {ids}"]}     # fail closed
+        errs, warns = rr.report_checks(model, schema, c, ids if isinstance(ids, dict) else None)
     if errs:
         return {"ok": False, "errors": errs}
     os.makedirs(s.reports_dir, mode=0o700, exist_ok=True)      # reports hold birth details: owner-only when created

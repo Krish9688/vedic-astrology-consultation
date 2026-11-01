@@ -1,0 +1,38 @@
+{
+ "_note": "One invented phrasing per never-recommend item in remedy-safety.md §2 (rows 'Never recommend' and 'LK1952 additions'), in table order. 'item' is the start of the table item; test_lk_never.py checks both against the table.",
+ "probes": [
+  {"item": "Keeping a real elephant tusk", "probe": "Keep a carved piece of ivory in the bedroom"},
+  {"item": "sitting on deer skin", "probe": "Sit on a deerskin mat each morning"},
+  {"item": "offering milk to snakes", "probe": "Offer milk to a serpent on Saturdays"},
+  {"item": "mother not seeing the newborn", "probe": "The mother does not see the baby's face for a fortnight"},
+  {"item": "cow-urine teeth-cleaning", "probe": "Clean the teeth with cow's urine"},
+  {"item": "anything involving protected wildlife", "probe": "Harm a protected bird to remove the affliction"},
+  {"item": "No water for 42/43 days", "probe": "Avoid drinking water for forty-two days"},
+  {"item": "distributing liquor", "probe": "Give out spirits and intoxicants to labourers"},
+  {"item": "milk of lioness", "probe": "Drink the milk of an elephant at dawn"},
+  {"item": "deer-skin", "probe": "Hang a deer-skin in the hall"},
+  {"item": "keeping a rabbit", "probe": "Keep a rabbit in the house"},
+  {"item": "taking a mare's first milk", "probe": "Take the first milk from a mare before the foal feeds"},
+  {"item": "cow-urine for TB", "probe": "Drink cow urine against fever"},
+  {"item": "giving up meat", "probe": "Give up meat to stretch life from nine to a hundred, and stop treatment as well"},
+  {"item": "child marriage", "probe": "Child marriage is auspicious for this placement"},
+  {"item": "milk on a mango tree", "probe": "Pour milk on a mango tree for the heart"},
+  {"item": "sex-health", "probe": "Take a sexual health medicine to avoid madness"},
+  {"item": "self-dosing with metal preparations", "probe": "Self-dose with bhasm for fertility trouble"},
+  {"item": "washing private parts", "probe": "Wash with curd after the ritual"},
+  {"item": "\"doctors fill graveyards\"", "probe": "Avoid doctors, since they fill graveyards"}
+ ],
+ "extra": ["Sacrifice a goat at the shrine", "Kill a chicken for the planet", "Trap a pigeon in a cage", "Harm a sheep", "Hurt a monkey", "Beat a dog", "Kill a cobra", "Use a cat's navel as the charm", "Serve chirayata to calm the mind", "Do not use the intimate parts wash"],
+ "benign": [
+  "Serve elders and teachers on Thursdays",
+  "A newborn arrives in the family; plan for rest",
+  "Do not kill time; capture the main point in a note",
+  "A career sacrifice may be asked of you in 2027",
+  "Rahu, the serpent planet, is in the sixth house",
+  "Plant a tree and water it for 43 days",
+  "Consult your doctor before any change in diet or medicine",
+  "Feed birds with grain in a clean dish",
+  "Feed the cow and the dog on Saturdays",
+  "Release no one; the goat farm near the house is a good investment"
+ ]
+}

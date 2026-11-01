@@ -14,15 +14,37 @@ from html import escape
 
 SAFETY = {"low-risk": "Low-risk traditional practice", "caution": "Caution: offered only in its safe form"}
 # remedy-safety.md §2, the ⛔ rows (KB and LK1952): never recommended, whatever the card says
-NEVER = re.compile(r"\b(?:ivory|tusks?|deer[- ]?skin|milk (?:to|for) (?:a )?snakes?|snakes? milk|newborn|52 days|cow[- ]urine"
-                   r"|hookah|smok\w*|liquor|cigarettes?|intoxicants?|lioness|monkeys?|rabbits?|mare'?s|child marriage|bhasm"
-                   r"|metal preparations?|gold medicines?|self-?medicat\w*|private parts|no water|without water|placenta"
-                   r"|wildlife|captur\w*|kill\w*|sacrific\w*)\b", re.I)
+# The same regex runs over all client text of a report, so the verbs kill/sacrifice/capture count only next to an animal word.
+_ANIMAL = (r"(?:animals?|birds?|snakes?|wildlife|creatures?|cows?|dogs?|fish|owls?|tortoises?|goats?|chickens?|hens?|cocks?"
+           r"|roosters?|pigeons?|doves?|crows?|sheep|rams?|buffal\w+|cobras?|cats?|ox|oxen|deer|monkeys?|rats?(?! race)|mice)")
+_SNAKE = r"(?:snakes?|serpents?|cobras?)"
+_GAP = r"\W+(?:\w+\W+){0,3}"          # up to three words between two terms
+NEVER = re.compile(
+    r"\b(?:ivory|tusks?|deer[- ]?skin|snakes? milk|cow'?s?[- ]urine|urine of (?:a |the )?cow|gomutra"
+    r"|(?:52|fifty[- ]?two) days|hookah|smok\w*|liquor|cigarettes?|intoxicants?|lioness|monkeys?|rabbits?|mare'?s"
+    r"|child[- ]marriages?|bhasm|metal preparations?|gold medicines?|self-?(?:medicat|dos)\w*|private parts|intimate parts"
+    r"|no water|without water|placenta|wildlife|chirayata|chiretta|elephants?'?s? milk"
+    rf"|milk{_GAP}{_SNAKE}|{_SNAKE}{_GAP}milk|milk (?:of|from) (?:an? |the )?(?:elephant|lion|mare|animals?)"
+    rf"|mare{_GAP}milk|milk{_GAP}mango|mango{_GAP}milk"
+    rf"|(?:newborn|baby|infant)'?s? face|newborn[^.]{{0,60}}\b(?:days?|avoid|away|not see)\b|\b(?:avoid|away|not see)\b[^.]{{0,60}}newborn"
+    r"|(?:avoid|abstain\w* from|refrain\w* from|go without|forgo|not drink\w*|stop drinking) (?:\w+ ){0,2}water[^.]{0,30}days?"
+    r"|(?:give|giving) up (?:eating )?meat[^.]{0,60}(?:life|longer|extend)|(?:extend|lengthen)\w* (?:your |the )?life[^.]{0,40}meat"
+    rf"|(?:sex\w*|libido|potency){_GAP}(?:medicines?|tonics?|potions?|pills?|cure)"
+    r"|wash\w*\W+(?:\w+\W+){0,3}curd|doctors? fill\w* (?:the )?graveyards?"
+    r"|(?:avoid|stop|skip|shun|abandon|quit) (?:\w+ ){0,2}(?:doctors?|medical (?:care|treatment|advice))"
+    rf"|(?:kill\w*|sacrific\w*|captur\w*|harm\w*|hurt\w*|trap\w*|cag\w+|beat\w*|beating){_GAP}{_ANIMAL}|{_ANIMAL}{_GAP}(?:killed|sacrificed|captured|caged|trapped|harmed|hurt|beaten)"
+    r"|protected (?:birds?|animals?|species)|cat'?s? (?:navel|placenta)|marr\w+ (?:off )?(?:a |your )?(?:minor|underage))\b",
+    re.I)
 # remedy-safety.md §2, the ⚠️ rows: only in a stated safe form
 CAUTION = re.compile(r"\b(?:float\w*|rivers?|streams?|drains?|ovens?|fire|burn\w*|fast(?:ing|s)?|pierc\w*|dogs?|bur(?:y|ied)"
                      r"|cremation|iron rod|releas\w*|blacken\w*|grandmother)\b", re.I)
 PROCESS = ("The book's process, as its advice and never an obligation: one remedy at a time, for 43 days unbroken, in "
            "daylight, done by the person.")
+
+
+def never_hits(strings):
+    """Never-recommend matches in any client text, not only remedy cards; [] when clean."""
+    return sorted({m.group() for t in strings if isinstance(t, str) for m in NEVER.finditer(t)})
 
 
 def card_checks(r):
@@ -83,7 +105,8 @@ def selftest():
     assert card_checks({"remedies_requested": True, "remedies": [safe]}) == []
     assert "temple" in cards_html({"remedies_requested": True, "remedies": [safe]})[0]
     assert "river" not in cards_html({"remedies_requested": True, "remedies": [safe]})[0]  # only the safe form shows
-    assert not NEVER.search("Learn new skills with elders") and not CAUTION.search("a driver by the fireplace")
+    assert never_hits(["Offer milk to a serpent", "a calm word"]) == ["milk to a serpent"]
+    assert not NEVER.search("A newborn arrives; killing time; capture attention; sacrifice a holiday; Learn new skills with elders") and not CAUTION.search("a driver by the fireplace")
     print("selftest ok")
 
 

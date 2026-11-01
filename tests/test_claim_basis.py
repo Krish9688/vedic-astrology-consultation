@@ -59,7 +59,7 @@ def test_basis_rules():
 def test_example_renders_labels():
     assert rr.validate(EX, SCHEMA) == [] and rr.checks(EX)[0] == []
     html = rr.html_of(EX)
-    assert "Interpretation · Source text · Parashari" in html and "Prediction (interpretive) · Source text" in html
+    assert "Interpretation · Commentary · Parashari" in html and "Prediction (interpretive) · Commentary" in html
 
 
 def test_past_unit_without_history_status_warns_and_shows_not_confirmed():

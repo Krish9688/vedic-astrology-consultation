@@ -1,7 +1,9 @@
 # Roadmap
 
 Ordered by value to consultation quality, not by size. Each item names what would show it worked.
-Updated 2026-10-03 (final-completion review in progress; this file is revised again when it ends).
+Status as of 2026-10-28: 3.7.0 is released; the items below were last revised 2026-10-21 and several "Later" entries are
+done or decided since (Chara D-3, pancha vargeeya bala D-6, Lal Kitab public split). Current task status is
+authoritative in `.project-council/PROJECT-STATUS.md`; open work is tracked as GitHub issues (private #37-#41, public #14-#15).
 
 ## Done since the previous roadmap (v3.4 → v3.5 / 3.5.0)
 

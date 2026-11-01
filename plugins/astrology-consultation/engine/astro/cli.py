@@ -4,7 +4,7 @@ line, so it stays out of shell history):  {"date": "1992-03-14", "time": "09:40"
   astro chart input.json [--md] [--out DIR]       astro sensitivity input.json [--md]
   astro dasha input.json [--on DATE] [--year 360]
   astro varga input.json --d 9                    astro consult "Will my career change?" input.json
-  astro transits input.json [--months 24]         astro report model.json [--name NAME]
+  astro transits input.json [--months 24]         astro report model.json --input birth.json [--name NAME]
   astro strength input.json                       astro sources "rule" | astro search "words"
   astro jaimini input.json                        astro predict add|list|evaluate|score ...
   astro network input.json --topic career         astro activation input.json --network career [--level pd]
@@ -84,6 +84,10 @@ def doctor():
             add("OPTIONAL", name, f"pip install {' '.join(mods)}")
     has = lambda *p: bool(s.knowledge_dir) and os.path.exists(os.path.join(s.knowledge_dir, *p))
     add("PASS" if s.skill_dir else "WARN", "skill folder", s.skill_dir or "not found — `astro setup --skill-dir`")
+    from . import places
+    pi = places.info(s.data_dir)
+    add("PASS" if pi else "OPTIONAL", "place gazetteer (find_place)",
+        f"{places.SOURCE}, downloaded {pi.get('downloaded', '?')}" if pi else "not installed — `astro setup --places` (≈7 MB)")
     add("PASS" if has("index", "library.sqlite") else "OPTIONAL", "book index (your own books)",
         "" if has("index", "library.sqlite") else "`astro add-book`")
     add("PASS" if has("graphify-out", "graph.json") else "OPTIONAL", "knowledge graph")
@@ -205,6 +209,9 @@ def main(argv=None):
     p = sub.add_parser("report")
     p.add_argument("model")
     p.add_argument("--name", default="report")
+    p.add_argument("--input", help="birth JSON (as for the other commands): the report's dates are checked against it")
+    p.add_argument("--on", type=dt.date.fromisoformat)
+    p.add_argument("--months", type=int, default=24)
     sub.add_parser("sources").add_argument("rule")
     p = sub.add_parser("search")
     p.add_argument("query")
@@ -279,7 +286,7 @@ def main(argv=None):
         return _print(S.consultation_context(a.question, _birth(a.input), S.Options(on=a.on)))
     if a.cmd == "report":
         with open(a.model) as f:
-            return _print(S.create_report(json.load(f), a.name))
+            return _print(S.create_report(json.load(f), a.name, _birth(a.input) if a.input else None, _opts(a)))
     if a.cmd == "sky":
         return _print(S.sky(a.start, a.end, a.tz))
     if a.cmd == "panchang":

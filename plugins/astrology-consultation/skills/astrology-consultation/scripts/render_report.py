@@ -118,6 +118,41 @@ WIN = re.compile(rf"\b{MOD}{MON}\.?(?: 20\d\d)?{SEP}{MOD}{MON}\.? 20\d\d\b"     
                  rf"|\b{MOD}(?:{MON}\.? )?20\d\d{SEP}{MOD}(?:{MON}\.? )?20\d\d\b", re.I)  # 2027 – mid-2028
 
 
+LK_NAME = re.compile(r"\b(?:LK\w*|Shrimali|Lal[- ]?Kitab)\b", re.I)   # names and aliases of the Lal Kitab family
+LK_BOOKS = {"LKS", "KB", "VT"}          # source-index.md: Shrimali's Lal Kitab, the knowledge base, the Varshaphal table; LK1952 below
+
+
+def separation(u, section_id):
+    """Errors that keep Parashari/Jaimini and Lal Kitab claims apart (the schema validator has no conditionals)."""
+    errs, system = [], u.get("system")
+    if system == "lal_kitab" and not u.get("edition"):
+        errs.append("is a Lal Kitab unit with no edition (shrimali, lk1952 or both)")
+    if system == "lal_kitab" and not section_id.startswith("lk-"):
+        errs.append("is a Lal Kitab unit outside an 'lk-' section (REPORT-STANDARD §7)")
+    if u.get("rule_refs") and not system:
+        errs.append("has rule_refs but no system")
+    if u.get("claim_basis") == "TEXT" and u.get("claim_type") != "rule":
+        errs.append("has claim_basis TEXT but is not a rule (an interpretation or prediction is COMMENTARY)")
+    if system == "combined" and "compar" not in section_id:
+        errs.append("is a combined unit outside the closing comparison section (its id must contain 'compar')")
+    for x in u.get("rule_refs", []):
+        x = x.strip()
+        book = (re.match(r"[A-Z][A-Za-z0-9]*", x) or [""])[0]
+        lk = book in LK_BOOKS or book.startswith("LK") or bool(LK_NAME.search(x))   # id first token, or a name anywhere, page or not
+        if not lk and not re.match(r"[A-Z][A-Za-z0-9]*\s+\S", x):
+            continue                     # CR-, rule: and node ids are not book citations
+        if system in ("parashari", "jaimini") and lk:
+            errs.append(f"is a {system} unit but cites the Lal Kitab book '{x}'")
+        if system == "lal_kitab" and not lk:
+            errs.append(f"is a Lal Kitab unit but cites the Parashari text '{x}'")
+        ed = u.get("edition")
+        if system == "lal_kitab" and lk and ed in ("shrimali", "lk1952"):
+            fam = "lk1952" if re.search(r"1952|\bLK(?!S\b)\w*", x) and book != "KB" else "shrimali" if re.search(r"\b(?:LKS|KB|Shrimali)\b", x) else None
+            if fam and fam != ed:
+                errs.append(f"is a {ed} unit but cites the {fam} reference '{x}'")
+    return errs
+
+
 def checks(r):
     """Consistency and life-first checks; returns (errors, warnings)."""
     errs, warns = [], []
@@ -143,6 +178,7 @@ def checks(r):
                 errs.append(f"{name} is a calculated fact but its claim_basis is {basis}")
             if basis in ("TEXT", "COMMENTARY") and (m := PROVEN.search(" ".join(str(u.get(k, "")) for k in TEXT_KEYS))):   # qc.md: a book is not a test
                 errs.append(f"{name} rests on {basis} but is phrased as tested or proven ('{m.group()}')")
+            errs += [f"{name} {e}" for e in separation(u, s["id"])]
             if u.get("temporal_mode") == "past" and not u.get("history_status"):
                 warns.append(f"{name} is about the past but has no history_status: it is shown as not confirmed")
             if not u.get("watch") and u.get("timing"):
@@ -173,12 +209,14 @@ def checks(r):
     if codes:   # round 10: coded windows in client text cost every report comparison
         errs.append(f"window codes in client text ({', '.join(codes)}) — use plain names and dates")
     res = lint(report_text(r), "report")
-    errs += [i for i in res["issues"] if i.startswith("SAFETY")]
+    errs += [i for i in res["issues"] if i.startswith(("SAFETY", "CERTAINTY"))]
     # safety covers every string in the model — appendix, timeline labels, watch list, practical summary too
     rest = lint("\n".join(_strings(r)), "report")   # every string, incl. unit basis and section titles (council 5 R7-1)
-    errs += [i for i in rest["issues"] if i.startswith("SAFETY") and i not in errs]
-    warns += [f"life-first: {i}" for i in res["issues"] if not i.startswith("SAFETY")]
+    errs += [i for i in rest["issues"] if i.startswith(("SAFETY", "CERTAINTY")) and i not in errs]
+    warns += [f"life-first: {i}" for i in res["issues"] if not i.startswith(("SAFETY", "CERTAINTY"))]
     errs += lk_remedies.card_checks(r)
+    if hits := lk_remedies.never_hits(_strings({k: v for k, v in r.items() if k != "remedies"})):   # cards report their own
+        errs.append(f"client text matches never-recommend items ({', '.join(hits[:4])}; remedy-safety.md §2)")
     cites = re.findall(r"\bp\.?\s?\d{1,4}\b|\bsl\.\s?\d+", report_text(r))
     if cites:
         warns.append(f"page/verse references in client text ({', '.join(cites[:4])}) — keep them in appendix.sources")
@@ -210,10 +248,16 @@ def _half(text, year, start):
 
 def _windows(r):
     """(label, start, end) for every timeline row and every date window in client text and summary windows."""
-    out = [(f"{x['label']} {x['start']}..{x['end']}", _ym(x["start"], True),
-            _ym(x["end"], False)) for x in r.get("timeline", [])]
-    texts = [k.get("window", "") for k in r["summary"]["key_points"]] + [report_text(r)]
-    for t in texts:
+    out = [(f"{x['label']} {x['start']}..{x['end']}", _ym(x["start"], True), _ym(x["end"], False),
+            f"{x['label']} {x.get('basis', '')}") for x in r.get("timeline", [])]
+    sm = r["summary"]
+    texts = [(sm.get("headline", ""), sm.get("headline", ""))]
+    for k in sm["key_points"]:               # a key point's window is grounded by the planets its own text names
+        texts += [(k.get("window", ""), f"{k.get('text', '')} {k.get('window', '')}"), (k.get("text", ""), f"{k.get('text', '')} {k.get('window', '')}")]
+    for sec in r["sections"]:               # prose windows are grounded by the unit (or section text) that holds them
+        texts += [(t, t) for t in [report_text({"sections": [dict(sec, units=[u])]}) for u in sec.get("units", [])]
+                  + [report_text({"sections": [dict(sec, units=[])]})]]
+    for t, ctx in texts:
         found = list(WIN.finditer(t))
         for m in found:
             a, b = re.split(SEP, re.sub(r"\bmid-?", "", m.group(), flags=re.I), maxsplit=1, flags=re.I)
@@ -223,9 +267,9 @@ def _windows(r):
             s, e = _half(a, ya, True), _half(b, yb, False)
             if not re.search(r"20\d\d", a) and s > e:
                 s = _half(a, ya - 1, True)          # "November to February 2027"
-            out.append((m.group(), s, e))
-        if not found and t is not texts[-1] and (y := re.fullmatch(r"\s*(20\d\d)\s*", t)):
-            out.append((y.group(1), dt.date(int(y.group(1)), 1, 1), dt.date(int(y.group(1)), 12, 31)))
+            out.append((m.group(), s, e, ctx))
+        if not found and (y := re.fullmatch(r"\s*(20\d\d)\s*", t)):
+            out.append((y.group(1), dt.date(int(y.group(1)), 1, 1), dt.date(int(y.group(1)), 12, 31), ctx))
     return out
 
 
@@ -239,12 +283,10 @@ PERIOD = re.compile(rf"({PLANETS})(?:\s*[–-]\s*({PLANETS})| major period)\b")
 
 
 def grounding(r, facts):
-    """Every window must lie near a dasha/AD boundary, ingress or exact contact of the engine facts (calc.json)."""
-    dasha = [_d(x[k]) for md in facts["vimshottari"] for x in [md] + md.get("sub", []) for k in ("start", "end")]
-    other = [_d(x["date"]) for x in facts.get("ingresses", []) + facts.get("slow_contacts", [])]
+    """Every window must lie near a dasha/AD boundary, ingress or exact contact of a planet its own text names (calc.json)."""
     first = _d(facts["meta"]["transit_date"])
-    last = max(other, default=first)             # calc.json does not store `months`; its last event bounds the horizon
-    if facts["meta"].get("months"):
+    last = max([_d(x["date"]) for x in facts.get("ingresses", []) + facts.get("slow_contacts", [])], default=first)
+    if facts["meta"].get("months"):         # calc.json does not store `months`; its last event bounds the horizon otherwise
         last = max(last, first + dt.timedelta(days=30.44 * facts["meta"]["months"]))
     tol = dt.timedelta(days=TOLERANCE_DAYS)
     errs, warns, seen = [], [], set()
@@ -257,18 +299,26 @@ def grounding(r, facts):
                       and abs(_ym(x["end"], False) - _d(p["end"])) <= tol):
             errs.append(f"row '{x['label']}' {x['start']}..{x['end']} does not match its {m.group()} "
                         f"({str(p['start'])[:10]} → {str(p['end'])[:10]})")
-    for label, s, e in _windows(r):
-        if (label, s, e) in seen:
+    for label, s, e, ctx in _windows(r):
+        if (label, s, e, ctx) in seen:
             continue
-        seen.add((label, s, e))
+        seen.add((label, s, e, ctx))
+        named = {n[:2] for n in re.findall(PLANETS, ctx)}      # engine lord codes: Su, Mo, Ma, Me ...
+        if not named:
+            errs.append(f"window '{label}' cites no dasha period or planet to ground it")
+            continue
+        anchors = [_d(x[k]) for md in facts["vimshottari"] for x in [md] + md.get("sub", []) if x["lord"] in named
+                   for k in ("start", "end")]
+        anchors += [_d(x["date"]) for x in facts.get("ingresses", []) + facts.get("slow_contacts", [])
+                    if {x.get("planet"), x.get("transit"), x.get("natal")} & named]
         if (e - s).days > 365.25 * BROAD_YEARS:
             warns.append(f"broad window '{label}' (over {BROAD_YEARS} years): grounding is weak")
-        if any(s - tol <= a <= e + tol for a in dasha + other):
+        if any(s - tol <= a <= e + tol for a in anchors):
             continue
         if e > last or s < first and e < first:
             warns.append(f"window '{label}' is beyond the facts' range: unverified")
         else:
-            errs.append(f"window '{label}' matches no dasha boundary, ingress or exact contact in the facts")
+            errs.append(f"window '{label}' matches no dasha boundary, ingress or exact contact of the planets it names")
     return errs, warns
 
 
@@ -515,6 +565,27 @@ def _owner_only(path):
     return os.fdopen(fd, "wb")
 
 
+def report_checks(r, schema, facts=None, fact_ids=None, outlook=None):
+    """The one check sequence behind render_report.py, create_report (MCP, REST, CLI): (errors, warnings)."""
+    errs = validate(r, schema)
+    if errs:
+        return errs, []
+    e2, warns = checks(r)
+    errs += e2
+    extra = [citations(r)]
+    if facts is not None:
+        extra.append(grounding(r, facts))
+    else:
+        warns.append("grounding not checked: pass --facts calc.json")
+    extra.append(outlook_checks(r, outlook))
+    if fact_ids is not None:
+        extra.append(fact_refs(r, fact_ids))
+    for e3, w3 in extra:
+        errs += e3
+        warns += w3
+    return errs, warns
+
+
 def main():
     if "--selftest" in sys.argv:
         return selftest()
@@ -527,24 +598,12 @@ def main():
     out = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else os.path.dirname(os.path.abspath(src))
     r = json.load(open(src, encoding="utf-8"))
     schema = json.load(open(os.path.join(ASSETS, "report.schema.json")))
-    errs = validate(r, schema)
-    if not errs:
-        e2, warns = checks(r)
-        errs += e2
-        extra = [citations(r)]
-        if "--facts" in sys.argv:
-            extra.append(grounding(r, json.load(open(sys.argv[sys.argv.index("--facts") + 1], encoding="utf-8"))))
-        else:
-            warns.append("grounding not checked: pass --facts calc.json")
-        o = json.load(open(sys.argv[sys.argv.index("--outlook") + 1], encoding="utf-8")) if "--outlook" in sys.argv else None
-        extra.append(outlook_checks(r, o))
-        if "--fact-ids" in sys.argv:
-            extra.append(fact_refs(r, json.load(open(sys.argv[sys.argv.index("--fact-ids") + 1], encoding="utf-8"))))
-        for e3, w3 in extra:
-            errs += e3
-            warns += w3
-        for w in warns:
-            print("warning:", w)
+    facts = json.load(open(sys.argv[sys.argv.index("--facts") + 1], encoding="utf-8")) if "--facts" in sys.argv else None
+    o = json.load(open(sys.argv[sys.argv.index("--outlook") + 1], encoding="utf-8")) if "--outlook" in sys.argv else None
+    ids = json.load(open(sys.argv[sys.argv.index("--fact-ids") + 1], encoding="utf-8")) if "--fact-ids" in sys.argv else None
+    errs, warns = report_checks(r, schema, facts, ids, o)
+    for w in warns:
+        print("warning:", w)
     if errs:
         print("\n".join("error: " + e for e in errs))
         sys.exit(1)
@@ -590,7 +649,7 @@ def selftest():
         pass                                   # labels are checked where jinja2 is installed (CI installs it)
     else:
         page = html_of(ex)
-        assert 'class="basis">Interpretation · Source text · Parashari<' in page and "Prediction (interpretive)" in page, "unit labels"
+        assert 'class="basis">Interpretation · Commentary · Parashari<' in page and "Prediction (interpretive)" in page, "unit labels"
         assert set(CLAIM_LABELS) == set(schema["$defs"]["unit"]["properties"]["claim_type"]["enum"])
         assert set(BASIS_LABELS) == set(schema["$defs"]["unit"]["properties"]["claim_basis"]["enum"])
         assert set(SYSTEM_LABELS) == set(schema["$defs"]["unit"]["properties"]["system"]["enum"])

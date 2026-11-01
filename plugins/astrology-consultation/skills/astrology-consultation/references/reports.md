@@ -80,6 +80,10 @@ technical appendix.
    life-first lint; then it writes HTML and, when WeasyPrint is installed, a PDF (cream and green, visuals.md). Without
    WeasyPrint, deliver the HTML (it prints to PDF from a browser) and say so. `--check-only` validates without
    rendering. A worked synthetic example: `assets/report/example-synthetic.json`.
+   The MCP `create_report` tool, REST `/api/v1/report` and `astro report` now refuse a model whose dates the chart does
+   not support, and they need the birth input for that (the same date, time, lat, lon, tz as the chart tools; it is
+   recomputed server-side and not printed). A model with a timeline or summary windows and no birth input is refused.
+   Facts are never taken from the client. The script path takes `--facts calc.json` for the same check.
 4. Read the rendered result before delivering it; fix the model, not the HTML.
 5. Save reports where the person asks. Personal reports never go into the skill package or the repository.
 
