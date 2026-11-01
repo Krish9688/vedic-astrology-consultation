@@ -74,3 +74,19 @@ def test_i46_unknown_event_ref_is_refused(tmp_path, monkeypatch):
     m["summary"]["key_points"][1]["event_refs"] = ["ING.Ju.2026-10-30"]           # off by a day: not an engine event
     r = create(m, tmp_path, monkeypatch)
     assert r["ok"] is False and any("unknown engine event" in e for e in r["errors"])
+
+
+def test_rc02_a_second_ungrounded_window_in_text_is_still_checked(tmp_path, monkeypatch):
+    m = copy.deepcopy(MODEL)
+    k = m["summary"]["key_points"][3]                       # Saturn's period (event_refs DSH.Sa); no Saturn event Dec 2026
+    k["text"] += " An early hint comes in Dec 2026 – Dec 2026."
+    r = create(m, tmp_path, monkeypatch)
+    assert r["ok"] is False and any("Dec 2026" in x and "matches no" in x for x in r["errors"]), r
+
+
+def test_rc03_refs_may_fall_in_either_range_of_the_window(tmp_path, monkeypatch):
+    m = copy.deepcopy(MODEL)
+    k = m["summary"]["key_points"][1]
+    k["window"], k["event_refs"] = "Oct 2026 – Nov 2026 and Jun 2027 – Jul 2027", ["ING.Ju.2026-10-31", "ING.Ju.2027-06-26"]
+    r = create(m, tmp_path, monkeypatch)
+    assert not [e for e in r.get("errors", []) if "does not contain" in e], r

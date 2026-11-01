@@ -119,7 +119,7 @@ def test_f04_every_chart_service_function_is_wrapped():
     import inspect
     unwrapped = [n for n, f in vars(S).items() if inspect.isfunction(f) and not n.startswith("_") and f.__module__ == S.__name__
                  and "b" in inspect.signature(f).parameters and not hasattr(f, "__wrapped__")
-                 and n not in {"unknown_time_problems"}]                      # pure check, computes nothing
+                 and n not in {"unknown_time_problems", "time_unknown"}]                      # pure check, computes nothing
     assert unwrapped == [], unwrapped
 
 
@@ -249,3 +249,43 @@ def test_i48_time_source_reaches_mcp_chart_tools():
     tools = [f for n, f in vars(M).items() if n.startswith(("get_", "create_", "prepare_")) and callable(f)
              and "time" in inspect.signature(f).parameters and "date" in inspect.signature(f).parameters]
     assert tools and all("time_source" in inspect.signature(f).parameters for f in tools)
+
+
+# --- council round 2 (REVIEW-correctness.md RC-01..RC-09) ---------------------------------------------------------------
+def test_rc01_time_varying_facts_cover_lagna_yogas_and_lordships():
+    v = S.time_varying_facts(S.BirthInput(**B, tz="+05:30"), S.DEFAULTS)
+    assert "F.asc.sign" in v and any(k.endswith(".owns") for k in v) and any(k.startswith("F.yoga.") for k in v)
+    m = {"report_type": "compact", "sections": [{"id": "s", "title": "t", "units": [{"fact_refs": [sorted(
+        k for k in v if k.startswith("F.yoga."))[0]]}]}]}
+    assert any("cannot be cited" in e for e in S.unknown_time_problems(m, UNKNOWN, v))
+
+
+@pytest.mark.parametrize("src,unknown", [("unknown; 12:00 used as a placeholder", True), ("time unknown", True),
+                                          ("not known", True), ("noon chart (time unknown)", True), ("N/A", True),
+                                          ("no birth time", True), ("birth certificate", False),
+                                          ("unknown hospital; time from birth certificate", False)])
+def test_rc04_unknown_time_wording(src, unknown):
+    assert S.time_unknown({}, S.BirthInput(**B, tz="+05:30", time_source=src)) is unknown
+
+
+def test_rc04_rc09_event_refs_need_a_window_and_are_refused_with_unknown_time():
+    m = {"report_type": "compact", "summary": {"headline": "h", "key_points": [{"text": "t", "confidence": "Low",
+                                                                                "event_refs": ["DSH.Sa"]}]}}
+    assert any("event_refs" in e for e in S.unknown_time_problems(m, UNKNOWN))
+
+
+@pytest.mark.parametrize("tz,flagged", [("+05:20", True), ("+04:40", True), ("+07:20", False), ("-10:40", False),
+                                        ("+12:20", False), ("+05:30", False)])
+def test_rc07_only_historical_20_minute_offsets_are_standard(tz, flagged):
+    assert any(f.startswith("non-standard") for f in S.BirthInput(**B, tz=tz).tz_flags) is flagged
+
+
+def test_rc05_refusal_shows_no_mean_time_number():
+    with pytest.raises(ValueError) as e:
+        S.BirthInput(date="1860-01-01", time="12:00", zone="Asia/Kolkata", lat=19.07, lon=72.88)
+    assert not re.search(r"[+-]\d\d:\d\d", str(e.value).split("(+HH:MM)")[0])
+
+
+def test_rc08_julian_leap_day_in_panchang():
+    p = S.panchang("1700-02-29", 19.07, 72.88, "+05:30", calendar="julian")
+    assert p["date"] == "1700-03-11"

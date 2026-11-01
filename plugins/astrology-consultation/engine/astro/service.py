@@ -42,11 +42,17 @@ OFFSET_COMPACT = re.compile(r"^(?:UTC|GMT)?([+-])(\d{2})([0-5]\d)$", re.I)   # I
 MAX_OFFSET_H = 14                                     # real civil offsets lie within -12..+14 (audit F-03)
 
 
+# 20-minute standard offsets the tz database has used (council RC-07); any other 20-minute value, e.g. a mistyped +05:20
+# for +05:30, is treated as non-standard (flagged when stated, refused from a zone).
+TWENTY_MINUTE_STANDARD = {sg * (h * 3600 + m * 60) for sg, h, m in ((1, 7, 20), (1, 8, 20), (-1, 4, 40), (-1, 10, 40),
+                                                                   (-1, 11, 20), (1, 12, 20), (1, 0, 20), (-1, 0, 20))}
+
+
 def standard_offset(seconds) -> bool:
-    """A standard-time offset is a whole number of quarter hours, or of 20 minutes (the historical Pacific -10:40,
-    -11:20, +12:20). Anything else (e.g. +05:53:20, +04:51) is a local or city mean time (audit F-06)."""
-    s = round(abs(seconds))
-    return s % 900 == 0 or s % 1200 == 0
+    """A standard-time offset is a whole number of quarter hours, or one of the historical 20-minute standard times
+    (TWENTY_MINUTE_STANDARD). Anything else (e.g. +05:53:20, +04:51) is a local or city mean time (audit F-06)."""
+    s = round(seconds)
+    return s % 900 == 0 or s in TWENTY_MINUTE_STANDARD
 
 
 def nonstandard_flag(hours) -> list:
@@ -123,9 +129,9 @@ def resolve_zone(date, time, zone, lon, fold=None):
     if t.tzname() == "LMT" or not standard_offset(t.utcoffset().total_seconds()):
         # No local mean time is ever offered or derived (owner rule: civil time with a stated offset, never LMT). The tz
         # database's LMT and its city mean times (e.g. Asia/Kolkata +05:53:20 before 1870, +05:21:10 to 1906) are refused.
-        raise ValueError(f"{zone} on {date} is before standard time (tz database: {utc_offset_str(t.utcoffset())} "
-                         f"{t.tzname()}, a mean time, not a standard offset). Give the UTC offset the birth record states "
-                         "(+HH:MM)")
+        raise ValueError(f"{zone} on {date} is before standard time: the tz database gives a mean time "
+                         f"({t.tzname()}), not a standard offset, so it cannot settle the clock. Give the UTC offset the "
+                         "birth record states (+HH:MM)")
     flags = []
     if date.year < 1970:
         flags.append("IANA offsets before 1970 often come from unreliable sources (tz theory.html): confirm with the "
@@ -332,11 +338,13 @@ def dasha(b: BirthInput, o: Options = DEFAULTS) -> dict:
                           "running": running, "periods": c["vimshottari"]})
 
 
-def julian_to_gregorian(d: dt.date) -> dt.date:
-    """A date written in the Julian calendar → the Gregorian date (Swiss Ephemeris julday/revjul), as BirthInput does."""
-    jd = engine.swe.julday(d.year, d.month, d.day, 0.0, engine.swe.JUL_CAL)
-    if engine.swe.revjul(jd, engine.swe.JUL_CAL)[:3] != (d.year, d.month, d.day):
-        raise ValueError(f"{d} is not a date in the Julian calendar")
+def julian_to_gregorian(d) -> dt.date:
+    """A date written in the Julian calendar ('YYYY-MM-DD' or a date) → the Gregorian date (Swiss Ephemeris
+    julday/revjul), as BirthInput does. Parsed from integers: Julian 1700-02-29 is not a Gregorian date (RC-08)."""
+    y, m, dd = (int(x) for x in str(d)[:10].split("-"))
+    jd = engine.swe.julday(y, m, dd, 0.0, engine.swe.JUL_CAL)
+    if engine.swe.revjul(jd, engine.swe.JUL_CAL)[:3] != (y, m, dd):
+        raise ValueError(f"{str(d)[:10]} is not a date in the Julian calendar")
     return dt.date(*engine.swe.revjul(jd, engine.swe.GREG_CAL)[:3])
 
 
@@ -348,8 +356,8 @@ def panchang(date, lat: float, lon: float, tz=None, zone: Optional[str] = None, 
     from .calc import panchang as P
     if calendar not in ("gregorian", "julian"):
         raise ValueError("calendar must be gregorian or julian")
-    written = dt.date.fromisoformat(str(date))
-    d = julian_to_gregorian(written) if calendar == "julian" else written
+    written = str(date)[:10]
+    d = julian_to_gregorian(written) if calendar == "julian" else dt.date.fromisoformat(written)
     if not (-89.9 <= lat <= 89.9 and -180 <= lon <= 180):
         raise ValueError("latitude must be within ±89.9° and longitude within ±180°")
     if zone:
@@ -808,26 +816,51 @@ def _derived_facts(c, ids=False):
     return cf.facts_json(chart) if ids else cf.facts(chart)
 
 
-TIME_BOUND_REF = re.compile(r"^F\.(asc|H\d+)\.|^F\.\w+\.(house|dispositor_house)$")   # need the exact birth time
+# Facts that always need the birth time (static fallback when no birth input is given): lagna, houses, house
+# placements and lordships, and every yoga (most are lagna-based). With a birth input the time-varying facts are
+# measured instead (time_varying_facts), which also catches degrees and anything else that moves within the day.
+TIME_BOUND_REF = re.compile(r"^F\.(asc|H\d+)\.|^F\.\w+\.(house|dispositor_house|owns|deg)$|^F\.yoga\.|^F\.moon\.elongation")
+UNKNOWN_TIME = re.compile(r"^\s*(unknown|not known|n/?a|none|no (birth )?time)\s*($|[;,(:.-])"
+                          r"|\b(birth )?time\s+(is\s+)?(unknown|not known)\b|\bno birth time\b", re.I)   # council RC-04
+DAY_SAMPLES = ("00:00:00", "03:00:00", "06:00:00", "09:00:00", "12:00:00", "15:00:00", "18:00:00", "21:00:00", "23:59:00")
 
 
-def unknown_time_problems(model: dict, b: Optional["BirthInput"] = None) -> list:
-    """ASTRO-REPORT-SPEC item 26 enforced in the engine, not only in SKILL.md (#48): with an unknown birth time only a
-    compact report is allowed, with no ascendant/house claims (fact_refs) and no dated windows or dasha timeline."""
-    unknown = re.compile(r"^\s*unknown", re.I)
+def time_unknown(model: dict, b: Optional["BirthInput"] = None) -> bool:
     src = (b.time_source if b else None) or (model.get("birth") or {}).get("time_source") or ""
     rel = str((model.get("birth") or {}).get("time_reliability") or "")
-    if not (unknown.match(src) or unknown.match(rel)):
+    return bool(UNKNOWN_TIME.search(src) or UNKNOWN_TIME.search(rel))
+
+
+@_calc
+def time_varying_facts(b: "BirthInput", o: "Options") -> set:
+    """Fact ids whose value changes at some clock time of the birth date (council RC-01): with an unknown time none of
+    them may be cited. Computed, not listed, so new lagna-based facts are covered automatically."""
+    seen = {}
+    for t in DAY_SAMPLES:
+        f = _derived_facts(_compute(b.model_copy(update={"time": t}), o), ids=True)
+        f = f.get("facts", {}) if isinstance(f, dict) else {}
+        for k in set(seen) | set(f):
+            seen.setdefault(k, set()).add(json.dumps(f.get(k), sort_keys=True, default=str))
+    return {k for k, v in seen.items() if len(v) > 1}
+
+
+def unknown_time_problems(model: dict, b: Optional["BirthInput"] = None, varying: Optional[set] = None,
+                          windows: Optional[list] = None) -> list:
+    """ASTRO-REPORT-SPEC item 26 enforced in the engine, not only in SKILL.md (#48): with an unknown birth time only a
+    compact report is allowed, with no time-dependent facts (fact_refs), no event_refs and no dated windows anywhere."""
+    if not time_unknown(model, b):
         return []
     errs = []
     if model.get("report_type") != "compact":
         errs.append(f"birth time unknown: only a compact report is allowed (got {model.get('report_type')!r})")
-    refs = sorted({x for s in model.get("sections", []) for u in s.get("units", []) for x in u.get("fact_refs", [])
-                   if TIME_BOUND_REF.search(x)})
+    cited = {x for s in model.get("sections", []) for u in s.get("units", []) for x in u.get("fact_refs", [])}
+    refs = sorted(x for x in cited if TIME_BOUND_REF.search(x) or (varying is not None and x in varying))
     if refs:
-        errs.append(f"birth time unknown: ascendant/house facts cannot be cited: {', '.join(refs[:8])}")
-    if model.get("timeline") or any(k.get("window") for k in (model.get("summary") or {}).get("key_points", [])):
-        errs.append("birth time unknown: no dated windows or dasha timeline (dasha dates depend on the birth time)")
+        errs.append(f"birth time unknown: facts that depend on the birth time cannot be cited: {', '.join(refs[:8])}")
+    kps = (model.get("summary") or {}).get("key_points", [])
+    if model.get("timeline") or any(k.get("window") or k.get("event_refs") for k in kps) or windows:
+        errs.append("birth time unknown: no dated windows, event_refs or dasha timeline (dasha dates depend on the "
+                    "birth time)")
     return errs
 
 
@@ -840,14 +873,20 @@ def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = N
         raise ValueError("report name: letters, digits, dot, dash, underscore; ≤ 64 characters")
     if refusal := config.folder_refusal(s.reports_dir, s.skill_dir):
         return {"ok": False, "errors": [refusal]}        # V-FOLDER: nothing is written, not even the folder
-    if problems := unknown_time_problems(model, b):
-        return {"ok": False, "errors": problems}         # #48: refused before anything is rendered
     spec = importlib.util.spec_from_file_location("render_report", os.path.join(s.skill_dir, "scripts", "render_report.py"))
     rr = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(rr)
     schema = json.load(open(os.path.join(s.skill_dir, "assets", "report", "report.schema.json")))
+    if time_unknown(model, b):          # #48: refused before anything is rendered; dated windows anywhere count (RC-04)
+        try:
+            wins = rr._windows(model) if model.get("summary") else []
+        except Exception:               # a malformed model is report_checks' job; the rule must still hold
+            wins = []
+        if problems := unknown_time_problems(model, b, time_varying_facts(b, o) if b else None, wins):
+            return {"ok": False, "errors": problems}
     if b is None:
-        if model.get("timeline") or any(k.get("window") for k in (model.get("summary") or {}).get("key_points", [])):
+        if model.get("timeline") or any(k.get("window") or k.get("event_refs")             # RC-09
+                                         for k in (model.get("summary") or {}).get("key_points", [])):
             return {"ok": False, "errors": ["grounding needs the birth input: pass the birth details (not printed) so the dates can be checked"]}
         errs, warns = rr.report_checks(model, schema)
     else:

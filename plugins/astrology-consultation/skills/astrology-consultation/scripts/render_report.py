@@ -305,15 +305,22 @@ def _key_point_refs(r, facts, tol):
         refs = k.get("event_refs") or []
         if not refs:
             continue
-        wins = _windows({"timeline": [], "summary": {"headline": "", "key_points": [k]}, "sections": []})
-        settled |= set(wins)
         unknown = [x for x in refs if x not in ev]
         if unknown:
             errs.append(f"key point cites unknown engine event(s): {', '.join(unknown)}")
-        for label, s, e, _ in [w for w in wins if w[0] == k.get("window")] or wins:
-            off = [x for x in refs if x in ev and not any(s - tol <= a <= e + tol for a in ev[x])]
-            if off:
-                errs.append(f"window '{label}' does not contain the engine event(s) it cites: {', '.join(off)}")
+        if not k.get("window"):
+            errs.append(f"key point cites engine events ({', '.join(refs)}) but has no window")
+            continue
+        # Only the key point's own `window` is settled by its refs (council RC-02): other dates in its text are still
+        # grounded by proximity. A ref may fall in any of the window's ranges (RC-03); one message per ref.
+        ctx = f"{k.get('text', '')} {k.get('window', '')}"
+        own = [(lab, s, e, ctx) for lab, s, e, _ in
+               _windows({"timeline": [], "summary": {"headline": "", "key_points": [{"text": "", "window": k["window"]}]},
+                         "sections": []})]
+        settled |= set(own)
+        off = [x for x in refs if x in ev and not any(s - tol <= a <= e + tol for _, s, e, _ in own for a in ev[x])]
+        if off:
+            errs.append(f"window '{k['window']}' does not contain the engine event(s) it cites: {', '.join(off)}")
     return errs, settled
 
 
