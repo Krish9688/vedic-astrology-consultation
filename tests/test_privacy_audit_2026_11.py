@@ -51,7 +51,7 @@ def test_f01_exemption_is_exact_paths_only(tmp_path, monkeypatch):
     text = f"see {HOME_SAMPLE} and mail someone@" + "mailhost.org\n"
     assert len(_flagged(tmp_path, monkeypatch, "notes/my_privacy_check_notes.md", text)) == 2   # (b) substring no longer exempt
     assert _flagged(tmp_path, monkeypatch, "tools/privacy_check.py", text) == []
-    assert P.path_exempt("privacy_check.py") and P.path_exempt("/x/repo/tests/test_privacy_check.py")
+    assert P.path_exempt("/x/repo/tests/test_privacy_check.py") and not P.path_exempt("privacy_check.py")   # RP-06
     assert not P.path_exempt("tools/privacy_check_old.py") and not P.path_exempt("check.py")
 
 
@@ -235,3 +235,59 @@ def test_git_worktree_dotgit_file_is_not_scanned(tmp_path):
     r = subprocess.run([sys.executable, os.path.join(WS, "tools", "privacy_check.py"), "."], cwd=tmp_path,
                        capture_output=True, text=True)
     assert ".git" not in r.stdout, r.stdout
+
+
+# ---- council round 2 (REVIEW-privacy.md RP-01..RP-09) ----
+@pytest.mark.parametrize("cmd", ["rsync -a -I private/ o/", "rsync -a -x ../private/ o/", "tar -c -f o.tar -I private/x",
+                                 "grep -rn x --exclude-dir=privatex .", "grep -rn x --exclude=private .",
+                                 "rg x . -g !private_old", "bash -c grep -r x .", "sh -c rg x", "zsh -c cat private/p2",
+                                 "grep -d recurse x .", "grep --directories recurse x .", "fd x", "mdfind -onlyin . x",
+                                 "ugrep -r x .", "ditto . o", "pax -w .", "git grep --no-index x", "env -C . grep -r x .",
+                                 "xargs -a docs/a.md grep -r x"])
+def test_rp01_rp03_bypasses_are_blocked(H, cmd):
+    assert _bash(H, H.root, cmd), cmd
+
+
+@pytest.mark.parametrize("cmd", ["rsync -a docs/ o/", "tar -cf o.tar docs", "grep -rn x --exclude-dir=private .",
+                                 "rg x . -g !private/**", "find . -path ./private -prune -o -print",
+                                 "find . -not -path *private* -name x", "git grep x"])
+def test_rp01_rp02_legitimate_commands_still_pass(H, cmd):
+    assert _bash(H, H.root, cmd) is None, cmd
+
+
+def test_rp02_grep_tool_exclusion_must_name_the_folder(H):
+    g = lambda **inp: H.guard({"tool_name": "Grep", "tool_input": inp, "cwd": H.root})
+    assert g(pattern="x", glob="!privatex") and g(pattern="x", glob="!private/**") is None
+
+
+def test_rp09_mcp_string_arguments_braces_and_walks(H):
+    g = lambda tool, **inp: H.guard({"tool_name": tool, "tool_input": inp, "cwd": H.root})
+    assert g("mcp__fs__copy", source="private/p2", destination="/tmp/y")
+    assert g("mcp__fs__read_multiple_files", files=["../private/p1/x.txt"])
+    assert g("mcp__fs__search", query="x", uri="file://" + H.root)
+    assert g("mcp__fs__dir_tree", path=".")
+    assert g("mcp__browser__exec", code="open('../private/p1/x.txt').read()")
+    assert H.guard({"tool_name": "Glob", "tool_input": {"pattern": "{private,docs}/*"}, "cwd": H.root})
+    assert g("mcp__fs__dir_tree", path="docs") is None
+
+
+@pytest.mark.parametrize("q", ["transit 1993-04-17 Pune horoscope", "Moon conjunction on 17 April 1993 Pune birth chart",
+                               "kundli 17 Apr 93 Pune", "kundli 4/17/93 Pune", "kundli 17041993 Pune",
+                               "kundli 1993 April 17 Pune", "kundli 17th of April 1993 Pune"])
+def test_rp04_more_date_shapes_and_no_sky_event_loophole(q):
+    H = pytest.importorskip("cc_hooks", reason="Claude Code hooks are private-edition tooling")
+    assert H.guard({"tool_name": "WebSearch", "tool_input": {"query": q}}), q
+
+
+def test_rp06_folder_scan_does_not_exempt_a_bare_privacy_check(tmp_path):
+    home = os.path.expanduser("~")
+    (tmp_path / "privacy_check.py").write_text(f"x = '{home}/notes'\n")
+    r = subprocess.run([sys.executable, os.path.join(WS, "tools", "privacy_check.py"), str(tmp_path)],
+                       capture_output=True, text=True)
+    assert "home path" in r.stdout, r.stdout
+
+
+@pytest.mark.parametrize("text,hit", [("/" + "USERS/someone/x", True), ("c:" + B + "users" + B + "someone" + B, True),
+                                      ("https://api.github.com/" + "users/someone/repos", False)])
+def test_rp07_home_paths_any_case(text, hit):
+    assert bool(P.HOME.search(text)) is hit

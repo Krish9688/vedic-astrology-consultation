@@ -36,8 +36,10 @@ BLOCK_DIRS = re.compile(r"(^|/)(private|backups|text|index|graphify-out|read|ven
 BLOCK_FILES = re.compile(r"(^|/)(knowledge/extraction\.json|knowledge/chapters/|sourcemaps/(?!BRIEF|STATUS|README)[^/]+\.md$|"
                          r"sourcemaps/(staging|logs)/|tests/results/)")
 # F-01(d): Windows profile paths (C:\Users\<name>\, also JSON-escaped C:\\Users\\ and C:/Users/) count as home paths too
-HOME = re.compile(r"/(?:Users|home)/(?!runner\b|<)[A-Za-z0-9._-]+/"
-                  r"|\b[A-Za-z]:(?:\\\\|\\|/)Users(?:\\\\|\\|/)(?!<|Public\b|Default\b)[A-Za-z0-9._-]+(?:\\\\|\\|/)")
+# RP-07: the Users/home segment is matched in any case (APFS and NTFS are case-insensitive: /USERS/x/ is a home path),
+# but only at the start of a path, so URL paths such as api.github.com/users/<name>/ are not home folders.
+HOME = re.compile(r"(?<![\w.:/-])/(?i:users|home)/(?!runner\b|<)[A-Za-z0-9._-]+/"
+                  r"|\b[A-Za-z]:(?:\\\\|\\|/)(?i:users)(?:\\\\|\\|/)(?!<|Public\b|Default\b)[A-Za-z0-9._-]+(?:\\\\|\\|/)")
 EMAIL = re.compile(r"\b[A-Za-z0-9._%+-]+@(?!example\.|anthropic\.com|users\.noreply\.github\.com)[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
 MAX = 5 * 1024 * 1024
 # caches that running tools/tests writes into a scanned folder; no exporter or package ever includes them
@@ -184,7 +186,9 @@ PATH_EXEMPT = ("tools/privacy_check.py", "tests/test_privacy_check.py")
 def path_exempt(rel):
     """rel may be repo-relative (tools/privacy_check.py) or relative to a scanned folder (privacy_check.py)."""
     rel = rel.replace(os.sep, "/").removeprefix("./")
-    return any(rel == e or rel.endswith("/" + e) or e.endswith("/" + rel) for e in PATH_EXEMPT)
+    # RP-06: the repo-relative path itself (also at the end of an absolute path); a bare 'privacy_check.py' found by a
+    # folder scan is not exempt any more
+    return any(rel == e or rel.endswith("/" + e) for e in PATH_EXEMPT)
 
 
 def scan_text(rel, text, T, paths=True):
