@@ -89,6 +89,7 @@ def elements(jd):
             "nakshatra": nk, "pada": pada}
 
 
+@E.locked
 def day(date, lat, lon, tz):
     """The Hindu day that begins with the sunrise of the civil `date` at (lat, lon); tz = UTC offset in hours.
     Elements prevailing at sunrise, and every change until the next sunrise, in local time."""

@@ -65,8 +65,8 @@ def get_engine_info() -> dict:
                       "slow-planet contacts, Shadbala, Ashtakavarga, Jaimini factors, birth-time sensitivity. "
                       "tz = UTC offset at birth as +HH:MM, e.g. \"+05:30\" (include daylight saving), or zone = an IANA "
                       "time zone such as \"Asia/Kolkata\" (find_place gives it); fold=0/1 for a repeated clock time. "
-                      "Both given: tz overrides and the IANA value is flagged. ayanamsa: lahiri (default), true_chitra, "
-                      "lahiri_icrc, lahiri_1940, kp or raman, only to reproduce a chart made with that convention. "
+                      "Both given: tz overrides and the IANA value is flagged. ayanamsa: lahiri (default); true_chitra, "
+                      "kp or raman only when the user asks for that convention by name. "
                       "calendar='julian' when the date is written in the Julian calendar (it is converted).")
 def calculate_birth_chart(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
                           on: Optional[dt.date] = None, months: int = 24,

@@ -70,3 +70,88 @@ def test_f06_no_lmt_offer_in_skill_text():
         if os.path.exists(p):
             t = open(p, encoding="utf-8").read()
             assert "{lmt}" not in t and "it suggests local mean time" not in t and "V-ZONE-LMT" not in t
+
+# --- Q7 / F-17 / F-19: ayanamsa set, nested requests, mean/true fields -------------------------------------------------
+def test_q7_owner_ayanamsa_set():
+    assert list(E.AYANAMSAS) == ["lahiri", "true_chitra", "kp", "raman"]
+    for gone in ("lahiri_icrc", "lahiri_1940"):
+        with pytest.raises(Exception):
+            S.Options(ayanamsa=gone)
+
+
+def test_f17_nested_conflicting_request_raises():
+    b = S.BirthInput(**B, tz="+05:30")
+    with E.using("raman"):
+        with pytest.raises(ValueError, match="one call, one ayanamsa"):
+            S.calculate_chart(b, S.Options(ayanamsa="lahiri"), full=False)
+        assert S.calculate_chart(b, S.Options(ayanamsa="raman"), full=False)["meta"]["ayanamsa"].startswith("Raman ")
+
+
+def test_f19_meta_has_mean_and_true_values():
+    c = S.calculate_chart(S.BirthInput(date="2000-01-01", time="12:00", tz="+00:00", lat=51.48, lon=0.0), full=False)
+    m = c["meta"]
+    assert m["ayanamsa"] == "Lahiri 23.8571°"
+    assert m["ayanamsa_deg_mean"] == pytest.approx(23.857092, abs=2e-6)
+    assert m["ayanamsa_deg_true"] == pytest.approx(23.853222, abs=2e-6)
+
+# --- F-04: create_report under the requested mode; locks ---------------------------------------------------------------
+def test_f04_create_report_recompute_uses_requested_ayanamsa(monkeypatch):
+    seen = []
+    real = S._compute
+
+    def spy(b, o, *a, **k):
+        c = real(b, o, *a, **k)
+        seen.append((o.ayanamsa, c["meta"]["ayanamsa"]))
+        return c
+    monkeypatch.setattr(S, "_compute", spy)
+    try:
+        S.create_report({}, "audit-f04", S.BirthInput(**B, tz="+05:30"), S.Options(ayanamsa="raman"))
+    except Exception:
+        pass                                                    # the empty model is refused; the recompute is what we test
+    assert seen and all(m.startswith("Raman ") for _, m in seen), seen
+
+
+def test_f04_every_chart_service_function_is_wrapped():
+    import inspect
+    unwrapped = [n for n, f in vars(S).items() if inspect.isfunction(f) and not n.startswith("_") and f.__module__ == S.__name__
+                 and "b" in inspect.signature(f).parameters and not hasattr(f, "__wrapped__")
+                 and n not in {"unknown_time_problems"}]                      # pure check, computes nothing
+    assert unwrapped == [], unwrapped
+
+
+def test_f04_threaded_modes_never_mix():
+    jd = 2451545.0
+    lahiri = E.positions(jd)["Su"]["lon"]
+    with E.using("raman"):
+        raman = E.positions(jd)["Su"]["lon"]
+    bad, stop = [], threading.Event()
+
+    def flip():
+        while not stop.is_set():
+            with E.using("raman"):
+                E.positions(jd)
+    old = sys.getswitchinterval()
+    sys.setswitchinterval(1e-6)
+    t = threading.Thread(target=flip)
+    t.start()
+    try:
+        for _ in range(1500):
+            v = E.positions(jd)["Su"]["lon"]
+            if abs(v - lahiri) > 1e-9:
+                bad.append(v)
+    finally:
+        stop.set()
+        t.join()
+        sys.setswitchinterval(old)
+    assert bad == [] and abs(raman - lahiri) > 1
+
+# --- F-07: adapter --------------------------------------------------------------------------------------------------
+@pytest.mark.parametrize("mode,label", [("lahiri", "Lahiri"), ("raman", "Raman")])
+def test_f07_adapter_offset_and_ayanamsa(mode, label):
+    with E.using(mode):
+        c = E.compute("2000-01-01", "12:00:00", 5.5, 28.6, 77.2, extras=False)
+    f = adapters.from_local(c)
+    assert f.birth.utc_offset_hours == 5.5 and f.provenance.ayanamsa.startswith(label)
+    E._sid()
+    assert f.provenance.ayanamsa_deg == pytest.approx(c["meta"]["ayanamsa_deg_mean"])
+    assert swe.get_ayanamsa_name(E._MODE.get()).startswith("Lahiri")

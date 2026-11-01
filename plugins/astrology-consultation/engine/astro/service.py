@@ -238,7 +238,7 @@ class Options(BaseModel):
     node: str = Field(default="mean", pattern="^(mean|true)$")
     year: str = Field(default="sidereal", pattern="^(sidereal|365.25|360)$")
     ayanamsa: str = Field(default="lahiri", pattern="^(" + "|".join(engine.AYANAMSAS) + ")$",
-                          description="lahiri (default), true_chitra, lahiri_icrc, lahiri_1940, kp, raman")
+                          description="lahiri (default); true_chitra, kp or raman only as an explicit choice")
 
     model_config = {"frozen": True}
 
@@ -792,6 +792,7 @@ def _derived_facts(c, ids=False):
     return cf.facts_json(chart) if ids else cf.facts(chart)
 
 
+@_calc   # audit F-04: the grounding recompute runs under the requested ayanamsa and the process lock
 def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = None, o: Options = DEFAULTS) -> dict:
     """Validate and render a Structured Report Model (assets/report/report.schema.json) to HTML (+PDF). Dates are checked
     against facts recomputed here from the birth input `b` (never client-supplied, never printed); a dated model needs it."""
