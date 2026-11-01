@@ -280,7 +280,7 @@ def test_rp04_more_date_shapes_and_no_sky_event_loophole(q):
 
 
 def test_rp06_folder_scan_does_not_exempt_a_bare_privacy_check(tmp_path):
-    home = os.path.expanduser("~")
+    home = "/" + "Users" + "/someone"                    # a synthetic home: the CI runner home is allow-listed
     (tmp_path / "privacy_check.py").write_text(f"x = '{home}/notes'\n")
     r = subprocess.run([sys.executable, os.path.join(WS, "tools", "privacy_check.py"), str(tmp_path)],
                        capture_output=True, text=True)
