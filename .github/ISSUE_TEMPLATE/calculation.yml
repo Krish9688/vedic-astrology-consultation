@@ -1,0 +1,32 @@
+name: Calculation question
+description: A position, dasha, varga or panchang value differs from another program.
+labels: [calculation]
+body:
+  - type: markdown
+    attributes:
+      value: "**Never paste real birth details (yours or anyone else's): date, time and place of birth are personal data. Use an invented chart or a published example, and say which.**"
+  - type: textarea
+    id: input
+    attributes:
+      label: Invented or published chart used (date, time with +HH:MM offset, coordinates)
+    validations:
+      required: true
+  - type: textarea
+    id: ours
+    attributes:
+      label: Our output (with meta.ayanamsa and meta.engine)
+    validations:
+      required: true
+  - type: textarea
+    id: other
+    attributes:
+      label: Other program, its version, its settings (ayanamsa, nodes, year length) and its output
+    validations:
+      required: true
+  - type: checkboxes
+    id: synthetic
+    attributes:
+      label: Birth data
+      options:
+        - label: Any chart in this issue is invented or published, not a real person's birth details.
+          required: true

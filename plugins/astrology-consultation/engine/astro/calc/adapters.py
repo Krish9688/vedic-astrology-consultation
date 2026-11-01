@@ -16,10 +16,13 @@ def _body(lon, retro=None, vargas=None):
 def from_local(calc: dict, time_source: str | None = None) -> ChartFacts:
     """astro.calc.engine.compute() / calc.json → ChartFacts (strength, Jaimini and sensitivity when present)."""
     m = calc["meta"]
-    d, t, off = re.match(r"(\S+) (\S+) UTC([+-][\d.]+)", m["birth_local"]).groups()
-    birth = Birth(date=d, time=t, utc_offset_hours=float(off), lat=m["lat"], lon=m["lon"], time_source=time_source)
-    prov = Provenance(engine="local-swisseph", engine_version=m["engine"], network="local",
-                      ayanamsa_deg=float(re.search(r"[\d.]+", m["ayanamsa"]).group()), nodes=m["nodes"],
+    d, t, off = re.match(r"(\S+) (\S+) UTC([+-]\S+)$", m["birth_local"]).groups()
+    from ..service import utc_offset_hours            # one offset parser: "+05:30" is 5.5, not 5.0 (audit F-07)
+    birth = Birth(date=d, time=t, utc_offset_hours=utc_offset_hours(off), lat=m["lat"], lon=m["lon"],
+                  time_source=time_source)
+    name, deg = re.fullmatch(r"(.+) (-?[\d.]+)°", m["ayanamsa"]).groups()
+    prov = Provenance(engine="local-swisseph", engine_version=m["engine"], network="local", ayanamsa=name,
+                      ayanamsa_deg=m.get("ayanamsa_deg_mean", float(deg)), nodes=m["nodes"],
                       dasha_year_days=m["dasha_year_days"], ephemeris=m.get("ephemeris"),
                       computed_at=m.get("computed_at_utc"), house_system="whole sign; Sripati bhavas")
     bodies = {n: _body(b["lon"], b["retro"] if n not in ("Asc",) else None, b["vargas"]) for n, b in calc["bodies"].items()}

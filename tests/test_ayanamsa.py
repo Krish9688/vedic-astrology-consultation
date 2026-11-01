@@ -14,10 +14,8 @@ from test_transit import B as RAW  # noqa: E402  (the synthetic chart of the tra
 
 B = S.BirthInput(**RAW)
 # Swiss Ephemeris 2.10.03 at J2000 (SE regression values, not truth; CALC-X4, CALC-X6 item 3)
-J2000 = {"lahiri": 23.85709, "true_chitra": 23.84002, "lahiri_icrc": 23.85679, "lahiri_1940": 23.84232,
-         "kp": 23.76024, "raman": 22.41079}
-LABEL = {"lahiri": "Lahiri ", "true_chitra": "True Citra ", "lahiri_icrc": "Lahiri ICRC ", "lahiri_1940": "Lahiri 1940 ",
-         "kp": "Krishnamurti ", "raman": "Raman "}
+J2000 = {"lahiri": 23.85709, "true_chitra": 23.84002, "kp": 23.76024, "raman": 22.41079}   # owner set 2026-11-01
+LABEL = {"lahiri": "Lahiri ", "true_chitra": "True Citra ", "kp": "Krishnamurti ", "raman": "Raman "}
 
 
 def strip(c):
@@ -93,7 +91,7 @@ def test_a_second_call_waits_for_the_first_to_finish():
 def test_chart_key_keeps_the_default_and_separates_other_modes():
     d = S.calculate_chart(B, S.Options(on="2026-01-15"), full=False)
     r = S.calculate_chart(B, S.Options(on="2026-01-15", ayanamsa="raman"), full=False)
-    i = S.calculate_chart(B, S.Options(on="2026-01-15", ayanamsa="lahiri_icrc"), full=False)
+    i = S.calculate_chart(B, S.Options(on="2026-01-15", ayanamsa="true_chitra"), full=False)
     m = d["meta"]
     old = "sha256:" + __import__("hashlib").sha256(json.dumps([m["birth_local"], m["lat"], m["lon"], m["nodes"]]).encode()).hexdigest()[:16]
     assert S._chart_key(d) == old and len({S._chart_key(x) for x in (d, r, i)}) == 3

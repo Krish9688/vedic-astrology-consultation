@@ -1,0 +1,38 @@
+name: Bug report
+description: Something in the engine, MCP/REST/CLI or the skill does not work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "**Never paste real birth details (yours or anyone else's): date, time and place of birth are personal data. Use an invented chart or a published example, and say which.**"
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps or command to reproduce (synthetic chart only)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version (astro doctor output)
+    validations:
+      required: true
+  - type: checkboxes
+    id: synthetic
+    attributes:
+      label: Birth data
+      options:
+        - label: Any chart in this issue is invented or published, not a real person's birth details.
+          required: true
