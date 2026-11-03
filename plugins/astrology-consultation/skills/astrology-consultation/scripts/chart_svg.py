@@ -32,7 +32,7 @@ def placements(positions):
         if body.lower() in LAGNA:
             lagna = SIGNS.index(sign)
         else:
-            by_sign.setdefault(SIGNS.index(sign), []).append(ABBR.get(body, body[:2]))
+            by_sign.setdefault(SIGNS.index(sign), []).append(ABBR.get(body, body[:2]) + ("*" if p.get("retro") is True else ""))
     return lagna, by_sign
 
 
@@ -47,10 +47,11 @@ def _bodies(cx, cy, names, first="b"):
             for i, r in enumerate(rows)]
 
 
-def _svg(body, label, desc):
+def _svg(body, label, desc, uid=""):
+    t, d = f"ct{uid}", f"cd{uid}"           # uid: several charts on one page need distinct element ids
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SIZE} {SIZE}" width="{SIZE}" height="{SIZE}" '
-            f'role="img" aria-labelledby="ct cd" class="chart"><title id="ct">{escape(label)}</title>'
-            f'<desc id="cd">{escape(desc)}</desc><style>line,rect,path{{stroke:#333;stroke-width:1.2;fill:none}}'
+            f'role="img" aria-labelledby="{t} {d}" class="chart"><title id="{t}">{escape(label)}</title>'
+            f'<desc id="{d}">{escape(desc)}</desc><style>line,rect,path{{stroke:#333;stroke-width:1.2;fill:none}}'
             # longhand: WeasyPrint ignores a `font:` shorthand with a weight in SVG <style> (the lagna row vanished, M10)
             '.b{font-family:sans-serif;font-size:12px;fill:#111}.n{font-family:sans-serif;font-size:9px;fill:#777}'
             '.a{font-family:sans-serif;font-size:12px;font-weight:bold;fill:#a33}'
@@ -62,7 +63,7 @@ def _desc(lagna, by_sign):
     return f"Lagna {SIGNS[lagna]}. " + ("; ".join(parts) or "no bodies listed") + "."
 
 
-def north(positions):
+def north(positions, label="North Indian rasi chart", uid="", asc=True):
     lagna, by_sign = placements(positions)
     if lagna is None:
         return None
@@ -73,11 +74,11 @@ def north(positions):
         sign = (lagna + h) % 12
         cx, cy = fx * S, fy * S
         m.append(_text(cx, cy - (24 if h in (0, 3, 6, 9) else 16), str(sign + 1), "n"))
-        m += _bodies(cx, cy, (["Asc"] if h == 0 else []) + by_sign.get(sign, []), "a")
-    return _svg(m, "North Indian rasi chart", _desc(lagna, by_sign))
+        m += _bodies(cx, cy, (["Asc"] if h == 0 and asc else []) + by_sign.get(sign, []), "a")
+    return _svg(m, label, _desc(lagna, by_sign), uid)
 
 
-def south(positions):
+def south(positions, label="South Indian rasi chart", uid="", asc=True):
     lagna, by_sign = placements(positions)
     if lagna is None:
         return None
@@ -92,15 +93,16 @@ def south(positions):
         x, y = col * c, row * c
         m.append(f'<text x="{x + 4:.1f}" y="{y + 11:.1f}" class="n">{SIGNS[sign][:3]}</text>')
         names = by_sign.get(sign, [])
-        if sign == lagna:
+        if sign == lagna and asc:
             m.append(f'<line x1="{x + c - 16:.1f}" y1="{y:.1f}" x2="{x + c:.1f}" y2="{y + 16:.1f}"/>')
             names = ["Asc"] + names
         m += _bodies(x + c / 2, y + c / 2, names, "a")
-    return _svg(m, "South Indian rasi chart", _desc(lagna, by_sign))
+    return _svg(m, label, _desc(lagna, by_sign), uid)
 
 
-def chart(positions, style="north"):
-    return (south if style == "south" else north)(positions)
+def chart(positions, style="north", label=None, uid=""):
+    f = south if style == "south" else north
+    return f(positions, label, uid) if label else f(positions, uid=uid)
 
 
 def selftest():
