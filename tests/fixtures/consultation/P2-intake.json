@@ -1,0 +1,74 @@
+{
+ "about": "P2: invented persona for the consultation-report regression (no real person)",
+ "client": {
+  "full_name": "Ananya Deshpande",
+  "gender": "female",
+  "current_city": "Pune",
+  "current_country": "India",
+  "language": "English",
+  "relationship_status": "single",
+  "occupation": "architect at a design firm",
+  "education": "B.Arch"
+ },
+ "birth": {
+  "date": "1996-02-14",
+  "time": "14:35",
+  "time_reliability": "exact",
+  "time_source": "birth certificate",
+  "place": "Pune, Maharashtra, India",
+  "lat": 18.5204,
+  "lon": 73.8567,
+  "tz": "+05:30"
+ },
+ "consultation": {
+  "type": "one-time",
+  "report_date": "2026-11-01",
+  "focus": [
+   "marriage timing",
+   "starting her own studio"
+  ],
+  "window": {
+   "from": "2026-11",
+   "to": "2028-12"
+  },
+  "chart_style": "north"
+ },
+ "questions": [
+  {
+   "id": "Q1",
+   "text": "When is a good time for me to get married?",
+   "category": "marriage",
+   "priority": "high"
+  },
+  {
+   "id": "Q2",
+   "text": "Should I start my own architecture studio in the next two years?",
+   "category": "business",
+   "priority": "high"
+  },
+  {
+   "id": "Q3",
+   "text": "What should I keep in mind about my health and energy?",
+   "category": "health",
+   "priority": "medium"
+  },
+  {
+   "id": "Q4",
+   "text": "What does my chart say about children?",
+   "category": "children",
+   "priority": "low"
+  },
+  {
+   "id": "Q5",
+   "text": "Which spiritual practice would suit me?",
+   "category": "spirituality",
+   "priority": "low"
+  }
+ ],
+ "consent": {
+  "store_and_process": true,
+  "print_birth_data": true,
+  "print_full_name": true,
+  "remedies_requested": true
+ }
+}

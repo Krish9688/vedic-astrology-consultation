@@ -40,3 +40,28 @@ CASES = _cases()
 def test_private_chart_matches_reference(ch, area, tol):
     bad = check(ch, area, tol)
     assert not bad, f"{ch['id']} {area}: {len(bad)} mismatch(es):\n" + "\n".join(bad)
+
+
+# ---- R1 consultation report (owner spec 2026-11-01): intake, model and verification stay in private/regression ----
+R1_FILES = [os.path.join(PRIVATE, f"R1-{k}.json") for k in ("intake", "model", "verification")]
+
+
+@pytest.mark.skipif(not all(os.path.exists(f) for f in R1_FILES), reason=REASON)
+def test_r1_consultation_report_is_complete(tmp_path):
+    import importlib.util
+    import json
+    import re
+    from astro import service as S
+    if importlib.util.find_spec("jinja2") is None:
+        pytest.skip("jinja2 not installed")
+    intake, model, ver = (json.load(open(f, encoding="utf-8")) for f in R1_FILES)
+    r = S.create_consultation_report(intake, model, None, S.DEFAULTS, ver, out_dir=str(tmp_path))
+    assert r["ok"], [e[:120] for e in r.get("errors", [])]
+    html = open(r["html"], encoding="utf-8").read()
+    text = re.sub(r"<[^>]+>", " ", html)
+    for s in ("1. Client intake", "3. Personalized kundli (Vedic)", "4. Lal Kitab view", "6. Answers to your questions",
+              "9. Appendix"):
+        assert s in text
+    assert len(intake["questions"]) == 10 and all(f'id="{q["id"]}"' in html for q in intake["questions"])
+    assert ver["failures"] == 0 and r.get("pdf_problems", []) == []
+    assert "Lahiri" in text and not re.search(r"Raman (?:ayanamsa|2[23]\.\d)", text) and "UTC+05:30" in text.replace("UTC +05:30", "UTC+05:30")

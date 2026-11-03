@@ -1,0 +1,1167 @@
+{
+ "about": "P4: interpretation model for the invented persona Maya Shah (no real person); Toronto DST fall-back birth, annual consultation",
+ "schema": "consultation-model/1",
+ "summary": {
+  "headline": "A year of opening doors at work inside a long, career-building Mars period: a job move is well supported in the first half of 2027, while mid-2027 asks you to settle and carry more responsibility rather than uproot again.",
+  "key_points": [
+   {
+    "text": "Your seven-year Mars period (to April 2032) is a career period: Mars rules both your 10th house of work and your 5th house of skill and judgement, which makes it the most useful planet for a Cancer lagna.",
+    "confidence": "Strong",
+    "fact_refs": [
+     "F.Ma.owns",
+     "F.Ma.house",
+     "F.H10.lord",
+     "F.H5.lord"
+    ],
+    "window": {
+     "label": "Mars major period",
+     "from": "2026-11",
+     "to": "2032-04",
+     "event_refs": [
+      "DSH.Ma"
+     ]
+    }
+   },
+   {
+    "text": "The best stretch this year for a new job is the first half of 2027, when Jupiter, the lord of the sub-period you are now in, passes over your lagna.",
+    "confidence": "Moderate",
+    "fact_refs": [
+     "F.Ju.owns",
+     "F.Ju.dignity"
+    ],
+    "window": {
+     "label": "Jupiter over your lagna",
+     "from": "2027-01",
+     "to": "2027-06",
+     "event_refs": [
+      "ING.Ju.2027-01-24",
+      "CON.Ju.Asc.conjunction.2027-02-16",
+      "CON.Ju.Asc.conjunction.2027-06-07"
+     ]
+    }
+   },
+   {
+    "text": "From June 2027 Saturn enters your 10th house, the sign of your Moon (the peak phase of Sade Sati), and settles there from February 2028: more responsibility and visibility at work, and a time to consolidate rather than make a second big move.",
+    "confidence": "Moderate",
+    "fact_refs": [
+     "F.Mo.house",
+     "DOSHA.sade_sati"
+    ],
+    "window": {
+     "label": "Saturn enters your 10th house",
+     "from": "2027-06",
+     "to": "2027-10",
+     "event_refs": [
+      "ING.Sa.2027-06-02"
+     ],
+     "kind": "pressure"
+    }
+   },
+   {
+    "text": "Income potential is good (your 11th house of gains is the best supported in Ashtakavarga), but the 2nd lord, the Sun, is debilitated in the 4th: money tends to flow towards the home unless savings are set aside first.",
+    "confidence": "Moderate",
+    "fact_refs": [
+     "AV.sav.H11",
+     "F.H2.lord",
+     "F.Su.dignity",
+     "F.Su.house"
+    ]
+   },
+   {
+    "text": "Home and abroad are tied together in your chart (the 12th lord Mercury sits in the 4th house of home): a return to Canada is a real possibility later in this period rather than a task for this year.",
+    "confidence": "Weak",
+    "fact_refs": [
+     "F.H12.lord",
+     "F.Me.house"
+    ]
+   }
+  ]
+ },
+ "kundli": {
+  "lagna": {
+   "text": "Cancer rises, in its last degrees. Cancer lagna describes a caring, protective and intuitive person who needs a secure base before taking risks. Its lord, the Moon, sits in the 10th house in Aries and is the strongest planet in your chart: your emotional life and your working life are closely linked, and you are at your best when your work is visible and has a clear purpose. Your birth record gives 01:30 Eastern Daylight Time, the first of the two 01:30s on the night the clocks went back; the chart is cast for that time (UTC−4). The rising sign is sensitive to the clock: the appendix shows that the lagna changes sign if the birth was 16 minutes or more later, so a birth at the second 01:30 (Eastern Standard Time, an hour later) would give the next sign as the lagna; the birth record settles which 01:30 it was.",
+   "fact_refs": [
+    "F.asc.sign",
+    "F.H1.lord",
+    "F.Mo.house",
+    "SB.Mo.rank"
+   ]
+  },
+  "moon": {
+   "text": "The Moon is in Aries, in the nakshatra Bharani, in the 10th house. You feel things quickly and act on them; restlessness shows when work has no direction. Aries in the 10th gives an independent, initiating streak at work, and the Moon here describes a career that changes shape several times and a public, people-facing role. The Moon also aspects your 4th house, so home and mother stay close to your heart wherever you live.",
+   "fact_refs": [
+    "F.Mo.sign",
+    "F.Mo.house",
+    "F.H4.aspected_by"
+   ]
+  },
+  "sun": {
+   "text": "The Sun is in Libra in the 4th house, together with Mercury. Libra is the Sun's sign of debilitation: your sense of self is built through harmony at home and fair dealing rather than through command. A classical cancellation clause holds (the Sun itself sits in an angle), so this is a weakness that is outgrown. Sun and Mercury together form Budhaditya yoga, which fits your analytical training.",
+   "fact_refs": [
+    "F.Su.sign",
+    "F.Su.house",
+    "F.Su.dignity",
+    "F.Su.with",
+    "F.yoga.NB-SELF-Su.holds",
+    "F.yoga.BUDHADITYA-LOL.holds"
+   ]
+  },
+  "current_period": {
+   "text": "Since April 2025 you are in the Mars major period, which runs to April 2032. Mars rules your 10th and 5th houses and sits in the 2nd house of earnings and speech, so these seven years are about building your career and income through skill. Within it, the Jupiter sub-period (October 2026 to September 2027) brings the 9th-house themes of growth, mentors and long journeys and the 6th-house themes of jobs and competition; the Saturn sub-period (September 2027 to October 2028) asks for steady effort and patience; the Mercury sub-period (October 2028 to October 2029) brings skills, contracts and the 12th-house theme of living abroad.",
+   "fact_refs": [
+    "F.Ma.owns",
+    "F.Ma.house",
+    "F.Ju.owns",
+    "F.Sa.owns",
+    "F.Me.owns"
+   ],
+   "event_refs": [
+    "DSH.Ma",
+    "DSH.Ma-Ju",
+    "DSH.Ma-Sa",
+    "DSH.Ma-Me"
+   ]
+  },
+  "yogas": {
+   "text": "The yogas that hold are supportive rather than dramatic. Budhaditya (Sun and Mercury together) supports analytical and communication work. Adhi yoga (benefics in the 6th, 7th or 8th from the Moon) describes steady support from colleagues and a comfortable life over time. Both debilitated planets, the Sun and Venus, carry classical cancellation clauses. Anapha and Vosi describe self-reliance and a good name earned through your own effort. One Raja-yoga reading of Saturn is disputed between the sources and is not relied on.",
+   "fact_refs": [
+    "F.yoga.BUDHADITYA-LOL.holds",
+    "F.yoga.ADHI-BPHS37.holds",
+    "F.yoga.ADHI-PD6.holds",
+    "F.yoga.NB-SELF-Su.holds",
+    "F.yoga.NB-DISP-Ve.holds",
+    "F.yoga.NB-EXP-Ve.holds",
+    "F.yoga.ANAPHA-BPHS37.holds",
+    "F.yoga.VOSI-BPHS38.holds",
+    "F.yoga.RAJA-KKP-Sa.holds"
+   ]
+  },
+  "strengths": {
+   "text": "The Moon, Venus, Saturn and Mars meet their classical strength minimum; Mercury falls a little short; the Sun and especially Jupiter (0.74 of its minimum) fall clearly short. That matters this year, because Jupiter runs your sub-period: its promise is real but needs your effort to show. In Ashtakavarga the 11th house of gains (35 points) and the 1st (33) are best supported, so income and personal resilience are reliable; the 5th, 7th and 9th (23 each) are the weakest, so partnership, long journeys and big judgement calls need more care and time.",
+   "fact_refs": [
+    "SB.Mo.strong",
+    "SB.Ve.strong",
+    "SB.Sa.strong",
+    "SB.Ma.strong",
+    "SB.Ju.strong",
+    "SB.Ju.rank",
+    "AV.sav.H11",
+    "AV.sav.H1",
+    "AV.sav.H5",
+    "AV.sav.H7",
+    "AV.sav.H9",
+    "SB.Me.strong",
+    "SB.Su.strong",
+    "SB.Ju.ratio"
+   ]
+  },
+  "transits": {
+   "text": "Saturn moves through Pisces, the 12th from your Moon, so the rising phase of Sade Sati is under way: a broad call to simplify and pace yourself, which needs the dasha to agree before it means much. Jupiter is in Leo, your 2nd house of earnings, and Mars is crossing your lagna. Rahu moves into your 7th house of partnership in December 2026, and Jupiter reaches your lagna in January 2027.",
+   "fact_refs": [
+    "GO.Sa.from_moon",
+    "DOSHA.sade_sati",
+    "GO.Ju.from_lagna",
+    "GO.Ma.from_lagna"
+   ],
+   "event_refs": [
+    "ING.Ra.2026-12-05",
+    "ING.Ju.2027-01-24"
+   ]
+  }
+ },
+ "lal_kitab": {
+  "overview": {
+   "text": "In the Lal Kitab chart the Sun and Mercury share house 4 and together act as an artificial 'exalted Mars' there, so the house of home and mother is strong and active. Rahu in house 3 and Ketu in house 9 are both in their exalted houses. Jupiter in house 6 is 'asleep' by both editions' tests, and Mars (house 2), Jupiter (house 6) and Venus (house 3) are in placements the book calls 'sinful', its term for a placement it reads as less helpful, not a judgement of you. Venus shares house 3 with Rahu, which the book treats as an enemy. The two editions also differ on the 'sleeping' test: the 1952 edition gives no single verdict for Venus and Rahu (it has no rule when a planet has two targets) and has no test for the Moon in house 10, while Shrimali reads all three as awake.",
+   "fact_refs": [
+    "LK.Su.house",
+    "LK.Me.house",
+    "LK.masnui.H4.SuMe",
+    "LK.Ra.dignity",
+    "LK.Ke.dignity",
+    "LK.Ju.sleeping.shrimali",
+    "LK.Ju.sleeping.lk1952",
+    "LK.Ma.state",
+    "LK.Ju.state",
+    "LK.Ve.state",
+    "LK.Ve.sleeping.lk1952",
+    "LK.Ra.sleeping.lk1952",
+    "LK.Mo.sleeping.lk1952",
+    "LK.Ve.sleeping.shrimali",
+    "LK.Ra.sleeping.shrimali",
+    "LK.Mo.sleeping.shrimali"
+   ]
+  },
+  "debts": {
+   "text": "The 1952 edition shows two debt signatures: one linked to the mother (Moon, with Mercury in house 4) and one it calls 'zalimana' (Saturn, with the Moon in house 10). The 1952 edition judges a debt across the family's charts, so these are patterns to be aware of, not declared debts.",
+   "fact_refs": [
+    "LK.rin.lk1952.matri",
+    "LK.rin.lk1952.zalimana"
+   ]
+  },
+  "varshaphal": {
+   "text": "In this annual chart (27 October 2026 to 26 October 2027) Jupiter moves into house 4 and Venus with Rahu into house 11, traditionally read as a supported year for home and for gains. The Sun and Mercury move into house 12, so expenses and travel are prominent, and Saturn with Ketu moves into house 8: be careful with paperwork and pace yourself.",
+   "fact_refs": [
+    "LK.varsh.Ju.house",
+    "LK.varsh.Ve.house",
+    "LK.varsh.Ra.house",
+    "LK.varsh.Su.house",
+    "LK.varsh.Me.house",
+    "LK.varsh.Sa.house",
+    "LK.varsh.Ke.house"
+   ]
+  }
+ },
+ "chapters": {
+  "love": {
+   "indicators": [
+    {
+     "text": "Your marriage is shaped by duty and shared principles: the 7th lord Saturn sits in the 9th house of beliefs and elders, so the relationship is built slowly and grows steadier with time.",
+     "fact_refs": [
+      "F.H7.lord",
+      "F.Sa.house"
+     ]
+    },
+    {
+     "text": "Affection is expressed through practical help and shared projects more than through grand gestures, and that improves with maturity: Venus is debilitated in the 3rd with Rahu, with two cancellation clauses.",
+     "fact_refs": [
+      "F.Ve.dignity",
+      "F.Ve.house",
+      "F.Ve.with",
+      "F.yoga.NB-DISP-Ve.holds",
+      "F.yoga.NB-EXP-Ve.holds"
+     ]
+    },
+    {
+     "text": "Commitment is taken seriously and tends to last: the upapada (the Jaimini point for marriage) falls in Aquarius, again ruled by Saturn.",
+     "fact_refs": [
+      "JA.upapada",
+      "F.H7.lord"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "The Jupiter sub-period, with Jupiter passing over your lagna in early 2027 and aspecting your 7th house, is a warm, supportive stretch for the marriage.",
+    "fact_refs": [
+     "F.H7.sign"
+    ],
+    "event_refs": [
+     "DSH.Ma-Ju",
+     "ING.Ju.2027-01-24",
+     "CON.Ju.Asc.conjunction.2027-02-16"
+    ]
+   },
+   "windows": [
+    {
+     "label": "Jupiter meets natal Venus",
+     "from": "2028-07",
+     "to": "2028-09",
+     "event_refs": [
+      "CON.Ju.Ve.conjunction.2028-08-12"
+     ],
+     "kind": "opportunity",
+     "text": "A later, transit-based window for closeness."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "Rahu moves through your 7th house from December 2026 to mid-2028: keep expectations explicit and make joint decisions slowly, especially about moves.",
+     "fact_refs": [
+      "F.H7.sign"
+     ],
+     "event_refs": [
+      "ING.Ra.2026-12-05"
+     ]
+    }
+   ]
+  },
+  "career": {
+   "indicators": [
+    {
+     "text": "Work is central to your life: the lagna lord Moon, your strongest planet, sits in the 10th house, and the 10th is aspected by the Sun, Mercury and Jupiter. You are suited to visible, analytical roles where your judgement is trusted.",
+     "fact_refs": [
+      "F.H1.lord",
+      "F.Mo.house",
+      "SB.Mo.rank",
+      "F.H10.aspected_by"
+     ]
+    },
+    {
+     "text": "Mars, lord of the 10th and the 5th, is the useful planet for your lagna and now runs the major period: career growth comes from skill and initiative, and income follows (Mars sits in the 2nd house).",
+     "fact_refs": [
+      "F.H10.lord",
+      "F.Ma.owns",
+      "F.Ma.house"
+     ]
+    },
+    {
+     "text": "Work that explains numbers to others suits you: Mercury, the planet of analysis, sits with the Sun in the 4th, and in the career chart (D10) it falls in Sagittarius, a sign of advisory and teaching roles.",
+     "fact_refs": [
+      "F.Me.house",
+      "F.Su.with",
+      "F.Me.d10"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "The Jupiter sub-period (to September 2027) activates the lord of your 6th house of jobs and competition and your 9th of growth: changing roles or employers is a natural theme this year.",
+    "fact_refs": [
+     "F.Ju.owns",
+     "F.Ju.house"
+    ],
+    "event_refs": [
+     "DSH.Ma-Ju"
+    ]
+   },
+   "windows": [
+    {
+     "label": "Jupiter over your lagna",
+     "from": "2027-01",
+     "to": "2027-06",
+     "event_refs": [
+      "ING.Ju.2027-01-24",
+      "CON.Ju.Asc.conjunction.2027-06-07"
+     ],
+     "kind": "opportunity",
+     "text": "The clearest stretch for interviews, offers and a new role."
+    },
+    {
+     "label": "Saturn crosses your 10th house",
+     "from": "2027-06",
+     "to": "2027-10",
+     "event_refs": [
+      "ING.Sa.2027-06-02"
+     ],
+     "kind": "pressure",
+     "text": "More responsibility; settle into the role rather than move again."
+    },
+    {
+     "label": "Saturn in the 10th house",
+     "from": "2028-02",
+     "to": "2029-08",
+     "event_refs": [
+      "ING.Sa.2028-02-23",
+      "ING.Sa.2029-08-08"
+     ],
+     "kind": "pressure",
+     "text": "Long, steady effort that builds lasting standing."
+    },
+    {
+     "label": "Saturn back in the 10th house",
+     "from": "2029-10",
+     "to": "2030-04",
+     "event_refs": [
+      "ING.Sa.2029-10-05",
+      "ING.Sa.2030-04-16"
+     ],
+     "kind": "pressure",
+     "text": "A last, shorter return of Saturn to the 10th: finish what you started there before Saturn moves on."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "Recognition comes through results over time rather than quickly, so judge a new role over a full year: the 10th house is below average in Ashtakavarga.",
+     "fact_refs": [
+      "AV.sav.H10"
+     ]
+    },
+    {
+     "text": "Good ideas can be overshadowed by others, so put your analysis in writing and make sure your name is on it: Mercury is combust (very close to the Sun).",
+     "fact_refs": [
+      "F.Me.combust"
+     ]
+    }
+   ]
+  },
+  "wealth": {
+   "indicators": [
+    {
+     "text": "Your earning capacity is good: the 11th house of gains is the best supported in Ashtakavarga, and the major-period lord Mars sits in the 2nd house of income, with Jupiter's aspect.",
+     "fact_refs": [
+      "AV.sav.H11",
+      "F.Ma.house",
+      "F.H2.aspected_by"
+     ]
+    },
+    {
+     "text": "Money goes readily into the house, vehicles and family comfort, so savings need to come off the top: the 2nd lord, the Sun, is debilitated (with cancellation) in the 4th house of home.",
+     "fact_refs": [
+      "F.H2.lord",
+      "F.Su.dignity",
+      "F.Su.house",
+      "F.yoga.NB-SELF-Su.holds"
+     ]
+    },
+    {
+     "text": "Gains can be irregular, and spending on hobbies, gadgets or short trips creeps up: the 11th lord Venus is debilitated in the 3rd with Rahu.",
+     "fact_refs": [
+      "F.H11.lord",
+      "F.Ve.dignity",
+      "F.Ve.house",
+      "F.Ve.with"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "Jupiter is now transiting your 2nd house of earnings and the Jupiter sub-period runs to September 2027: a good year to set up savings and raise your income through a better-paid role.",
+    "fact_refs": [
+     "GO.Ju.from_lagna"
+    ],
+    "event_refs": [
+     "DSH.Ma-Ju"
+    ]
+   },
+   "windows": [
+    {
+     "label": "Jupiter returns to your 2nd house",
+     "from": "2027-06",
+     "to": "2027-11",
+     "event_refs": [
+      "ING.Ju.2027-06-25",
+      "CON.Ju.Ma.conjunction.2027-07-19",
+      "ING.Ju.2027-11-26"
+     ],
+     "kind": "opportunity",
+     "text": "Jupiter meets natal Mars in the house of earnings: good for a pay review."
+    },
+    {
+     "label": "Saturn in the 11th house",
+     "from": "2030-04",
+     "to": "2031-10",
+     "event_refs": [
+      "ING.Sa.2030-04-16"
+     ],
+     "kind": "opportunity",
+     "text": "Steady gains from long-term effort."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "Rahu is in your 8th house until December 2026: avoid opaque or high-pressure financial arrangements in these weeks.",
+     "fact_refs": [
+      "GO.Ra.from_lagna"
+     ],
+     "event_refs": [
+      "ING.Ra.2026-12-05"
+     ]
+    }
+   ]
+  },
+  "foreign": {
+   "indicators": [
+    {
+     "text": "Home and abroad are tied together: the 12th lord Mercury sits in the 4th house of home, and Jupiter aspects the 12th. Living away from your birthplace feels natural, and a home abroad is part of the chart's picture.",
+     "fact_refs": [
+      "F.H12.lord",
+      "F.Me.house",
+      "F.H12.aspected_by"
+     ]
+    },
+    {
+     "text": "Long-distance moves happen, but slowly and with more paperwork than expected: the 9th house of long journeys holds Saturn and Ketu and is among the weakest in Ashtakavarga.",
+     "fact_refs": [
+      "F.H9.occupants",
+      "AV.sav.H9"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "The Jupiter sub-period activates your 9th lord, so plans for long journeys and study or work abroad come up this year; the Mercury sub-period from October 2028 activates the 12th lord itself.",
+    "fact_refs": [
+     "F.Ju.owns",
+     "F.H12.lord"
+    ],
+    "event_refs": [
+     "DSH.Ma-Ju",
+     "DSH.Ma-Me"
+    ]
+   },
+   "windows": [
+    {
+     "label": "Mercury sub-period",
+     "from": "2028-10",
+     "to": "2029-10",
+     "event_refs": [
+      "DSH.Ma-Me"
+     ],
+     "kind": "opportunity",
+     "text": "The 12th lord runs the sub-period: the most natural time to plan a move abroad."
+    },
+    {
+     "label": "Jupiter's first pass of your 4th house",
+     "from": "2028-12",
+     "to": "2029-03",
+     "event_refs": [
+      "ING.Ju.2028-12-26",
+      "ING.Ju.2029-03-29"
+     ],
+     "kind": "opportunity",
+     "text": "Jupiter crosses the house of home inside the Mercury sub-period: a good time to start the paperwork."
+    },
+    {
+     "label": "Jupiter in your 4th house",
+     "from": "2029-08",
+     "to": "2030-01",
+     "event_refs": [
+      "ING.Ju.2029-08-24",
+      "CON.Ju.Me.conjunction.2029-09-27",
+      "ING.Ju.2030-01-24"
+     ],
+     "kind": "opportunity",
+     "text": "Jupiter meets the 12th lord in the house of home."
+    },
+    {
+     "label": "Jupiter's third pass of your 4th house",
+     "from": "2030-05",
+     "to": "2030-09",
+     "event_refs": [
+      "ING.Ju.2030-05-01",
+      "ING.Ju.2030-09-22"
+     ],
+     "kind": "opportunity",
+     "text": "A last pass over the house of home, for settling any move already under way."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "Saturn enters your Moon's sign from June 2027 and again from February 2028, and crosses the Moon itself around April 2029: a heavy period for paperwork and moving costs, so plan relocations around these dates, not inside them.",
+     "fact_refs": [
+      "DOSHA.sade_sati"
+     ],
+     "event_refs": [
+      "ING.Sa.2027-06-02",
+      "ING.Sa.2028-02-23",
+      "CON.Sa.Mo.conjunction.2029-04-19"
+     ]
+    }
+   ]
+  },
+  "education": {
+   "indicators": [
+    {
+     "text": "Structured, analytical learning comes easily, which fits your training in statistics: Budhaditya yoga (Sun with Mercury) falls in the 4th house.",
+     "fact_refs": [
+      "F.yoga.BUDHADITYA-LOL.holds",
+      "F.Me.house"
+     ]
+    },
+    {
+     "text": "Practical, earning-related qualifications pay off more than purely academic ones in these years: the 5th lord Mars, which runs your major period, sits in the 2nd.",
+     "fact_refs": [
+      "F.H5.lord",
+      "F.Ma.house"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "The Jupiter sub-period, Jupiter being the planet of knowledge and lord of your 9th house of higher learning, supports a certification or a specialised course this year.",
+    "fact_refs": [
+     "F.Ju.owns",
+     "F.Ju.dignity"
+    ],
+    "event_refs": [
+     "DSH.Ma-Ju"
+    ]
+   },
+   "windows": [
+    {
+     "label": "Jupiter in your 3rd house",
+     "from": "2027-11",
+     "to": "2028-02",
+     "event_refs": [
+      "ING.Ju.2027-11-26"
+     ],
+     "kind": "opportunity",
+     "text": "Good for short courses and new technical skills."
+    },
+    {
+     "label": "Jupiter meets natal Mercury",
+     "from": "2029-09",
+     "to": "2029-11",
+     "event_refs": [
+      "CON.Ju.Me.conjunction.2029-09-27"
+     ],
+     "kind": "opportunity"
+    }
+   ],
+   "cautions": [
+    {
+     "text": "Choose one course and finish it rather than starting several: the 5th house of study and judgement is among the weakest in Ashtakavarga.",
+     "fact_refs": [
+      "AV.sav.H5"
+     ]
+    }
+   ]
+  },
+  "family": {
+   "indicators": [
+    {
+     "text": "Home is a strong theme: the 4th house holds the Sun and Mercury and is aspected by the Moon, your lagna lord. Family and home stay central to your choices, wherever you live.",
+     "fact_refs": [
+      "F.H4.occupants",
+      "F.H4.aspected_by"
+     ]
+    },
+    {
+     "text": "Family decisions go best when they are made together and without hurry: the 7th lord Saturn in the 9th describes a partner and in-laws who value duty and principles.",
+     "fact_refs": [
+      "F.H7.lord",
+      "F.Sa.house"
+     ]
+    },
+    {
+     "text": "The 5th house is ruled by Mars, now the major-period lord, and aspected by it; Jupiter, the natural significator of children, is in its own sign. The chart shows warm family themes.",
+     "fact_refs": [
+      "F.H5.lord",
+      "F.H5.aspected_by",
+      "F.Ju.dignity"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "The Jupiter sub-period, with Jupiter crossing your lagna in the first half of 2027, is a protective, settling time for home life.",
+    "fact_refs": [
+     "F.Ju.dignity"
+    ],
+    "event_refs": [
+     "DSH.Ma-Ju"
+    ]
+   },
+   "windows": [],
+   "no_window_reason": "This report does not give timing for children or family additions; that is a personal and medical matter. Home and partnership timing appears in the love and career chapters and in the answer to your family question.",
+   "cautions": [
+    {
+     "text": "Rahu in your 7th house from December 2026 can bring restlessness into shared plans; talk through any move or job change as a couple before committing.",
+     "fact_refs": [
+      "F.H7.sign"
+     ],
+     "event_refs": [
+      "ING.Ra.2026-12-05"
+     ]
+    }
+   ]
+  },
+  "health": {
+   "indicators": [
+    {
+     "text": "Your basic resilience is good: the 1st house is well supported in Ashtakavarga and your lagna lord, the Moon, is the strongest planet in the chart.",
+     "fact_refs": [
+      "AV.sav.H1",
+      "SB.Mo.rank"
+     ]
+    },
+    {
+     "text": "High energy can turn into haste, so rest and regular meals are your main wellness levers: the Moon is in Aries and Mars runs the major period.",
+     "fact_refs": [
+      "F.Mo.sign",
+      "F.Ma.owns"
+     ],
+     "event_refs": [
+      "DSH.Ma"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "Mars is crossing your lagna now and Sade Sati is in its rising phase: slow down, sleep well and avoid rushing.",
+    "fact_refs": [
+     "GO.Ma.from_lagna",
+     "DOSHA.sade_sati"
+    ],
+    "event_refs": [
+     "DSH.Ma-Ju"
+    ]
+   },
+   "windows": [
+    {
+     "label": "Ketu crosses your lagna",
+     "from": "2027-01",
+     "to": "2027-03",
+     "event_refs": [
+      "CON.Ke.Asc.conjunction.2027-01-29"
+     ],
+     "kind": "watch",
+     "text": "You may feel less grounded; keep your routine simple."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "Tiredness shows more easily once Saturn enters your Moon's sign in June 2027; protect sleep and routine, and see a doctor for any physical concern.",
+     "fact_refs": [
+      "DOSHA.sade_sati"
+     ],
+     "event_refs": [
+      "ING.Sa.2027-06-02"
+     ]
+    }
+   ]
+  },
+  "spirituality": {
+   "indicators": [
+    {
+     "text": "A quiet, disciplined practice (a fixed daily time, study, service) suits you better than outward ritual: the 9th house of beliefs holds Saturn and Ketu.",
+     "fact_refs": [
+      "F.H9.occupants"
+     ]
+    },
+    {
+     "text": "Faith is expressed through service and through helping colleagues and people who are struggling: the 9th lord Jupiter is in its own sign in the 6th.",
+     "fact_refs": [
+      "F.H9.lord",
+      "F.Ju.dignity",
+      "F.Ju.house"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "The Jupiter sub-period activates the 9th lord, and Sade Sati asks for simplicity: a good year to set up a short, regular practice.",
+    "fact_refs": [
+     "F.H9.lord",
+     "DOSHA.sade_sati"
+    ],
+    "event_refs": [
+     "DSH.Ma-Ju"
+    ]
+   },
+   "windows": [
+    {
+     "label": "Ketu sub-period",
+     "from": "2029-10",
+     "to": "2030-03",
+     "event_refs": [
+      "DSH.Ma-Ke"
+     ],
+     "kind": "opportunity",
+     "text": "A naturally inward, reflective stretch."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "Saturn with Ketu can make practice dry or severe; keep it short and kind to yourself.",
+     "fact_refs": [
+      "F.Sa.with"
+     ]
+    }
+   ]
+  }
+ },
+ "answers": [
+  {
+   "question_id": "Q1",
+   "answer": "The chart supports a job move, with timing. The Jupiter sub-period you are now in activates the lord of your 6th house of jobs, and the clearest stretch for offers is the first half of 2027, while Jupiter passes over your lagna. Mars, which rules your 10th house and runs the major period, supports a step up rather than a sideways move. A new city is a bigger decision: once Saturn enters your 10th house, the sign of your Moon, in June 2027, the chart favours settling into a role and carrying responsibility, so if you move, aim to be settled before then; otherwise use the second half of the year to consolidate.",
+   "short": "A new job: the chart supports it, best while Jupiter crosses your lagna. A new city: only if you can be settled by mid-2027.",
+   "confidence": "Moderate",
+   "evidence": [
+    {
+     "text": "Jupiter, lord of the 6th house of jobs, runs the current sub-period",
+     "fact_refs": [
+      "F.Ju.owns"
+     ],
+     "event_refs": [
+      "DSH.Ma-Ju"
+     ]
+    },
+    {
+     "text": "Mars, lord of the 10th, runs the major period from the 2nd house",
+     "fact_refs": [
+      "F.H10.lord",
+      "F.Ma.house"
+     ],
+     "event_refs": [
+      "DSH.Ma"
+     ]
+    },
+    {
+     "text": "Lagna lord Moon, the strongest planet, in the 10th house",
+     "fact_refs": [
+      "F.Mo.house",
+      "SB.Mo.rank"
+     ]
+    }
+   ],
+   "windows": [
+    {
+     "label": "Jupiter over your lagna",
+     "from": "2027-01",
+     "to": "2027-06",
+     "event_refs": [
+      "ING.Ju.2027-01-24",
+      "CON.Ju.Asc.conjunction.2027-02-16"
+     ],
+     "kind": "opportunity"
+    },
+    {
+     "label": "Saturn crosses your 10th house",
+     "from": "2027-06",
+     "to": "2027-10",
+     "event_refs": [
+      "ING.Sa.2027-06-02"
+     ],
+     "kind": "pressure"
+    }
+   ],
+   "what_to_do": "Update your CV and network from November; apply seriously from January 2027 and aim to accept an offer by June. Discuss any change of city with your family before committing, and avoid a second move in the second half of 2027."
+  },
+  {
+   "question_id": "Q2",
+   "answer": "The chart supports a move back to Canada as a possibility later in the Mars period rather than this year. The 12th lord Mercury sits in your 4th house of home, which ties home and abroad together, and the most natural time to plan a move is the Mercury sub-period (October 2028 to October 2029). Within it, Jupiter crosses your 4th house of home from December 2028 to March 2029, and again from August 2029 to January 2030, when it meets Mercury itself; a third, shorter pass follows from May to September 2030. Long-distance moves come slowly in your chart (the 9th house is weak in Ashtakavarga), so start the paperwork early. A chart does not choose a country; the decision rests on your work, family and visas.",
+   "short": "Possible later: plan for 2028–2030 rather than this year.",
+   "confidence": "Weak",
+   "evidence": [
+    {
+     "text": "12th lord Mercury in the 4th house of home",
+     "fact_refs": [
+      "F.H12.lord",
+      "F.Me.house"
+     ]
+    },
+    {
+     "text": "9th house of long journeys weak in Ashtakavarga, with Saturn and Ketu",
+     "fact_refs": [
+      "AV.sav.H9",
+      "F.H9.occupants"
+     ]
+    }
+   ],
+   "windows": [
+    {
+     "label": "Mercury sub-period",
+     "from": "2028-10",
+     "to": "2029-10",
+     "event_refs": [
+      "DSH.Ma-Me"
+     ],
+     "kind": "opportunity"
+    },
+    {
+     "label": "Jupiter's first pass of your 4th house",
+     "from": "2028-12",
+     "to": "2029-03",
+     "event_refs": [
+      "ING.Ju.2028-12-26",
+      "ING.Ju.2029-03-29"
+     ],
+     "kind": "opportunity"
+    },
+    {
+     "label": "Jupiter in your 4th house",
+     "from": "2029-08",
+     "to": "2030-01",
+     "event_refs": [
+      "ING.Ju.2029-08-24",
+      "ING.Ju.2030-01-24"
+     ],
+     "kind": "opportunity"
+    },
+    {
+     "label": "Jupiter's third pass of your 4th house",
+     "from": "2030-05",
+     "to": "2030-09",
+     "event_refs": [
+      "ING.Ju.2030-05-01",
+      "ING.Ju.2030-09-22"
+     ],
+     "kind": "opportunity"
+    }
+   ],
+   "what_to_do": "Keep your Canadian documents current; agree as a couple on the conditions for a move (work, family, schooling) and revisit the question in 2028."
+  },
+  {
+   "question_id": "Q3",
+   "answer": "A settled, supportive year at home with one point to watch. Jupiter passes over your lagna in the first half of 2027 and aspects your 7th house of marriage, a protective, warm stretch for the family. Rahu enters your 7th house in December 2026, which brings restlessness into shared plans; with a possible job or city change in the air, talk things through together and decide slowly. Once Saturn enters your Moon's sign in June 2027, the second half of the year is busier and more tiring, so protect family time. This report does not time children.",
+   "short": "Warm and protective, especially while Jupiter crosses your lagna; decide shared plans slowly.",
+   "confidence": "Moderate",
+   "evidence": [
+    {
+     "text": "4th house of home holds the Sun and Mercury, aspected by the lagna lord",
+     "fact_refs": [
+      "F.H4.occupants",
+      "F.H4.aspected_by"
+     ]
+    },
+    {
+     "text": "7th lord Saturn in the 9th house",
+     "fact_refs": [
+      "F.H7.lord",
+      "F.Sa.house"
+     ]
+    }
+   ],
+   "windows": [
+    {
+     "label": "Jupiter over your lagna",
+     "from": "2027-01",
+     "to": "2027-06",
+     "event_refs": [
+      "ING.Ju.2027-01-24"
+     ],
+     "kind": "opportunity"
+    },
+    {
+     "label": "Rahu enters your 7th house",
+     "from": "2026-12",
+     "to": "2027-03",
+     "event_refs": [
+      "ING.Ra.2026-12-05"
+     ],
+     "kind": "watch"
+    }
+   ],
+   "what_to_do": "Set a regular time each week for family decisions; involve your partner early in any job or city change; keep evenings light from mid-2027."
+  },
+  {
+   "question_id": "Q4",
+   "answer": "Your earning capacity is good (the 11th house of gains is the strongest in Ashtakavarga), and Jupiter is in your 2nd house of income now and returns there from June to November 2027. The weak point is outflow: the 2nd lord, the Sun, is debilitated in the 4th house of home, and the 11th lord Venus sits with Rahu in the 3rd, so money drifts towards the home, gadgets and short trips. Pay yourself first: move savings out on the day salary arrives, and keep a written monthly budget. This is guidance, not financial advice; check the plan with a qualified adviser.",
+   "short": "Income is fine; control outflow with automatic savings and a written budget.",
+   "confidence": "Moderate",
+   "evidence": [
+    {
+     "text": "11th house best supported in Ashtakavarga",
+     "fact_refs": [
+      "AV.sav.H11"
+     ]
+    },
+    {
+     "text": "2nd lord Sun debilitated in the 4th; 11th lord Venus debilitated with Rahu",
+     "fact_refs": [
+      "F.H2.lord",
+      "F.Su.dignity",
+      "F.H11.lord",
+      "F.Ve.with"
+     ]
+    }
+   ],
+   "windows": [
+    {
+     "label": "Jupiter returns to your 2nd house",
+     "from": "2027-06",
+     "to": "2027-11",
+     "event_refs": [
+      "ING.Ju.2027-06-25",
+      "ING.Ju.2027-11-26"
+     ],
+     "kind": "opportunity"
+    }
+   ],
+   "what_to_do": "Automate a fixed monthly saving; set a cap for home and gadget spending; use the mid-2027 window for a pay review. Avoid opaque financial schemes until Rahu leaves your 8th house in December 2026."
+  }
+ ],
+ "timeline": {
+  "months_12": [
+   {
+    "label": "Jupiter sub-period: growth, jobs, mentors",
+    "from": "2026-11",
+    "to": "2027-09",
+    "event_refs": [
+     "DSH.Ma-Ju"
+    ],
+    "kind": "opportunity"
+   },
+   {
+    "label": "Rahu enters the 7th house: decide shared plans slowly",
+    "from": "2026-12",
+    "to": "2027-03",
+    "event_refs": [
+     "ING.Ra.2026-12-05"
+    ],
+    "kind": "watch"
+   },
+   {
+    "label": "Ketu crosses the lagna: keep routines simple",
+    "from": "2027-01",
+    "to": "2027-03",
+    "event_refs": [
+     "CON.Ke.Asc.conjunction.2027-01-29"
+    ],
+    "kind": "watch"
+   },
+   {
+    "label": "Jupiter over the lagna: offers and new roles",
+    "from": "2027-01",
+    "to": "2027-06",
+    "event_refs": [
+     "ING.Ju.2027-01-24",
+     "CON.Ju.Asc.conjunction.2027-02-16",
+     "CON.Ju.Asc.conjunction.2027-06-07"
+    ],
+    "kind": "opportunity"
+   },
+   {
+    "label": "Saturn enters the Moon's sign: responsibility at work",
+    "from": "2027-06",
+    "to": "2027-10",
+    "event_refs": [
+     "ING.Sa.2027-06-02"
+    ],
+    "kind": "pressure"
+   },
+   {
+    "label": "Jupiter back in the 2nd house: pay review",
+    "from": "2027-06",
+    "to": "2027-11",
+    "event_refs": [
+     "ING.Ju.2027-06-25",
+     "CON.Ju.Ma.conjunction.2027-07-19",
+     "ING.Ju.2027-11-26"
+    ],
+    "kind": "opportunity"
+   }
+  ],
+  "years": [
+   {
+    "label": "Saturn sub-period: steady effort",
+    "from": "2027-09",
+    "to": "2028-10",
+    "event_refs": [
+     "DSH.Ma-Sa"
+    ],
+    "kind": "pressure"
+   },
+   {
+    "label": "Saturn in the 10th house: lasting standing",
+    "from": "2028-02",
+    "to": "2029-08",
+    "event_refs": [
+     "ING.Sa.2028-02-23",
+     "ING.Sa.2029-08-08"
+    ],
+    "kind": "pressure"
+   },
+   {
+    "label": "Mercury sub-period: skills, contracts, abroad",
+    "from": "2028-10",
+    "to": "2029-10",
+    "event_refs": [
+     "DSH.Ma-Me"
+    ],
+    "kind": "opportunity"
+   },
+   {
+    "label": "Jupiter's first pass of the 4th house: start the paperwork",
+    "from": "2028-12",
+    "to": "2029-03",
+    "event_refs": [
+     "ING.Ju.2028-12-26",
+     "ING.Ju.2029-03-29"
+    ],
+    "kind": "opportunity"
+   },
+   {
+    "label": "Jupiter in the 4th house: home and relocation",
+    "from": "2029-08",
+    "to": "2030-01",
+    "event_refs": [
+     "ING.Ju.2029-08-24",
+     "ING.Ju.2030-01-24"
+    ],
+    "kind": "opportunity"
+   },
+   {
+    "label": "Saturn back in the 10th house: finish what you started",
+    "from": "2029-10",
+    "to": "2030-04",
+    "event_refs": [
+     "ING.Sa.2029-10-05",
+     "ING.Sa.2030-04-16"
+    ],
+    "kind": "pressure"
+   },
+   {
+    "label": "Saturn in the 11th house: steady gains",
+    "from": "2030-04",
+    "to": "2031-10",
+    "event_refs": [
+     "ING.Sa.2030-04-16"
+    ],
+    "kind": "opportunity"
+   },
+   {
+    "label": "Jupiter's third pass of the 4th house: settling in",
+    "from": "2030-05",
+    "to": "2030-09",
+    "event_refs": [
+     "ING.Ju.2030-05-01",
+     "ING.Ju.2030-09-22"
+    ],
+    "kind": "opportunity"
+   }
+  ]
+ },
+ "remedies": {
+  "vedic": [
+   {
+    "title": "Tuesday practice for Mars",
+    "instructions": "On Tuesdays, ten minutes of prayer or chanting in your own tradition, and a small act of help to a sibling, colleague or someone starting out. Continue for a few months; stop whenever you wish.",
+    "priority": "high",
+    "why": {
+     "text": "Mars rules your 10th and 5th houses and runs the major period to 2032, so it carries your career question.",
+     "fact_refs": [
+      "F.Ma.owns",
+      "F.H10.lord"
+     ]
+    }
+   },
+   {
+    "title": "Thursday study and service for Jupiter",
+    "instructions": "On Thursdays, a short reading or prayer in your own tradition, and help a student or a teacher in a practical way.",
+    "priority": "medium",
+    "why": {
+     "text": "Jupiter runs this year's sub-period but is the weakest planet by Shadbala.",
+     "fact_refs": [
+      "F.Ju.owns",
+      "SB.Ju.rank"
+     ]
+    }
+   },
+   {
+    "title": "Saturday service for Saturn",
+    "instructions": "On Saturdays, a small act of service to elders or to people doing hard physical work, such as sharing food. Keep it simple and regular.",
+    "priority": "low",
+    "why": {
+     "text": "Saturn, lord of your 7th house, is moving towards your Moon (Sade Sati); steady service suits its themes of duty and patience.",
+     "fact_refs": [
+      "F.H7.lord",
+      "DOSHA.sade_sati"
+     ]
+    }
+   }
+  ],
+  "lal_kitab": [
+   {
+    "planet": "Sun",
+    "house": 4,
+    "remedy": "Feed the blind (the book's remedy for the Sun in house 4)",
+    "safety": "low-risk",
+    "source": "KB B8 Sun H4 p75",
+    "instructions": "Now and then, provide a meal to visually impaired people, for example through a charity or school that serves them. Optional; one remedy at a time.",
+    "priority": "medium",
+    "fact_refs": [
+     "LK.Su.house"
+    ]
+   },
+   {
+    "planet": "Mercury",
+    "house": 4,
+    "remedy": "Wear a silver chain (the book: for peace)",
+    "safety": "low-risk",
+    "source": "KB B8 Mercury H4 p99",
+    "instructions": "Wear or keep a plain silver chain. Optional; no cost beyond the item itself is needed.",
+    "priority": "low",
+    "fact_refs": [
+     "LK.Me.house",
+     "LK.masnui.H4.SuMe"
+    ]
+   },
+   {
+    "planet": "Saturn",
+    "house": 9,
+    "remedy": "The book says 'Jupiter remedies' without detail; a modern low-risk way to honour Jupiter is to support students and teachers (not the book's wording).",
+    "safety": "low-risk",
+    "source": "KB B8 Saturn H9 p127",
+    "instructions": "Once a week, help a student or a teacher in a practical way. Optional; one remedy at a time.",
+    "priority": "low",
+    "fact_refs": [
+     "LK.Sa.house"
+    ]
+   }
+  ]
+ }
+}
