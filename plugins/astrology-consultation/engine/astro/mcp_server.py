@@ -292,6 +292,20 @@ def create_report(model: dict, name: str = "report", date: Optional[dt.date] = N
     return S.create_report(model, name, b, _o(on, months, ayanamsa=ayanamsa))
 
 
+@tool("Writer's brief for a full consultation report (Lahiri, civil time, never LMT): validates the intake (client, "
+      "birth with time_reliability exact/approximate/unknown, consultation, questions with category and priority, consent) "
+      "and returns every calculated fact, id and dated event the interpretation may cite. Errors name the field.")
+def prepare_consultation_report(intake: dict) -> dict:
+    return S.consultation_brief(intake)
+
+
+@tool("Check an interpretation model (skill://assets/report/consultation-model.schema.json) against the chart "
+      "recomputed from the intake and write the consultation report as HTML, PDF and DOCX in the reports folder. Every "
+      "statement must cite fact ids or engine events; every intake question must be answered.")
+def create_consultation_report(intake: dict, model: dict, name: Optional[str] = None) -> dict:
+    return S.create_consultation_report(intake, model, name)
+
+
 @mcp.resource("skill://{+path}", description="A document of the astrology-consultation skill (SKILL.md, "
                                              "references/*.md, assets/report/*). Read-only.")
 def skill_document(path: str) -> str:
