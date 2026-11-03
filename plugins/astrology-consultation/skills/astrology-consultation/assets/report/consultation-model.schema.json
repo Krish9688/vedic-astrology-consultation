@@ -1,0 +1,64 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "consultation-model/1",
+ "title": "Consultation report: interpretation model",
+ "description": "Written by the consultant from the writer's brief (prepare_consultation_report). Every number is printed from the engine; the model holds only interpretation, and every statement names the fact ids (F.*, LK.*, SB.*, AV.*, GO.*, JA.*, DOSHA.*) or engine events (DSH.*, ING.*, CON.*) it rests on. consultation.py model_checks is the authority; this schema documents the shape.",
+ "type": "object",
+ "required": ["summary", "kundli", "chapters", "answers", "timeline"],
+ "properties": {
+  "schema": {"const": "consultation-model/1"},
+  "summary": {"type": "object", "required": ["headline", "key_points"], "properties": {
+   "headline": {"type": "string"},
+   "key_points": {"type": "array", "minItems": 1, "maxItems": 7, "items": {"allOf": [{"$ref": "#/$defs/item"}, {"type": "object", "required": ["confidence"], "properties": {"confidence": {"$ref": "#/$defs/grade"}, "window": {"$ref": "#/$defs/window"}}}]}}}},
+  "kundli": {"type": "object", "description": "lagna and current_period may be left out only when the birth time is unknown", "properties": {
+   "lagna": {"$ref": "#/$defs/item"}, "moon": {"$ref": "#/$defs/item"}, "sun": {"$ref": "#/$defs/item"},
+   "current_period": {"$ref": "#/$defs/item"}, "yogas": {"$ref": "#/$defs/item"}, "strengths": {"$ref": "#/$defs/item"},
+   "transits": {"$ref": "#/$defs/item"}}},
+  "lal_kitab": {"type": "object", "description": "only LK.* fact ids; required when the pack has a Lal Kitab chart", "properties": {
+   "overview": {"$ref": "#/$defs/item"}, "debts": {"$ref": "#/$defs/item"}, "varshaphal": {"$ref": "#/$defs/item"}}},
+  "chapters": {"type": "object", "required": ["love", "career", "wealth", "foreign", "education", "family", "health", "spirituality"],
+   "additionalProperties": false, "patternProperties": {"^(love|career|wealth|foreign|education|family|health|spirituality)$": {"$ref": "#/$defs/chapter"}}},
+  "answers": {"type": "array", "description": "exactly one per intake question", "items": {"type": "object",
+   "required": ["question_id", "answer", "confidence", "what_to_do"], "properties": {
+    "question_id": {"type": "string", "pattern": "^Q\\d{1,2}$"}, "answer": {"type": "string", "minLength": 40},
+    "short": {"type": "string", "description": "one line shown in the chapter box"},
+    "confidence": {"$ref": "#/$defs/grade"}, "answerable": {"type": "boolean", "default": true},
+    "limits": {"type": "string", "description": "required when answerable is false: why the chart cannot answer"},
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/item"}},
+    "windows": {"type": "array", "items": {"$ref": "#/$defs/window"}},
+    "no_window_reason": {"type": "string"}, "what_to_do": {"type": "string"}}}},
+  "timeline": {"type": "object", "description": "empty when the birth time is unknown", "properties": {
+   "months_12": {"type": "array", "items": {"$ref": "#/$defs/window"}},
+   "years": {"type": "array", "items": {"$ref": "#/$defs/window"}}}},
+  "remedies": {"type": "object", "description": "only with consent.remedies_requested", "properties": {
+   "vedic": {"type": "array", "items": {"type": "object", "required": ["title", "instructions", "priority", "why"], "properties": {
+    "title": {"type": "string"}, "instructions": {"type": "string"}, "priority": {"enum": ["high", "medium", "low"]},
+    "why": {"$ref": "#/$defs/item"}}}},
+   "lal_kitab": {"type": "array", "items": {"type": "object",
+    "required": ["planet", "house", "remedy", "safety", "source", "instructions", "priority", "fact_refs"], "properties": {
+     "planet": {"type": "string"}, "house": {"type": "integer"}, "remedy": {"type": "string"},
+     "safety": {"enum": ["low-risk", "caution"]}, "safe_form": {"type": "string"}, "source": {"type": "string"},
+     "dispute": {"type": "string"}, "instructions": {"type": "string"}, "priority": {"enum": ["high", "medium", "low"]},
+     "fact_refs": {"type": "array", "items": {"type": "string", "pattern": "^LK\\."}}}}}}}
+ },
+ "$defs": {
+  "grade": {"enum": ["Strong", "Moderate", "Weak", "Contradictory", "Unknown"]},
+  "item": {"type": "object", "required": ["text"], "properties": {
+   "text": {"type": "string"},
+   "fact_refs": {"type": "array", "items": {"type": "string"}},
+   "event_refs": {"type": "array", "items": {"type": "string"}},
+   "time_sensitive": {"type": "boolean", "description": "required when a cited id varies within an approximate birth time"}}},
+  "window": {"type": "object", "required": ["label", "from", "to", "event_refs"], "properties": {
+   "label": {"type": "string"}, "from": {"type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"},
+   "to": {"type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"},
+   "event_refs": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+   "kind": {"enum": ["opportunity", "pressure", "watch"]}, "text": {"type": "string"},
+   "time_sensitive": {"type": "boolean"}}},
+  "chapter": {"type": "object", "required": ["indicators", "cautions"], "properties": {
+   "indicators": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/item"}},
+   "current_period": {"$ref": "#/$defs/item"},
+   "windows": {"type": "array", "items": {"$ref": "#/$defs/window"}},
+   "no_window_reason": {"type": "string"},
+   "cautions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/item"}}}}
+ }
+}

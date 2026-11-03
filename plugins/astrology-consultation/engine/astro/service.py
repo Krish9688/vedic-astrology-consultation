@@ -917,3 +917,118 @@ def _inside(path, root):
     if os.path.commonpath([rp, rr]) != rr:
         raise PermissionError("path outside the allowed folder")
     return rp
+
+
+# ---- consultation report (owner specification 2026-11-01): intake -> engine pack -> checked HTML/PDF/DOCX ----------
+CONSULT_MONTHS = 60          # transit events for the 3-5 year overview
+
+
+def _skill_mod(name):
+    s = config.load()
+    path = os.path.join(s.skill_dir or "", "scripts", f"{name}.py")
+    if not os.path.exists(path):
+        return None
+    spec = importlib.util.spec_from_file_location(f"skill_{name}", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _consult_birth(cm, intake):
+    """BirthInput from an intake, resolving a place name offline when no coordinates are given. Errors are messages."""
+    bi = cm.birth_input(intake)
+    if bi.get("lat") is None or bi.get("lon") is None:
+        place = intake["birth"]["place"]
+        try:
+            r = find_place(place)
+        except FileNotFoundError as e:
+            raise ValueError(f"birth.place '{place}': no coordinates given and {e}") from None
+        hits = r.get("matches") or []
+        if not hits:
+            raise ValueError(f"birth.place '{place}': unknown place; check the spelling or give lat, lon and the time zone")
+        if r.get("ambiguous"):
+            names = "; ".join(f"{h.get('name')}, {h.get('admin1', '')} {h.get('country', '')}".strip() for h in hits[:5])
+            raise ValueError(f"birth.place '{place}' matches several places ({names}); give the coordinates")
+        h = hits[0]
+        bi |= {"lat": h["lat"], "lon": h["lon"]}
+        if not bi.get("tz") and not bi.get("zone") and h.get("zone"):
+            bi["zone"] = h["zone"]
+    try:
+        return BirthInput(**bi)
+    except Exception as e:          # pydantic: one readable line per problem
+        errs = getattr(e, "errors", lambda: [])()
+        msg = "; ".join(f"birth.{'.'.join(map(str, x.get('loc', [])))}: {x.get('msg')}" for x in errs) or str(e)
+        raise ValueError(msg) from None
+
+
+@_calc
+def consultation_pack(intake: dict, o: Options = DEFAULTS, verification: Optional[dict] = None) -> dict:
+    """Everything a consultation report prints, computed here from the intake: never typed by the writer.
+    Returns {"ok": True, "pack": ...} or {"ok": False, "errors": [...]} with field-named messages."""
+    cm = _skill_mod("consultation")
+    if cm is None:
+        return {"ok": False, "errors": ["the skill's scripts/consultation.py was not found (astro setup)"]}
+    if errs := cm.validate_intake(intake):
+        return {"ok": False, "errors": errs}
+    if o.ayanamsa != "lahiri":
+        return {"ok": False, "errors": [f"the consultation report uses the Lahiri ayanamsa only (got {o.ayanamsa})"]}
+    try:
+        b = _consult_birth(cm, intake)
+    except ValueError as e:
+        return {"ok": False, "errors": [str(e)]}
+    o = o.model_copy(update={"on": dt.date.fromisoformat(intake["consultation"]["report_date"]), "months": CONSULT_MONTHS})
+    c = _compute(b, o, full=True)
+    samples, sample_ids, lk = [], [], _skill_mod("lal_kitab")
+    unknown = intake["birth"]["time_reliability"] == "unknown"
+    for t in cm.sample_times(intake):      # the uncertain birth time, measured: every id at every sample time
+        d, clock = (t.split("T") if "T" in t else (str(b.date), t))
+        cs = _compute(b.model_copy(update={"date": dt.date.fromisoformat(d), "time": clock}), o, full=True)
+        fs = _derived_facts(cs, ids=True)
+        fs = fs.get("facts", {}) if isinstance(fs, dict) else {}
+        samples.append(cs)
+        sample_ids.append(fs | cm.chart_ids(cs, fs, None if unknown else lk))
+    eng = {"chart": c, "derived_text": _derived_facts(c), "derived_ids": _derived_facts(c, ids=True),
+           "gochara": gochara(b, o), "samples": samples, "sample_ids": sample_ids, "months": CONSULT_MONTHS,
+           "varying_facts": sorted(time_varying_facts(b, o)) if unknown else [], "verification": verification}
+    if not isinstance(eng["derived_ids"], dict):
+        return {"ok": False, "errors": [f"derived facts unavailable: {eng['derived_ids']}"]}
+    rr = _skill_mod("render_report")
+    pack = cm.build_pack(intake, eng, lk, _skill_mod("varshaphal"), rr)
+    return {"ok": True, "pack": pack}
+
+
+@_calc
+def create_consultation_report(intake: dict, model: dict, name: Optional[str] = None, o: Options = DEFAULTS,
+                               verification: Optional[dict] = None, formats=("html", "pdf", "docx"),
+                               out_dir: Optional[str] = None) -> dict:
+    """Check the interpretation model against the pack recomputed from the intake, then write HTML, PDF and DOCX to the
+    reports folder (owner-only files). Refused with field-named errors when anything is missing or unsupported."""
+    s = config.load()
+    out_dir = os.path.expanduser(out_dir) if out_dir else s.reports_dir      # out_dir: CLI and Python only, never MCP
+    if refusal := config.folder_refusal(out_dir, s.skill_dir):
+        return {"ok": False, "errors": [refusal]}
+    r = consultation_pack(intake, o, verification)
+    if not r["ok"]:
+        return r
+    cm, rr = _skill_mod("consultation"), _skill_mod("render_report")
+    if name is None:
+        first = re.sub(r"[^a-z0-9]", "", intake["client"]["full_name"].split()[0].lower()) or "client"
+        name = f"{first}-consultation-{intake['consultation']['report_date'].replace('-', '')}"
+    if not SAFE_NAME.match(name):
+        raise ValueError("report name: letters, digits, dot, dash, underscore; ≤ 64 characters")
+    schema = json.load(open(os.path.join(s.skill_dir, "assets", "report", "report.schema.json")))
+    try:
+        out = cm.report(r["pack"], model, out_dir, name, rr, schema, formats)
+    except Exception as e:      # rendering libraries missing or broken: say why, never a traceback
+        return {"ok": False, "errors": [f"report could not be rendered: {type(e).__name__}: {e}"]}
+    return out
+
+
+def consultation_brief(intake: dict, o: Options = DEFAULTS) -> dict:
+    """The writer's brief for a consultation report: every fact, id and dated event the interpretation may cite."""
+    r = consultation_pack(intake, o)
+    if not r["ok"]:
+        return r
+    return {"ok": True, "brief": _skill_mod("consultation").brief(r["pack"]),
+            "model_schema": "skill://assets/report/consultation-model.schema.json",
+            "method": "skill://references/consultation-report.md"}

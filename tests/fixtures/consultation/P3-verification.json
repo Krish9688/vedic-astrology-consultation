@@ -1,0 +1,207 @@
+{
+ "chart": "P3",
+ "comparisons": 224,
+ "failures": 0,
+ "rows": [
+  {
+   "quantity": "UT of birth",
+   "engine": "2000-12-31T18:30:00",
+   "independent": "2000-12-31T18:30:00",
+   "pyjhora": "same instant",
+   "delta": "jd diff -0.093s",
+   "tolerance": "<1 s",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Lahiri (mean, deg)",
+   "engine": "23.8711°",
+   "independent": "23.8711°",
+   "pyjhora": "23.8711°",
+   "delta": "-0.0000\"",
+   "tolerance": "1e-6 deg",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Ascendant sidereal lon",
+   "engine": "164.3011°",
+   "independent": "164.3015°",
+   "pyjhora": "164.3011°",
+   "delta": "E-I -0.024' / P-I -0.023'",
+   "tolerance": "3.0'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Sun sidereal lon",
+   "engine": "256.5332°",
+   "independent": "256.5332°",
+   "pyjhora": "256.5332°",
+   "delta": "E-I -0.001' / P-I -0.000'",
+   "tolerance": "1.0'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Moon sidereal lon",
+   "engine": "322.0746°",
+   "independent": "322.0746°",
+   "pyjhora": "322.0746°",
+   "delta": "E-I -0.001' / P-I -0.001'",
+   "tolerance": "1.0'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Mars sidereal lon",
+   "engine": "190.9372°",
+   "independent": "190.9372°",
+   "pyjhora": "190.9372°",
+   "delta": "E-I +0.001' / P-I -0.000'",
+   "tolerance": "1.0'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Mercury sidereal lon",
+   "engine": "260.0333°",
+   "independent": "260.0333°",
+   "pyjhora": "260.0333°",
+   "delta": "E-I +0.001' / P-I -0.000'",
+   "tolerance": "1.0'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Jupiter sidereal lon",
+   "engine": "38.3421°",
+   "independent": "38.3421°",
+   "pyjhora": "38.3421°",
+   "delta": "E-I +0.002' / P-I +0.000'",
+   "tolerance": "1.0'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Venus sidereal lon",
+   "engine": "302.8469°",
+   "independent": "302.8469°",
+   "pyjhora": "302.8469°",
+   "delta": "E-I +0.002' / P-I -0.000'",
+   "tolerance": "1.0'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Saturn sidereal lon",
+   "engine": "30.7344°",
+   "independent": "30.7344°",
+   "pyjhora": "30.7344°",
+   "delta": "E-I -0.001' / P-I +0.000'",
+   "tolerance": "1.0'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Rahu sidereal lon",
+   "engine": "81.8310°",
+   "independent": "81.8310°",
+   "pyjhora": "81.8310°",
+   "delta": "E-I +0.001' / P-I +0.000'",
+   "tolerance": "1.0'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Ketu sidereal lon",
+   "engine": "261.8310°",
+   "independent": "261.8310°",
+   "pyjhora": "261.8310°",
+   "delta": "E-I +0.001' / P-I +0.000'",
+   "tolerance": "1.0'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Ascendant (own spherical trig, true ayanamsa)",
+   "engine": "164.3011°",
+   "independent": "164.3015°",
+   "pyjhora": "—",
+   "delta": "E-I -0.024'",
+   "tolerance": "3'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "MC",
+   "engine": "73.7160°",
+   "independent": "73.7163°",
+   "pyjhora": "—",
+   "delta": "E-I -0.020' ; formula -0.020'",
+   "tolerance": "3'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Rahu true node",
+   "engine": "81.6496°",
+   "independent": "81.6496°",
+   "pyjhora": "81.6496°",
+   "delta": "E-I -0.002' / P-I -0.000'",
+   "tolerance": "1'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Ketu true node",
+   "engine": "261.6496°",
+   "independent": "261.6496°",
+   "pyjhora": "261.6496°",
+   "delta": "E-I -0.002' / P-I -0.000'",
+   "tolerance": "1'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Signs (ascendant and planets)",
+   "engine": "10 values",
+   "independent": "10 of 10 agree",
+   "pyjhora": "compared where computed",
+   "delta": "none",
+   "tolerance": "exact",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Nakshatra and pada",
+   "engine": "21 values",
+   "independent": "21 of 21 agree",
+   "pyjhora": "compared where computed",
+   "delta": "none",
+   "tolerance": "exact",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Divisional-chart signs (16 vargas)",
+   "engine": "160 values",
+   "independent": "160 of 160 agree",
+   "pyjhora": "compared where computed",
+   "delta": "none",
+   "tolerance": "exact",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Vimshottari period starts",
+   "engine": "5 values",
+   "independent": "5 of 5 agree",
+   "pyjhora": "compared where computed",
+   "delta": "worst +0 d ",
+   "tolerance": "3 d",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Bhava cusps (Sripati)",
+   "engine": "2 values",
+   "independent": "2 of 2 agree",
+   "pyjhora": "compared where computed",
+   "delta": "0.025'",
+   "tolerance": "3'",
+   "status": "PASS"
+  },
+  {
+   "quantity": "Panchang at birth",
+   "engine": "10 values",
+   "independent": "10 of 10 agree",
+   "pyjhora": "compared where computed",
+   "delta": "none",
+   "tolerance": "exact",
+   "status": "PASS"
+  }
+ ],
+ "about": "This chart was recomputed by two programs that share no code with this engine: an independent Swiss Ephemeris (pyswisseph) calculation and PyJHora 4.8.7 with the Lahiri ayanamsa set explicitly. Both ran on this computer.",
+ "summary_text": "All 224 comparisons agree within tolerance (longitudes within 1′, ascendant within 3′, signs, nakshatras and vargas exact, period starts within 3 days)."
+}

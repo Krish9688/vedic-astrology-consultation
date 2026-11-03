@@ -1,0 +1,548 @@
+{
+ "about": "P5: interpretation model for the invented persona Kavya Sen (no real person); unknown birth time, so only factors that hold at every hour of the birth date are cited, with no dates, windows or timeline",
+ "schema": "consultation-model/1",
+ "summary": {
+  "headline": "Without a birth time this report reads only what stays the same all day: a mind and voice of real quality (Mercury exalted in its own sign), a strong sense of self (the Sun in its own sign Leo), and a slower, more serious path to commitment, with Saturn ruling partnership counted from the Moon. The ascendant, the houses from it, all dates and the Lal Kitab chart cannot be given.",
+  "key_points": [
+   {
+    "text": "Your clearest asset is how you think, explain and organise ideas, and this does not depend on the birth time: Mercury, the planet of intellect and speech, is exalted in its own sign Virgo and again in its own sign Gemini in the navamsa.",
+    "confidence": "Strong",
+    "fact_refs": [
+     "F.Me.sign",
+     "F.Me.dignity",
+     "F.Me.d9",
+     "F.Me.d9_dignity"
+    ]
+   },
+   {
+    "text": "On career, the chart supports using that Mercury skill more fully rather than walking away from education: a change of role (training, curriculum, writing, assessment, educational content) fits the chart better than an unrelated field.",
+    "confidence": "Weak",
+    "fact_refs": [
+     "F.Me.dignity",
+     "F.Me.aspected_by",
+     "F.Sa.sign"
+    ]
+   },
+   {
+    "text": "Marriage is not denied by any stable factor. Counted from the Moon, the 7th house of partnership is ruled by Saturn whichever of the two possible Moon signs is right, which describes commitment that matures slowly and a steady, responsible partner.",
+    "confidence": "Weak",
+    "fact_refs": [
+     "F.M7.lord",
+     "F.Sa.sign",
+     "F.Sa.d9_dignity"
+    ]
+   },
+   {
+    "text": "Two of your questions cannot be answered honestly without a birth time: the exact lagna (every sign rises once a day) and Lal Kitab remedies (that chart is counted from the lagna). General Vedic practices are given instead, resting only on what is fixed all day: Jupiter in an enemy's sign, and Saturn and Venus debilitated in the navamsa.",
+    "confidence": "Unknown",
+    "fact_refs": [
+     "F.Ju.sign_relation",
+     "F.Sa.d9_dignity",
+     "F.Ve.d9_dignity"
+    ]
+   },
+   {
+    "text": "People are likely to notice how well you speak and present yourself, and that holds at every hour of your birth date: Ubhayachari yoga is formed, with Mercury and Venus on either side of your Sun, which the texts read as eloquence and a well-supported name.",
+    "confidence": "Moderate",
+    "fact_refs": [
+     "F.yoga.UBHAYACHARI-BPHS38.holds",
+     "F.yoga.UBHAYACHARI-PD6.holds",
+     "F.yoga.UBHAYACHARI-PD6.detail"
+    ]
+   }
+  ]
+ },
+ "kundli": {
+  "moon": {
+   "text": "Feelings you keep to yourself, and an emotional steadiness you build on your own rather than draw from others: that much holds at every hour of your birth date, because the Moon was waning (losing light) and received no planetary aspect. Its sign cannot be fixed: it was at the very end of Cancer for roughly the first third of the day (until about the morning) and in the first degrees of Leo for the rest of the day. Readings counted from the Moon in this report use only what is the same from either sign.",
+   "fact_refs": [
+    "F.moon.phase",
+    "F.Mo.aspected_by",
+    "F.moon.malefic_waning",
+    "F.M1.lord_house"
+   ]
+  },
+  "sun": {
+   "text": "Self-respect, a natural authority in a classroom or any room, and a dislike of being managed closely: the Sun is in Leo, its own sign. Ketu in the same sign adds a quieter note: recognition may matter less to you than it appears to others, and you may sometimes doubt your own standing more than the facts justify.",
+   "fact_refs": [
+    "F.Su.sign",
+    "F.Su.dignity",
+    "F.Ke.sign"
+   ]
+  },
+  "yogas": {
+   "text": "Most classical yogas are counted from the lagna or depend on the Moon's exact sign, so they are not used here. One holds at every hour: Ubhayachari, with benefic planets on both sides of the Sun (Mercury in Virgo on one side, Venus in Cancer on the other), which the texts read as eloquence, balance and a well-supported name. The Kala Sarpa pattern does not occur, because the planets are not all on one side of the nodes.",
+   "fact_refs": [
+    "F.yoga.UBHAYACHARI-BPHS38.holds",
+    "F.yoga.UBHAYACHARI-PD6.holds",
+    "F.yoga.UBHAYACHARI-PD6.detail",
+    "DOSHA.kala_sarpa"
+   ]
+  },
+  "strengths": {
+   "text": "Shadbala and Ashtakavarga need the birth time and are not stated. By sign dignity alone, your strongest planet is Mercury (exalted, own sign and moolatrikona in Virgo, own sign in the navamsa), followed by the Sun in its own sign and Mars, which is in its own sign Scorpio in the navamsa. The more delicate placements are Venus and Saturn, both debilitated in the navamsa, and Jupiter and Venus, each in an enemy's sign in the birth chart.",
+   "fact_refs": [
+    "F.Me.dignity",
+    "F.Me.moolatrikona",
+    "F.Su.dignity",
+    "F.Ma.d9_dignity",
+    "F.Ve.d9_dignity",
+    "F.Sa.d9_dignity",
+    "F.Ju.sign_relation",
+    "F.Ve.sign_relation"
+   ]
+  },
+  "transits": {
+   "text": "This is a season for patience where you usually act on conviction: Saturn now moves through Pisces, the sign of your birth Mars. Questions of recognition and purpose are in view while Jupiter moves through Leo, the sign of your birth Sun and Ketu. Rahu and Ketu are back in Aquarius and Leo, their birth signs. Sade Sati is not active. The houses these transits fall in depend on the lagna and are not stated.",
+   "fact_refs": [
+    "GO.Sa.sign",
+    "F.Ma.sign",
+    "GO.Ju.sign",
+    "F.Su.sign",
+    "F.Ke.sign",
+    "GO.Ra.sign",
+    "GO.Ke.sign",
+    "DOSHA.sade_sati"
+   ]
+  }
+ },
+ "chapters": {
+  "love": {
+   "indicators": [
+    {
+     "text": "A steady, responsible partner, perhaps older or more serious than you, and a bond built slowly that lasts because of it: counted from the Moon, the 7th house of partnership is ruled by Saturn from either possible Moon sign.",
+     "fact_refs": [
+      "F.M7.lord",
+      "F.Sa.sign"
+     ]
+    },
+    {
+     "text": "A partner who respects your mind, enjoys conversation and values learning suits you better than one chosen for status alone: by tradition this is suggested by Jupiter, the significator of the husband in a woman's chart, aspecting your exalted Mercury.",
+     "fact_refs": [
+      "F.Me.aspected_by",
+      "F.Ju.sign"
+     ]
+    },
+    {
+     "text": "You show affection by looking after people, and you may give more than you ask for until you learn to say what you need: Venus is in Cancer, a sign of care and home, in an enemy's sign there and debilitated in the navamsa.",
+     "fact_refs": [
+      "F.Ve.sign",
+      "F.Ve.sign_relation",
+      "F.Ve.d9_dignity"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "In place of a running period, which needs the birth time: Jupiter, the significator of the husband, now moves through Leo, the sign of your birth Sun, while Saturn, which rules partnership from the Moon, moves through Pisces, the sign of your birth Mars. Use this season to get clear about what you want in a partner; it is not a date.",
+    "fact_refs": [
+     "GO.Ju.sign",
+     "F.Su.sign",
+     "GO.Sa.sign",
+     "F.Ma.sign",
+     "F.M7.lord"
+    ]
+   },
+   "cautions": [
+    {
+     "text": "Commitment may come later than friends' or family's expectations, because the partnership ruler from the Moon, Saturn, is debilitated in the navamsa. That is a pace, not a refusal; do not let outside pressure decide the timing for you.",
+     "fact_refs": [
+      "F.Sa.d9_dignity",
+      "F.M7.lord"
+     ]
+    },
+    {
+     "text": "Whether Mars meets any of the popular Kuja conventions depends on both the lagna and the Moon's sign, and both change during your birth date, so this report does not assess it; in any case the conventions disagree with each other and are not a verdict on any marriage.",
+     "fact_refs": [
+      "F.Ma.sign"
+     ]
+    }
+   ]
+  },
+  "career": {
+   "indicators": [
+    {
+     "text": "Precise explanation, organising material, language, assessment and analysis are your standout skills, shown by Mercury exalted in its own sign Virgo. Teaching uses them well; so do curriculum design, educational writing, training adults and examination or content work.",
+     "fact_refs": [
+      "F.Me.sign",
+      "F.Me.dignity",
+      "F.Me.moolatrikona"
+     ]
+    },
+    {
+     "text": "You can carry responsibility for a subject or a team, not only a classroom: Mars, Jupiter and Saturn all aspect Mercury, so drive, wisdom and discipline all bear on how you work with ideas.",
+     "fact_refs": [
+      "F.Me.aspected_by"
+     ]
+    },
+    {
+     "text": "Steady work in education or knowledge fields stays well supported even if the role changes: in the career chart (D10) Venus is in its own sign Taurus and Saturn sits in Sagittarius, the sign of teaching and higher learning.",
+     "fact_refs": [
+      "F.Ve.d10",
+      "F.Sa.d10"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "In place of a running period: Saturn moving through Pisces, the sign of your birth Mars, favours patience over a sudden move just now, and Jupiter in Leo, over your birth Sun, keeps questions of recognition and purpose in view. Both fit testing a new direction alongside your post.",
+    "fact_refs": [
+     "GO.Sa.sign",
+     "F.Ma.sign",
+     "GO.Ju.sign",
+     "F.Su.sign"
+    ]
+   },
+   "cautions": [
+    {
+     "text": "The 10th house of career is counted from the lagna, which is unknown, so this chapter rests on planets, chiefly your exalted Mercury, not on the career house. Treat it as a description of your strengths rather than a verdict on a particular job.",
+     "fact_refs": [
+      "F.Me.dignity"
+     ]
+    },
+    {
+     "text": "You may find close supervision hard and may sometimes feel undervalued, a possibility that comes with the Sun in its own sign alongside Ketu; test a new direction on the side before leaving a secure post on a feeling.",
+     "fact_refs": [
+      "F.Su.dignity",
+      "F.Ke.sign"
+     ]
+    }
+   ]
+  },
+  "wealth": {
+   "indicators": [
+    {
+     "text": "Income tends to come from your own skill and your own words: counted from the Moon, the lord of the 2nd house of earnings sits in that same house, in its own sign, from either possible Moon sign.",
+     "fact_refs": [
+      "F.M2.lord_house"
+     ]
+    },
+    {
+     "text": "Careful accounts, budgeting and practical judgement about money come naturally with exalted Mercury.",
+     "fact_refs": [
+      "F.Me.dignity",
+      "F.Me.sign"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "In place of a running period: Jupiter, the natural significator of wealth, now moves through Leo, where your Sun is in its own sign, a backdrop for pricing your skill fairly rather than taking speculative risks. This is guidance, not financial advice; check any plan with a qualified adviser.",
+    "fact_refs": [
+     "GO.Ju.sign",
+     "F.Su.sign",
+     "F.Su.dignity"
+    ]
+   },
+   "cautions": [
+    {
+     "text": "Growth comes from steady saving and skill rather than from speculation, since Jupiter, the natural significator of wealth, is in an enemy's sign. This is a tendency, not financial advice.",
+     "fact_refs": [
+      "F.Ju.sign",
+      "F.Ju.sign_relation"
+     ]
+    }
+   ]
+  },
+  "foreign": {
+   "indicators": [
+    {
+     "text": "Connections abroad, or with people from other backgrounds, are most likely to come through study, teaching or knowledge work: Rahu is in Aquarius, and its sign lord Saturn is in Sagittarius, the sign of distant places and higher learning.",
+     "fact_refs": [
+      "F.Ra.sign",
+      "F.Ra.dispositor",
+      "F.Sa.sign"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "In place of a running period: Rahu, the planet most linked with foreign connections, is now back in Aquarius, its birth sign, and its sign lord Saturn moves through Pisces. Whether this touches travel depends on houses from the lagna, which are unknown.",
+    "fact_refs": [
+     "GO.Ra.sign",
+     "F.Ra.sign",
+     "F.Ra.dispositor",
+     "GO.Sa.sign"
+    ]
+   },
+   "cautions": [
+    {
+     "text": "Rahu's sign is known, but the houses that describe travel and settling abroad are counted from the lagna, so this chapter can say little; treat it as low confidence and decide on practical grounds.",
+     "fact_refs": [
+      "F.Ra.sign"
+     ]
+    }
+   ]
+  },
+  "education": {
+   "indicators": [
+    {
+     "text": "Study comes naturally, especially languages, analysis and anything that rewards precision, and further qualifications are well supported: Mercury, the significator of learning, is exalted in Virgo and in its own sign in the navamsa.",
+     "fact_refs": [
+      "F.Me.dignity",
+      "F.Me.d9",
+      "F.Me.d9_dignity"
+     ]
+    },
+    {
+     "text": "A degree or certification taken step by step suits you better than short bursts, with Saturn in Sagittarius, the sign of higher learning.",
+     "fact_refs": [
+      "F.Sa.sign"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "In place of a running period: Jupiter, the planet of learning and teaching, now moves through Leo, over your birth Sun, a supportive backdrop for starting a qualification or a new subject.",
+    "fact_refs": [
+     "GO.Ju.sign",
+     "F.Su.sign"
+    ]
+   },
+   "cautions": [
+    {
+     "text": "A sharp, critical mind can turn on your own work (retrograde Mars aspects Mercury); set a standard of 'good enough' before you start a course.",
+     "fact_refs": [
+      "F.Ma.retro",
+      "F.Me.aspected_by"
+     ]
+    }
+   ]
+  },
+  "family": {
+   "indicators": [
+    {
+     "text": "Your father or a father figure is a strong presence in your life and in how you set your own standards: the Sun, natural significator of the father, is in its own sign.",
+     "fact_refs": [
+      "F.Su.sign",
+      "F.Su.dignity"
+     ]
+    },
+    {
+     "text": "With your mother, the bond is close but quiet, and feelings are often understood rather than said: the Moon, significator of the mother, is waning and unaspected.",
+     "fact_refs": [
+      "F.moon.phase",
+      "F.Mo.aspected_by"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "In place of a running period: Jupiter now moves through Leo, the sign of your birth Sun, the significator of the father, so advice from your father or an older mentor may carry more weight with you at present.",
+    "fact_refs": [
+     "GO.Ju.sign",
+     "F.Su.sign"
+    ]
+   },
+   "windows": [],
+   "no_window_reason": "This report does not give timing for children or family additions; that is a personal and medical matter. With an unknown birth time no family dates are given at all.",
+   "cautions": [
+    {
+     "text": "Home life is shaped more by what you build yourself than by inherited circumstances: counted from the Moon, the 4th house of home has no planet in it from either possible Moon sign.",
+     "fact_refs": [
+      "F.M4.occupants"
+     ]
+    }
+   ]
+  },
+  "health": {
+   "indicators": [
+    {
+     "text": "Good basic vitality and resilience are the classical picture of the Sun in its own sign.",
+     "fact_refs": [
+      "F.Su.dignity"
+     ]
+    },
+    {
+     "text": "Rest, regular meals and quiet time matter more to you than to most, because the waning Moon describes energy that needs regular replenishing.",
+     "fact_refs": [
+      "F.moon.phase"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "In place of a running period: Saturn now moves through Pisces, the sign of your birth Mars, so pace yourself and keep a steady routine rather than pushing through tiredness. See a doctor for any physical concern.",
+    "fact_refs": [
+     "GO.Sa.sign",
+     "F.Ma.sign"
+    ]
+   },
+   "cautions": [
+    {
+     "text": "Stress tends to show first as an overactive mind (exalted Mercury aspected by Mars and Saturn); keep work out of the evenings, and see a doctor for any physical concern. This is general wellness guidance, not medical advice.",
+     "fact_refs": [
+      "F.Me.aspected_by"
+     ]
+    }
+   ]
+  },
+  "spirituality": {
+   "indicators": [
+    {
+     "text": "A spiritual life that is private and inward suits you better than one built around display or a particular teacher: Ketu, the significator of detachment, shares Leo with the Sun.",
+     "fact_refs": [
+      "F.Ke.sign",
+      "F.Su.sign"
+     ]
+    },
+    {
+     "text": "A regular, disciplined practice, study of principles, or service through teaching fits you, with Saturn in Sagittarius, the sign of dharma.",
+     "fact_refs": [
+      "F.Sa.sign"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "In place of a running period: Ketu, the significator of detachment, is back in Leo, its birth sign and the sign of your Sun, and Jupiter moves through the same sign, a good moment to set up a short, private practice.",
+    "fact_refs": [
+     "GO.Ke.sign",
+     "F.Ke.sign",
+     "GO.Ju.sign",
+     "F.Su.sign"
+    ]
+   },
+   "cautions": [
+    {
+     "text": "Discipline can start to feel like duty (Saturn is debilitated in the navamsa); keep the practice short and kind to yourself.",
+     "fact_refs": [
+      "F.Sa.d9_dignity"
+     ]
+    }
+   ]
+  }
+ },
+ "answers": [
+  {
+   "question_id": "Q1",
+   "answer": "Nothing that holds at every hour of your birth date argues against marriage. Counted from the Moon, the 7th house of partnership is ruled by Saturn from either possible Moon sign, which suits a steady, responsible partner, perhaps older or more serious than you, and a commitment that grows slowly and lasts. Jupiter, the traditional significator of the husband, aspects your exalted Mercury, so someone who respects your mind and shares an interest in learning or ideas fits the chart. Venus in Cancer, debilitated in the navamsa, asks you to say what you need rather than only giving. Without a birth time the 7th house from the lagna and all dates are unknown, so no timing is given.",
+   "short": "Not denied; a steady, thoughtful partner suits you. No timing without a birth time.",
+   "confidence": "Weak",
+   "evidence": [
+    {
+     "text": "Saturn rules the 7th from the Moon from either possible Moon sign",
+     "fact_refs": [
+      "F.M7.lord",
+      "F.Sa.sign"
+     ]
+    },
+    {
+     "text": "Jupiter aspects exalted Mercury (by tradition, a partner who values the mind)",
+     "fact_refs": [
+      "F.Me.aspected_by",
+      "F.Me.dignity"
+     ]
+    },
+    {
+     "text": "Venus in an enemy's sign, debilitated in the navamsa",
+     "fact_refs": [
+      "F.Ve.sign_relation",
+      "F.Ve.d9_dignity"
+     ]
+    }
+   ],
+   "windows": [],
+   "what_to_do": "Look for steadiness and shared values rather than speed; let introductions come through work, study or people who know you well. A recorded birth time would allow the timing and the 7th house to be read."
+  },
+  {
+   "question_id": "Q2",
+   "answer": "The chart does not say 'leave education'; it says 'use your Mercury more fully'. Your strongest feature is Mercury, exalted in its own sign and again in its own sign in the navamsa, with Mars, Jupiter and Saturn all aspecting it. That favours precise explanation, organising knowledge and responsibility for a subject. A change of role that keeps this at the centre (curriculum design, training, educational writing, assessment or content work, or a senior academic role) fits better than a leap into an unrelated field. The career house itself depends on the lagna and no dates can be given, so test a new direction alongside your current job before deciding.",
+   "short": "Change the role, not the field: build on your Mercury skills; test before leaving.",
+   "confidence": "Weak",
+   "evidence": [
+    {
+     "text": "Mercury exalted, own sign and moolatrikona in Virgo; own sign in the navamsa",
+     "fact_refs": [
+      "F.Me.dignity",
+      "F.Me.moolatrikona",
+      "F.Me.d9_dignity"
+     ]
+    },
+    {
+     "text": "Mars, Jupiter and Saturn aspect Mercury",
+     "fact_refs": [
+      "F.Me.aspected_by"
+     ]
+    },
+    {
+     "text": "Saturn in Sagittarius, the sign of teaching, in both the birth and career charts",
+     "fact_refs": [
+      "F.Sa.sign",
+      "F.Sa.d10"
+     ]
+    }
+   ],
+   "windows": [],
+   "what_to_do": "List the parts of teaching you enjoy most (explaining, designing material, assessing, mentoring) and try one paid or voluntary project built on them for a few months before deciding. Keep your current post until the new work shows real demand."
+  },
+  {
+   "question_id": "Q3",
+   "answer": "Your exact lagna cannot be given. Every sign rises once in a day, each for about two hours, so without a recorded birth time any lagna would be a guess, and the strongest house (Ashtakavarga and Shadbala) is counted from that lagna too. What can be said without the time is that Mercury is your strongest planet by dignity, exalted and in its own sign.",
+   "short": "Not answerable without a birth time; Mercury is the strongest planet.",
+   "confidence": "Unknown",
+   "answerable": false,
+   "limits": "The lagna changes about every two hours and the houses, Shadbala and Ashtakavarga all follow from it; no birth time was recorded, so neither the lagna nor the strongest house can be stated without inventing precision.",
+   "evidence": [
+    {
+     "text": "Strongest planet by dignity: Mercury, exalted and in its own sign",
+     "fact_refs": [
+      "F.Me.dignity",
+      "F.Me.d9_dignity"
+     ]
+    }
+   ],
+   "windows": [],
+   "what_to_do": "Look for a birth time in a birth certificate, a hospital discharge record, a horoscope made at your birth, or old family letters. Failing that, birth-time rectification from several well-dated life events is possible but gives an estimate, not a record."
+  },
+  {
+   "question_id": "Q4",
+   "answer": "Lal Kitab remedies cannot be given honestly. The Lal Kitab chart is counted from the ascendant, which needs a birth time, so it has not been cast, and every Lal Kitab remedy depends on which house a planet occupies in that chart. Remedies taken from a guessed chart could be the wrong ones. General Vedic practices that rest on factors which hold at every hour are given in the remedies section instead.",
+   "short": "Not answerable without a birth time; general Vedic practices are given instead.",
+   "confidence": "Unknown",
+   "answerable": false,
+   "limits": "Lal Kitab houses are counted from the ascendant, and the ascendant needs a birth time; without it the Lal Kitab chart is not cast and no Lal Kitab remedy can be matched to a planet's house.",
+   "windows": [],
+   "what_to_do": "Use the general practices in the remedies section if you wish; they are optional. If a birth time is found, the Lal Kitab chart and its remedies can be added."
+  }
+ ],
+ "timeline": {
+  "months_12": [],
+  "years": []
+ },
+ "remedies": {
+  "vedic": [
+   {
+    "title": "Thursday learning and service for Jupiter",
+    "instructions": "On Thursdays, ten minutes of prayer or study in your own tradition, and a small act of help to a student or a teacher, such as lending books or an hour of free tutoring. Continue for a few months; stop whenever you wish.",
+    "priority": "high",
+    "why": {
+     "text": "Jupiter, significator of the husband and of teaching, is in an enemy's sign; it also aspects your exalted Mercury.",
+     "fact_refs": [
+      "F.Ju.sign_relation",
+      "F.Me.aspected_by"
+     ]
+    },
+    "source": "Classical shanti practice (prayer, chanting, service, charity), Phaladeepika XXVI.49"
+   },
+   {
+    "title": "Saturday service for Saturn",
+    "instructions": "On Saturdays, give food to someone who needs it or spend time with an elderly person in your family or neighbourhood. Quiet, regular and without show.",
+    "priority": "medium",
+    "why": {
+     "text": "Saturn rules partnership counted from the Moon and is debilitated in the navamsa.",
+     "fact_refs": [
+      "F.M7.lord",
+      "F.Sa.d9_dignity"
+     ]
+    },
+    "source": "Classical shanti practice (prayer, chanting, service, charity), Phaladeepika XXVI.49"
+   },
+   {
+    "title": "Friday care for Venus",
+    "instructions": "On Fridays, a short prayer or chant of your own tradition, and a small kindness to a woman who could use it; also take one small thing you enjoy for yourself, without guilt.",
+    "priority": "low",
+    "why": {
+     "text": "Venus, the significator of affection, is in an enemy's sign and debilitated in the navamsa.",
+     "fact_refs": [
+      "F.Ve.sign_relation",
+      "F.Ve.d9_dignity"
+     ]
+    },
+    "source": "Classical shanti practice (prayer, chanting, service, charity), Phaladeepika XXVI.49"
+   }
+  ]
+ }
+}

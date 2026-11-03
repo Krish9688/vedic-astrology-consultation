@@ -37,6 +37,13 @@ Rules that hold throughout:
 Aliases, matched only when exact and case-insensitive: `life`, `full` = complete-life; `year`, `annual` = 12-month;
 `summary` = compact; `monthly`, `quarterly` = outlook; `travel`, `abroad` = relocation.
 
+**Full consultation report** (`consultation`, alias `consultation report`, `client report`) is a separate flow. It
+covers the intake, methodology, kundli, Lal Kitab, eight life areas, answers to every question, the timeline, remedies
+and the appendix, and it runs only on Lahiri. Follow `skill://references/consultation-report.md`:
+`prepare_consultation_report(intake)` gives the writer's brief, and `create_consultation_report(intake, model)` writes
+the HTML, PDF and DOCX files. The engine fills in every table and chart; the model holds only interpretation, with
+fact and event ids.
+
 ## Messages
 
 Use these ids and texts (fill the braces). They are the project's own wording.

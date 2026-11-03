@@ -34,6 +34,12 @@ class ReportRequest(BaseModel):
     options: S.Options = S.Options()
 
 
+class ConsultationReportRequest(BaseModel):
+    intake: dict
+    model: Optional[dict] = None
+    name: Optional[str] = None
+
+
 def _auth(request: Request, authorization: Optional[str] = Header(default=None)):
     if request.url.path == "/api/v1/source":   # AGPL section 13: the source offer is visible without a token
         return
@@ -210,6 +216,18 @@ def consultation(r: ConsultationRequest):
 @app.post("/api/v1/report")
 def report(r: ReportRequest):
     return _wrap(lambda: S.create_report(r.model, r.name, r.birth, r.options))
+
+
+@app.post("/api/v1/consultation-report/brief")
+def consultation_report_brief(r: ConsultationReportRequest):
+    return _wrap(lambda: S.consultation_brief(r.intake))
+
+
+@app.post("/api/v1/consultation-report")
+def consultation_report(r: ConsultationReportRequest):
+    if r.model is None:
+        raise HTTPException(status_code=422, detail="model is required (get the brief from /api/v1/consultation-report/brief)")
+    return _wrap(lambda: S.create_consultation_report(r.intake, r.model, r.name))
 
 
 def main(host: str = "127.0.0.1", port: int = 8766):

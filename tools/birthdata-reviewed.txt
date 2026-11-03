@@ -354,3 +354,14 @@ c6ca7f9a91996ed3  book-example
 d957c8149c52fb66  book-example
 db35b30c56137558  book-example
 2da068b62c17c41a  synthetic-test-chart
+669a24c320935324  synthetic-test-chart
+ef944d8ed2f66a6a  synthetic-test-chart
+707f10fba3d6abbf  synthetic-test-chart
+f8fe2016082bc976  synthetic-test-chart
+746a2297aaea9a2e  synthetic-test-chart
+e7f10aab6d0d5fa7  synthetic-test-chart
+e45650dc38ea15e1  synthetic-test-chart
+11690542b6eed62a  synthetic-test-chart
+923ee103f70a27cd  synthetic-test-chart
+9de4c75e37005dfb  synthetic-test-chart
+c72566d1bfd8deea  synthetic-test-chart
