@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Astrology consultation report — {{ client.first_name }}</title>
+<meta name="author" content="astrology-consultation">
+<meta name="dcterms.created" content="{{ p.report_date }}">
+<meta name="dcterms.modified" content="{{ p.report_date }}">
+<meta name="generator" content="astrology-consultation consultation report">
+<style>{{ css|safe }}</style>
+</head>
+<body class="consultation">
+{# ============================== cover ============================== #}
+<section class="cover">
+  <div class="kind">Astrology consultation report · {{ k.type|capitalize }}</div>
+  <h1>{{ client.display_name }}</h1>
+  <div class="sub">Vedic (Parashari) kundli, Lal Kitab view, life areas and answers to your questions</div>
+  <div class="rule"></div>
+  <dl>
+    <dt>Prepared for</dt><dd>{{ client.display_name }}</dd>
+    <dt>Report date</dt><dd>{{ p.report_date_long }}</dd>
+    <dt>Birth</dt><dd>{% if consent.print_birth_data %}{{ birth.date_long }}, {% if p.unknown_time %}time not known{% else %}{{ birth.time_text }}{% endif %}, {{ birth.place }}{% else %}held on file, not printed (client's choice){% endif %}</dd>
+    <dt>Birth time</dt><dd>{{ birth.reliability_text }}</dd>
+    <dt>Calculation</dt><dd>Lahiri ayanamsa · whole-sign houses · Swiss Ephemeris, computed on this computer</dd>
+  </dl>
+  <p class="foot">Astrology is a traditional interpretive system. This report describes tendencies and timing within that
+  tradition; it is guidance, not a guarantee, and it is not a substitute for medical, legal, financial or
+  psychological advice.</p>
+</section>
+
+{# ============================== 1 intake ============================== #}
+<h2 id="s1" class="first">1. Client intake</h2>
+<table class="kv">
+<tbody>
+<tr><th>Full name</th><td>{{ client.display_name }}{% if not consent.print_full_name %} (first name only, at the client's request){% endif %}</td></tr>
+<tr><th>Gender</th><td>{{ client.gender }}</td></tr>
+<tr><th>Date of birth</th><td>{% if consent.print_birth_data %}{{ birth.date_long }}{% else %}not printed{% endif %}</td></tr>
+<tr><th>Time of birth</th><td>{% if consent.print_birth_data %}{{ birth.time_text }}{% else %}not printed{% endif %}</td></tr>
+<tr><th>Place of birth</th><td>{% if consent.print_birth_data %}{{ birth.place }} ({{ birth.coords }}){% else %}not printed{% endif %}</td></tr>
+<tr><th>Time zone used</th><td>{{ birth.zone_plain }}</td></tr>{% if birth.midnight %}
+<tr><th>Midnight</th><td>00:00 is taken as the first instant of {{ birth.date_long }} (not the end of the day before).</td></tr>{% endif %}
+<tr><th>Birth-time reliability</th><td>{{ birth.reliability_text }}</td></tr>
+<tr><th>Current city and country</th><td>{{ client.current_place }}</td></tr>
+<tr><th>Language</th><td>{{ client.language }}</td></tr>
+<tr><th>Relationship status</th><td>{{ client.relationship_status }}</td></tr>
+<tr><th>Occupation</th><td>{{ client.occupation }}</td></tr>
+<tr><th>Education</th><td>{{ client.education }}</td></tr>
+<tr><th>Consultation type</th><td>{{ k.type|capitalize }}</td></tr>
+<tr><th>Report date</th><td>{{ p.report_date_long }}</td></tr>
+<tr><th>Focus</th><td>{{ k.focus_text }}</td></tr>
+<tr><th>Time window of interest</th><td>{{ k.window_text }}</td></tr>
+</tbody></table>
+<h3>Your questions</h3>
+<table class="questions"><thead><tr><th>#</th><th>Question (your words)</th><th>Category</th><th>Priority</th><th>Answered in</th></tr></thead><tbody>
+{% for q in questions %}<tr><td>{{ q.id }}</td><td>“{{ q.text }}”</td><td>{{ q.category_label }}</td><td>{{ q.priority|capitalize }}</td><td><a href="#{{ q.id }}">section 6</a>{% if q.chapter %} and <a href="#{{ q.chapter }}">{{ q.chapter_title }}</a>{% endif %}</td></tr>{% endfor %}
+</tbody></table>
+<h3>Consent and privacy</h3>
+<p class="small">{{ consent_text }}</p>
+
+{# ============================== TOC ============================== #}
+<nav class="toc-page">
+<h2 id="contents">Contents</h2>
+<ol class="toc">
+<li><a href="#s1">1. Client intake</a></li>
+<li><a href="#summary">The short version</a></li>
+<li><a href="#s2">2. Methodology and settings</a></li>
+<li><a href="#s3">3. Personalized kundli (Vedic)</a></li>
+<li><a href="#s4">4. Lal Kitab view</a></li>
+<li><a href="#s5">5. Life areas</a><ol>{% for cid, title in chapters %}<li><a href="#{{ cid }}">{{ title }}</a></li>{% endfor %}</ol></li>
+<li><a href="#s6">6. Answers to your questions</a></li>
+<li><a href="#s7">7. Timeline</a></li>
+<li><a href="#s8">8. Remedies and guidance</a></li>
+<li><a href="#s9">9. Appendix</a></li>
+</ol>
+</nav>
+
+{# ============================== summary ============================== #}
+<h2 id="summary">The short version</h2>
+<p class="headline">{{ m.summary.headline }}</p>
+<ul class="keypoints">
+{% for kp in m.summary.key_points %}<li>{{ kp.text }}<span class="meta"><span class="grade {{ kp.confidence }}">{{ kp.confidence }}</span>{% if kp.window %} · {{ kp.window_text }}{% endif %}{% if kp.time_sensitive %} · depends on the exact birth time{% endif %}</span></li>{% endfor %}
+</ul>
+{% if p.unknown_time %}<div class="callout warn"><strong>Birth time unknown.</strong> {{ unknown_text }}</div>{% endif %}
+{% if p.time_status == "approximate" %}<div class="callout warn"><strong>Approximate birth time (±{{ birth.uncertainty }} minutes).</strong> {{ approx_text }}</div>{% endif %}
+<p class="small muted">How to read this report: confidence words (Strong, Moderate, Weak, Contradictory, Unknown) say how much of the chart agrees, not a probability. Dates are periods, never exact days. Every statement names the chart factors behind it; they are listed in the appendix.</p>
+
+{# ============================== 2 methodology ============================== #}
+<h2 id="s2">2. Methodology and settings</h2>
+<table class="kv"><tbody>
+<tr><th>Ayanamsa</th><td>{{ p.method.ayanamsa }}</td></tr>
+<tr><th>House system</th><td>{{ p.method.houses }}</td></tr>
+<tr><th>Nodes</th><td>{{ p.method.nodes }}</td></tr>
+<tr><th>Dasha</th><td>{{ p.method.dasha }}</td></tr>
+<tr><th>Divisional charts</th><td>{{ p.method.vargas }}</td></tr>
+<tr><th>Time zone handling</th><td>{{ p.method.time_zone }}{% for f in p.method.time_flags %}<br><span class="flag">Note: {{ f }}</span>{% endfor %}</td></tr>
+<tr><th>Ephemeris</th><td>{{ p.method.ephemeris }}</td></tr>
+<tr><th>Transits measured on</th><td>{{ p.method.transit_date }}</td></tr>
+<tr><th>Verification</th><td>{{ p.method.verification }}{% if verification %} Result: {{ verification.summary_text }}{% else %} Not cross-checked in this run.{% endif %}</td></tr>
+<tr><th>Lal Kitab</th><td>{{ p.method.lal_kitab }}</td></tr>
+</tbody></table>
+
+{# ============================== 3 kundli ============================== #}
+<h2 id="s3">3. Personalized kundli (Vedic)</h2>
+<h3>Rasi chart (D1)</h3>
+{% if p.unknown_time %}<p class="callout warn">The ascendant (lagna) changes about every two hours, so with an unknown birth time it is not known. The charts below are drawn as <strong>Moon charts</strong> (Chandra lagna): the Moon's sign stands in the first house, and houses are counted from the Moon. {{ moon_stability }}</p>{% endif %}
+<div class="charts2">
+<figure class="rasi">{{ charts.D1_north|safe }}<figcaption>North Indian style{% if p.unknown_time %} (Moon chart){% elif asc_alt %} — ascendant shown for the stated time; it may be {{ asc_alt }} within the birth-time range{% endif %}</figcaption></figure>
+<figure class="rasi">{{ charts.D1_south|safe }}<figcaption>South Indian style{% if p.unknown_time %} (Moon chart){% elif asc_alt %} — ascendant shown for the stated time; it may be {{ asc_alt }} within the birth-time range{% endif %}</figcaption></figure>
+</div>
+<p class="small muted">Signs only; * marks a retrograde planet. Degrees are in the table below.</p>
+<h3>Planetary positions</h3>
+<table class="positions"><thead><tr><th>Body</th><th>Sign</th><th>Degree</th><th>Nakshatra · pada</th><th>House{% if p.unknown_time %} (from Moon){% endif %}</th><th>Retro</th><th>Combust</th><th>Dignity</th></tr></thead><tbody>
+{% for r in planets %}<tr{% if r.varies %} class="varies"{% endif %}><td>{{ r.body }}</td><td>{{ r.sign_text }}</td><td>{{ r.degree_text }}</td><td>{{ r.nak_text }}</td><td>{{ r.house_text }}</td><td>{{ r.retrograde }}</td><td>{{ r.combust }}</td><td>{{ r.dignity }}</td></tr>{% endfor %}
+</tbody></table>
+{% if any_varies %}<p class="small">{{ varies_note }}</p>{% endif %}
+
+<h3>Lagna, Moon sign and Sun sign</h3>
+{% for key, label in [("lagna", "Lagna (ascendant)"), ("moon", "Moon sign"), ("sun", "Sun sign")] %}
+<div class="reading"><div class="rtitle">{{ label }}{% if key == "lagna" %}: {{ lagna_sign }}{% elif key == "moon" %}: {{ moon_sign }}{% else %}: {{ sun_sign }}{% endif %}</div>
+{% if m.kundli[key] %}{{ para(m.kundli[key]) }}{% elif key == "lagna" and p.unknown_time %}<p>{{ lagna_unknown }}</p>{% endif %}</div>
+{% endfor %}
+
+<h3>Navamsa and divisional charts</h3>
+<p class="small">D9 (navamsa) is read for marriage and inner strength; D10 (dashamsa) for career; D7 (saptamsa) for children; D4 (chaturthamsa) for home and property. {{ varga_note }}</p>
+{% if p.unknown_time %}<p class="small">The divisional charts (D9, D10, D7, D4) are not drawn: their lagnas depend on the birth time. The planets' divisional signs are listed in the table below.</p>{% else %}<div class="charts4">
+{% for d, label in [("D9", "D9 Navamsa"), ("D10", "D10 Dashamsa (career)"), ("D7", "D7 Saptamsa (children)"), ("D4", "D4 Chaturthamsa (property)")] %}
+<figure class="rasi small">{% if charts[d] %}{{ charts[d]|safe }}{% else %}<div class="nochart">Not drawn: the {{ label }} lagna depends on the birth time.</div>{% endif %}<figcaption>{{ label }}{% if p.varga_varies[d] %} — may change with the birth time: {{ p.varga_varies[d]|join(", ") }}{% endif %}</figcaption></figure>
+{% endfor %}
+</div>{% endif %}
+<table class="small"><thead><tr><th>Body</th>{% for d in ["D1", "D9", "D10", "D7", "D4"] %}<th>{{ d }}</th>{% endfor %}</tr></thead><tbody>
+{% for r in varga_table %}<tr><td>{{ r.body }}</td>{% for d in ["D1", "D9", "D10", "D7", "D4"] %}<td>{{ r[d] }}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table>
+
+<h3>Vimshottari dasha</h3>
+{% if p.unknown_time %}
+<p class="callout warn">{{ dasha_unknown }}</p>
+{% else %}
+{% if p.dasha.current_md %}<p class="current">Running now ({{ p.on_long }}): <strong>{{ p.dasha.current_md.lord }} major period</strong> ({{ p.dasha.current_md.start_long }} – {{ p.dasha.current_md.end_long }}){% if p.dasha.current_ad %}, <strong>{{ p.dasha.current_ad.lord }} sub-period</strong> ({{ p.dasha.current_ad.start_long }} – {{ p.dasha.current_ad.end_long }}){% endif %}.</p>{% endif %}
+{% if m.kundli.current_period %}<div class="reading"><div class="rtitle">What the current period means</div>{{ para(m.kundli.current_period) }}</div>{% endif %}
+{% if p.time_status == "approximate" and p.dasha.shift_days %}<p class="small">With the stated birth-time uncertainty, period boundaries can move by up to {{ p.dasha.shift_days }} days.</p>{% endif %}
+<table class="small"><thead><tr><th>Major period (mahadasha)</th><th>From</th><th>To</th></tr></thead><tbody>
+{% for x in p.dasha.mahadashas %}<tr{% if p.dasha.current_md and x.id == p.dasha.current_md.id %} class="now"{% endif %}><td>{{ x.lord }}</td><td>{{ x.start }}</td><td>{{ x.end }}</td></tr>{% endfor %}
+</tbody></table>
+<table class="small"><thead><tr><th>Sub-period (antardasha)</th><th>From</th><th>To</th></tr></thead><tbody>
+{% for x in p.dasha.antardashas %}<tr{% if x.current %} class="now"{% endif %}><td>{{ x.md }} – {{ x.ad }}{% if x.current %} (now){% endif %}</td><td>{{ x.start }}</td><td>{{ x.end }}</td></tr>{% endfor %}
+</tbody></table>
+{% endif %}
+
+<h3>Yogas present in this chart</h3>
+{% if m.kundli.yogas %}<div class="reading">{{ para(m.kundli.yogas) }}</div>{% endif %}
+{% if yogas %}<table class="small"><thead><tr><th>Yoga</th><th>Why it holds here</th><th>Note</th></tr></thead><tbody>
+{% for y in yogas %}<tr><td>{{ y.name }}</td><td>{{ y.detail_short }}</td><td>{% if y.disputed %}sources disagree{% elif y.time_dependent %}depends on the birth time{% elif y.sister_not_holding %}another source's version does not hold: {{ y.sister_not_holding|join(", ") }}{% else %}—{% endif %}</td></tr>{% endfor %}
+</tbody></table>{% else %}<p>{{ no_yogas_text }}</p>{% endif %}
+<p class="small muted">{% if p.unknown_time %}{{ p.yogas_not_holding }} further named yoga definitions do not hold at any sampled time of the birth date, or depend on the birth time and are not shown.{% else %}{{ p.yogas_not_holding }} further named yoga definitions were checked and do not hold in this chart.{% endif %} Yogas describe potential; they act through the periods that activate them.</p>
+<h3>Dosha checks</h3>
+{% if p.doshas %}<table class="small"><thead><tr><th>Check</th><th>Result</th><th>What it rests on</th><th>How to weigh it</th></tr></thead><tbody>
+{% for d in p.doshas %}<tr><td>{{ d.name }}</td><td>{{ d.status }}{% if d.time_dependent %} (depends on the birth time){% endif %}</td><td>{{ d.detail }}</td><td>{{ d.note }}</td></tr>{% endfor %}
+</tbody></table>{% else %}<p>None of the dosha checks holds in this chart.</p>{% endif %}
+<ul class="small">{% for x in p.not_assessed_doshas %}<li>{{ x }}</li>{% endfor %}</ul>
+
+<h3>Planetary strength</h3>
+{% if m.kundli.strengths %}<div class="reading">{{ para(m.kundli.strengths) }}</div>{% endif %}
+{% if p.unknown_time %}<p class="small">Shadbala and Ashtakavarga depend on the houses and the time of day; with an unknown birth time they are not shown.</p>{% else %}
+{% if p.time_status == "approximate" %}<p class="small flag">Values below are computed at the stated time; Shadbala, Ashtakavarga and the house cusps depend on the birth time and can differ within the ±{{ birth.uncertainty }}-minute range.</p>{% endif %}
+<table class="small"><thead><tr><th>Shadbala</th><th>Rupas</th><th>Needed</th><th>Ratio</th><th>Rank</th></tr></thead><tbody>
+{% for r in p.shadbala %}<tr><td>{{ r.planet }}</td><td>{{ "%.2f"|format(r.rupas) }}</td><td>{{ "%.1f"|format(r.required) }}</td><td>{{ "%.2f"|format(r.ratio) }}</td><td>{{ r.rank }}</td></tr>{% endfor %}
+</tbody></table>
+<table class="small sav"><thead><tr><th>House</th>{% for i in range(1, 13) %}<th>{{ i }}</th>{% endfor %}</tr></thead><tbody>
+<tr><td>Ashtakavarga (SAV)</td>{% for n in p.sav_by_house %}<td>{{ n }}</td>{% endfor %}</tr></tbody></table>
+<p class="small muted">Shadbala ratio ≥ 1 means the planet meets its classical minimum strength. Ashtakavarga: houses scoring 28 or more points are supported; fewer than 25 are weaker.</p>{% endif %}
+
+<h3>Current transits (gochar)</h3>
+{% if m.kundli.transits %}<div class="reading">{{ para(m.kundli.transits) }}</div>{% endif %}
+<table class="small"><thead><tr><th>Planet</th><th>Sign</th><th>From Moon</th>{% if not p.unknown_time %}<th>From lagna</th>{% endif %}<th>Retro</th><th>Reading from the Moon</th></tr></thead><tbody>
+{% for r in p.gochara %}<tr><td>{{ r.planet }}</td><td>{{ r.sign }}</td><td>{{ r.from_moon }}</td>{% if not p.unknown_time %}<td>{{ r.from_lagna }}</td>{% endif %}<td>{{ r.retro }}</td><td>{{ r.reading }}</td></tr>{% endfor %}
+</tbody></table>
+<p class="small muted">Measured on {{ p.method.transit_date }}. Sade Sati: {% if p.sade_sati.active %}active, {{ p.sade_sati.phase }}{% else %}not active{% endif %}.</p>
+
+{# ============================== 4 Lal Kitab ============================== #}
+<h2 id="s4">4. Lal Kitab view</h2>
+<p class="small">Lal Kitab is a separate system with its own houses and rules. Nothing in this section is used as evidence in the Vedic sections, and the two systems are never merged. Two editions are compared: Pt. Radhakrishna Shrimali's (the project's knowledge base) and the 1952 edition of Pt. Rupchand Joshi; where they disagree, both are shown.</p>
+{% if not lk %}
+<p class="callout warn">{{ p.lal_kitab_reason }}</p>
+{% else %}
+<figure class="rasi">{{ charts.LK|safe }}<figcaption>Lal Kitab chart: house numbers are fixed (house 1 at the top); the planets sit in their houses counted from the lagna, and signs are dropped</figcaption></figure>
+{% if m.lal_kitab.overview %}<div class="reading"><div class="rtitle">Reading</div>{{ para(m.lal_kitab.overview) }}</div>{% endif %}
+<h3>Planets by house</h3>
+<table class="small"><thead><tr><th>Planet</th><th>House</th><th>Pakka ghar</th><th>Exalted / debilitated</th><th>Sleeping? (Shrimali)</th><th>Sleeping? (1952)</th><th>With friends</th><th>With enemies</th><th>State</th></tr></thead><tbody>
+{% for r in lk.rows %}<tr><td>{{ r.planet }}</td><td>{{ r.house }}</td><td>{{ r.pakka_ghar }}{% if r.pakka_note %} ({{ r.pakka_note }}){% endif %}</td><td>{{ r.dignity }}</td><td>{{ r.sleeping_shrimali }}</td><td>{{ r.sleeping_lk1952 }}</td><td>{{ r.with_friends }}</td><td>{{ r.with_enemies }}</td><td>{{ r.state }}</td></tr>{% endfor %}
+</tbody></table>
+<p class="small">'Sinful placement' is the book's term for a placement it reads as less helpful; it is not a judgement of the person. 'Dharmi' is a placement the book reads as protective.</p>
+<p class="small">Empty houses ({{ lk.empty_houses|join(", ") or "none" }}) are 'sleeping houses' in both editions{% if lk.awakeners %}; the planet said to awaken each: {% for h, a in lk.awakeners.items() %}{{ h }} {{ a }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}.
+{% if lk.blind %} Blind-chart signature (enemy planets together in house 10): {{ lk.blind|join(", ") }}.{% else %} No blind-chart signature (no enemy planets together in house 10).{% endif %}</p>
+<h3>Artificial (masnui) planets</h3>
+{% if lk.masnui %}<table class="small"><thead><tr><th>House</th><th>Pair</th><th>Acts as</th><th>Note</th></tr></thead><tbody>{% for x in lk.masnui %}<tr><td>{{ x.house }}</td><td>{{ x.pair }}</td><td>{{ x.acts_as }}</td><td>{{ x.note }}</td></tr>{% endfor %}</tbody></table>{% else %}<p class="small">No pair of planets in one house forms an artificial planet.</p>{% endif %}
+<h3>Debts (rin)</h3>
+{% if m.lal_kitab.debts %}<div class="reading">{{ para(m.lal_kitab.debts) }}</div>{% endif %}
+{% if lk.rin %}<table class="small"><thead><tr><th>Edition</th><th>Debt signature</th><th>Planet hurt</th><th>Its houses</th><th>Occupied by</th></tr></thead><tbody>{% for x in lk.rin %}<tr><td>{{ x.edition }}</td><td>{{ x.debt }}</td><td>{{ x.planet }}</td><td>{{ x.houses }}</td><td>{{ x.occupants }}</td></tr>{% endfor %}</tbody></table>
+<p class="small muted">A signature is a placement pattern, not a declared debt: the 1952 edition judges a debt across the family's charts (p144) and does not say whether all or any of houses 2, 5, 9 and 12 must be afflicted (p150).</p>{% else %}<p class="small">No debt signature of either edition is present.</p>{% endif %}
+{% if lk_cards %}<h3>Lal Kitab remedies (upay)</h3><p class="small">Listed by priority in section 8, with instructions.</p>{% endif %}
+<h3>Varshaphal (annual chart) for the current year</h3>
+{% if vp and vp.rows %}
+<p class="small">Age-year {{ vp.age_year }} ({{ vp.convention }}), {{ vp.from_long }} – {{ vp.to_long }}. Main effect: {{ vp.main_month }}.{% if vp.note %} <span class="flag">{{ vp.note }}.</span>{% endif %}</p>
+<table class="small"><thead><tr><th>Planet</th><th>Natal house</th><th>Annual house</th>{% if vp.alt_differs %}<th>1952 reading</th>{% endif %}<th>Month of effect (1952)</th><th>Month of effect (Shrimali)</th></tr></thead><tbody>{% for r in vp.rows %}<tr><td>{{ r.planet }}</td><td>{{ r.natal_house }}</td><td>{{ r.annual_house }}</td>{% if vp.alt_differs %}<td>{{ r.lk1952_reading }}</td>{% endif %}<td>{{ r.month_lk1952 }}</td><td>{{ r.month_shrimali }}</td></tr>{% endfor %}</tbody></table>
+{% if m.lal_kitab.varshaphal %}<div class="reading">{{ para(m.lal_kitab.varshaphal) }}</div>{% endif %}
+{% else %}<p class="small">{{ (vp and vp.note) or "The annual table is not installed with this skill." }}</p>{% endif %}
+<h3>Where the editions disagree</h3>
+{% if lk.no_test %}<p class="small">The 1952 edition gives no sleeping test for {{ lk.no_test|join(", ") }}; only Shrimali's verdict is shown for them.</p>{% endif %}
+{% if lk.disputes %}<table class="small"><thead><tr><th>Point</th><th>Shrimali</th><th>1952 edition</th><th>How this report handles it</th></tr></thead><tbody>{% for d in lk.disputes %}<tr><td>{{ d.topic }}</td><td>{{ d.shrimali }}</td><td>{{ d.lk1952 }}</td><td>{{ d.used }}</td></tr>{% endfor %}</tbody></table>{% elif not lk.no_test %}<p class="small">No point of this chart is read differently by the two editions.</p>{% endif %}
+{% endif %}
+
+{# ============================== 5 chapters ============================== #}
+<h2 id="s5">5. Life areas</h2>
+<p class="small">Each chapter gives the key chart indicators, how the current period touches the area, favourable windows, cautions, and the answer to any question you asked in that area.</p>
+{% for ch in chapters_full %}
+<section class="chapter">
+<h3 id="{{ ch.id }}" class="chapter-title">{{ ch.title }}</h3>
+{% if ch.id == "health" %}<p class="callout small">General wellness themes only. This is not medical advice and never replaces a doctor; nothing here is a diagnosis or a prediction of illness.</p>{% endif %}
+<h4>Key chart indicators</h4>
+<ul>{% for it in ch.indicators %}<li>{{ it.text }}{{ tsmark(it) }}<span class="refs">{{ it.refs_text }}</span></li>{% endfor %}</ul>
+<h4>Current period</h4>
+{% if ch.current_period %}<p>{{ ch.current_period.text }}{{ tsmark(ch.current_period) }}<span class="refs">{{ ch.current_period.refs_text }}</span></p>{% else %}<p>{{ no_period_text }}</p>{% endif %}
+<h4>Windows</h4>
+{% if ch.windows %}<table class="small"><thead><tr><th>Window</th><th>When</th><th>What it rests on</th></tr></thead><tbody>{% for w in ch.windows %}<tr><td><span class="kind {{ w.kind or 'opportunity' }}">{{ w.kind_text }}</span> {{ w.label }}{% if w.text %}<br><span class="muted">{{ w.text }}</span>{% endif %}</td><td>{{ w.when }}</td><td>{{ w.refs_text }}</td></tr>{% endfor %}</tbody></table>
+{% else %}<p>{{ ch.no_window_reason or no_window_unknown }}</p>{% endif %}
+<h4>Cautions</h4>
+<ul>{% for it in ch.cautions %}<li>{{ it.text }}{{ tsmark(it) }}<span class="refs">{{ it.refs_text }}</span></li>{% endfor %}</ul>
+{% for a in ch.answers %}<div class="qbox"><div class="q">Your question {{ a.question_id }}: “{{ a.question }}”</div><p>{{ a.short }} <a href="#{{ a.question_id }}">Full answer in section 6.</a></p></div>{% endfor %}
+</section>
+{% endfor %}
+
+{# ============================== 6 answers ============================== #}
+<h2 id="s6">6. Answers to your questions</h2>
+{% for a in answers %}
+<div class="answer" id="{{ a.question_id }}">
+<div class="q">{{ a.question_id }} · {{ a.category_label }} · {{ a.priority|capitalize }} priority<br>“{{ a.question }}”</div>
+<p class="ans">{{ a.answer }}</p>
+{% if not a.answerable %}<p class="callout warn small"><strong>What the chart cannot answer:</strong> {{ a.limits }}</p>{% endif %}
+<table class="small kv"><tbody>
+<tr><th>Confidence</th><td><span class="grade {{ a.confidence }}">{{ a.confidence }}</span></td></tr>
+<tr><th>Chart evidence</th><td><ul>{% for e in a.evidence %}<li>{{ e.text }}{{ tsmark(e) }}<span class="refs">{{ e.refs_text }}</span></li>{% endfor %}{% if not a.evidence %}<li>No separate chart evidence: see the note above.</li>{% endif %}</ul></td></tr>
+<tr><th>Time windows</th><td>{% if a.windows %}<ul>{% for w in a.windows %}<li><strong>{{ w.when }}</strong> · <span class="kind {{ w.kind or 'opportunity' }}">{{ w.kind_text }}</span> — {{ w.label }}{% if w.text %}: {{ w.text }}{% endif %}<span class="refs">{{ w.refs_text }}</span></li>{% endfor %}</ul>{% else %}{{ a.no_window_reason or no_window_unknown }}{% endif %}</td></tr>
+<tr><th>What to do</th><td>{{ a.what_to_do }}</td></tr>
+</tbody></table>
+</div>
+{% endfor %}
+
+{# ============================== 7 timeline ============================== #}
+<h2 id="s7">7. Timeline</h2>
+{% if p.unknown_time %}
+<p class="callout warn">{{ timeline_unknown }}</p>
+{% else %}
+<h3>The next twelve months ({{ p.on_long }} – {{ p.horizon12_long }})</h3>
+{% if tl12 %}<div class="timeline">
+  <div class="tl-row tl-scale"><div class="tl-name"></div><div class="tl-track">{% for y in tl12.years %}<span style="left: {{ y.x }}%">{{ y.label }}</span>{% endfor %}</div></div>
+  {% for b in tl12.bars %}<div class="tl-row"><div class="tl-name">{{ b.label }}</div><div class="tl-track"><div class="tl-bar {{ b.kind }} {{ b.cut }}" style="left: {{ b.x }}%; width: {{ b.w }}%"></div></div></div>{% endfor %}
+</div>{% endif %}
+<table class="small"><thead><tr><th>When</th><th>What</th><th>Kind</th><th>Rests on</th></tr></thead><tbody>{% for w in m12 %}<tr><td>{{ w.when }}</td><td>{{ w.label }}{% if w.text %}<br><span class="muted">{{ w.text }}</span>{% endif %}</td><td>{{ w.kind_text }}</td><td>{{ w.refs_text }}</td></tr>{% endfor %}</tbody></table>
+<h3>The next three to five years at a glance</h3>
+{% if tly %}<div class="timeline">
+  <div class="tl-row tl-scale"><div class="tl-name"></div><div class="tl-track">{% for y in tly.years %}<span style="left: {{ y.x }}%">{{ y.label }}</span>{% endfor %}</div></div>
+  {% for b in tly.bars %}<div class="tl-row"><div class="tl-name">{{ b.label }}</div><div class="tl-track"><div class="tl-bar {{ b.kind }} {{ b.cut }}" style="left: {{ b.x }}%; width: {{ b.w }}%"></div></div></div>{% endfor %}
+</div>{% endif %}
+<table class="small"><thead><tr><th>When</th><th>What</th><th>Kind</th><th>Rests on</th></tr></thead><tbody>{% for w in years %}<tr><td>{{ w.when }}</td><td>{{ w.label }}{% if w.text %}<br><span class="muted">{{ w.text }}</span>{% endif %}</td><td>{{ w.kind_text }}</td><td>{{ w.refs_text }}</td></tr>{% endfor %}</tbody></table>
+<p class="tl-legend">Key:<span class="tl-bar window tl-key"></span>favourable window<span class="tl-bar pressure tl-key"></span>pressure period<span class="tl-bar watch tl-key"></span>something to watch. Edges are approximate (periods, not days).</p>
+{% endif %}
+
+{# ============================== 8 remedies ============================== #}
+<h2 id="s8">8. Remedies and guidance</h2>
+{% if not consent.remedies_requested %}
+<p>Remedies were not requested, so none are suggested. The practical guidance is in each chapter's cautions and in the answers.</p>
+{% else %}
+<p class="small">Remedies are optional traditional practices for reflection and steadiness. No efficacy is established, none is required, and nothing bad follows from not doing them. None replaces medical, psychological, legal or financial help. Listed by priority.</p>
+{% if lk_cards %}<p class="small">{{ lk_process }}</p>{% endif %}
+<table class="remedies"><thead><tr><th>Priority</th><th>System</th><th>Remedy</th><th>How to do it</th><th>Why (chart factor)</th></tr></thead><tbody>
+{% for r in remedies %}<tr><td>{{ r.priority|capitalize }}</td><td>{{ r.system }}</td><td>{{ r.title }}{% if r.safety %}<br><span class="muted">{{ r.safety }}</span>{% endif %}</td><td>{{ r.instructions }}</td><td>{{ r.why }}<span class="refs">{{ r.refs_text }}</span></td></tr>{% endfor %}
+</tbody></table>
+{% endif %}
+
+{# ============================== 9 appendix ============================== #}
+<section class="appendix">
+<h2 id="s9">9. Appendix</h2>
+<h3>A. Raw calculation tables</h3>
+<table class="small"><thead><tr><th>Body</th><th>Longitude</th><th>Sign</th><th>Degree</th><th>Nakshatra</th><th>Pada</th><th>D1–D60 signs</th></tr></thead><tbody>
+{% for r in raw_positions %}<tr><td>{{ r.body }}</td><td>{{ r.lon }}</td><td>{{ r.sign }}</td><td>{{ r.deg }}</td><td>{{ r.nak }}</td><td>{{ r.pada }}</td><td class="tiny">{{ r.vargas }}</td></tr>{% endfor %}
+</tbody></table>
+{% if not p.unknown_time and p.bhavas %}{% if p.time_status == "approximate" %}<p class="small flag">House cusps at the stated time; they shift with the birth time.</p>{% endif %}<table class="small"><thead><tr><th>Bhava (Sripati)</th><th>Start</th><th>Middle</th><th>End</th></tr></thead><tbody>{% for b in p.bhavas %}<tr><td>{{ b.house }}</td><td>{{ "%.4f"|format(b.start) }}°</td><td>{{ "%.4f"|format(b.middle) }}°</td><td>{{ "%.4f"|format(b.end) }}°</td></tr>{% endfor %}</tbody></table>{% endif %}
+{% if not p.unknown_time and bav_rows %}<table class="small"><thead><tr><th>Ashtakavarga (BAV) by house</th>{% for i in range(1, 13) %}<th>{{ i }}</th>{% endfor %}</tr></thead><tbody>{% for r in bav_rows %}<tr><td>{{ r.planet }}</td>{% for n in r.points %}<td>{{ n }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>{% endif %}
+{% if sensitivity_rows %}<h3>B. Birth-time sensitivity</h3><p class="small">How many minutes the birth time can move before each factor changes (computed).</p>
+<table class="small"><thead><tr><th>Factor</th><th>Earlier by</th><th>Later by</th></tr></thead><tbody>{% for r in sensitivity_rows %}<tr><td>{{ r.factor }}</td><td>{{ r.before }}</td><td>{{ r.after }}</td></tr>{% endfor %}</tbody></table>{% endif %}
+<h3>C. Verification record</h3>
+{% if verification %}
+<p class="small">{{ verification.about }}</p>
+<table class="small"><thead><tr><th>Quantity</th><th>This engine</th><th>Independent recompute</th><th>PyJHora</th><th>Largest difference</th><th>Tolerance</th><th>Result</th></tr></thead><tbody>
+{% for r in verification.rows %}<tr><td>{{ r.quantity }}</td><td>{{ r.engine }}</td><td>{{ r.independent }}</td><td>{{ r.pyjhora }}</td><td>{{ r.delta }}</td><td>{{ r.tolerance }}</td><td>{{ r.status }}</td></tr>{% endfor %}
+</tbody></table>
+<p class="small">{{ verification.summary_text }} VedAstro: not used (not installed locally; its library sends birth data to a remote service).</p>
+{% else %}<p class="small">Not cross-checked in this run. The calculation engine itself is tested against an independent recompute and PyJHora on synthetic charts (see the methodology).</p>{% endif %}
+<h3>D. Where each statement comes from</h3>
+<p class="small">Fact ids: F.* calculated Parashari facts (houses, dignity, yogas), LK.* Lal Kitab placements, SB.* Shadbala, AV.* Ashtakavarga, GO.* transits, JA.* Jaimini points, DOSHA.* dosha checks. Event ids: DSH.* dasha periods, ING.* sign changes, CON.* exact transit contacts.</p>
+<table class="tiny"><thead><tr><th>Id</th><th>Value</th></tr></thead><tbody>{% for i, v in cited %}<tr><td>{{ i }}</td><td>{{ v }}</td></tr>{% endfor %}</tbody></table>
+{% if remedies %}<h3>E. Remedy sources</h3>
+<table class="small"><thead><tr><th>Remedy</th><th>Source</th><th>Where the editions disagree</th></tr></thead><tbody>{% for r in remedies %}<tr><td>{{ r.title }}</td><td>{{ r.source or "—" }}</td><td>{{ r.dispute or "—" }}</td></tr>{% endfor %}</tbody></table>{% endif %}
+<h3>F. Glossary</h3>
+<dl class="glossary">{% for t, d in glossary %}<dt>{{ t }}</dt><dd>{{ d }}</dd>{% endfor %}</dl>
+<h3>G. Disclaimer</h3>
+<p class="small">{{ disclaimer }}</p>
+</section>
+</body>
+</html>
