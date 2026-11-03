@@ -325,8 +325,8 @@ def _more_candidates(D, benefic, show_all=False):
             f"; exchange between the {' and '.join(f'{h}th' for h in sorted(swap))} lords (not counted by LOL)" if swap else "")
         grouped += [("VIPARITA-LOL", "Viparita (LOL p327): lords of at least two dusthanas each in another dusthana, "
                      "not by exchange", len(set(lol) - swap) >= 2, det, f"LOL p327, source map LOL.md - {NOT_PC}"),
-                    ("VIPARITA-HJH", "Viparita (Raman): a dusthana lord in another dusthana (6th in 8th, 8th in 12th, "
-                     "12th in 3rd)", bool(hjh), det, f"HJH2 p296, p353 (HJH2_part2.md); HJH1 p307 (HJH1_part2.md) - {NOT_PC}"),
+                    ("VIPARITA-HJH", "Viparita (Raman, as coded): a lord of the 6th, 8th or 12th placed in the 3rd, 6th, 8th or 12th "
+                     "(other than its own house)", bool(hjh), det, f"HJH2 p296, p353 (HJH2_part2.md); HJH1 p307 (HJH1_part2.md) - {NOT_PC}"),
                     ("VIPARITA-CRUX", "Viparita (CRUX p30-32): two lords of the 3rd/6th/8th/12th joined in the 3rd, 6th, "
                      "8th or 12th", bool(crux), det + (f"; joined in H{','.join(map(str, crux))}" if crux else ""),
                      f"CRUX p30-32, source map CRUX_part1.md - {NOT_PC}")]
@@ -629,7 +629,7 @@ def facts_json(chart):
     """The same facts as facts() as stable ids: {"schema", "conventions", "facts": {"F.Sa.house": 7, ...}}.
     Parashari only (no Lal Kitab). Every value comes from derive()/candidates()/kuja() and the helpers the text uses.
     IDs: F.asc.{sign,deg}; F.<P>.{sign,deg,house,retro,dignity,sign_relation,dispositor,dispositor_house,owns,with,
-    aspected_by,combust,d9,d10,vargottama,moolatrikona,compound_to_dispositor,d9_dignity} per planet P present;
+    aspected_by,combust,d9,d10,vargottama,moolatrikona,compound_to_dispositor,d9_dignity,d10_dignity} per planet P present;
     F.H<h>.{sign,occupants,aspected_by,lord,lord_house,notes} h=1..12; F.M<h>.{sign,occupants,lord,lord_house} from the
     Moon (when present); F.moon.{phase,elongation,malefic_waning,malefic_72}; F.malefics;
     F.yoga.<ID>.{holds,detail,source}; F.dispositor.{chains,finals}."""
@@ -654,7 +654,8 @@ def facts_json(chart):
               f"F.{p}.vargottama": None if d9 is None else d9 == s,
               f"F.{p}.moolatrikona": None if mt in (None, "deg?") else mt,
               f"F.{p}.compound_to_dispositor": comp[1] if comp else None,
-              f"F.{p}.d9_dignity": None if d9 is None or p not in P7 else _d9_dignity(p, d9) or "none"}
+              f"F.{p}.d9_dignity": None if d9 is None or p not in P7 else _d9_dignity(p, d9) or "none",
+              f"F.{p}.d10_dignity": None if deg is None or p not in P7 else _d9_dignity(p, varga(s, deg, 10)) or "none"}
     for h in range(1, 13):
         L = lord[h]
         F |= {f"F.H{h}.sign": SIGNS[soh[h]], f"F.H{h}.occupants": occ[h], f"F.H{h}.aspected_by": D["aspected_by"][h],
