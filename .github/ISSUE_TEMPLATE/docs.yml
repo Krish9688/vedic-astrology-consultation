@@ -1,0 +1,26 @@
+name: Documentation
+description: Something is missing, wrong or unclear in the docs or skill text.
+labels: [documentation]
+body:
+  - type: markdown
+    attributes:
+      value: "**Never paste real birth details (yours or anyone else's): date, time and place of birth are personal data. Use an invented chart or a published example, and say which.**"
+  - type: input
+    id: where
+    attributes:
+      label: File and section
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong or missing
+    validations:
+      required: true
+  - type: checkboxes
+    id: synthetic
+    attributes:
+      label: Birth data
+      options:
+        - label: Any chart in this issue is invented or published, not a real person's birth details.
+          required: true

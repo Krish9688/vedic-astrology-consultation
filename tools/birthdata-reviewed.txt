@@ -1,268 +1,367 @@
 # Birth-data records reviewed as synthetic or published (council 6, C-4; re-reviewed 2026-10-18 after the security review).
 # Fingerprint = sha256 of the whole normalised line(s) holding the record. No dates here. A record not listed fails
 # tools/privacy_check.py. Add one only after checking it is invented or from a book (privacy_check.py --records PATH).
+# 2026-11-01 (audit F-01): lines newly matched by the added record shapes; all synthetic, invented or edge-case inputs.
 02287202972782b0  synthetic-test-chart
+0229ea6775c58e8c  invented-test-input
+036b60400710c54d  book-example (knowledge graph)
+037a74d1fd61a728  book-example (knowledge graph)
+03f2c385242b513a  book-example (knowledge graph)
+043e471d168a2257  synthetic-test-chart
 055dddb2bf55f4a8  reference-or-edge-chart
 064a11984ea23e9d  reference-or-edge-chart
 0739166144592d66  book-example
 074a88499c787107  book-example
 081fb6b4a632efdd  reference-or-edge-chart
+08e54c848c993ce0  book-example (knowledge graph)
 091948abede76db5  reference-or-edge-chart
 0a04200daa087242  synthetic-test-chart
 0b252659e41e6eba  book-example
 0c795ec9aaaf1389  synthetic-test-chart
+0cdc4b4ac3f84f25  synthetic-test-chart
+0d22849ae830900e  book-example (knowledge graph)
+0eb0b994fc61abed  book-example (knowledge graph)
 0f326c19c9d9e8c3  book-example
 118ca8a1a22afa62  synthetic-test-chart
 11ca3a0978512b99  synthetic-test-chart
 131b3eb693dbb43f  book-example
+13589fb7e3806eac  synthetic-test-chart
 15c6f5cd267f3926  book-example
 165df91799719629  synthetic-test-chart
+1685b1722ff536e9  book-example (knowledge graph)
 16dd52ac435e0b52  reference-or-edge-chart
+171aabeb9e890801  book-example
+171b1c73aedeb9cd  book-example (knowledge graph)
+19a6f6a71f037afa  synthetic-test-chart
 1aeac899626cec6d  synthetic-test-chart
 1b607e168417bf17  book-example
+1c687774b9515b62  book-example (knowledge graph)
 1cf9c18e2610ae7f  synthetic-test-chart
 1e01f0d2967014a3  book-example
+1fc1b28a41aa2e36  synthetic-test-chart
+2017302988dde3da  book-example (knowledge graph)
+21b31864479a5982  book-example (knowledge graph)
+21b76e7de804c62e  synthetic-test-chart
 257c183044d69860  synthetic-test-chart
+2625f67844ff217d  book-example (knowledge graph)
+27b3f27c746dfd10  synthetic-test-chart
 2aea7e6de3207be5  synthetic-test-chart
 2aef716cdb9065f4  book-example
+2be03f9b6df825f1  synthetic-test-chart
 2d0454ea86199a36  synthetic-test-chart
 2d55dfecefcd8f04  book-example
 2dbe30b6be274028  book-example
 2ddbe89be7420225  reference-or-edge-chart
+2e13f04ab0b82b83  book-example (knowledge graph)
 2e32a5749ec7c6cd  synthetic-test-chart
+2ec6fc93e7d21640  invented-test-input
+2f23cce8884d4dd6  invented-test-input
+2fc3e9ae265bf9c2  synthetic-test-chart
+2fd71a4eaad90c74  book-example (knowledge graph)
 30202bb8c737070e  book-example
+335775abfd696d17  synthetic-test-chart
+3368a17091de5d8f  invented-test-input
 337bc3f53e897ed5  synthetic-test-chart
 34707109c2d1b836  synthetic-test-chart
+34a7248b7bda8670  reference-or-edge-chart
+36e47b1f5387e102  book-example (knowledge graph)
+37104638ccc29200  synthetic-test-chart
 37ce911fc8734ef6  book-example
+3997a54bc4c26596  book-example (knowledge graph)
 39cefa6f9e15580d  reference-or-edge-chart
+39d56b2d48b3d35f  synthetic-test-chart
 3a7452ff62ac10eb  reference-or-edge-chart
+3bb87f39e893a467  book-example (knowledge graph)
 3c3312e703b021e5  book-example
+3c36b7fb7b84616b  book-example (knowledge graph)
+3c67c2e265d4d0b3  synthetic-test-chart
 3dff4037cadfc9a2  book-example
+3e22f5ed232a7917  book-example (knowledge graph)
+3f105696385400fe  synthetic-test-chart
+3f64ea26d9030d56  book-example (knowledge graph)
 404fd7736d083424  book-example
+4067ae5d355e9e6d  invented-test-input
+43f1909a0f79849e  synthetic-test-chart
 441c25f327b9af0b  synthetic-test-chart
+44b7c44f3b98eb1b  book-example (knowledge graph)
+46d79752d706083d  reference-or-edge-chart
+4747103cd6d5b90e  synthetic-test-chart
 474b7014150d74c4  reference-or-edge-chart
+474f359fa459950c  book-example (knowledge graph)
+4763733a1ad4c2f3  invented-spec-example
 485a9ddc896eb97a  book-example
 49852f16cde04e38  synthetic-test-chart
 49fe7929062313ab  book-example
 4b01aa87cad1e7a9  reference-or-edge-chart
+4b4fada2e52d292b  invented-test-input
+4bdc26cd11380b95  book-example (knowledge graph)
 4c1340e1cecb7e90  synthetic-test-chart
 4c2546a395f7aca3  reference-or-edge-chart
+4cf6ee063ad83f05  book-example (knowledge graph)
 4d0aa5ad85d0e5db  book-example
 4dfaa99c113889e8  synthetic-test-chart
 4ef436faf60ebdf2  book-example
 4f43683d3f0b6c8c  synthetic-test-chart
+4f83c7d8c3d4b0bd  synthetic-test-chart
+50d666a6efc98722  synthetic-test-chart
+531019565ee0a3d3  invented-test-input
+54626d639093a47b  synthetic-test-chart
+5622a77e912baca4  synthetic-test-chart
+582677ec6df2ca8a  synthetic-test-chart
 58606163d3606d71  synthetic-test-chart
+58c1ee854574ed73  synthetic-test-chart
+58d247941d435aba  book-example (knowledge graph)
+591a38c4c8ca1e5c  invented-spec-example
+594e8580a70d4470  book-example (knowledge graph)
+5b9f9ea2105d4388  book-example
+5bc05ede129a5ec4  reference-or-edge-chart
+5f8d2559e28ce3c7  synthetic-test-chart
 60cb7bd477547c6e  book-example
 616c3fade939753f  book-example
+633b417ab4953f83  book-example (knowledge graph)
 63ff78109cd58558  synthetic-test-chart
+64b2fff5bbe423ed  synthetic-test-chart
+66db146467036d69  reference-or-edge-chart
+66dfecb140f14e67  synthetic-test-chart
+687928f92b50e211  book-example (knowledge graph)
 6a0a318a954f7ecb  synthetic-test-chart
 6b548351b1a5d8e0  book-example
+6d555771e8c7239b  book-example (knowledge graph)
+6d560b967663a8ba  synthetic-test-chart
 6d783fd5a3eecdab  synthetic-test-chart
+6eb79bb1ef8627a2  synthetic-test-chart
+709a07dd492c34b0  book-example (knowledge graph)
 71c6e3887722d3b0  reference-or-edge-chart
+71ebe4c468e64349  invented-test-input
 73b0ef13c734a7e5  synthetic-test-chart
+73b36cb712300b11  book-example
+7571196082c606bc  book-example (knowledge graph)
+757983cdc48f6690  invented-test-input
+75a28bb728fd35cf  synthetic-test-chart
+75c8afa4b521472a  synthetic-test-chart
+75f90d9b6162d706  book-example (knowledge graph)
 761b042705499fa1  synthetic-test-chart
+7790673b1c0f5739  synthetic-test-chart
+77f42c0c2ac2fdec  book-example (knowledge graph)
+784b371d8a83bdc3  synthetic-test-chart
+788781266a4fe322  synthetic-test-chart
+7942aca0288512e7  synthetic-test-chart
+79891fec4fbd5fd8  synthetic-test-chart
 7b1bdb04a33f3be7  synthetic-test-chart
+7b3cc74ddda5f25c  synthetic-test-chart
+7c1b740d9d44d7bf  book-example (knowledge graph)
+7e16a07b5e652355  synthetic-test-chart
+7e4637d1d7642335  invented-test-input
+7e6f44cca40857d8  invented-spec-example
+7e9a088f2603f0a9  synthetic-test-chart
 7e9eb4d089a61fed  reference-or-edge-chart
+7f16fb61ddecb351  book-example (knowledge graph)
+81133369dce6d0a9  reference-or-edge-chart
+8155f746493f9f48  invented-test-input
 816db82c63eeb893  synthetic-test-chart
+8170f16acd63b0f5  synthetic-test-chart
+81a42ce5ba73a722  invented-test-input
+826906f76745cc02  reference-or-edge-chart
 83e8f5486fb9e60a  synthetic-test-chart
+8557096e5152d9bc  synthetic-test-chart
 86fc0a6b948c33ef  synthetic-test-chart
+8740a9b7089135de  invented-spec-example
+881dba010bead4b4  book-example (knowledge graph)
 893476b6030ac599  synthetic-test-chart
 8ae71a8487d87d89  synthetic-test-chart
+8b2a76598a0a9fa2  book-example (knowledge graph)
+8c514f9e11e654c7  invented-test-input
+8d01a1b8a70c8f9d  book-example (knowledge graph)
+8df7bb7c9c86e444  synthetic-test-chart
+8e01290c35c8ad7a  synthetic-test-chart
+8e2b5d41f10c97b3  book-example (knowledge graph)
+8e5cb156cedf71a6  synthetic-test-chart
+8fbbf1ce87ec3455  book-example (knowledge graph)
+8fd9fc1e1e3273b2  book-example (knowledge graph)
+913e30947e88aca5  synthetic-test-chart
 9160ae7b9c324497  synthetic-test-chart
+91dbb2d08c744dff  synthetic-test-chart
+93c2fa72da723995  book-example (knowledge graph)
+94ec21fdcc7f6514  invented-spec-example
+956f34723200af5c  book-example (knowledge graph)
+96740a6cb1b2370d  synthetic-test-chart
+97e08564ef6ebdac  synthetic-test-chart
 98222a9cc66f492f  synthetic-test-chart
+983a512e770e431f  synthetic-test-chart
 987b2114e9d82809  synthetic-test-chart
 987fd69001b2fb18  synthetic-test-chart
 98c69c59ec71e4b8  synthetic-test-chart
 98d1b81fb05110d7  book-example
+99c508f4297e7676  book-example (knowledge graph)
+9ae78dcc2dede240  reference-or-edge-chart
+9c1cdd354d7c593a  invented-test-input
+9c4022ceff39c55c  synthetic-test-chart
 9c53c463815175f7  synthetic-test-chart
+9d7d0e1a1b63830a  invented-spec-example
+9de457e7eaebc0f2  book-example (knowledge graph)
+9ebfab8d879ca884  book-example (knowledge graph)
 a15bd1dbd28738cd  synthetic-test-chart
 a22e80dff440005f  reference-or-edge-chart
+a2c30cb597a4e9b2  invented-test-input
 a30b912b5586d105  synthetic-test-chart
+a39645b2afeddc9b  book-example (knowledge graph)
+a44e3651c2046b5d  invented-test-input
+a4522dae45453ffb  invented-test-input
+a50125e938cfa526  invented-spec-example
+a6ca2a85bf85d272  synthetic-test-chart
+a72c710faf9274a5  book-example (knowledge graph)
+a799e198c6f2ed59  book-example (knowledge graph)
 a7ec30c8f0ef8213  reference-or-edge-chart
+a7ec4cc884dd8b05  synthetic-test-chart
 a800faecd6c90338  reference-or-edge-chart
 a83529321330c9e0  book-example
 a8c4778e708684de  book-example
 a93914f3f56cc95b  reference-or-edge-chart
 aa3942c1652aa656  synthetic-test-chart
 ac75da892ecfa7ab  book-example
+ae214680867be930  synthetic-test-chart
 aeae96c89b19f48e  synthetic-test-chart
+b0c0c710afe78882  invented-test-input
+b1c32ac12e5ba06c  book-example (knowledge graph)
 b22d7591ba262117  synthetic-test-chart
+b2a511229731234c  book-example (knowledge graph)
+b39741fe7fc28855  synthetic-test-chart
+b3c1f64c61b1507a  synthetic-test-chart
+b459f4191099cb3d  synthetic-test-chart
+b4cda1d791b7cc26  reference-or-edge-chart
 b5efc6d1e823d3ca  book-example
+b6301542c1132b6d  synthetic-test-chart
+b6a9edb829679933  synthetic-test-chart
 b6c4156e8c65b2a3  synthetic-test-chart
 b72a3a31c85dce8a  book-example
 b73412b96dc97590  book-example
 b75c33e225f49c66  synthetic-test-chart
 b773322f47cce337  synthetic-test-chart
+ba4cde5a985dabb7  book-example (knowledge graph)
 baaa39afa1838526  book-example
+bb17fb10b9d87eaa  book-example (knowledge graph)
+bbb66d2cca9667a3  synthetic-test-chart
 bcb3033fba10fa3e  reference-or-edge-chart
 bd351427aeef04b6  book-example
 be645fcac5db6f94  synthetic-test-chart
 bee8299efa92d879  reference-or-edge-chart
+bf4b6d29a676c415  book-example (knowledge graph)
 c10a25c40d597245  synthetic-test-chart
+c1b6a8bd5a41b5d8  synthetic-test-chart
+c2197864b1d402af  book-example (knowledge graph)
+c29b17dc1a0ff9c0  invented-spec-example
+c6ca7f9a91996ed3  book-example (knowledge graph)
+c6fa0523ef8e6cef  synthetic-test-chart
 c735e90c825c5cef  synthetic-test-chart
+c8ad8b0bd87b6d9f  invented-spec-example
+c8b3c2f8be4043e1  reference-or-edge-chart
+c944c69a71dc3e96  synthetic-test-chart
+c95288c05561deee  book-example (knowledge graph)
+c9ef67a4b5277a15  synthetic-test-chart
+ca03fece9d5f7704  synthetic-test-chart
 cd860393c63516ba  reference-or-edge-chart
+cda700346460c5a4  book-example (knowledge graph)
+cf0865595b279725  synthetic-test-chart
+cf5cee6a776dedc3  synthetic-test-chart
+d0a315e3b633c8a0  synthetic-test-chart
+d0e2c5a2312b1431  synthetic-test-chart
 d23aac3519226769  synthetic-test-chart
+d4225a972b41c3ea  book-example (knowledge graph)
+d4eee003cbfbb051  invented-test-input
 d52c7a6b53eafa30  synthetic-test-chart
+d5407676df7e08c4  reference-or-edge-chart
+d555e8c4bd67f25f  synthetic-test-chart
 d5c2b1f89e685f7b  synthetic-test-chart
+d67ff6d6bc9c7a1f  synthetic-test-chart
+d68c37702796aeab  synthetic-test-chart
+d6b4e013ad397289  reference-or-edge-chart
 d6cb8f631e4ad546  reference-or-edge-chart
+d738151fc7c49ff9  book-example (knowledge graph)
+d8286913b9b9b806  invented-test-input
 d8694f83b52dad67  synthetic-test-chart
 d87595f4891fd353  synthetic-test-chart
 d88480acd99068bf  book-example
+d9197c73ffb4d9ff  synthetic-test-chart
+d957c8149c52fb66  book-example (knowledge graph)
+d9d35bc273d55818  book-example (knowledge graph)
+da460a5f9f08ead5  reference-or-edge-chart
+da7936196b369bf4  book-example (knowledge graph)
+dbdb6a819210e733  book-example (knowledge graph)
 dc06775bbf36c80b  book-example
+dc3a3c2bf33aa5e4  book-example (knowledge graph)
 dc6812e8ed655d20  reference-or-edge-chart
 dcd7fd72805f663a  synthetic-test-chart
+de8a84be2a8c4cb1  reference-or-edge-chart
+df209929bd21684b  book-example (knowledge graph)
+e0f9005d188d6c88  book-example (knowledge graph; rebuilt 2026-10-24 for KB v2.4, same 52 records)
+e34ff008519dae67  book-example (knowledge graph)
+e41f36d2240665ea  synthetic-test-chart
 e4537090386e78d0  synthetic-test-chart
 e4a9470251b062e8  book-example
+e545a3970b220f75  reference-or-edge-chart
+e580a611aaf4fa82  invented-spec-example
+e5a3a006ac1edbd0  synthetic-test-chart
+e6ad8946ae061de6  book-example (knowledge graph)
 e7165783f04a7bec  synthetic-test-chart
 e83277ea471543bc  synthetic-test-chart
 e8972ab9b7aacb12  synthetic-test-chart
-ea97689606c6e5d4  book-example
-f4db8836d8ca87d4  synthetic-test-chart
-fb2334cd979f06cc  reference-or-edge-chart
-e0f9005d188d6c88  book-example (knowledge graph; rebuilt 2026-10-24 for KB v2.4, same 52 records)
-ba4cde5a985dabb7  book-example (knowledge graph)
-4bdc26cd11380b95  book-example (knowledge graph)
-bf4b6d29a676c415  book-example (knowledge graph)
-7571196082c606bc  book-example (knowledge graph)
-ece373c93e0d8b89  book-example (knowledge graph)
-dc3a3c2bf33aa5e4  book-example (knowledge graph)
-1c687774b9515b62  book-example (knowledge graph)
-bb17fb10b9d87eaa  book-example (knowledge graph)
-b1c32ac12e5ba06c  book-example (knowledge graph)
-171b1c73aedeb9cd  book-example (knowledge graph)
-709a07dd492c34b0  book-example (knowledge graph)
-2625f67844ff217d  book-example (knowledge graph)
-8d01a1b8a70c8f9d  book-example (knowledge graph)
-7f16fb61ddecb351  book-example (knowledge graph)
-3f64ea26d9030d56  book-example (knowledge graph)
-8fbbf1ce87ec3455  book-example (knowledge graph)
-c95288c05561deee  book-example (knowledge graph)
-956f34723200af5c  book-example (knowledge graph)
-3bb87f39e893a467  book-example (knowledge graph)
-c6ca7f9a91996ed3  book-example (knowledge graph)
-633b417ab4953f83  book-example (knowledge graph)
-9ebfab8d879ca884  book-example (knowledge graph)
-58d247941d435aba  book-example (knowledge graph)
-d4225a972b41c3ea  book-example (knowledge graph)
-fef08e281c81f4d0  book-example (knowledge graph)
-a72c710faf9274a5  book-example (knowledge graph)
-da7936196b369bf4  book-example (knowledge graph)
-4cf6ee063ad83f05  book-example (knowledge graph)
-474f359fa459950c  book-example (knowledge graph)
-2fd71a4eaad90c74  book-example (knowledge graph)
-df209929bd21684b  book-example (knowledge graph)
-e34ff008519dae67  book-example (knowledge graph)
-3997a54bc4c26596  book-example (knowledge graph)
-594e8580a70d4470  book-example (knowledge graph)
-b2a511229731234c  book-example (knowledge graph)
-a39645b2afeddc9b  book-example (knowledge graph)
-2017302988dde3da  book-example (knowledge graph)
-687928f92b50e211  book-example (knowledge graph)
-a799e198c6f2ed59  book-example (knowledge graph)
-75f90d9b6162d706  book-example (knowledge graph)
-3c36b7fb7b84616b  book-example (knowledge graph)
-8b2a76598a0a9fa2  book-example (knowledge graph)
-9de457e7eaebc0f2  book-example (knowledge graph)
-8fd9fc1e1e3273b2  book-example (knowledge graph)
-d738151fc7c49ff9  book-example (knowledge graph)
-f55887c9a91559d0  book-example (knowledge graph)
-e6ad8946ae061de6  book-example (knowledge graph)
-44b7c44f3b98eb1b  book-example (knowledge graph)
-93c2fa72da723995  book-example (knowledge graph)
-037a74d1fd61a728  book-example (knowledge graph)
-6d555771e8c7239b  book-example (knowledge graph)
-77f42c0c2ac2fdec  book-example (knowledge graph)
-21b31864479a5982  book-example (knowledge graph)
-7c1b740d9d44d7bf  book-example (knowledge graph)
-ffc7e43cda48c390  book-example (knowledge graph)
-f8a4f369d124631b  book-example (knowledge graph)
-36e47b1f5387e102  book-example (knowledge graph)
-03f2c385242b513a  book-example (knowledge graph)
-99c508f4297e7676  book-example (knowledge graph)
-d957c8149c52fb66  book-example (knowledge graph)
-0d22849ae830900e  book-example (knowledge graph)
-881dba010bead4b4  book-example (knowledge graph)
-dbdb6a819210e733  book-example (knowledge graph)
-2e13f04ab0b82b83  book-example (knowledge graph)
-c2197864b1d402af  book-example (knowledge graph)
-08e54c848c993ce0  book-example (knowledge graph)
-d9d35bc273d55818  book-example (knowledge graph)
-cda700346460c5a4  book-example (knowledge graph)
-1685b1722ff536e9  book-example (knowledge graph)
-8e2b5d41f10c97b3  book-example (knowledge graph)
-3e22f5ed232a7917  book-example (knowledge graph)
-036b60400710c54d  book-example (knowledge graph)
-0eb0b994fc61abed  book-example (knowledge graph)
+e95e66f7d7437fa5  synthetic-test-chart
 e99fdeb355f98170  book-example (knowledge graph)
-c1b6a8bd5a41b5d8  synthetic-test-chart
-a7ec4cc884dd8b05  synthetic-test-chart
-7b3cc74ddda5f25c  synthetic-test-chart
-7e16a07b5e652355  synthetic-test-chart
-7942aca0288512e7  synthetic-test-chart
-b6301542c1132b6d  synthetic-test-chart
-6eb79bb1ef8627a2  synthetic-test-chart
-ca03fece9d5f7704  synthetic-test-chart
-50d666a6efc98722  synthetic-test-chart
-66dfecb140f14e67  synthetic-test-chart
-a6ca2a85bf85d272  synthetic-test-chart
-b459f4191099cb3d  synthetic-test-chart
-75c8afa4b521472a  synthetic-test-chart
+ea97689606c6e5d4  book-example
+ece373c93e0d8b89  book-example (knowledge graph)
 efdaff5cdd329f78  synthetic-test-chart
-b3c1f64c61b1507a  synthetic-test-chart
-3c67c2e265d4d0b3  synthetic-test-chart
-983a512e770e431f  synthetic-test-chart
-e5a3a006ac1edbd0  synthetic-test-chart
-13589fb7e3806eac  synthetic-test-chart
-582677ec6df2ca8a  synthetic-test-chart
-0cdc4b4ac3f84f25  synthetic-test-chart
-171aabeb9e890801  book-example
-73b36cb712300b11  book-example
-784b371d8a83bdc3  synthetic-test-chart
-d9197c73ffb4d9ff  synthetic-test-chart
-4747103cd6d5b90e  synthetic-test-chart
+effa6a5d860f7985  reference-or-edge-chart
+f4124b249f4964ac  reference-or-edge-chart
 f493c1f9a7012576  synthetic-test-chart
-043e471d168a2257  synthetic-test-chart
-d555e8c4bd67f25f  synthetic-test-chart
-c944c69a71dc3e96  synthetic-test-chart
-1fc1b28a41aa2e36  synthetic-test-chart
-7790673b1c0f5739  synthetic-test-chart
-8e5cb156cedf71a6  synthetic-test-chart
-5622a77e912baca4  synthetic-test-chart
-58c1ee854574ed73  synthetic-test-chart
-43f1909a0f79849e  synthetic-test-chart
-37104638ccc29200  synthetic-test-chart
-c6fa0523ef8e6cef  synthetic-test-chart
-96740a6cb1b2370d  synthetic-test-chart
-91dbb2d08c744dff  synthetic-test-chart
-2fc3e9ae265bf9c2  synthetic-test-chart
+f4db8836d8ca87d4  synthetic-test-chart
+f55887c9a91559d0  book-example (knowledge graph)
+f8a4f369d124631b  book-example (knowledge graph)
+fb2334cd979f06cc  reference-or-edge-chart
 fd407500f79c098b  synthetic-test-chart
-5b9f9ea2105d4388  book-example
-3f105696385400fe  synthetic-test-chart
-2be03f9b6df825f1  synthetic-test-chart
-64b2fff5bbe423ed  synthetic-test-chart
-54626d639093a47b  synthetic-test-chart
-0229ea6775c58e8c  invented-test-input
-2f23cce8884d4dd6  invented-test-input
-4b4fada2e52d292b  invented-test-input
-531019565ee0a3d3  invented-test-input
-757983cdc48f6690  invented-test-input
-7e4637d1d7642335  invented-test-input
-8155f746493f9f48  invented-test-input
-81a42ce5ba73a722  invented-test-input
-9c1cdd354d7c593a  invented-test-input
-a2c30cb597a4e9b2  invented-test-input
-a44e3651c2046b5d  invented-test-input
-a4522dae45453ffb  invented-test-input
-b0c0c710afe78882  invented-test-input
-d4eee003cbfbb051  invented-test-input
-d8286913b9b9b806  invented-test-input
-c29b17dc1a0ff9c0  invented-spec-example
-a50125e938cfa526  invented-spec-example
-8740a9b7089135de  invented-spec-example
-591a38c4c8ca1e5c  invented-spec-example
-4763733a1ad4c2f3  invented-spec-example
-94ec21fdcc7f6514  invented-spec-example
-c8ad8b0bd87b6d9f  invented-spec-example
-9d7d0e1a1b63830a  invented-spec-example
-7e6f44cca40857d8  invented-spec-example
-e580a611aaf4fa82  invented-spec-example
+fd6dc13b725269cc  synthetic-test-chart
+fef08e281c81f4d0  book-example (knowledge graph)
+ffc7e43cda48c390  book-example (knowledge graph)
+05846aed24cefe16  reference-or-edge-chart
+46bc7d3ce14c2402  reference-or-edge-chart
+b33bae1d6cfd2d71  reference-or-edge-chart
+a847fb6095abe9a5  reference-or-edge-chart
+e26587a357eb7f44  reference-or-edge-chart
+f8eb6a47d33333a3  reference-or-edge-chart
+a0efa82fa7df65cd  reference-or-edge-chart
+cce39f097ab81639  reference-or-edge-chart
+80afc0e694f44874  reference-or-edge-chart
+5515411c39b0a494  synthetic-test-chart
+031780ef0aaede51  book-example
+03f2c385242b513a  book-example
+2625f67844ff217d  book-example
+2ce6073309822a56  book-example
+3bb87f39e893a467  book-example
+3e095702bd6c76c8  book-example
+453e2a7ffc1fac8d  book-example
+70b903bef74751c6  book-example
+7abeba8385f0378f  book-example
+7f16fb61ddecb351  book-example
+85ecbb02abfc644c  book-example
+8d01a1b8a70c8f9d  book-example
+92e50f558a6acbbd  book-example
+9411214c6c92c6da  book-example
+956f34723200af5c  book-example
+99c508f4297e7676  book-example
+9b8c8ae8da69bed6  book-example
+a1a24d4ff062cfa8  book-example
+bf8dda128b68497f  book-example
+c6ca7f9a91996ed3  book-example
+d957c8149c52fb66  book-example
+db35b30c56137558  book-example
+2da068b62c17c41a  synthetic-test-chart
+669a24c320935324  synthetic-test-chart
+ef944d8ed2f66a6a  synthetic-test-chart
+707f10fba3d6abbf  synthetic-test-chart
+f8fe2016082bc976  synthetic-test-chart
+746a2297aaea9a2e  synthetic-test-chart
+e7f10aab6d0d5fa7  synthetic-test-chart
+e45650dc38ea15e1  synthetic-test-chart
+11690542b6eed62a  synthetic-test-chart
+923ee103f70a27cd  synthetic-test-chart
+9de4c75e37005dfb  synthetic-test-chart
+c72566d1bfd8deea  synthetic-test-chart

@@ -13,6 +13,7 @@ from __future__ import annotations
 import contextlib
 import contextvars
 import datetime as dt
+import functools
 import hashlib
 import json
 import os
@@ -66,9 +67,11 @@ EPHE_DIR = _find_ephe()
 swe.set_ephe_path(EPHE_DIR)          # None → Moshier fallback
 AYANAMSA = swe.SIDM_LAHIRI
 AYANAMSA_NAME = swe.get_ayanamsa_name(AYANAMSA)
-# P8-3c / CALC-X4: a small closed set, Lahiri the default; no free-form or user-defined values
-AYANAMSAS = {"lahiri": swe.SIDM_LAHIRI, "true_chitra": swe.SIDM_TRUE_CITRA, "lahiri_icrc": swe.SIDM_LAHIRI_ICRC,
-             "lahiri_1940": swe.SIDM_LAHIRI_1940, "kp": swe.SIDM_KRISHNAMURTI, "raman": swe.SIDM_RAMAN}
+# P8-3c / CALC-X4: a small closed set, Lahiri the default; no free-form or user-defined values. Owner decision
+# 2026-11-01 (audit council Q7): Lahiri default; True Chitra, KP and Raman only as named opt-ins; Lahiri ICRC (1.1" from
+# Lahiri) and Lahiri 1940 (53") dropped as choices that add confusion, not a different chart.
+AYANAMSAS = {"lahiri": swe.SIDM_LAHIRI, "true_chitra": swe.SIDM_TRUE_CITRA, "kp": swe.SIDM_KRISHNAMURTI,
+             "raman": swe.SIDM_RAMAN}
 _MODE = contextvars.ContextVar("ayanamsa", default=AYANAMSA)
 _LOCK = threading.RLock()
 
@@ -77,6 +80,23 @@ def _sid():
     """Re-assert the ayanamsa before every sidereal call: swisseph keeps it as process-global state that any other
     caller in the same process can change (CALC-F1). The mode is the one `using()` set for this context."""
     swe.set_sid_mode(_MODE.get())
+
+
+def locked(fn):
+    """Hold the process lock for the whole call: _sid() and the swisseph calls that follow must not interleave with
+    another thread's mode (audit F-04: 26-29/3000 corrupted results without it, 0 with it). RLock: re-entrant."""
+    @functools.wraps(fn)
+    def run(*a, **k):
+        with _LOCK:
+            return fn(*a, **k)
+    return run
+
+
+def ayanamsa_values(jd):
+    """Ayanamsa of the active mode at jd: mean (the conventional printed value, as PyJHora prints it) and true
+    (mean + nutation in longitude, the value FLG_SIDEREAL positions actually use). Audit F-19."""
+    _sid()
+    return swe.get_ayanamsa_ut(jd), swe.get_ayanamsa_ex_ut(jd, swe.FLG_SWIEPH)[1]
 
 
 def ayanamsa_name():
@@ -95,6 +115,10 @@ def using(name=None):
         raise ValueError(f"ayanamsa must be one of {', '.join(AYANAMSAS)}")
     with _LOCK:   # ponytail: one process-wide lock; per-mode worker processes if parallel throughput ever matters
         outer = not _OUTER.get()
+        if not outer and name is not None and AYANAMSAS[name] != _MODE.get():
+            # audit F-17: an explicit inner request must not be silently overridden by the outer mode
+            raise ValueError(f"ayanamsa {name!r} requested inside a calculation already running under "
+                             f"{ayanamsa_name()}: one call, one ayanamsa")
         tokens = (_MODE.set(AYANAMSAS[name]) if outer and name else None, _OUTER.set(True))
         try:
             yield
@@ -138,6 +162,7 @@ def lon_of(jd, body, flags):
     return x[0] % 360, x[3]
 
 
+@locked
 def positions(jd, node="mean"):
     _sid()
     f = swe.FLG_SIDEREAL | swe.FLG_SWIEPH | swe.FLG_SPEED
@@ -156,12 +181,14 @@ def declination(jd, body):
     return x[1]
 
 
+@locked
 def asc(jd, lat, lon):
     _sid()
     _, ascmc = swe.houses_ex(jd, lat, lon, b"W", swe.FLG_SIDEREAL)
     return ascmc[0] % 360
 
 
+@locked
 def angles(jd, lat, lon):
     """Sidereal ascendant and midheaven."""
     _sid()
@@ -169,6 +196,7 @@ def angles(jd, lat, lon):
     return ascmc[0] % 360, ascmc[1] % 360
 
 
+@locked
 def bhavas(jd, lat, lon):
     """Sripati bhavas: madhyas (house middles) at the Porphyry cusps — house 1 middle = ascendant, house 10 middle =
     midheaven — and sandhis (boundaries) halfway between consecutive madhyas. Sidereal."""
@@ -412,6 +440,7 @@ def transit_sign_aspects(t0, months, ingress_rows, T, asc_i, moon_i, tz=0):
     return out
 
 
+@locked
 def compute(date, time, tz, lat, lon, node="mean", year="sidereal", on=None, months=36, extras=True):
     """Everything for one chart as a JSON-ready dict (the calc.json format). ``tz`` = UTC offset in hours."""
     on = on or dt.date.today().isoformat()
@@ -441,8 +470,11 @@ def compute(date, time, tz, lat, lon, node="mean", year="sidereal", on=None, mon
     transits = {n: {"sign": SIGNS[int(p["lon"] // 30)], "deg": round(p["lon"] % 30, 2), "retro": p["retro"],
                     "house_from_lagna": (int(p["lon"] // 30) - asc_i) % 12 + 1,
                     "house_from_moon": (int(p["lon"] // 30) - moon_i) % 12 + 1} for n, p in T.items()}
+    ay_mean, ay_true = ayanamsa_values(jd)
     meta = {"engine": f"astro {ENGINE_VERSION} on Swiss Ephemeris {swe.version} (pyswisseph, local)",
-            **ephemeris_info(jd), "ayanamsa": f"{ayanamsa_name()} {swe.get_ayanamsa_ut(jd):.4f}°", "nodes": node,
+            **ephemeris_info(jd), "ayanamsa": f"{ayanamsa_name()} {ay_mean:.4f}°", "ayanamsa_deg_mean": round(ay_mean, 6),
+            "ayanamsa_deg_true": round(ay_true, 6), "ayanamsa_note": "label = mean value; positions use the true value "
+            "(mean + nutation)", "nodes": node,
             "dasha_year_days": ylen, "houses": "whole sign from the sidereal ascendant; Sripati bhavas in 'bhavas'",
             "birth_local": f"{date} {time} UTC{fmt_offset(tz)}", "utc_offset": fmt_offset(tz), "lat": lat, "lon": lon, "transit_date": on,
             "transit_time": "12:00 local (birth UTC offset)", "vargas": "Parashari rules, engine.VARGA_METHODS",

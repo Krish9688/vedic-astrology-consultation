@@ -1,0 +1,61 @@
+{
+ "about": "P5: invented persona for the consultation-report regression (no real person)",
+ "client": {
+  "full_name": "Kavya Sen",
+  "gender": "female",
+  "current_city": "Kolkata",
+  "current_country": "India",
+  "language": "English",
+  "relationship_status": "single",
+  "occupation": "school teacher"
+ },
+ "birth": {
+  "date": "1988-09-09",
+  "time_reliability": "unknown",
+  "time_source": "no record; family does not remember",
+  "place": "Kolkata, West Bengal, India",
+  "lat": 22.5726,
+  "lon": 88.3639,
+  "tz": "+05:30"
+ },
+ "consultation": {
+  "type": "one-time",
+  "report_date": "2026-11-01",
+  "focus": [
+   "marriage",
+   "career change"
+  ]
+ },
+ "questions": [
+  {
+   "id": "Q1",
+   "text": "Will I get married, and what kind of partner suits me?",
+   "category": "marriage",
+   "priority": "high"
+  },
+  {
+   "id": "Q2",
+   "text": "Should I leave teaching for a different career?",
+   "category": "career",
+   "priority": "high"
+  },
+  {
+   "id": "Q3",
+   "text": "What is my exact lagna and which house is strongest?",
+   "category": "general",
+   "priority": "medium"
+  },
+  {
+   "id": "Q4",
+   "text": "Which Lal Kitab remedies apply to me?",
+   "category": "lal_kitab",
+   "priority": "low"
+  }
+ ],
+ "consent": {
+  "store_and_process": true,
+  "print_birth_data": true,
+  "print_full_name": true,
+  "remedies_requested": true
+ }
+}

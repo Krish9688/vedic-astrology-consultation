@@ -1,0 +1,1059 @@
+{
+ "about": "P6: interpretation model for the invented persona Vikram Joshi (no real person); approximate birth time, so the reading leans on Moon-based houses and slow-planet signs, and every time-bound statement is marked",
+ "schema": "consultation-model/1",
+ "summary": {
+  "headline": "A steady, resourceful chart built around a very strong Moon in Taurus and a crowded 4th house of property and fixed assets; the business moves from a restless, restructuring year into a long Saturn period that rewards patient, well-organised growth, with a lean stretch for expenses in 2028–29.",
+  "key_points": [
+   {
+    "text": "Your emotional steadiness and practical judgement are the chart's main asset: the Moon is exalted in Taurus, repeats that dignity in the navamsa (D9), and is the strongest planet in Shadbala.",
+    "confidence": "Strong",
+    "fact_refs": [
+     "F.Mo.sign",
+     "F.Mo.dignity",
+     "F.Mo.vargottama",
+     "F.Mo.d9_dignity",
+     "SB.Mo.rank"
+    ]
+   },
+   {
+    "text": "Business growth over the next three years looks real but gradual: the current Rahu sub-period is a time to reorganise, and Saturn, which rules the 9th and 10th houses counted from your Moon, takes over as the main period from about late 2027.",
+    "confidence": "Moderate",
+    "fact_refs": [
+     "F.M9.lord",
+     "F.M10.lord",
+     "F.M5.occupants"
+    ],
+    "event_refs": [
+     "DSH.Ju-Ra",
+     "DSH.Sa"
+    ],
+    "time_sensitive": true,
+    "window": {
+     "label": "Saturn sub-period of the Saturn period",
+     "from": "2027-10",
+     "to": "2030-10",
+     "event_refs": [
+      "DSH.Sa-Sa"
+     ],
+     "time_sensitive": true
+    }
+   },
+   {
+    "text": "Property is a natural theme for you: Mars, Jupiter and Rahu all sit in Leo, the 4th sign from your Moon. The clearest, though moderate, property stretch is Jupiter's return to Leo, June to October 2027 (Jupiter in the 4th from the Moon is not a favourable transit in itself).",
+    "confidence": "Moderate",
+    "fact_refs": [
+     "F.M4.occupants",
+     "F.M4.sign",
+     "GO.Ju.from_moon"
+    ],
+    "window": {
+     "label": "Jupiter's return over your 4th-house planets",
+     "from": "2027-06",
+     "to": "2027-10",
+     "event_refs": [
+      "ING.Ju.2027-06-26",
+      "CON.Ju.Ma.conjunction.2027-08-25",
+      "CON.Ju.Ju.conjunction.2027-09-11"
+     ]
+    }
+   },
+   {
+    "text": "Plan for higher expenses and slower returns while Saturn moves through the 12th sign from your Moon, from February 2028 to August 2029, and again from October 2029 to April 2030; it is a building-and-investing phase, not a harvest. This is the opening phase of the 7½-year Saturn cycle traditionally called Sade Sati, which first touches your chart in June 2027: read it as a time of responsibility and consolidation, not misfortune.",
+    "confidence": "Moderate",
+    "fact_refs": [
+     "GO.Sa.from_moon",
+     "F.M12.sign",
+     "DOSHA.sade_sati"
+    ],
+    "window": {
+     "label": "Saturn in the 12th from your Moon",
+     "from": "2028-02",
+     "to": "2029-08",
+     "event_refs": [
+      "ING.Sa.2028-02-23",
+      "ING.Sa.2029-08-08"
+     ]
+    },
+    "event_refs": [
+     "ING.Sa.2027-06-03",
+     "ING.Sa.2028-02-23",
+     "ING.Sa.2029-10-05"
+    ]
+   },
+   {
+    "text": "Your birth time is known only to about 45 minutes, so the rising sign and the exact period dates are uncertain; this report counts houses from the Moon, which does not move within that range.",
+    "confidence": "Strong",
+    "fact_refs": [
+     "F.M1.sign",
+     "F.asc.sign"
+    ],
+    "time_sensitive": true
+   }
+  ]
+ },
+ "kundli": {
+  "lagna": {
+   "text": "You are patient, practical and comfort-loving, and you build slowly and hold on to what you build: that is the Taurus temperament of your Moon sign. Your birth time is known only to about 45 minutes, and within that range the rising sign itself can change (the table shows the possible signs), so this report does not rest anything on the rising sign; it counts every house from the Moon in Taurus, which stays the same across the whole range.",
+   "fact_refs": [
+    "F.M1.sign",
+    "F.Mo.sign"
+   ]
+  },
+  "moon": {
+   "text": "You stay calm when others panic and read people and markets with good instinct. In the chart this is the Moon in Taurus in Rohini, its sign of exaltation and its moolatrikona; it repeats Taurus in the navamsa and was born almost full. Classically this is one of the best Moons a chart can have: emotional stability, a good memory and a feel for what people want to buy. The one classical note is that no planet stands in the signs on either side of it (the bare Kemadruma pattern); the stricter BPHS form of that pattern does not hold here, so it describes a tendency to carry worries alone rather than a weakness.",
+   "fact_refs": [
+    "F.Mo.sign",
+    "F.Mo.dignity",
+    "F.Mo.moolatrikona",
+    "F.Mo.vargottama",
+    "F.moon.phase",
+    "F.yoga.KEM-BARE.holds",
+    "F.yoga.KEM-BPHS.holds"
+   ]
+  },
+  "sun": {
+   "text": "You hold yourself to a firm standard in dealings with partners and customers. In the chart the Sun is in Scorpio, the 7th sign from your Moon, and receives the aspect of the Moon, Mars and Saturn: partnerships and public dealings are where your will is tested, and where a respectful but firm style serves you best.",
+   "fact_refs": [
+    "F.Su.sign",
+    "F.M7.occupants",
+    "F.Su.aspected_by"
+   ]
+  },
+  "current_period": {
+   "text": "You are in the last part of the Jupiter major period (to about October 2027), in its Rahu sub-period. These months stir up questions of property, premises and how the business is structured, because Jupiter rules the 8th and 11th signs from your Moon and sits with Rahu in the 4th. Then comes the period most directly about your business: the nineteen-year Saturn major period. Saturn rules the 9th and 10th signs from your Moon (fortune and work). Because the birth time is approximate, these change-over dates can move by several months.",
+   "fact_refs": [
+    "F.M8.lord",
+    "F.M11.lord",
+    "F.M4.occupants",
+    "F.M9.lord",
+    "F.M10.lord"
+   ],
+   "event_refs": [
+    "DSH.Ju",
+    "DSH.Ju-Ra",
+    "DSH.Sa"
+   ],
+   "time_sensitive": true
+  },
+  "yogas": {
+   "text": "Several classical combinations hold. In the chart, Jupiter in an angle from the Moon gives the loose form of Kesari (the strict BPHS Gajakesari does not hold), Mercury and Venus in the 6th and 8th from the Moon give Adhi yoga, and planets on both sides of the Sun give Ubhayachari: together they describe resourcefulness, good advisers and balanced judgement. Raman's form of Viparita yoga (a difficult-house lord in another difficult house) also holds, which reads as gains that come through handling setbacks; the other two versions of that yoga do not hold, so it is a minor note.",
+   "fact_refs": [
+    "F.yoga.KESARI-LOOSE.holds",
+    "F.yoga.GK-BPHS36.holds",
+    "F.yoga.ADHI-BPHS37.holds",
+    "F.yoga.ADHI-PD6.holds",
+    "F.yoga.UBHAYACHARI-BPHS38.holds",
+    "F.yoga.UBHAYACHARI-PD6.holds",
+    "F.yoga.VIPARITA-HJH.holds",
+    "F.yoga.VIPARITA-LOL.holds",
+    "F.yoga.VIPARITA-CRUX.holds"
+   ]
+  },
+  "strengths": {
+   "text": "In Shadbala the Moon (1.99) and Jupiter (1.51) lead, so instinct and good counsel are your most reliable tools. Steady work and trade are also well backed: Saturn and Mercury are both above their classical minimum. At the stated birth time the Sun and Venus fall slightly below 1, so authority and comfort are better earned slowly than pushed for; within the birth-time range they can reach 1, so treat this as a light note. Good counsel is further strengthened because Jupiter repeats its sign (Leo) in the navamsa.",
+   "fact_refs": [
+    "SB.Mo.rank",
+    "SB.Mo.ratio",
+    "SB.Ju.rank",
+    "SB.Ju.ratio",
+    "SB.Sa.strong",
+    "SB.Me.strong",
+    "SB.Su.ratio",
+    "SB.Ve.ratio",
+    "F.Ju.vargottama",
+    "SB.Su.strong",
+    "SB.Ve.strong"
+   ],
+   "time_sensitive": true
+  },
+  "transits": {
+   "text": "Gains from steady effort are supported for now: Saturn moves through Pisces, the 11th from your Moon. Sade Sati is not active today; it begins when Saturn first moves into Aries, the 12th from your Moon, in June 2027, and its first phase runs mainly from February 2028. Sade Sati is a long phase of responsibility and consolidation, not a misfortune, and this chart meets it with a very strong Moon. Home matters feel heavier than usual while Jupiter is in Leo, the 4th from the Moon, not a favourable house for it in transit. Interest in distant markets grows when Rahu leaves the 10th from your Moon for the 9th in December 2026.",
+   "fact_refs": [
+    "GO.Sa.from_moon",
+    "GO.Ju.from_moon",
+    "GO.Ra.from_moon",
+    "DOSHA.sade_sati"
+   ],
+   "event_refs": [
+    "ING.Sa.2027-06-03",
+    "ING.Sa.2028-02-23",
+    "ING.Ra.2026-12-05"
+   ]
+  }
+ },
+ "lal_kitab": {
+  "overview": {
+   "text": "Home, property and your mother are the busiest themes of the Lal Kitab chart: Jupiter, Mars and Rahu share house 4, with Jupiter exalted and Mars debilitated there, and the Jupiter–Rahu pair forms an artificial Mercury. The book reads Rahu there, in the 'dharmi' state, as a calmer, protective Rahu. Your own drive and good fortune are active, as the Moon in house 1 and Jupiter are awake by both editions' tests; trade and comfort need more conscious effort, as Mercury in house 6 and Venus in house 8 are 'asleep' and in placements the book reads as less helpful ('sinful' in its own term). Because the house numbers depend on the rising sign, this reading depends on the exact birth time.",
+   "fact_refs": [
+    "LK.Ju.house",
+    "LK.Ju.dignity",
+    "LK.Ma.dignity",
+    "LK.masnui.H4.JuRa",
+    "LK.Ra.state",
+    "LK.Mo.house",
+    "LK.Mo.sleeping.shrimali",
+    "LK.Ju.sleeping.shrimali",
+    "LK.Me.state",
+    "LK.Ve.state",
+    "LK.Me.sleeping.shrimali",
+    "LK.Ve.sleeping.shrimali",
+    "LK.Mo.sleeping.lk1952",
+    "LK.Ju.sleeping.lk1952"
+   ],
+   "time_sensitive": true
+  },
+  "debts": {
+   "text": "Two debt signatures appear. The 1952 edition's 'zaati' (personal) list is triggered by Saturn in house 5, and both editions list a debt connected with women of the family (Venus, triggered by the Sun in house 7). The 1952 edition judges a debt across the family's charts, so these are patterns to be aware of, not declared debts; respect and practical support for the women of the household is the book's spirit here.",
+   "fact_refs": [
+    "LK.rin.lk1952.zaati_list_p150",
+    "LK.rin.lk1952.stri",
+    "LK.rin.kb.stree_table_p173_174",
+    "LK.Sa.house",
+    "LK.Su.house"
+   ],
+   "time_sensitive": true
+  },
+  "varshaphal": {
+   "text": "The current annual chart (age-year 47, ending 2 December 2026) moves Jupiter, Mars and Rahu together into house 10, which the book reads as a year of work, effort and visibility in business; Saturn moves into house 7 and the Moon into house 8, so dealings with partners need patience and rest needs protecting. Trade income is favoured, with Mercury in house 11. The annual houses follow the natal Lal Kitab houses, which follow the rising sign, so this annual reading depends on the exact birth time.",
+   "fact_refs": [
+    "LK.varsh.Ju.house",
+    "LK.varsh.Ma.house",
+    "LK.varsh.Ra.house",
+    "LK.varsh.Sa.house",
+    "LK.varsh.Mo.house",
+    "LK.varsh.Me.house"
+   ],
+   "time_sensitive": true
+  }
+ },
+ "chapters": {
+  "love": {
+   "indicators": [
+    {
+     "text": "In your marriage you look for loyalty and a partner with a mind of their own; in the chart the Sun sits in Scorpio, the 7th sign from your Moon, and the 7th lord Mars is in the 4th, so the marriage is closely tied to the home and the family property, and both partners have strong views.",
+     "fact_refs": [
+      "F.M7.occupants",
+      "F.M7.sign",
+      "F.M7.lord",
+      "F.M7.lord_house"
+     ]
+    },
+    {
+     "text": "Generosity and shared values hold the relationship together more than routine romance: Venus, the natural significator of the spouse, sits in Sagittarius, aspected by Jupiter.",
+     "fact_refs": [
+      "F.Ve.sign",
+      "F.Ve.aspected_by"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "Home and property decisions are in the foreground during the Rahu sub-period; making them together, openly, keeps the partnership steady.",
+    "fact_refs": [
+     "F.M4.occupants"
+    ],
+    "event_refs": [
+     "DSH.Ju-Ra"
+    ],
+    "time_sensitive": true
+   },
+   "windows": [
+    {
+     "label": "Jupiter in the 7th from your Moon",
+     "from": "2030-01",
+     "to": "2030-04",
+     "event_refs": [
+      "ING.Ju.2030-01-25"
+     ],
+     "kind": "opportunity",
+     "text": "A warm stretch for the marriage and for shared plans."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "With the Sun in the partnership sign, avoid letting business pressure turn into a contest of wills at home; give each other clear areas of decision.",
+     "fact_refs": [
+      "F.M7.occupants"
+     ]
+    },
+    {
+     "text": "Kuja (Mangal) is a convention, not a verdict on your marriage. Of the four Kuja conventions this report checks, Mars meets 1 of 4: the popular rule (Mars in the 4th from the Moon) is met; the classical BPHS rule is not met, because Jupiter with Mars cancels it; the Phaladeepika rule (Mars in the 7th) is not met at the stated time, though it can hold elsewhere in the birth-time range; and the HJH2 rule is not met, because its own source exempts Mars in Leo. The conventions disagree with each other.",
+     "fact_refs": [
+      "DOSHA.kuja.KUJA-POPULAR",
+      "DOSHA.kuja.KUJA-BPHS80",
+      "DOSHA.kuja.KUJA-HJH2",
+      "DOSHA.kuja.KUJA-HJH2.exempted",
+      "DOSHA.kuja.KUJA-PD11_3"
+     ],
+     "time_sensitive": true
+    }
+   ]
+  },
+  "career": {
+   "indicators": [
+    {
+     "text": "Your business is built on patience and organisation rather than quick bets, because Saturn, which rules the 9th and 10th signs from your Moon (fortune and work), sits in Virgo, a sign of method and detail, and is in its own sign in the navamsa. A careful, process-driven trader does best here.",
+     "fact_refs": [
+      "F.M9.lord",
+      "F.M10.lord",
+      "F.Sa.sign",
+      "F.Sa.d9_dignity"
+     ]
+    },
+    {
+     "text": "You do well in competitive markets, in negotiation and in managing credit and suppliers: Mercury, the planet of trade and also your Atmakaraka (the planet of highest degree), sits in Libra, the 6th from your Moon, and is in its own sign in the navamsa.",
+     "fact_refs": [
+      "JA.AK",
+      "F.Me.sign",
+      "F.M6.occupants",
+      "F.Me.d9_dignity"
+     ]
+    },
+    {
+     "text": "You work in a detached, hands-on style and sometimes doubt your direction, as Ketu sits in Aquarius, the 10th sign from your Moon; decisions go better when they rest on figures rather than on mood.",
+     "fact_refs": [
+      "F.M10.occupants",
+      "F.Ke.sign"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "Restructuring is favoured until about October 2027 (the Rahu sub-period): new suppliers, new premises or new product lines. Income from existing customers is supported in the meantime by Saturn's favourable transit of the 11th from your Moon.",
+    "fact_refs": [
+     "GO.Sa.from_moon",
+     "F.M4.occupants"
+    ],
+    "event_refs": [
+     "DSH.Ju-Ra"
+    ],
+    "time_sensitive": true
+   },
+   "windows": [
+    {
+     "label": "Saturn period begins",
+     "from": "2027-10",
+     "to": "2030-10",
+     "event_refs": [
+      "DSH.Sa-Sa"
+     ],
+     "kind": "opportunity",
+     "text": "The ruler of your work and fortune runs the period: steady, earned growth.",
+     "time_sensitive": true
+    },
+    {
+     "label": "Jupiter in Virgo, the 5th from your Moon",
+     "from": "2027-12",
+     "to": "2028-02",
+     "event_refs": [
+      "ING.Ju.2027-11-26"
+     ],
+     "kind": "opportunity",
+     "text": "Good judgement for planning and new ideas."
+    },
+    {
+     "label": "Jupiter in Virgo again",
+     "from": "2028-07",
+     "to": "2028-12",
+     "event_refs": [
+      "ING.Ju.2028-07-24"
+     ],
+     "kind": "opportunity"
+    }
+   ],
+   "cautions": [
+    {
+     "text": "While Saturn moves through Aries, the 12th from your Moon (the two costlier Saturn stretches listed under the wealth windows), costs rise and returns slow down; expand in stages, not all at once.",
+     "fact_refs": [
+      "GO.Sa.from_moon",
+      "F.M12.sign"
+     ],
+     "event_refs": [
+      "ING.Sa.2028-02-23",
+      "ING.Sa.2029-10-05"
+     ]
+    },
+    {
+     "text": "Offers can look larger than they are, with Rahu beside Mars and Jupiter in the 4th sign from your Moon; check partnership and lease terms in writing.",
+     "fact_refs": [
+      "F.M4.occupants",
+      "F.Ra.with"
+     ]
+    }
+   ]
+  },
+  "wealth": {
+   "indicators": [
+    {
+     "text": "Your gains are tied to fixed assets: Jupiter, which rules Pisces (the 11th from your Moon, the house of gains), sits in the 4th with Mars, so income tends to grow through property, stock and premises rather than through cash alone.",
+     "fact_refs": [
+      "F.M11.lord",
+      "F.M11.lord_house",
+      "F.M4.occupants"
+     ]
+    },
+    {
+     "text": "Money moves through credit, loans and receivables, so cash flow needs close tracking even when business is good: Mercury, the ruler of Gemini (the 2nd from your Moon, savings), sits in the 6th.",
+     "fact_refs": [
+      "F.M2.lord",
+      "F.M2.lord_house"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "Income stays steady to mid-2027 with Saturn's transit of the 11th from your Moon, while the Rahu sub-period adds pressure to spend on property or expansion.",
+    "fact_refs": [
+     "GO.Sa.from_moon"
+    ],
+    "event_refs": [
+     "DSH.Ju-Ra"
+    ],
+    "time_sensitive": true
+   },
+   "windows": [
+    {
+     "label": "Saturn's last stretch in the 11th from your Moon",
+     "from": "2027-10",
+     "to": "2028-02",
+     "event_refs": [
+      "ING.Sa.2027-10-20"
+     ],
+     "kind": "opportunity",
+     "text": "Collect dues and strengthen reserves before the costlier phase."
+    },
+    {
+     "label": "Saturn in the 12th from your Moon",
+     "from": "2028-02",
+     "to": "2029-08",
+     "event_refs": [
+      "ING.Sa.2028-02-23",
+      "ING.Sa.2029-08-08"
+     ],
+     "kind": "pressure",
+     "text": "Higher expenses; keep commitments within comfortable limits."
+    },
+    {
+     "label": "Saturn back in the 12th from your Moon",
+     "from": "2029-10",
+     "to": "2030-04",
+     "event_refs": [
+      "ING.Sa.2029-10-05",
+      "ING.Sa.2030-04-17"
+     ],
+     "kind": "pressure",
+     "text": "A second, shorter costly stretch; the same care applies."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "Avoid opaque or speculative arrangements from June 2028, when Rahu enters Sagittarius, the 8th from your Moon, during the costlier Saturn phase.",
+     "fact_refs": [
+      "F.M8.sign"
+     ],
+     "event_refs": [
+      "ING.Ra.2028-06-24"
+     ]
+    }
+   ]
+  },
+  "foreign": {
+   "indicators": [
+    {
+     "text": "Travel is mainly for business: Mars, the ruler of Aries (the 12th from your Moon), sits in the 4th with Jupiter and Rahu, so trips abroad tend to serve the home base, such as sourcing, buyers or trade fairs, rather than a move away.",
+     "fact_refs": [
+      "F.M12.lord",
+      "F.M12.lord_house",
+      "F.M4.occupants"
+     ]
+    },
+    {
+     "text": "Planned, purposeful trips go better than spontaneous ones: Saturn, ruler of Capricorn (the 9th from your Moon, long journeys), sits in the 5th.",
+     "fact_refs": [
+      "F.M9.lord",
+      "F.M9.lord_house"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "Contacts with distant suppliers or buyers are more likely than usual, as Rahu, the planet of foreign links, runs the current sub-period.",
+    "fact_refs": [
+     "F.Ra.sign"
+    ],
+    "event_refs": [
+     "DSH.Ju-Ra"
+    ],
+    "time_sensitive": true
+   },
+   "windows": [
+    {
+     "label": "Rahu in the 9th from your Moon",
+     "from": "2026-12",
+     "to": "2028-06",
+     "event_refs": [
+      "ING.Ra.2026-12-05",
+      "ING.Ra.2028-06-24"
+     ],
+     "kind": "opportunity",
+     "text": "Business travel and new long-distance contacts."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "From February 2028 Saturn's transit of the 12th from your Moon makes travel costlier and more tiring; plan trips with buffers.",
+     "fact_refs": [
+      "GO.Sa.from_moon"
+     ],
+     "event_refs": [
+      "ING.Sa.2028-02-23"
+     ]
+    }
+   ]
+  },
+  "education": {
+   "indicators": [
+    {
+     "text": "You learn best by doing and by method, with Saturn in Virgo, the 5th from your Moon (the house of learning and judgement): practical, structured knowledge such as accounts, systems and trade rules suits you better than theory, and it builds slowly but lasts.",
+     "fact_refs": [
+      "F.M5.occupants",
+      "F.Sa.sign"
+     ]
+    },
+    {
+     "text": "You have a lifelong aptitude for numbers and negotiation that is worth keeping sharp: Mercury, ruler of that 5th sign, is your Atmakaraka and is in its own sign in the navamsa.",
+     "fact_refs": [
+      "F.M5.lord",
+      "JA.AK",
+      "F.Me.d9_dignity"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "Learning something new for the business, such as digital sales, new markets or new materials, is favoured in the Rahu sub-period.",
+    "fact_refs": [
+     "F.Ra.sign"
+    ],
+    "event_refs": [
+     "DSH.Ju-Ra"
+    ],
+    "time_sensitive": true
+   },
+   "windows": [
+    {
+     "label": "Jupiter in Virgo: learning and new skills",
+     "from": "2027-12",
+     "to": "2028-02",
+     "event_refs": [
+      "ING.Ju.2027-11-26"
+     ],
+     "kind": "opportunity",
+     "text": "A good stretch for a course or advisory help that improves your systems."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "With Saturn in the 5th from your Moon, new skills take time to pay off; give a new system a full year before judging it.",
+     "fact_refs": [
+      "F.M5.occupants"
+     ]
+    }
+   ]
+  },
+  "family": {
+   "indicators": [
+    {
+     "text": "Home and family property matter a great deal to you: the 4th sign from your Moon holds Mars, Jupiter and Rahu, so the home is lively, sometimes crowded with plans, and often the base of the business too.",
+     "fact_refs": [
+      "F.M4.occupants"
+     ]
+    },
+    {
+     "text": "The exalted Moon, the natural significator of the mother, points to a strong maternal influence and an emotionally secure upbringing.",
+     "fact_refs": [
+      "F.Mo.dignity"
+     ]
+    },
+    {
+     "text": "As a father you take your children's progress seriously and support it through discipline and steady effort, as Saturn in Virgo, the 5th from your Moon, describes.",
+     "fact_refs": [
+      "F.M5.occupants",
+      "F.Sa.sign"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "Expect changes around the home in the Rahu sub-period, such as renovation, a move or a new arrangement of space; involve the whole family early.",
+    "fact_refs": [
+     "F.M4.occupants"
+    ],
+    "event_refs": [
+     "DSH.Ju-Ra"
+    ],
+    "time_sensitive": true
+   },
+   "windows": [],
+   "no_window_reason": "This report does not give timing for children or family additions; that is a personal matter. Home and property timing appears in the wealth chapter and in the answer to your property question.",
+   "cautions": [
+    {
+     "text": "The household can feel unsettled during changes, with Rahu in the home sign; keep shared routines (meals, a weekly family evening) steady.",
+     "fact_refs": [
+      "F.M4.occupants"
+     ]
+    }
+   ]
+  },
+  "health": {
+   "indicators": [
+    {
+     "text": "Your basic resilience is good: the Moon, which describes the mind and the body's rhythms, is exalted and the strongest planet in the chart, so steady routines restore you quickly.",
+     "fact_refs": [
+      "F.Mo.dignity",
+      "SB.Mo.rank"
+     ]
+    },
+    {
+     "text": "Taurus, the sign of the Moon, enjoys comfort and good food; Mars in Leo in the 4th from the Moon adds heat and drive. The balance to keep is regular activity against a sedentary, desk-bound business routine.",
+     "fact_refs": [
+      "F.Mo.sign",
+      "F.Ma.sign",
+      "F.M4.occupants"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "These months of the Rahu sub-period are busy and restless; protect sleep and keep meal times regular while the business is being reorganised.",
+    "fact_refs": [
+     "F.Ra.sign"
+    ],
+    "event_refs": [
+     "DSH.Ju-Ra"
+    ],
+    "time_sensitive": true
+   },
+   "windows": [],
+   "cautions": [
+    {
+     "text": "This is general wellness guidance from the chart, not medical advice; see your doctor for regular age-appropriate check-ups and for any symptom.",
+     "fact_refs": [
+      "F.Mo.dignity"
+     ]
+    }
+   ],
+   "no_window_reason": "This report gives no dates for health; general wellness guidance applies at every age, and timing for check-ups is a matter for your doctor."
+  },
+  "spirituality": {
+   "indicators": [
+    {
+     "text": "A practical, disciplined practice suits you: Saturn rules Capricorn, the 9th from your Moon (faith and principles), and sits in the 5th of devotion and mantra, so a short fixed daily practice works better than occasional large observances.",
+     "fact_refs": [
+      "F.M9.lord",
+      "F.M9.lord_house"
+     ]
+    },
+    {
+     "text": "Work itself can become a form of practice, through honest dealing and fair treatment of staff as service; Ketu in the 10th sign from your Moon points this way.",
+     "fact_refs": [
+      "F.M10.occupants"
+     ]
+    }
+   ],
+   "current_period": {
+    "text": "Faith and guidance came naturally in the Jupiter major period, now in its last stretch; the coming Saturn period turns that into steady discipline.",
+    "fact_refs": [
+     "F.Ju.sign",
+     "F.M9.lord"
+    ],
+    "event_refs": [
+     "DSH.Ju",
+     "DSH.Sa"
+    ],
+    "time_sensitive": true
+   },
+   "windows": [
+    {
+     "label": "Jupiter returns to Leo",
+     "from": "2027-06",
+     "to": "2027-10",
+     "event_refs": [
+      "CON.Ju.Ju.conjunction.2027-09-11"
+     ],
+     "kind": "opportunity",
+     "text": "A reflective stretch as one twelve-year Jupiter cycle closes."
+    }
+   ],
+   "cautions": [
+    {
+     "text": "Discipline can turn into rigidity under Saturn's influence; keep the practice simple and kind to yourself.",
+     "fact_refs": [
+      "F.M9.lord"
+     ]
+    }
+   ]
+  }
+ },
+ "answers": [
+  {
+   "question_id": "Q1",
+   "answer": "The chart supports growth, but steady rather than sudden growth, and in two phases. Until about October 2027 you are in the Rahu sub-period: a restless time that is best used to reorganise (suppliers, premises, product range, online sales) while Saturn's favourable transit of the 11th from your Moon keeps income from existing customers coming in. From about late 2027 the Saturn major period begins; Saturn rules the 9th and 10th signs from your Moon and is your planet of work and fortune, so this is the period most directly about building the business. The caution is cost: in two stretches between 2028 and 2030 (dates in the windows below) Saturn moves through the 12th from your Moon, so growth in that stretch comes through investment and should be paced. The period change-over date depends on the exact birth time and can move by several months. This is guidance, not financial advice; check any expansion plan with a qualified adviser.",
+   "short": "Steady growth: reorganise to late 2027, build in the Saturn period, pace spending in 2028–30.",
+   "confidence": "Moderate",
+   "evidence": [
+    {
+     "text": "Saturn rules the 9th and 10th from the Moon; it is in its own sign in the navamsa",
+     "fact_refs": [
+      "F.M9.lord",
+      "F.M10.lord",
+      "F.Sa.d9_dignity"
+     ]
+    },
+    {
+     "text": "Mercury, the trade planet and Atmakaraka, in the 6th from the Moon: competitive markets and credit",
+     "fact_refs": [
+      "JA.AK",
+      "F.M6.occupants"
+     ]
+    },
+    {
+     "text": "Saturn now in the 11th from the Moon, moving to the 12th in 2028–29 and again in 2029–30",
+     "fact_refs": [
+      "GO.Sa.from_moon"
+     ],
+     "event_refs": [
+      "ING.Sa.2028-02-23",
+      "ING.Sa.2029-10-05"
+     ]
+    }
+   ],
+   "windows": [
+    {
+     "label": "Rest of the Rahu sub-period: reorganise",
+     "from": "2026-11",
+     "to": "2027-10",
+     "event_refs": [
+      "DSH.Ju-Ra"
+     ],
+     "kind": "watch",
+     "time_sensitive": true
+    },
+    {
+     "label": "Saturn period begins",
+     "from": "2027-10",
+     "to": "2030-10",
+     "event_refs": [
+      "DSH.Sa-Sa"
+     ],
+     "kind": "opportunity",
+     "time_sensitive": true
+    },
+    {
+     "label": "Saturn in the 12th from your Moon",
+     "from": "2028-02",
+     "to": "2029-08",
+     "event_refs": [
+      "ING.Sa.2028-02-23",
+      "ING.Sa.2029-08-08"
+     ],
+     "kind": "pressure"
+    },
+    {
+     "label": "Saturn back in the 12th from your Moon",
+     "from": "2029-10",
+     "to": "2030-04",
+     "event_refs": [
+      "ING.Sa.2029-10-05",
+      "ING.Sa.2030-04-17"
+     ],
+     "kind": "pressure"
+    }
+   ],
+   "what_to_do": "Use the coming year to tidy systems, credit terms and supplier contracts; plan expansion in stages from late 2027; build a cash reserve before 2028 so the costlier phase is funded from savings rather than borrowing.",
+   "time_sensitive": true
+  },
+  {
+   "question_id": "Q2",
+   "answer": "Property is one of the strongest themes in your chart: Mars, the planet of land, and Jupiter, the planet of growth, both sit in Leo, the 4th sign from your Moon, with Rahu. So looking for property is well supported, and Jupiter's return to Leo, from June to October 2027, when it passes over your own Mars and Jupiter, is the clearest property stretch in the next few years. The caution is Rahu in the same sign, which brings attractive deals with hidden complications, so the title, approvals and the true total cost need extra checking. This is guidance, not financial advice; check the plan with a qualified adviser before you commit.",
+   "short": "Supported; the clearest stretch is June–October 2027. Check titles carefully.",
+   "confidence": "Moderate",
+   "evidence": [
+    {
+     "text": "Mars, Jupiter and Rahu in Leo, the 4th from the Moon",
+     "fact_refs": [
+      "F.M4.occupants",
+      "F.M4.sign"
+     ]
+    },
+    {
+     "text": "Jupiter, ruler of the 11th from the Moon (gains), is in that 4th sign",
+     "fact_refs": [
+      "F.M11.lord",
+      "F.M11.lord_house"
+     ]
+    },
+    {
+     "text": "Jupiter's transit in Leo is classically unfavourable in itself, so the window is moderate, not strong",
+     "fact_refs": [
+      "GO.Ju.from_moon"
+     ]
+    }
+   ],
+   "windows": [
+    {
+     "label": "Jupiter's return over your 4th-house planets",
+     "from": "2027-06",
+     "to": "2027-10",
+     "event_refs": [
+      "ING.Ju.2027-06-26",
+      "CON.Ju.Ma.conjunction.2027-08-25",
+      "CON.Ju.Ju.conjunction.2027-09-11"
+     ],
+     "kind": "opportunity"
+    }
+   ],
+   "what_to_do": "Shortlist and inspect over the coming months, have the title and approvals checked independently, and keep any commitment within what the business can carry through the costlier Saturn phase from 2028."
+  },
+  {
+   "question_id": "Q3",
+   "answer": "The chart describes you as a serious, structured supporter of your children's studies. With Saturn in Virgo, the 5th sign from your Moon, the tradition reads education as something that progresses through discipline, routine and steady effort rather than quick results; the ruler of that sign, Mercury, is in its own sign in the navamsa, which favours practical and analytical subjects. Good teachers and sound guidance are supported too, since Jupiter, the natural significator of learning and of children, is strong and in an angle from your Moon. Your own chart cannot describe each child's ability; their own charts and, above all, their interests and their teachers' feedback matter more.",
+   "short": "Steady progress through routine and good guidance; no timing is given.",
+   "confidence": "Weak",
+   "answerable": true,
+   "evidence": [
+    {
+     "text": "Saturn in Virgo, the 5th from the Moon",
+     "fact_refs": [
+      "F.M5.occupants",
+      "F.M5.sign"
+     ]
+    },
+    {
+     "text": "5th ruler Mercury in its own sign in the navamsa",
+     "fact_refs": [
+      "F.M5.lord",
+      "F.Me.d9_dignity"
+     ]
+    },
+    {
+     "text": "Jupiter strong and in an angle from the Moon",
+     "fact_refs": [
+      "SB.Ju.rank",
+      "F.yoga.KESARI-LOOSE.holds"
+     ]
+    }
+   ],
+   "windows": [],
+   "no_window_reason": "This report does not give timing for matters concerning children; each child's own path and choices matter more than a parent's chart.",
+   "what_to_do": "Offer structure and patience rather than pressure: a fixed study routine, good tutors or mentors where needed, and room for each child to choose subjects they care about."
+  },
+  {
+   "question_id": "Q4",
+   "answer": "Your basic constitution is resilient: the Moon, which governs the body's rhythms, is exalted and the strongest planet in your chart. The main thing to watch as you get older is lifestyle balance: Taurus enjoys comfort and rich food, and a busy trading business tends to mean long hours sitting and irregular meals. Regular activity, regular meals and protected sleep are the chart's own advice for you. This is general wellness guidance, not medical advice; please see your doctor for age-appropriate check-ups and for any symptom.",
+   "short": "Resilient; keep active, eat regularly, and keep a yearly check-up with your doctor.",
+   "confidence": "Moderate",
+   "evidence": [
+    {
+     "text": "Exalted Moon, strongest in Shadbala",
+     "fact_refs": [
+      "F.Mo.dignity",
+      "SB.Mo.rank"
+     ]
+    },
+    {
+     "text": "Taurus Moon and Mars in Leo: comfort-loving with plenty of drive",
+     "fact_refs": [
+      "F.Mo.sign",
+      "F.Ma.sign"
+     ]
+    }
+   ],
+   "windows": [],
+   "what_to_do": "Walk or exercise daily, keep regular meal times, protect your sleep, and book a yearly check-up with your doctor.",
+   "no_window_reason": "This report gives no dates for health matters; check-up timing is for your doctor to decide."
+  }
+ ],
+ "timeline": {
+  "months_12": [
+   {
+    "label": "Rest of the Rahu sub-period: reorganise the business",
+    "from": "2026-11",
+    "to": "2027-10",
+    "event_refs": [
+     "DSH.Ju-Ra"
+    ],
+    "kind": "watch",
+    "time_sensitive": true
+   },
+   {
+    "label": "Sade Sati begins: Saturn's first step into the 12th from your Moon",
+    "from": "2027-06",
+    "to": "2027-10",
+    "event_refs": [
+     "ING.Sa.2027-06-03"
+    ],
+    "kind": "watch"
+   },
+   {
+    "label": "Jupiter's return to Leo: property",
+    "from": "2027-06",
+    "to": "2027-10",
+    "event_refs": [
+     "ING.Ju.2027-06-26",
+     "CON.Ju.Ma.conjunction.2027-08-25",
+     "CON.Ju.Ju.conjunction.2027-09-11"
+    ],
+    "kind": "opportunity"
+   }
+  ],
+  "years": [
+   {
+    "label": "Rahu in the 9th from your Moon: business travel",
+    "from": "2026-12",
+    "to": "2028-06",
+    "event_refs": [
+     "ING.Ra.2026-12-05",
+     "ING.Ra.2028-06-24"
+    ],
+    "kind": "opportunity"
+   },
+   {
+    "label": "Saturn period begins: steady growth",
+    "from": "2027-10",
+    "to": "2030-10",
+    "event_refs": [
+     "DSH.Sa-Sa"
+    ],
+    "kind": "opportunity",
+    "time_sensitive": true
+   },
+   {
+    "label": "Jupiter in Virgo: planning and new ideas",
+    "from": "2027-12",
+    "to": "2028-02",
+    "event_refs": [
+     "ING.Ju.2027-11-26"
+    ],
+    "kind": "opportunity"
+   },
+   {
+    "label": "Saturn in the 12th: costlier phase",
+    "from": "2028-02",
+    "to": "2029-08",
+    "event_refs": [
+     "ING.Sa.2028-02-23",
+     "ING.Sa.2029-08-08"
+    ],
+    "kind": "pressure"
+   },
+   {
+    "label": "Saturn back in the 12th: costlier phase",
+    "from": "2029-10",
+    "to": "2030-04",
+    "event_refs": [
+     "ING.Sa.2029-10-05",
+     "ING.Sa.2030-04-17"
+    ],
+    "kind": "pressure"
+   },
+   {
+    "label": "Rahu in the 8th from your Moon",
+    "from": "2028-06",
+    "to": "2030-01",
+    "event_refs": [
+     "ING.Ra.2028-06-24",
+     "ING.Ra.2030-01-11"
+    ],
+    "kind": "watch"
+   },
+   {
+    "label": "Jupiter in the 7th: partnerships",
+    "from": "2030-01",
+    "to": "2030-04",
+    "event_refs": [
+     "ING.Ju.2030-01-25"
+    ],
+    "kind": "opportunity"
+   },
+   {
+    "label": "Saturn over your Moon: lighten the workload",
+    "from": "2030-08",
+    "to": "2031-05",
+    "event_refs": [
+     "CON.Sa.Mo.conjunction.2030-08-29",
+     "CON.Sa.Mo.conjunction.2031-05-03"
+    ],
+    "kind": "watch"
+   }
+  ]
+ },
+ "remedies": {
+  "vedic": [
+   {
+    "title": "Saturday service for Saturn",
+    "instructions": "On Saturdays, a small act of help to workers, elderly people or anyone doing hard manual work (a meal, fair wages paid on time, or a donation in your own tradition), and a few minutes of prayer. Continue as long as you wish; stop whenever you like.",
+    "priority": "high",
+    "why": {
+     "text": "Your work and fortune are ruled by Saturn (the 9th and 10th from your Moon), which runs the coming major period.",
+     "fact_refs": [
+      "F.M9.lord",
+      "F.M10.lord"
+     ],
+     "event_refs": [
+      "DSH.Sa"
+     ],
+     "time_sensitive": true
+    }
+   },
+   {
+    "title": "Thursday practice for Jupiter",
+    "instructions": "On Thursdays, ten minutes of prayer or study in your own tradition, and some time given to a student or a younger colleague who is learning (teaching or mentoring, not gifts or money). The Lal Kitab chart has Jupiter exalted, and that tradition advises against giving away an exalted planet's objects, so this practice involves no donation.",
+    "priority": "medium",
+    "why": {
+     "text": "Your gains are ruled by Jupiter (the 11th from your Moon), which sits in the 4th of home and property.",
+     "fact_refs": [
+      "F.M11.lord",
+      "F.M11.lord_house"
+     ]
+    }
+   },
+   {
+    "title": "Wednesday care for Mercury",
+    "instructions": "On Wednesdays, review accounts and dues calmly, and spend a few minutes teaching a practical skill (such as bookkeeping) to someone in your business. The Lal Kitab chart has Mercury exalted, so, as with Jupiter, this practice involves no donation. Chanting of your own tradition is optional.",
+    "priority": "low",
+    "why": {
+     "text": "Your savings are ruled by Mercury (the 2nd from your Moon), your Atmakaraka, which sits in the 6th of credit and competition.",
+     "fact_refs": [
+      "JA.AK",
+      "F.M2.lord",
+      "F.M2.lord_house"
+     ]
+    }
+   }
+  ],
+  "lal_kitab": [
+   {
+    "planet": "Mars",
+    "house": 4,
+    "remedy": "Serve widows",
+    "safety": "low-risk",
+    "source": "KB B8 Mars H4 p91",
+    "instructions": "Help a widow in your family or community in practical ways (groceries, errands, a share of a festival meal). The book's process is 43 days unbroken, in daylight, done by you. Optional; one remedy at a time. The Lal Kitab house depends on the exact birth time.",
+    "priority": "medium",
+    "fact_refs": [
+     "LK.Ma.house",
+     "LK.Ma.dignity"
+    ],
+    "time_sensitive": true
+   },
+   {
+    "planet": "Saturn",
+    "house": 5,
+    "remedy": "Keep gold, silver and copper at home",
+    "safety": "low-risk",
+    "source": "KB B8 Saturn H5 p125",
+    "instructions": "Keep a small item of each metal (for example a coin) together in a safe place at home; no purchase beyond what you already own is needed. Optional; one remedy at a time. The Lal Kitab house depends on the exact birth time.",
+    "priority": "low",
+    "fact_refs": [
+     "LK.Sa.house",
+     "LK.Sa.state"
+    ],
+    "time_sensitive": true
+   }
+  ]
+ }
+}

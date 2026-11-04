@@ -38,17 +38,47 @@ TOPICS = ROUTING.TOPICS   # question → the skill's topic reference; the manife
 
 
 OFFSET = re.compile(r"^(?:UTC|GMT)?([+-])?(\d{1,2}):([0-5]\d)(?::([0-5]\d))?$", re.I)
+OFFSET_COMPACT = re.compile(r"^(?:UTC|GMT)?([+-])(\d{2})([0-5]\d)$", re.I)   # ISO 8601 basic form, sign required: +0530
+MAX_OFFSET_H = 14                                     # real civil offsets lie within -12..+14 (audit F-03)
+
+
+# 20-minute standard offsets the tz database has used (council RC-07); any other 20-minute value, e.g. a mistyped +05:20
+# for +05:30, is treated as non-standard (flagged when stated, refused from a zone).
+TWENTY_MINUTE_STANDARD = {sg * (h * 3600 + m * 60) for sg, h, m in ((1, 7, 20), (1, 8, 20), (-1, 4, 40), (-1, 10, 40),
+                                                                   (-1, 11, 20), (1, 12, 20), (1, 0, 20), (-1, 0, 20))}
+
+
+def standard_offset(seconds) -> bool:
+    """A standard-time offset is a whole number of quarter hours, or one of the historical 20-minute standard times
+    (TWENTY_MINUTE_STANDARD). Anything else (e.g. +05:53:20, +04:51) is a local or city mean time (audit F-06)."""
+    s = round(seconds)
+    return s % 900 == 0 or s in TWENTY_MINUTE_STANDARD
+
+
+def nonstandard_flag(hours) -> list:
+    """Flag for an explicitly stated offset that is not a standard time (owner decision 2026-11-01: accepted as stated,
+    never suggested)."""
+    if standard_offset(hours * 3600):
+        return []
+    return [f"non-standard offset {utc_offset_str(dt.timedelta(hours=hours))}: not a standard time-zone offset (a local "
+            "or city mean time); used exactly as stated - confirm it with the birth record"]
 
 
 def utc_offset_hours(v) -> float:
     """'+05:30', '-03:00', 'UTC+05:45' or '+05:53:20'; decimal hours only in whole or quarter steps (5.5, -3.75).
     A decimal such as 5.30 is refused: it would silently mean 5 h 18 min, a 3.6° ascendant shift (audit H1)."""
     if isinstance(v, str):
-        m = OFFSET.match(v.strip().replace(" ", ""))
+        s = v.strip().replace(" ", "")
+        m = OFFSET.match(s) or OFFSET_COMPACT.match(s)
         if m:
-            sign, h, mi, se = m.groups()
+            sign, h, mi, se = (m.groups() + (None,))[:4]
             hours = int(h) + int(mi) / 60 + int(se or 0) / 3600
-            return -hours if sign == "-" else hours
+            hours = -hours if sign == "-" else hours
+            if abs(hours) > MAX_OFFSET_H:
+                raise ValueError(f"UTC offset {v!r} is outside -14:00..+14:00; write it as +HH:MM, e.g. +05:30")
+            return hours
+        if re.fullmatch(r"[+-]?\d{3,4}", s):
+            raise ValueError(f"UTC offset {v!r}: write it as +HH:MM, e.g. +05:30 (or with a sign, +0530)")
         try:
             v = float(v)
         except ValueError:
@@ -58,6 +88,8 @@ def utc_offset_hours(v) -> float:
     if abs(v * 4 - round(v * 4)) > 1e-9:
         raise ValueError(f"UTC offset {v}: decimal hours must be whole or .25/.5/.75 (5.30 would mean 5 h 18 min); "
                          "write it as +HH:MM, e.g. +05:30")
+    if abs(v) > MAX_OFFSET_H:
+        raise ValueError(f"UTC offset {v} is outside -14:00..+14:00; write it as +HH:MM, e.g. +05:30")
     return float(v)
 
 
@@ -94,10 +126,12 @@ def resolve_zone(date, time, zone, lon, fold=None):
         raise ValueError(f"{date} {time} occurs twice in {zone} (clocks went back): pass fold=0 for the first "
                          f"({utc_offset_str(a.utcoffset())}) or fold=1 for the second ({utc_offset_str(b.utcoffset())})")
     t = b if fold == 1 else a
-    if t.tzname() == "LMT":
-        lmt = utc_offset_str(dt.timedelta(seconds=round(lon * 240)))
-        raise ValueError(f"{zone} on {date} is before standard time; the tz database's local mean time is not meaningful "
-                         f"for a birth place. Give the offset explicitly (local mean time at this longitude: {lmt})")
+    if t.tzname() == "LMT" or not standard_offset(t.utcoffset().total_seconds()):
+        # No local mean time is ever offered or derived (owner rule: civil time with a stated offset, never LMT). The tz
+        # database's LMT and its city mean times (e.g. Asia/Kolkata +05:53:20 before 1870, +05:21:10 to 1906) are refused.
+        raise ValueError(f"{zone} on {date} is before standard time: the tz database gives a mean time "
+                         f"({t.tzname()}), not a standard offset, so it cannot settle the clock. Give the UTC offset the "
+                         "birth record states (+HH:MM)")
     flags = []
     if date.year < 1970:
         flags.append("IANA offsets before 1970 often come from unreliable sources (tz theory.html): confirm with the "
@@ -199,6 +233,8 @@ class BirthInput(BaseModel):
             raise ValueError("give the UTC offset at birth (+HH:MM) or an IANA time zone (zone)")
         else:
             self.tz_source = self.tz_source or "explicit UTC offset"
+        if self.tz is not None and (f := nonstandard_flag(self.tz)) and not any(x.startswith("non-standard") for x in self.tz_flags):
+            self.tz_flags = f + list(self.tz_flags)
         return self
 
 
@@ -208,7 +244,7 @@ class Options(BaseModel):
     node: str = Field(default="mean", pattern="^(mean|true)$")
     year: str = Field(default="sidereal", pattern="^(sidereal|365.25|360)$")
     ayanamsa: str = Field(default="lahiri", pattern="^(" + "|".join(engine.AYANAMSAS) + ")$",
-                          description="lahiri (default), true_chitra, lahiri_icrc, lahiri_1940, kp, raman")
+                          description="lahiri (default); true_chitra, kp or raman only as an explicit choice")
 
     model_config = {"frozen": True}
 
@@ -222,7 +258,8 @@ def _calc(fn):
     @functools.wraps(fn)
     def run(*a, **k):
         o = k.get("o") or next((x for x in a if isinstance(x, Options)), None)
-        with engine.using(o.ayanamsa if o else None):   # no Options: keep the caller's mode (e.g. CLI --ayanamsa)
+        name = o.ayanamsa if o else k.get("ayanamsa")   # Options-less tools (panchang) take a keyword ayanamsa (#47)
+        with engine.using(name):   # None: keep the caller's mode (e.g. CLI --ayanamsa)
             return fn(*a, **k)
     return run
 
@@ -301,11 +338,26 @@ def dasha(b: BirthInput, o: Options = DEFAULTS) -> dict:
                           "running": running, "periods": c["vimshottari"]})
 
 
+def julian_to_gregorian(d) -> dt.date:
+    """A date written in the Julian calendar ('YYYY-MM-DD' or a date) → the Gregorian date (Swiss Ephemeris
+    julday/revjul), as BirthInput does. Parsed from integers: Julian 1700-02-29 is not a Gregorian date (RC-08)."""
+    y, m, dd = (int(x) for x in str(d)[:10].split("-"))
+    jd = engine.swe.julday(y, m, dd, 0.0, engine.swe.JUL_CAL)
+    if engine.swe.revjul(jd, engine.swe.JUL_CAL)[:3] != (y, m, dd):
+        raise ValueError(f"{str(d)[:10]} is not a date in the Julian calendar")
+    return dt.date(*engine.swe.revjul(jd, engine.swe.GREG_CAL)[:3])
+
+
 @_calc
-def panchang(date, lat: float, lon: float, tz=None, zone: Optional[str] = None) -> dict:
-    """Panchang of the Hindu day that begins at the sunrise of `date` at (lat, lon). No birth data needed."""
+def panchang(date, lat: float, lon: float, tz=None, zone: Optional[str] = None, *, ayanamsa: Optional[str] = None,
+             calendar: str = "gregorian") -> dict:
+    """Panchang of the Hindu day that begins at the sunrise of `date` at (lat, lon). No birth data needed.
+    ayanamsa: None keeps the caller's mode (Lahiri by default); calendar='julian' converts the date first (#47)."""
     from .calc import panchang as P
-    d = dt.date.fromisoformat(str(date))
+    if calendar not in ("gregorian", "julian"):
+        raise ValueError("calendar must be gregorian or julian")
+    written = str(date)[:10]
+    d = julian_to_gregorian(written) if calendar == "julian" else dt.date.fromisoformat(written)
     if not (-89.9 <= lat <= 89.9 and -180 <= lon <= 180):
         raise ValueError("latitude must be within ±89.9° and longitude within ±180°")
     if zone:
@@ -313,11 +365,14 @@ def panchang(date, lat: float, lon: float, tz=None, zone: Optional[str] = None) 
         if tz is not None and abs(utc_offset_hours(tz) - hours) > 1 / 3600:
             raise ValueError(f"tz disagrees with {zone} on {d}: give one")
     elif tz is not None:
-        hours, flags = utc_offset_hours(tz), []
+        hours = utc_offset_hours(tz)
+        flags = nonstandard_flag(hours)
     else:
         raise ValueError("give the UTC offset (+HH:MM) or an IANA time zone (zone)")
     out = P.day(d, lat, lon, hours)
     out["meta"] |= {k: v for k, v in (("zone", zone), ("utc_offset_flags", flags)) if v}
+    if calendar == "julian":
+        out["meta"]["date_source"] = f"Julian calendar {written}, converted to Gregorian {d}"
     return out
 
 
@@ -761,6 +816,55 @@ def _derived_facts(c, ids=False):
     return cf.facts_json(chart) if ids else cf.facts(chart)
 
 
+# Facts that always need the birth time (static fallback when no birth input is given): lagna, houses, house
+# placements and lordships, and every yoga (most are lagna-based). With a birth input the time-varying facts are
+# measured instead (time_varying_facts), which also catches degrees and anything else that moves within the day.
+TIME_BOUND_REF = re.compile(r"^F\.(asc|H\d+)\.|^F\.\w+\.(house|dispositor_house|owns|deg)$|^F\.yoga\.|^F\.moon\.elongation")
+UNKNOWN_TIME = re.compile(r"^\s*(unknown|not known|n/?a|none|no (birth )?time)\s*($|[;,(:.-])"
+                          r"|\b(birth )?time\s+(is\s+)?(unknown|not known)\b|\bno birth time\b", re.I)   # council RC-04
+DAY_SAMPLES = ("00:00:00", "03:00:00", "06:00:00", "09:00:00", "12:00:00", "15:00:00", "18:00:00", "21:00:00", "23:59:00")
+
+
+def time_unknown(model: dict, b: Optional["BirthInput"] = None) -> bool:
+    src = (b.time_source if b else None) or (model.get("birth") or {}).get("time_source") or ""
+    rel = str((model.get("birth") or {}).get("time_reliability") or "")
+    return bool(UNKNOWN_TIME.search(src) or UNKNOWN_TIME.search(rel))
+
+
+@_calc
+def time_varying_facts(b: "BirthInput", o: "Options") -> set:
+    """Fact ids whose value changes at some clock time of the birth date (council RC-01): with an unknown time none of
+    them may be cited. Computed, not listed, so new lagna-based facts are covered automatically."""
+    seen = {}
+    for t in DAY_SAMPLES:
+        f = _derived_facts(_compute(b.model_copy(update={"time": t}), o), ids=True)
+        f = f.get("facts", {}) if isinstance(f, dict) else {}
+        for k in set(seen) | set(f):
+            seen.setdefault(k, set()).add(json.dumps(f.get(k), sort_keys=True, default=str))
+    return {k for k, v in seen.items() if len(v) > 1}
+
+
+def unknown_time_problems(model: dict, b: Optional["BirthInput"] = None, varying: Optional[set] = None,
+                          windows: Optional[list] = None) -> list:
+    """ASTRO-REPORT-SPEC item 26 enforced in the engine, not only in SKILL.md (#48): with an unknown birth time only a
+    compact report is allowed, with no time-dependent facts (fact_refs), no event_refs and no dated windows anywhere."""
+    if not time_unknown(model, b):
+        return []
+    errs = []
+    if model.get("report_type") != "compact":
+        errs.append(f"birth time unknown: only a compact report is allowed (got {model.get('report_type')!r})")
+    cited = {x for s in model.get("sections", []) for u in s.get("units", []) for x in u.get("fact_refs", [])}
+    refs = sorted(x for x in cited if TIME_BOUND_REF.search(x) or (varying is not None and x in varying))
+    if refs:
+        errs.append(f"birth time unknown: facts that depend on the birth time cannot be cited: {', '.join(refs[:8])}")
+    kps = (model.get("summary") or {}).get("key_points", [])
+    if model.get("timeline") or any(k.get("window") or k.get("event_refs") for k in kps) or windows:
+        errs.append("birth time unknown: no dated windows, event_refs or dasha timeline (dasha dates depend on the "
+                    "birth time)")
+    return errs
+
+
+@_calc   # audit F-04: the grounding recompute runs under the requested ayanamsa and the process lock
 def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = None, o: Options = DEFAULTS) -> dict:
     """Validate and render a Structured Report Model (assets/report/report.schema.json) to HTML (+PDF). Dates are checked
     against facts recomputed here from the birth input `b` (never client-supplied, never printed); a dated model needs it."""
@@ -773,8 +877,16 @@ def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = N
     rr = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(rr)
     schema = json.load(open(os.path.join(s.skill_dir, "assets", "report", "report.schema.json")))
+    if time_unknown(model, b):          # #48: refused before anything is rendered; dated windows anywhere count (RC-04)
+        try:
+            wins = rr._windows(model) if model.get("summary") else []
+        except Exception:               # a malformed model is report_checks' job; the rule must still hold
+            wins = []
+        if problems := unknown_time_problems(model, b, time_varying_facts(b, o) if b else None, wins):
+            return {"ok": False, "errors": problems}
     if b is None:
-        if model.get("timeline") or any(k.get("window") for k in (model.get("summary") or {}).get("key_points", [])):
+        if model.get("timeline") or any(k.get("window") or k.get("event_refs")             # RC-09
+                                         for k in (model.get("summary") or {}).get("key_points", [])):
             return {"ok": False, "errors": ["grounding needs the birth input: pass the birth details (not printed) so the dates can be checked"]}
         errs, warns = rr.report_checks(model, schema)
     else:
@@ -805,3 +917,118 @@ def _inside(path, root):
     if os.path.commonpath([rp, rr]) != rr:
         raise PermissionError("path outside the allowed folder")
     return rp
+
+
+# ---- consultation report (owner specification 2026-11-01): intake -> engine pack -> checked HTML/PDF/DOCX ----------
+CONSULT_MONTHS = 60          # transit events for the 3-5 year overview
+
+
+def _skill_mod(name):
+    s = config.load()
+    path = os.path.join(s.skill_dir or "", "scripts", f"{name}.py")
+    if not os.path.exists(path):
+        return None
+    spec = importlib.util.spec_from_file_location(f"skill_{name}", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _consult_birth(cm, intake):
+    """BirthInput from an intake, resolving a place name offline when no coordinates are given. Errors are messages."""
+    bi = cm.birth_input(intake)
+    if bi.get("lat") is None or bi.get("lon") is None:
+        place = intake["birth"]["place"]
+        try:
+            r = find_place(place)
+        except FileNotFoundError as e:
+            raise ValueError(f"birth.place '{place}': no coordinates given and {e}") from None
+        hits = r.get("matches") or []
+        if not hits:
+            raise ValueError(f"birth.place '{place}': unknown place; check the spelling or give lat, lon and the time zone")
+        if r.get("ambiguous"):
+            names = "; ".join(f"{h.get('name')}, {h.get('admin1', '')} {h.get('country', '')}".strip() for h in hits[:5])
+            raise ValueError(f"birth.place '{place}' matches several places ({names}); give the coordinates")
+        h = hits[0]
+        bi |= {"lat": h["lat"], "lon": h["lon"]}
+        if not bi.get("tz") and not bi.get("zone") and h.get("zone"):
+            bi["zone"] = h["zone"]
+    try:
+        return BirthInput(**bi)
+    except Exception as e:          # pydantic: one readable line per problem
+        errs = getattr(e, "errors", lambda: [])()
+        msg = "; ".join(f"birth.{'.'.join(map(str, x.get('loc', [])))}: {x.get('msg')}" for x in errs) or str(e)
+        raise ValueError(msg) from None
+
+
+@_calc
+def consultation_pack(intake: dict, o: Options = DEFAULTS, verification: Optional[dict] = None) -> dict:
+    """Everything a consultation report prints, computed here from the intake: never typed by the writer.
+    Returns {"ok": True, "pack": ...} or {"ok": False, "errors": [...]} with field-named messages."""
+    cm = _skill_mod("consultation")
+    if cm is None:
+        return {"ok": False, "errors": ["the skill's scripts/consultation.py was not found (astro setup)"]}
+    if errs := cm.validate_intake(intake):
+        return {"ok": False, "errors": errs}
+    if o.ayanamsa != "lahiri":
+        return {"ok": False, "errors": [f"the consultation report uses the Lahiri ayanamsa only (got {o.ayanamsa})"]}
+    try:
+        b = _consult_birth(cm, intake)
+    except ValueError as e:
+        return {"ok": False, "errors": [str(e)]}
+    o = o.model_copy(update={"on": dt.date.fromisoformat(intake["consultation"]["report_date"]), "months": CONSULT_MONTHS})
+    c = _compute(b, o, full=True)
+    samples, sample_ids, lk = [], [], _skill_mod("lal_kitab")
+    unknown = intake["birth"]["time_reliability"] == "unknown"
+    for t in cm.sample_times(intake):      # the uncertain birth time, measured: every id at every sample time
+        d, clock = (t.split("T") if "T" in t else (str(b.date), t))
+        cs = _compute(b.model_copy(update={"date": dt.date.fromisoformat(d), "time": clock}), o, full=True)
+        fs = _derived_facts(cs, ids=True)
+        fs = fs.get("facts", {}) if isinstance(fs, dict) else {}
+        samples.append(cs)
+        sample_ids.append(fs | cm.chart_ids(cs, fs, None if unknown else lk))
+    eng = {"chart": c, "derived_text": _derived_facts(c), "derived_ids": _derived_facts(c, ids=True),
+           "gochara": gochara(b, o), "samples": samples, "sample_ids": sample_ids, "months": CONSULT_MONTHS,
+           "varying_facts": sorted(time_varying_facts(b, o)) if unknown else [], "verification": verification}
+    if not isinstance(eng["derived_ids"], dict):
+        return {"ok": False, "errors": [f"derived facts unavailable: {eng['derived_ids']}"]}
+    rr = _skill_mod("render_report")
+    pack = cm.build_pack(intake, eng, lk, _skill_mod("varshaphal"), rr)
+    return {"ok": True, "pack": pack}
+
+
+@_calc
+def create_consultation_report(intake: dict, model: dict, name: Optional[str] = None, o: Options = DEFAULTS,
+                               verification: Optional[dict] = None, formats=("html", "pdf", "docx"),
+                               out_dir: Optional[str] = None) -> dict:
+    """Check the interpretation model against the pack recomputed from the intake, then write HTML, PDF and DOCX to the
+    reports folder (owner-only files). Refused with field-named errors when anything is missing or unsupported."""
+    s = config.load()
+    out_dir = os.path.expanduser(out_dir) if out_dir else s.reports_dir      # out_dir: CLI and Python only, never MCP
+    if refusal := config.folder_refusal(out_dir, s.skill_dir):
+        return {"ok": False, "errors": [refusal]}
+    r = consultation_pack(intake, o, verification)
+    if not r["ok"]:
+        return r
+    cm, rr = _skill_mod("consultation"), _skill_mod("render_report")
+    if name is None:
+        first = re.sub(r"[^a-z0-9]", "", intake["client"]["full_name"].split()[0].lower()) or "client"
+        name = f"{first}-consultation-{intake['consultation']['report_date'].replace('-', '')}"
+    if not SAFE_NAME.match(name):
+        raise ValueError("report name: letters, digits, dot, dash, underscore; ≤ 64 characters")
+    schema = json.load(open(os.path.join(s.skill_dir, "assets", "report", "report.schema.json")))
+    try:
+        out = cm.report(r["pack"], model, out_dir, name, rr, schema, formats)
+    except Exception as e:      # rendering libraries missing or broken: say why, never a traceback
+        return {"ok": False, "errors": [f"report could not be rendered: {type(e).__name__}: {e}"]}
+    return out
+
+
+def consultation_brief(intake: dict, o: Options = DEFAULTS) -> dict:
+    """The writer's brief for a consultation report: every fact, id and dated event the interpretation may cite."""
+    r = consultation_pack(intake, o)
+    if not r["ok"]:
+        return r
+    return {"ok": True, "brief": _skill_mod("consultation").brief(r["pack"]),
+            "model_schema": "skill://assets/report/consultation-model.schema.json",
+            "method": "skill://references/consultation-report.md"}

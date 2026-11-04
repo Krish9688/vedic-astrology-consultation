@@ -1,0 +1,50 @@
+/* Consultation report: additions to report.css (same cream and green tokens). */
+.consultation h2 { break-before: page; }
+.consultation h2.first, .consultation .appendix h2 { break-before: page; }
+.consultation h3.chapter-title { font-size: 15pt; border-top: 1pt solid var(--eucalyptus); padding-top: 6pt; margin-top: 22pt; }
+.consultation h4 { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 8.5pt; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--moss); margin: 10pt 0 3pt; break-after: avoid; }
+.consultation .chapter { break-before: auto; }
+table.kv th { width: 42mm; background: var(--mint); }
+table.small, .small { font-size: 9pt; }
+table.tiny, .tiny { font-size: 7.5pt; }
+.tiny td { word-break: break-word; }
+.flag { color: var(--clay); }
+.refs { display: block; font-size: 7.5pt; color: var(--sage); margin-top: 1pt; }
+.reading { background: var(--ivory); border-left: 3pt solid var(--eucalyptus); padding: 6pt 10pt; margin: 6pt 0 10pt; break-inside: avoid; }
+.reading .rtitle { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-weight: 600; color: var(--pine); margin-bottom: 3pt; }
+.callout.warn { background: #F3E6DD; border-left: 3pt solid var(--clay); }
+.charts2 { display: flex; gap: 10mm; justify-content: center; align-items: flex-start; break-inside: avoid; }
+.charts2 figure { margin: 0; flex: 0 1 auto; max-width: 82mm; }
+.charts2 figcaption { overflow-wrap: anywhere; text-align: center; }
+.charts2 .lkside { flex: 1; }
+.charts4 { display: flex; flex-wrap: wrap; gap: 6mm; justify-content: center; break-inside: avoid; }
+.charts4 figure { margin: 0; width: 72mm; text-align: center; }
+.charts4 svg { width: 62mm; height: 62mm; }
+.charts2 svg { width: 70mm; height: 70mm; }
+.nochart { width: 62mm; height: 62mm; display: flex; align-items: center; justify-content: center; border: .75pt dashed var(--eucalyptus); font-size: 8.5pt; color: var(--muted); padding: 6mm; box-sizing: border-box; }
+tr.varies td { background: #FBF3E9; }
+tr.now td { font-weight: 600; background: var(--mint); }
+.two { display: flex; gap: 6mm; } .two table { flex: 1; }
+.qbox { background: var(--mint); padding: 6pt 10pt; margin: 8pt 0; break-inside: avoid; }
+.qbox .q, .answer .q { font-weight: 600; color: var(--forest); }
+.answer { border-top: .75pt solid var(--pistachio); padding-top: 8pt; margin-top: 12pt; }
+.answer .ans { font-size: 10.5pt; }
+.answer ul, .chapter ul { margin: 0 0 4pt 0; padding-left: 14pt; }
+.toc-page { break-before: page; }
+.toc-page h2 { break-before: auto; }
+.toc { padding-left: 0; list-style: none; }
+.toc ol { list-style: none; padding-left: 12pt; }
+.toc a::after { content: leader(".") target-counter(attr(href), page); color: var(--muted); }
+.current { background: var(--mint); padding: 6pt 10pt; }
+table.remedies td { font-size: 9pt; }
+dl.glossary { display: grid; grid-template-columns: 34mm 1fr; gap: 2pt 8pt; font-size: 9pt; }
+dl.glossary dt { font-weight: 600; color: var(--forest); }
+dl.glossary dd { margin: 0; }
+@page { @bottom-left { content: "Astrology consultation report"; } }
+.answer, .qbox, .reading { break-inside: avoid; }
+table.sav td, table.sav th { padding: 3pt 4pt; text-align: center; }
+.kind { font-size: 7.5pt; text-transform: uppercase; letter-spacing: .05em; padding: 0 3pt; border: .5pt solid var(--eucalyptus); }
+.kind.pressure { border-style: dashed; color: var(--clay); } .kind.watch { border-style: dotted; }
+li { break-inside: avoid; }
+.refs { break-before: avoid; }

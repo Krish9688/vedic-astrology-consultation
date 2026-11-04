@@ -58,8 +58,11 @@ def test_skipped_and_repeated_clock_times_are_refused_not_guessed():
 
 
 def test_local_mean_time_era_needs_an_explicit_offset():
-    with pytest.raises(ValueError, match=r"local mean time at this longitude: \+04:51:31"):
-        birth(date="1850-01-01", zone="Asia/Kolkata")            # 72.88° E = 4 h 51 m 31 s
+    """No LMT is ever suggested (owner rule 2026-11-01); the tzdb LMT and city mean times are refused."""
+    for d in ("1850-01-01", "1860-01-01", "1900-06-01"):         # LMT, then HMT +05:53:20, then MMT +05:21:10
+        with pytest.raises(ValueError, match=r"before standard time.*Give the UTC offset the birth record states") as e:
+            birth(date=d, zone="Asia/Kolkata")
+        assert "longitude" not in str(e.value)
 
 
 @pytest.mark.parametrize("bad", [dict(zone="Mars/Olympus"), dict(lat=95, tz="+00:00"), dict(lon=181, tz="+00:00"),

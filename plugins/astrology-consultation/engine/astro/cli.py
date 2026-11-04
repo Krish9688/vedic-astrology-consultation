@@ -212,6 +212,14 @@ def main(argv=None):
     p.add_argument("--input", help="birth JSON (as for the other commands): the report's dates are checked against it")
     p.add_argument("--on", type=dt.date.fromisoformat)
     p.add_argument("--months", type=int, default=24)
+    p = sub.add_parser("consultation-report", help="full consultation report: intake -> brief, or intake + model -> "
+                       "HTML, PDF and DOCX (Lahiri only)")
+    p.add_argument("intake", help="intake JSON (client, birth, consultation, questions, consent)")
+    p.add_argument("model", nargs="?", help="interpretation model JSON; without it the writer's brief is printed")
+    p.add_argument("--name")
+    p.add_argument("--out", help="output folder (default: the reports folder from astro setup)")
+    p.add_argument("--verification", help="verification record JSON (tools/crosscheck/verification_record.py)")
+    p.add_argument("--formats", default="html,pdf,docx")
     sub.add_parser("sources").add_argument("rule")
     p = sub.add_parser("search")
     p.add_argument("query")
@@ -253,6 +261,8 @@ def main(argv=None):
     p.add_argument("--lon", type=float, required=True)
     p.add_argument("--tz", help="UTC offset, e.g. +05:30")
     p.add_argument("--zone", help="IANA time zone, e.g. Asia/Kolkata")
+    p.add_argument("--ayanamsa", default="lahiri", choices=list(S.engine.AYANAMSAS))      # #47
+    p.add_argument("--calendar", default="gregorian", choices=["gregorian", "julian"])   # #47
     p = sub.add_parser("place", help="birthplace → coordinates and IANA time zone (offline)")
     p.add_argument("name")
     p.add_argument("--country", help="two-letter country code, e.g. IN")
@@ -287,10 +297,24 @@ def main(argv=None):
     if a.cmd == "report":
         with open(a.model) as f:
             return _print(S.create_report(json.load(f), a.name, _birth(a.input) if a.input else None, _opts(a)))
+    if a.cmd == "consultation-report":
+        with open(a.intake) as f:
+            intake = json.load(f)
+        if not a.model:
+            r = S.consultation_brief(intake)
+            return print(r["brief"]) if r["ok"] else _print(r)
+        with open(a.model) as f:
+            model = json.load(f)
+        ver = None
+        if a.verification:
+            with open(a.verification) as f:
+                ver = json.load(f)
+        return _print(S.create_consultation_report(intake, model, a.name, S.DEFAULTS, ver,
+                                                   tuple(x for x in a.formats.split(",") if x), a.out))
     if a.cmd == "sky":
         return _print(S.sky(a.start, a.end, a.tz))
     if a.cmd == "panchang":
-        return _print(S.panchang(a.date, a.lat, a.lon, a.tz, a.zone))
+        return _print(S.panchang(a.date, a.lat, a.lon, a.tz, a.zone, ayanamsa=a.ayanamsa, calendar=a.calendar))
     if a.cmd == "place":
         return _print(S.find_place(a.name, a.country))
     if a.cmd == "sources":
