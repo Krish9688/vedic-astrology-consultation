@@ -245,6 +245,7 @@ bcb3033fba10fa3e  reference-or-edge-chart
 bd351427aeef04b6  book-example
 be645fcac5db6f94  synthetic-test-chart
 bee8299efa92d879  reference-or-edge-chart
+bf45592f0dd14370  synthetic-test-chart
 bf4b6d29a676c415  book-example (knowledge graph)
 c10a25c40d597245  synthetic-test-chart
 c1b6a8bd5a41b5d8  synthetic-test-chart
