@@ -281,15 +281,15 @@
 {# ============================== 9 appendix ============================== #}
 <section class="appendix">
 <h2 id="s9">9. Appendix</h2>
-<h3>A. Raw calculation tables</h3>
+{% set apx = namespace(i=0) %}<h3>A. Raw calculation tables</h3>
 <table class="small"><thead><tr><th>Body</th><th>Longitude</th><th>Sign</th><th>Degree</th><th>Nakshatra</th><th>Pada</th><th>D1–D60 signs</th></tr></thead><tbody>
 {% for r in raw_positions %}<tr><td>{{ r.body }}</td><td>{{ r.lon }}</td><td>{{ r.sign }}</td><td>{{ r.deg }}</td><td>{{ r.nak }}</td><td>{{ r.pada }}</td><td class="tiny">{{ r.vargas }}</td></tr>{% endfor %}
 </tbody></table>
 {% if not p.unknown_time and p.bhavas %}{% if p.time_status == "approximate" %}<p class="small flag">House cusps at the stated time; they shift with the birth time.</p>{% endif %}<table class="small"><thead><tr><th>Bhava (Sripati)</th><th>Start</th><th>Middle</th><th>End</th></tr></thead><tbody>{% for b in p.bhavas %}<tr><td>{{ b.house }}</td><td>{{ "%.4f"|format(b.start) }}°</td><td>{{ "%.4f"|format(b.middle) }}°</td><td>{{ "%.4f"|format(b.end) }}°</td></tr>{% endfor %}</tbody></table>{% endif %}
 {% if not p.unknown_time and bav_rows %}<table class="small"><thead><tr><th>Ashtakavarga (BAV) by house</th>{% for i in range(1, 13) %}<th>{{ i }}</th>{% endfor %}</tr></thead><tbody>{% for r in bav_rows %}<tr><td>{{ r.planet }}</td>{% for n in r.points %}<td>{{ n }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>{% endif %}
-{% if sensitivity_rows %}<h3>B. Birth-time sensitivity</h3><p class="small">How many minutes the birth time can move before each factor changes (computed).</p>
+{% if sensitivity_rows %}{% set apx.i = apx.i + 1 %}<h3>{{ "BCDEFG"[apx.i - 1] }}. Birth-time sensitivity</h3><p class="small">How many minutes the birth time can move before each factor changes (computed).</p>
 <table class="small"><thead><tr><th>Factor</th><th>Earlier by</th><th>Later by</th></tr></thead><tbody>{% for r in sensitivity_rows %}<tr><td>{{ r.factor }}</td><td>{{ r.before }}</td><td>{{ r.after }}</td></tr>{% endfor %}</tbody></table>{% endif %}
-<h3>C. Verification record</h3>
+{% set apx.i = apx.i + 1 %}<h3>{{ "BCDEFG"[apx.i - 1] }}. Verification record</h3>
 {% if verification %}
 <p class="small">{{ verification.about }}</p>
 <table class="small"><thead><tr><th>Quantity</th><th>This engine</th><th>Independent recompute</th><th>PyJHora</th><th>Largest difference</th><th>Tolerance</th><th>Result</th></tr></thead><tbody>
@@ -297,14 +297,14 @@
 </tbody></table>
 <p class="small">{{ verification.summary_text }} VedAstro: not used (not installed locally; its library sends birth data to a remote service).</p>
 {% else %}<p class="small">Not cross-checked in this run. The calculation engine itself is tested against an independent recompute and PyJHora on synthetic charts (see the methodology).</p>{% endif %}
-<h3>D. Where each statement comes from</h3>
+{% set apx.i = apx.i + 1 %}<h3>{{ "BCDEFG"[apx.i - 1] }}. Where each statement comes from</h3>
 <p class="small">Fact ids: F.* calculated Parashari facts (houses, dignity, yogas), LK.* Lal Kitab placements, SB.* Shadbala, AV.* Ashtakavarga, GO.* transits, JA.* Jaimini points, DOSHA.* dosha checks. Event ids: DSH.* dasha periods, ING.* sign changes, CON.* exact transit contacts.</p>
 <table class="tiny"><thead><tr><th>Id</th><th>Value</th></tr></thead><tbody>{% for i, v in cited %}<tr><td>{{ i }}</td><td>{{ v }}</td></tr>{% endfor %}</tbody></table>
-{% if remedies %}<h3>E. Remedy sources</h3>
+{% if remedies %}{% set apx.i = apx.i + 1 %}<h3>{{ "BCDEFG"[apx.i - 1] }}. Remedy sources</h3>
 <table class="small"><thead><tr><th>Remedy</th><th>Source</th><th>Where the editions disagree</th></tr></thead><tbody>{% for r in remedies %}<tr><td>{{ r.title }}</td><td>{{ r.source or "—" }}</td><td>{{ r.dispute or "—" }}</td></tr>{% endfor %}</tbody></table>{% endif %}
-<h3>F. Glossary</h3>
+{% set apx.i = apx.i + 1 %}<h3>{{ "BCDEFG"[apx.i - 1] }}. Glossary</h3>
 <dl class="glossary">{% for t, d in glossary %}<dt>{{ t }}</dt><dd>{{ d }}</dd>{% endfor %}</dl>
-<h3>G. Disclaimer</h3>
+{% set apx.i = apx.i + 1 %}<h3>{{ "BCDEFG"[apx.i - 1] }}. Disclaimer</h3>
 <p class="small">{{ disclaimer }}</p>
 </section>
 </body>

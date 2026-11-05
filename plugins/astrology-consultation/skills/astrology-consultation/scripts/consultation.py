@@ -660,7 +660,12 @@ def build_pack(intake, eng, lk_mod=None, vp_mod=None, rr=None):
     # ---- Lal Kitab ----
     lk = vp = None
     if unknown:
-        lk_reason = "The Lal Kitab chart is counted from the ascendant, which a birth time is needed for; it is not cast."
+        lk_reason = ("Birth time unknown: the Lal Kitab chart is not cast. Lal Kitab places every planet by house, counted "
+                     "from the ascendant, and the ascendant needs the birth time. With a birth time this section would "
+                     "give the Lal Kitab chart, each planet's house reading (pakka ghar, exalted or debilitated, sleeping "
+                     "or awake), the debts (rin), the annual chart (varshphal) for the current year, and remedies with "
+                     "both editions compared. A birth certificate, hospital record or family record of the time is "
+                     "enough to add it later.")
     elif lk_mod is None:
         lk_reason = "The Lal Kitab module is not installed with this skill."
     else:

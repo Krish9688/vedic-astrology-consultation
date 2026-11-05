@@ -15,7 +15,8 @@ table.tiny, .tiny { font-size: 7.5pt; }
 .reading .rtitle { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-weight: 600; color: var(--pine); margin-bottom: 3pt; }
 .callout.warn { background: #F3E6DD; border-left: 3pt solid var(--clay); }
 .charts2 { display: flex; gap: 10mm; justify-content: center; align-items: flex-start; break-inside: avoid; }
-.charts2 figure { margin: 0; flex: 0 0 auto; }
+.charts2 figure { margin: 0; flex: 0 1 auto; max-width: 82mm; }
+.charts2 figcaption { overflow-wrap: anywhere; text-align: center; }
 .charts2 .lkside { flex: 1; }
 .charts4 { display: flex; flex-wrap: wrap; gap: 6mm; justify-content: center; break-inside: avoid; }
 .charts4 figure { margin: 0; width: 72mm; text-align: center; }
