@@ -146,3 +146,11 @@ def test_sensitivity_classes_match_exact_change_times(t, la, lo):
             continue                                   # exactly on a sampled offset: either class is defensible
         want = "robust" if d is None else "moderate" if d > 5 else "high" if d > 1 else "very high"
         assert g["classes"][factor] == want, (factor, d, g["classes"][factor])
+
+
+def test_sun_events_just_after_sunrise_is_day_not_polar_fallback():
+    # synthetic: 2024-03-20 06:04 UT at 50N 0E is ~1 min after sunrise; two sunrises fall inside (jd-1, jd]
+    jd = E.jd_of(dt.datetime(2024, 3, 20, 6, 4))
+    r1, s, r2, polar = S._sun_events(jd, 50.0, 0.0)
+    assert not polar and r1 <= jd < s < r2
+    assert (dt.datetime(2000, 1, 1, 12) + dt.timedelta(days=r1 - 2451545.0)).strftime("%a") == "Wed"   # today's sunrise
