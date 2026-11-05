@@ -11,7 +11,8 @@ Review fixes made after 3.7.0; the version number is the owner's decision.
 ### Fixed
 - **Births just after sunrise.** A birth within a few minutes after sunrise was treated as a polar case, which
   gave the wrong weekday, hora, day or night in shadbala, dasha applicability and panchang. These births now get the
-  normal sunrise-based result.
+  normal sunrise-based result. Births just before sunrise on the days near the year's earliest sunrise were affected
+  too and are fixed.
 - **Tajika completed years.** Just after the solar return the completed-years count could be one too low; the annual
   chart now starts from the right year.
 - **DOCX reports.** The public engine `report` and `all` extras now install python-docx, so DOCX reports work after a
@@ -19,6 +20,7 @@ Review fixes made after 3.7.0; the version number is the owner's decision.
 
 ### Security
 - The jinja2 minimum is raised to 3.1.6, which excludes releases with known template-sandbox vulnerabilities.
+  The public install script and CI now also require jinja2 3.1.6.
 
 ### Changed
 - The README is rewritten in both repositories, so install and first use are easier to follow.
