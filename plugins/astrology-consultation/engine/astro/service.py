@@ -436,6 +436,7 @@ def tajika(b: BirthInput, year: Optional[int] = None, o: Options = DEFAULTS) -> 
             raise ValueError("the date asked about is before the birth")
         n = int((on - bj) / TJ.SIDEREAL_YEAR)
         n -= TJ.varsha_pravesh(bj, natal["Su"], n) > on
+        n += TJ.varsha_pravesh(bj, natal["Su"], n + 1) <= on     # the return can fall just before the mean-year estimate
     elif year < 1:
         raise ValueError("year is the year of life, 1 or more (year 1 starts at birth)")
     else:

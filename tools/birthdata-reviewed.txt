@@ -2,6 +2,7 @@
 # Fingerprint = sha256 of the whole normalised line(s) holding the record. No dates here. A record not listed fails
 # tools/privacy_check.py. Add one only after checking it is invented or from a book (privacy_check.py --records PATH).
 # 2026-11-01 (audit F-01): lines newly matched by the added record shapes; all synthetic, invented or edge-case inputs.
+008f492caa9ab1b5  synthetic-test-chart
 02287202972782b0  synthetic-test-chart
 0229ea6775c58e8c  invented-test-input
 036b60400710c54d  book-example (knowledge graph)

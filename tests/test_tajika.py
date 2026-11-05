@@ -52,3 +52,9 @@ def test_default_year_follows_on_and_rejects_year_zero():
         S.tajika(EX118, 0)
     with pytest.raises(ValueError):                                       # a date before birth has no Tajika year
         S.tajika(EX118, None, S.Options(on="1960-01-01"))
+
+
+def test_default_year_counts_a_return_just_before_the_mean_year():
+    # synthetic: the 91st return falls ~16 min before birth + 91 mean sidereal years, and noon of `on` lies between them
+    b = S.BirthInput(date="1987-07-20", time="04:07", tz=0, lat=51.5, lon=-0.12)
+    assert S.tajika(b, None, S.Options(on="2078-07-20"))["year"] == 92
