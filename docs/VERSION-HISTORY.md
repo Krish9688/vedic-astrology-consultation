@@ -26,12 +26,13 @@ one day and released the next, both are given. No date below is a guess; where e
 | v3.4 | astrology-consultation | 2026-10-01 (development from 2026-09-27) | previous stable | `astrology-consultation-v3.4.skill` | 2e038b2d92d29a0f | life-first writing, three output modes, report system, normalized calculation layer |
 | v3.5 | astrology-consultation | 2026-10-03 | previous stable | `astrology-consultation-v3.5.skill` | 01a33c976195b20f | local strength/Jaimini/sensitivity engine, full ephemeris, MCP/REST/CLI service, curated disputes |
 | 3.5.0 (public plugin) | astrology-consultation | 2026-10-03 | earlier public release | `astrology-consultation-3.5.0.skill` | a2f8a42fe3b6d794 | v3.5 as a Claude marketplace plugin; portable library lookup; no Lal Kitab knowledge base, but Lal Kitab rule tables, method notes and the Varshaphal table shipped |
-| v3.6 | astrology-consultation | 2026-10-10 | **current stable** | `astrology-consultation-v3.6.skill` | 2bb3c9410e0cbd4f | engine/security/packaging fixes; method kept at v3.5 after three blind rounds |
+| v3.6 | astrology-consultation | 2026-10-10 | previous stable | `astrology-consultation-v3.6.skill` | 2bb3c9410e0cbd4f | engine/security/packaging fixes; method kept at v3.5 after three blind rounds |
 | 3.6.0 (public plugin) | astrology-consultation | 2026-10-10 | earlier public release | `astrology-consultation-3.6.0.skill` | 2c8df547c5c11cc5 | as v3.6 without the Lal Kitab KB and Varshaphal table (Lal Kitab rule tables and method notes still shipped); licence inside the package |
 | 3.6.1 (public plugin) | astrology-consultation | 2026-10-15 (prepared from 2026-10-10) | earlier public release | `astrology-consultation-3.6.1.skill` | 978563f7c8824a97 | VedAstro removed; corrected period fixtures; independent dasha references; no Lal Kitab material in the public edition (B2) |
 | 3.6.2 (public plugin) | astrology-consultation | 2026-10-15 | previous public release | `astrology-consultation-3.6.2.skill` | e9efd10d796a77a3 | safety lint verdict negations and new topic groups; crisis protocol; graceful Lal Kitab loader; report errors reach the client |
-| 3.7.0 (public plugin) | astrology-consultation | 2026-10-25 | prepared, not yet tagged or packaged | — | — | roadmap phases 0–8: fact layer and evidence labels, yoga/panchang/Yogini/gochara/Tajika/Chara calculations, SVG charts, outlook report, ayanamsa and Julian input (Lal Kitab stays private) |
-| 3.6.3 (public plugin) | astrology-consultation | 2026-10-19 | **current public release** | `astrology-consultation-3.6.3.skill` | 604734a936533602 | report identity check, report audit order, `astro sky`, sensitivity span + Moon-sign row, audit lint, structural privacy check and content-hash manifests; unpadded-time fix |
+| v3.7 | astrology-consultation | 2026-10-25 | **current stable** | `astrology-consultation-v3.7.skill` | a1e0f88b852927f6 | roadmap phases 0–8 (tag v3.7.0); private edition adds the Lal Kitab knowledge base and Varshaphal table |
+| 3.6.3 (public plugin) | astrology-consultation | 2026-10-19 | previous public release | `astrology-consultation-3.6.3.skill` | 604734a936533602 | report identity check, report audit order, `astro sky`, sensitivity span + Moon-sign row, audit lint, structural privacy check and content-hash manifests; unpadded-time fix |
+| 3.7.0 (public plugin) | astrology-consultation | 2026-10-25 | **current public release** | `astrology-consultation-3.7.0.skill` | ff38b4b1d42576e3 | roadmap phases 0–8: fact layer and evidence labels, yoga/panchang/Yogini/gochara/Tajika/Chara calculations, SVG charts, outlook report, ayanamsa and Julian input; Lal Kitab rules, code and remedies public (tag v3.7.0) |
 
 Also preserved: the first v3.2 build (installed 10:44, replaced at 10:58 after page-checking citations to the newly
 added books) as `releases/previous/astrology-consultation-v3.2-first-build-2026-09-25_1044.tgz`, and a 2026-09-21
@@ -177,7 +178,7 @@ re-zip of v2.1 whose contents are identical to v2.1 (`…-v2.1-repack-2026-09-21
 - **Known limitations:** 125 automatic disputes uncurated; long reports can repeat themselves; Chat/Cowork lack local
   search, graph and engine; one benchmark item (R01) was contaminated by the bundled example and is reported apart.
 
-## v3.5 (2026-10-03; current stable)
+## v3.5 (2026-10-03; superseded by v3.6 and v3.7)
 
 - **Why:** Shadbala and Ashtakavarga came only from a cloud engine whose numbers disagreed with others; birth-time
   margins were estimated by eye; the calculation could only be used inside Claude Code; 125 automatic cross-book
