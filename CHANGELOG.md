@@ -9,7 +9,7 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 Review fixes made after 3.7.0; the version number is the owner's decision.
 
 ### Fixed
-- **Births just after sunrise.** A birth within about two minutes after sunrise was treated as a polar case, which
+- **Births just after sunrise.** A birth within a few minutes after sunrise was treated as a polar case, which
   gave the wrong weekday, hora, day or night in shadbala, dasha applicability and panchang. These births now get the
   normal sunrise-based result.
 - **Tajika completed years.** Just after the solar return the completed-years count could be one too low; the annual
