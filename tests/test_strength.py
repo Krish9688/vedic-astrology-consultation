@@ -154,3 +154,10 @@ def test_sun_events_just_after_sunrise_is_day_not_polar_fallback():
     r1, s, r2, polar = S._sun_events(jd, 50.0, 0.0)
     assert not polar and r1 <= jd < s < r2
     assert (dt.datetime(2000, 1, 1, 12) + dt.timedelta(days=r1 - 2451545.0)).strftime("%a") == "Wed"   # today's sunrise
+
+
+def test_sun_events_just_before_sunrise_near_earliest_sunrise_day():
+    jd = 2460478.6611   # synthetic: just before sunrise near the earliest-sunrise day
+    r1, s, r2, polar = S._sun_events(jd, 50.0, 0.0)
+    assert not polar and r1 <= jd < r2 and s < jd      # night: yesterday's sunrise and sunset, today's sunrise ahead
+    assert 0.9 < jd - r1 < 1.1

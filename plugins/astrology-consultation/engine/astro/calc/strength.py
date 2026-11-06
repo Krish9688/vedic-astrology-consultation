@@ -128,7 +128,7 @@ def _sun_events(jd, lat, lon):
     r1 = event(jd - 1, swe.CALC_RISE)
     if r1 is not None and r1 > jd:
         r1 = event(jd - 2, swe.CALC_RISE)
-    elif r1 is not None:
+    if r1 is not None:
         nxt = event(r1 + 0.5, swe.CALC_RISE)           # a second rise inside (jd-1, jd]: the later one is "before jd"
         r1 = nxt if nxt is not None and nxt <= jd else r1
     s = event(r1, swe.CALC_SET) if r1 is not None else None
