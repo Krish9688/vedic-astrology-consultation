@@ -6,9 +6,31 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 ## [Unreleased]
 
-Review fixes made after 3.7.0; the version number is the owner's decision.
+Review fixes made after 3.7.0, and the T2 research round of 2026-11-07; the version number is the owner's decision.
+
+### Added
+- **Report design: evidence chips, one legend, a "This report answers" line and birth-time states.** Before, a
+  unit's evidence labels were one run of text ("Interpretation · Commentary · Parashari"), there was no key to the
+  labels, and birth-time sensitivity was a single "depends on the exact birth time" note. A study of how public
+  report catalogues present confidence and timing found that readers need the key in one place and need to see
+  which statements move with the birth time. Now each label is a chip whose border, fill and corner carry the class
+  (readable in grayscale); every full report has one "Key to the labels" block (compact and outlook keep a one-line
+  key); the cover says what the report answers, with a default per report type and an optional `answers` field; and
+  an optional `sensitivity` field (`stable`, `may_shift`, `depends`) on key points, units and timeline rows shows as a
+  chip, as dotted or faded bar ends, and in a "What moves with the birth time" list. Existing report JSON still
+  validates; the boolean `time_sensitive` maps to `depends`. Validated by new tests (`tests/test_report_design.py`)
+  and by HTML, PDF and DOCX renders of the synthetic personas P2–P6.
 
 ### Fixed
+- **Report text contrast.** Small text in moss or sage on the light backgrounds was below the WCAG AA ratio of 4.5:1
+  (sage on ivory 4.2). It now uses the muted colour, and the smallest text in full reports is 8 pt (was 7.5 pt);
+  compact and outlook chips stay at 7.5 pt to keep their page limit. A test checks the colour pairs.
+- **Outlook headroom.** The new chips and key left the quarter outlook with almost no spare room on its two pages.
+  Tighter compact spacing restores about 20 % headroom (pre-T2: about 24 %); a test adds 15 % to the default month
+  and quarter drafts and checks that each still fits on two pages.
+- **Calculation engines document.** `docs/CALCULATION-ENGINES.md` named engine 3.6.1, listed two ayanamsa options
+  the engine no longer accepts, and said Chara and Yogini dasha and time-zone lookup were missing. It now matches the
+  3.7.0 engine.
 - **Births just after sunrise.** A birth within a few minutes after sunrise was treated as a polar case, which
   gave the wrong weekday, hora, day or night in shadbala, dasha applicability and panchang. These births now get the
   normal sunrise-based result. Births just before sunrise on the days near the year's earliest sunrise were affected
@@ -24,6 +46,11 @@ Review fixes made after 3.7.0; the version number is the owner's decision.
 
 ### Changed
 - The README is rewritten in both repositories, so install and first use are easier to follow.
+- **Consultation voice: seven edits tested, none adopted.** Seven proposed edits to the consultation voice were
+  tested in blind round 13 on a fresh synthetic chart (S6): one answerer per version, three blind graders. The
+  candidate scored lower (2251 against 2370; 4 wins, 34 losses, 7 ties) with equal accuracy, so the skill text is
+  unchanged. One answerer per version cannot separate answerer variance from the edits; two items that leaned to
+  the candidate need an isolated re-test. Details in `docs/TESTING.md` §5c.
 
 ## [3.7.0] — 2026-10-25 — roadmap phases 0–8: fact layer, evidence labels, new calculations, charts and outlook report
 
