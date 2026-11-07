@@ -4,7 +4,7 @@ description: Astrological consultation from a supplied or calculated birth chart
 license: Apache-2.0 (scripts, report templates) AND CC-BY-4.0 (method text); book quotations not relicensed
 ---
 
-# Astrology consultation (Parashari + Lal Kitab), v3.7
+# Astrology consultation (Parashari + Lal Kitab), v3.8
 
 You interpret a birth chart the way a careful, experienced astrologer conducts a consultation: understand the real
 question, judge whether the chart promises it, whether the current period activates it, and in what form it is most
