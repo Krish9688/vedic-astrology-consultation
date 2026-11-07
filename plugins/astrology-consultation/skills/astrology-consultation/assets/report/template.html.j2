@@ -11,6 +11,7 @@
   <div class="kind">{{ type_name }}</div>
   <h1>{{ r.title }}</h1>
   {% if r.subtitle %}<div class="sub">{{ r.subtitle }}</div>{% endif %}
+  <p class="answers"><span>This report answers</span> {{ answers_line }}</p>
   <div class="rule"></div>
   <dl>
     <dt>Prepared for</dt><dd>{{ r.prepared_for }}</dd>
@@ -28,12 +29,14 @@
 {% if r.spine %}<p class="spine">{{ r.spine }}</p>{% endif %}
 <ul class="keypoints">
 {% for k in r.summary.key_points %}
-  <li>{{ k.text }}<span class="meta"><span class="grade {{ k.confidence }}">{{ k.confidence }}</span>{% if k.window %} · {{ k.window }}{% endif %}{% if k.section %} · see <a href="#{{ k.section }}">{{ section_titles.get(k.section, k.section) }}</a>{% endif %}</span></li>
+  <li>{{ k.text }}<span class="meta"><span class="grade {{ k.confidence }}">{{ k.confidence }}</span>{% if sens(k) %} <span class="chip sens sens-{{ sens(k) }}">{{ sens_labels[sens(k)] }}</span>{% endif %}{% if k.window %} · {{ k.window }}{% endif %}{% if k.section %} · see <a href="#{{ k.section }}">{{ section_titles.get(k.section, k.section) }}</a>{% endif %}</span></li>
 {% endfor %}
 </ul>
 
 {% if r.report_type != "compact" or r.how_to_read %}<h3>How to read this report</h3>
 <p>{{ r.how_to_read or default_how_to_read }}</p>{% endif %}
+{% if r.report_type in ("compact", "outlook") %}<p class="tl-legend">Key: <span class="grade Strong">Strong</span> <span class="grade Moderate">Moderate</span> <span class="grade Weak">Weak</span> <span class="grade Contradictory">Contradictory</span> <span class="grade Unknown">Unknown</span> say how much of the chart agrees, not a probability. Birth-time marks, where shown: stable, may shift, depends on exact time.</p>
+{% else %}{% set legend_evidence = show_evidence %}{% include "legend.html.j2" %}{% endif %}
 {% if r.sections|length > 3 %}
 <ol class="toc">{% for s in r.sections %}<li><a href="#{{ s.id }}">{{ s.title }}</a></li>{% endfor %}{% if r.timeline %}<li><a href="#timeline">Timeline</a></li>{% endif %}<li><a href="#uncertain">What is uncertain</a></li>{% if appendix %}<li><a href="#appendix">Technical appendix</a></li>{% endif %}</ol>
 {% endif %}
@@ -45,9 +48,14 @@
 {% for u in s.units or [] %}
 <div class="unit">
   <div class="theme">{{ u.theme }}</div>
-  {% set tags = [claim_labels.get(u.claim_type), (basis_labels[u.claim_basis] ~ (": " ~ u.test_result if u.test_result else "")) if u.claim_basis else None, system_labels.get(u.system),
-                 ("Past: " ~ (u.history_status or "not confirmed")) if u.temporal_mode == "past" else None] | select | list %}
-  {% if tags %}<div class="basis">{{ tags | join(" · ") }}</div>{% endif %}
+  {% set ss = sens(u) %}{% set past = u.temporal_mode == "past" %}
+  {% if u.claim_type or u.claim_basis or u.system or past or ss %}<div class="basis">
+    {% if u.claim_type %}<span class="chip ev-{{ u.claim_type }}">{{ claim_labels.get(u.claim_type) }}</span>{% endif %}
+    {% if u.claim_basis %}<span class="chip ba-{{ u.claim_basis }}">{{ basis_labels[u.claim_basis] }}{% if u.test_result %}: {{ u.test_result }}{% endif %}</span>{% endif %}
+    {% if u.system %}<span class="chip sys">{{ system_labels.get(u.system) }}</span>{% endif %}
+    {% if past %}<span class="chip past">Past: {{ u.history_status or "not confirmed" }}</span>{% endif %}
+    {% if ss %}<span class="chip sens sens-{{ ss }}">{{ sens_labels[ss] }}</span>{% endif %}
+  </div>{% endif %}
   <dl>
     <dt>What it means</dt><dd>{{ u.meaning }}</dd>
     {% if u.manifestation %}<dt>Likely form</dt><dd>{{ u.manifestation }}</dd>{% endif %}
@@ -66,12 +74,13 @@
 <div class="timeline">
   <div class="tl-row tl-scale"><div class="tl-name"></div><div class="tl-track">{% for y in tl.years %}<span style="left: {{ y.x }}%">{{ y.label }}</span>{% endfor %}</div></div>
   {% for b in tl.bars %}
-  <div class="tl-row"><div class="tl-name">{{ b.label }}</div><div class="tl-track"><div class="tl-bar {{ b.kind }} {{ b.cut }}" style="left: {{ b.x }}%; width: {{ b.w }}%"></div></div></div>
+  <div class="tl-row"><div class="tl-name">{{ b.label }}</div><div class="tl-track"><div class="tl-bar {{ b.kind }} {{ b.cut }}{% if b.sens %} sens-{{ b.sens }}{% endif %}" style="left: {{ b.x }}%; width: {{ b.w }}%"></div></div></div>
   {% endfor %}
 </div>
-<p class="tl-legend">Key:<span class="tl-bar chapter tl-key"></span>calculated period<span class="tl-bar window tl-key"></span>interpretive window<span class="tl-bar pressure tl-key"></span>pressure period<span class="tl-bar watch tl-key"></span>something to watch. Edges are approximate; a dashed end means the period continues beyond the chart.</p>
-<table><thead><tr><th>When</th><th>What</th><th>Why this period</th></tr></thead><tbody>
-{% for t in r.timeline %}<tr><td>{{ t.start }} – {{ t.end }}</td><td>{{ t.label }}</td><td>{{ t.basis or "" }}</td></tr>{% endfor %}
+<p class="tl-legend">Key:<span class="tl-bar chapter tl-key"></span>calculated period<span class="tl-bar window tl-key"></span>interpretive window<span class="tl-bar pressure tl-key"></span>pressure period<span class="tl-bar watch tl-key"></span>something to watch<span class="tl-bar window tl-key sens-may_shift"></span>dotted ends: may shift with birth time<span class="tl-bar window tl-key sens-depends"></span>faded ends: depends on exact birth time. Edges are approximate; a dashed end means the period continues beyond the chart.</p>
+{% set tl_sens = r.timeline | selectattr("sensitivity") | list %}
+<table><thead><tr><th>When</th><th>What</th><th>Why this period</th>{% if tl_sens %}<th>Birth time</th>{% endif %}</tr></thead><tbody>
+{% for t in r.timeline %}<tr><td>{{ t.start }} – {{ t.end }}</td><td>{{ t.label }}</td><td>{{ t.basis or "" }}</td>{% if tl_sens %}<td>{{ sens_labels[t.sensitivity].replace("Birth time: ", "") if t.sensitivity else "" }}</td>{% endif %}</tr>{% endfor %}
 </tbody></table>
 {% endif %}
 
@@ -86,10 +95,11 @@
 <h2 id="uncertain">What is uncertain</h2>
 {% set u = r.uncertainty or {} %}
 {% if u.birth_time %}<p><strong>Birth time.</strong> {{ u.birth_time }}</p>{% endif %}
+{% if moving %}<p><strong>What moves with the birth time.</strong></p><ul>{% for t, st in moving %}<li>{{ t }} <span class="chip sens sens-{{ st }}">{{ sens_labels[st] }}</span></li>{% endfor %}</ul>{% endif %}
 {% if u.contradictions %}<p><strong>Where the chart argues both ways.</strong></p><ul>{% for c in u.contradictions %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
 {% if u.engine_differences %}<p><strong>Calculation differences.</strong></p><ul>{% for c in u.engine_differences %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
 {% if u.not_assessed %}<p><strong>Not assessed.</strong></p><ul>{% for c in u.not_assessed %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
-{% if not (u.birth_time or u.contradictions or u.engine_differences or u.not_assessed) %}<p>No specific uncertainties were recorded beyond the general limits stated on the cover.</p>{% endif %}
+{% if not (u.birth_time or moving or u.contradictions or u.engine_differences or u.not_assessed) %}<p>No specific uncertainties were recorded beyond the general limits stated on the cover.</p>{% endif %}
 
 {% if r.practical_summary %}
 <h2 id="practical">In practice</h2>

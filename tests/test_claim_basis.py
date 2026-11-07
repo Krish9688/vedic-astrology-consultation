@@ -3,6 +3,7 @@ import copy
 import gzip
 import json
 import os
+import re
 import sys
 
 import pytest
@@ -59,7 +60,9 @@ def test_basis_rules():
 def test_example_renders_labels():
     assert rr.validate(EX, SCHEMA) == [] and rr.checks(EX)[0] == []
     html = rr.html_of(EX)
-    assert "Interpretation · Commentary · Parashari" in html and "Prediction (interpretive) · Commentary" in html
+    chips = lambda *t: r"\s*".join(f'<span class="chip {c}">{re.escape(x)}</span>' for c, x in t)
+    assert re.search(chips(("ev-interpretation", "Interpretation"), ("ba-COMMENTARY", "Commentary"), ("sys", "Parashari")), html)
+    assert re.search(chips(("ev-prediction", "Prediction (interpretive)"), ("ba-COMMENTARY", "Commentary")), html)
 
 
 def test_past_unit_without_history_status_warns_and_shows_not_confirmed():
