@@ -3,14 +3,14 @@
 .consultation h2.first, .consultation .appendix h2 { break-before: page; }
 .consultation h3.chapter-title { font-size: 15pt; border-top: 1pt solid var(--eucalyptus); padding-top: 6pt; margin-top: 22pt; }
 .consultation h4 { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 8.5pt; letter-spacing: .06em;
-  text-transform: uppercase; color: var(--moss); margin: 10pt 0 3pt; break-after: avoid; }
+  text-transform: uppercase; color: var(--muted); margin: 10pt 0 3pt; break-after: avoid; }
 .consultation .chapter { break-before: auto; }
 table.kv th { width: 42mm; background: var(--mint); }
 table.small, .small { font-size: 9pt; }
-table.tiny, .tiny { font-size: 7.5pt; }
+table.tiny, .tiny { font-size: 8pt; }
 .tiny td { word-break: break-word; }
 .flag { color: var(--clay); }
-.refs { display: block; font-size: 7.5pt; color: var(--sage); margin-top: 1pt; }
+.refs { display: block; font-size: 8pt; color: var(--muted); margin-top: 1pt; }
 .reading { background: var(--ivory); border-left: 3pt solid var(--eucalyptus); padding: 6pt 10pt; margin: 6pt 0 10pt; break-inside: avoid; }
 .reading .rtitle { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-weight: 600; color: var(--pine); margin-bottom: 3pt; }
 .callout.warn { background: #F3E6DD; border-left: 3pt solid var(--clay); }
@@ -44,7 +44,7 @@ dl.glossary dd { margin: 0; }
 @page { @bottom-left { content: "Astrology consultation report"; } }
 .answer, .qbox, .reading { break-inside: avoid; }
 table.sav td, table.sav th { padding: 3pt 4pt; text-align: center; }
-.kind { font-size: 7.5pt; text-transform: uppercase; letter-spacing: .05em; padding: 0 3pt; border: .5pt solid var(--eucalyptus); }
+.kind { font-size: 8pt; text-transform: uppercase; letter-spacing: .05em; padding: 0 3pt; border: .5pt solid var(--eucalyptus); }
 .kind.pressure { border-style: dashed; color: var(--clay); } .kind.watch { border-style: dotted; }
 li { break-inside: avoid; }
 .refs { break-before: avoid; }

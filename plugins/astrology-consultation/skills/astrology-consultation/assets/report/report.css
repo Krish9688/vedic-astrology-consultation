@@ -23,7 +23,7 @@ p { margin: 0 0 8pt; }
 /* cover */
 .cover { page: cover; height: 297mm; box-sizing: border-box; padding: 58mm 26mm 30mm; background: var(--paper);
   position: relative; break-after: page; }
-.cover .kind { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 9.5pt; letter-spacing: .14em; text-transform: uppercase; color: var(--moss); }
+.cover .kind { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 9.5pt; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 .cover h1 { font-size: 30pt; margin: 10pt 0 6pt; }
 .cover .sub { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-size: 14pt; line-height: 1.4; color: var(--forest); margin-bottom: 26pt; }
 .cover .rule { width: 60mm; border-top: 1pt solid var(--bronze); margin: 0 0 18pt; }
@@ -49,7 +49,7 @@ p { margin: 0 0 8pt; }
 .unit .theme { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-weight: 600; font-size: 12.5pt; line-height: 1.35; color: var(--pine); margin-bottom: 4pt; }
 .unit .basis { font-size: 8pt; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: -2pt 0 5pt; }
 .unit dl { margin: 0; display: grid; grid-template-columns: 33mm 1fr; gap: 3pt 10pt; }
-.unit dt { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: .04em; text-transform: uppercase; color: var(--moss); padding-top: 2.5pt; }
+.unit dt { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding-top: 2.5pt; }
 .unit dd { margin: 0; }
 .unit dd.counter { border-left: 2pt dashed var(--clay); padding-left: 7pt; }
 .conf { display: flex; gap: 6pt; margin-top: 6pt; font-size: 9pt; }
@@ -61,7 +61,7 @@ p { margin: 0 0 8pt; }
 .tl-row { display: flex; align-items: center; min-height: 18pt; }
 .tl-name { width: 38%; font-size: 8.5pt; padding-right: 8pt; box-sizing: border-box; }
 .tl-track { position: relative; width: 62%; height: 14pt; border-left: .5pt solid var(--eucalyptus); border-right: .5pt solid var(--eucalyptus); }
-.tl-scale .tl-track { height: 12pt; border: none; border-bottom: .75pt solid var(--eucalyptus); font-size: 7.5pt; color: var(--muted); }
+.tl-scale .tl-track { height: 12pt; border: none; border-bottom: .75pt solid var(--eucalyptus); font-size: 8pt; color: var(--muted); }
 .tl-scale .tl-track span { position: absolute; top: 0; transform: translateX(-50%); }
 .tl-bar { position: absolute; top: 2pt; height: 10pt; box-sizing: border-box; }
 .tl-bar.chapter { background: var(--pistachio); }
