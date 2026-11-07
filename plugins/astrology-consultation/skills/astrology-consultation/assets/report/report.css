@@ -130,6 +130,13 @@ a { color: var(--forest); }
 .compact .cover .rule { display: none; }
 .compact .cover .foot { position: static; margin-top: 6pt; }
 .compact h2 { font-size: 14pt; margin: 14pt 0 4pt; }
+/* outlook and compact pages are word-limited: tighter units and chips keep the two-page capacity */
+.compact .unit { margin: 6pt 0 10pt; }
+.compact .unit dl { gap: 2pt 10pt; }
+.compact .keypoints li { padding: 6pt 11pt; margin-bottom: 4pt; }
+.compact .unit .basis { margin: -2pt 0 3pt; }
+.compact .chip { font-size: 7.5pt; }
+.compact .tl-legend { font-size: 8pt; margin: 3pt 0 4pt; }
 .compact .appendix h2 { break-before: auto; }
 
 /* on screen (HTML viewed in a browser) the cover is not a fixed A4 page: let the disclaimer follow the details */
