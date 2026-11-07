@@ -33,7 +33,7 @@
     },
     "answers": {
       "type": "string",
-      "description": "optional: the question this report answers, in the reader's words; the renderer has a default per report_type (REPORT-DESIGN-SPEC.md section 1)"
+      "description": "optional: the question this report answers, in the reader's words; the renderer has a default per report_type"
     },
     "prepared_for": {
       "type": "string",

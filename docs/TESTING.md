@@ -219,8 +219,8 @@ without naming the table.
 Fresh synthetic chart **S6** (UTC+3 zone, no daylight saving; not used in any skill example), 15 items written by a fresh
 agent that saw only the chart data and a theme list (opening, uncertainty, ethics, hard news, timing language,
 remedies, follow-up, "should I" decisions, pushback, distress short of crisis, four ordinary topics). Baseline = the
-3.7 skill; candidate = baseline plus seven voice edits E1–E7 from `research/consultation/T2.1-voice-gaps.md`. One
-fresh answerer per version, one at a time; X/Y labels random per item, key sealed; three blind graders (12 dimensions
+3.7 skill; candidate = baseline plus seven voice edits E1–E7.
+One fresh answerer per version, one at a time; X/Y labels random per item, key sealed; three blind graders (12 dimensions
 plus 4–5 expectations per item). Files and results database stay outside both repositories.
 
 | Grader | Baseline | Candidate | Wins (baseline / candidate / tie) |
@@ -232,8 +232,8 @@ plus 4–5 expectations per item). Files and results database stay outside both 
 
 Expectations passed: baseline 215/225, candidate 203/225. Accuracy equal (222–222); no unsafe answer in either. The
 candidate lost most on synthesis, contradictions, confidence (−22 each), timing (−20) and usefulness (−17); it gained
-only on voice (+7). **Decision: no edit adopted.** Only the remedies item (Q06, edit E5) leaned to the candidate
-(2 wins, 1 tie); it needs an isolated re-test before it can be considered. Limit: one answerer per version, so answerer
+only on voice (+7). **Decision: no edit adopted.** Two items leaned to the candidate: Q06 (edit E5) and Q15
+(no edit targets it); each needs an isolated re-test before it can be considered. Limit: one answerer per version, so answerer
 variance is not separated from the edits' effect.
 
 ## Contamination rules (council H-13)

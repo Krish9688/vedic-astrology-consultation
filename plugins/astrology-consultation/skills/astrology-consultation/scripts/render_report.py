@@ -44,7 +44,7 @@ TEXT_KEYS = ("theme", "meaning", "manifestation", "timing", "nuance", "counter",
 PROVEN = re.compile(r"\b(?:tested|proven|proved|proof|validated|statistically|scientifically|confirmed by (?:data|research|stud(?:y|ies)))\b", re.I)
 SYSTEM_LABELS = {"parashari": "Parashari", "jaimini": "Jaimini", "lal_kitab": "Lal Kitab",
                  "combined": "Combined (each system separately)"}
-# REPORT-DESIGN-SPEC.md sections 1, 6-8: the question each type answers, what each chip and mark means (one legend)
+# the question each type answers, what each chip and mark means (one legend)
 ANSWERS = {
     "compact": "What did the chart say to the questions I asked, and what should I watch next?",
     "outlook": "What is the running period asking of me in the coming weeks, and is any event actually timed?",

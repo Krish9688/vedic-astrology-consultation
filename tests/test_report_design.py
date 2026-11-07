@@ -1,4 +1,4 @@
-"""T2.3 report design (docs/REPORT-DESIGN-SPEC.md): sensitivity states, the one legend, the per-type answer line, contrast."""
+"""T2.3 report design: sensitivity states, the one legend, the per-type answer line, contrast."""
 import copy
 import json
 import os
