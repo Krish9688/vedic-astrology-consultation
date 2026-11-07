@@ -22,6 +22,11 @@ Review fixes made after 3.7.0, and the T2 research round of 2026-11-07; the vers
   and by HTML, PDF and DOCX renders of the synthetic personas P2–P6.
 
 ### Fixed
+- **Ashtakavarga Moon and Venus rows.** Four entries of the bindu table followed Varahamihira while the engine
+  documents BPHS ch. 66: the Moon's row from the Moon (house 9 missing), from Mars (extra 9) and from Jupiter (12
+  instead of 2), and Venus's row from Mars (5 instead of 4). Totals were unaffected, which is why the totals test never
+  caught it; Moon and Venus bindus per sign, and the SAV per sign, differed from BPHS in most charts. Now BPHS, checked against
+  the BPHS dot lists and PVR's tables; a regression test reproduces PVR's published Moon and Venus rows.
 - **Report text contrast.** Small text in moss or sage on the light backgrounds was below the WCAG AA ratio of 4.5:1
   (sage on ivory 4.2). It now uses the muted colour, and the smallest text in full reports is 8 pt (was 7.5 pt);
   compact and outlook chips stay at 7.5 pt to keep their page limit. A test checks the colour pairs.
