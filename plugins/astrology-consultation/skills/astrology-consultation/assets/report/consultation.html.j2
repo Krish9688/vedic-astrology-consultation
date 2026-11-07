@@ -16,6 +16,7 @@
   <div class="kind">Astrology consultation report · {{ k.type|capitalize }}</div>
   <h1>{{ client.display_name }}</h1>
   <div class="sub">Vedic (Parashari) kundli, Lal Kitab view, life areas and answers to your questions</div>
+  <p class="answers"><span>This report answers</span> The questions you asked (section 6), and what the chart says about the life areas behind them.</p>
   <div class="rule"></div>
   <dl>
     <dt>Prepared for</dt><dd>{{ client.display_name }}</dd>
@@ -79,11 +80,12 @@
 <h2 id="summary">The short version</h2>
 <p class="headline">{{ m.summary.headline }}</p>
 <ul class="keypoints">
-{% for kp in m.summary.key_points %}<li>{{ kp.text }}<span class="meta"><span class="grade {{ kp.confidence }}">{{ kp.confidence }}</span>{% if kp.window %} · {{ kp.window_text }}{% endif %}{% if kp.time_sensitive %} · depends on the exact birth time{% endif %}</span></li>{% endfor %}
+{% for kp in m.summary.key_points %}<li>{{ kp.text }}<span class="meta"><span class="grade {{ kp.confidence }}">{{ kp.confidence }}</span>{% if kp.window %} · {{ kp.window_text }}{% endif %}{% if kp.time_sensitive %} <span class="chip sens sens-depends">depends on the exact birth time</span>{% endif %}</span></li>{% endfor %}
 </ul>
 {% if p.unknown_time %}<div class="callout warn"><strong>Birth time unknown.</strong> {{ unknown_text }}</div>{% endif %}
 {% if p.time_status == "approximate" %}<div class="callout warn"><strong>Approximate birth time (±{{ birth.uncertainty }} minutes).</strong> {{ approx_text }}</div>{% endif %}
 <p class="small muted">How to read this report: confidence words (Strong, Moderate, Weak, Contradictory, Unknown) say how much of the chart agrees, not a probability. Dates are periods, never exact days. Every statement names the chart factors behind it; they are listed in the appendix.</p>
+{% include "legend.html.j2" %}
 
 {# ============================== 2 methodology ============================== #}
 <h2 id="s2">2. Methodology and settings</h2>
@@ -254,16 +256,16 @@
 <h3>The next twelve months ({{ p.on_long }} – {{ p.horizon12_long }})</h3>
 {% if tl12 %}<div class="timeline">
   <div class="tl-row tl-scale"><div class="tl-name"></div><div class="tl-track">{% for y in tl12.years %}<span style="left: {{ y.x }}%">{{ y.label }}</span>{% endfor %}</div></div>
-  {% for b in tl12.bars %}<div class="tl-row"><div class="tl-name">{{ b.label }}</div><div class="tl-track"><div class="tl-bar {{ b.kind }} {{ b.cut }}" style="left: {{ b.x }}%; width: {{ b.w }}%"></div></div></div>{% endfor %}
+  {% for b in tl12.bars %}<div class="tl-row"><div class="tl-name">{{ b.label }}</div><div class="tl-track"><div class="tl-bar {{ b.kind }} {{ b.cut }}{% if b.sens %} sens-{{ b.sens }}{% endif %}" style="left: {{ b.x }}%; width: {{ b.w }}%"></div></div></div>{% endfor %}
 </div>{% endif %}
 <table class="small"><thead><tr><th>When</th><th>What</th><th>Kind</th><th>Rests on</th></tr></thead><tbody>{% for w in m12 %}<tr><td>{{ w.when }}</td><td>{{ w.label }}{% if w.text %}<br><span class="muted">{{ w.text }}</span>{% endif %}</td><td>{{ w.kind_text }}</td><td>{{ w.refs_text }}</td></tr>{% endfor %}</tbody></table>
 <h3>The next three to five years at a glance</h3>
 {% if tly %}<div class="timeline">
   <div class="tl-row tl-scale"><div class="tl-name"></div><div class="tl-track">{% for y in tly.years %}<span style="left: {{ y.x }}%">{{ y.label }}</span>{% endfor %}</div></div>
-  {% for b in tly.bars %}<div class="tl-row"><div class="tl-name">{{ b.label }}</div><div class="tl-track"><div class="tl-bar {{ b.kind }} {{ b.cut }}" style="left: {{ b.x }}%; width: {{ b.w }}%"></div></div></div>{% endfor %}
+  {% for b in tly.bars %}<div class="tl-row"><div class="tl-name">{{ b.label }}</div><div class="tl-track"><div class="tl-bar {{ b.kind }} {{ b.cut }}{% if b.sens %} sens-{{ b.sens }}{% endif %}" style="left: {{ b.x }}%; width: {{ b.w }}%"></div></div></div>{% endfor %}
 </div>{% endif %}
 <table class="small"><thead><tr><th>When</th><th>What</th><th>Kind</th><th>Rests on</th></tr></thead><tbody>{% for w in years %}<tr><td>{{ w.when }}</td><td>{{ w.label }}{% if w.text %}<br><span class="muted">{{ w.text }}</span>{% endif %}</td><td>{{ w.kind_text }}</td><td>{{ w.refs_text }}</td></tr>{% endfor %}</tbody></table>
-<p class="tl-legend">Key:<span class="tl-bar window tl-key"></span>favourable window<span class="tl-bar pressure tl-key"></span>pressure period<span class="tl-bar watch tl-key"></span>something to watch. Edges are approximate (periods, not days).</p>
+<p class="tl-legend">Key:<span class="tl-bar window tl-key"></span>favourable window<span class="tl-bar pressure tl-key"></span>pressure period<span class="tl-bar watch tl-key"></span>something to watch<span class="tl-bar window tl-key sens-depends"></span>faded ends: depends on the exact birth time. Edges are approximate (periods, not days).</p>
 {% endif %}
 
 {# ============================== 8 remedies ============================== #}

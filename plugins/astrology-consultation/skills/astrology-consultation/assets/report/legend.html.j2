@@ -1,0 +1,19 @@
+{# One legend block per report. Needs the env globals legend and sens_labels; the
+   evidence rows only where the including template sets legend_evidence. Table markup so the DOCX export keeps it. #}
+<h3>Key to the labels</h3>
+<table class="legend" id="legend">
+<thead><tr><th>Mark</th><th>What it means</th></tr></thead>
+<tbody>
+{% if legend_evidence %}<tr class="grp"><th colspan="2">What a statement rests on</th></tr>
+{% for k, label in claim_labels.items() %}<tr><td><span class="chip ev-{{ k }}">{{ label }}</span></td><td>{{ legend.claim[k] }}</td></tr>
+{% endfor %}{% endif %}
+<tr class="grp"><th colspan="2">How much of the chart agrees (words, not probabilities)</th></tr>
+{% for k, d in legend.grade.items() %}<tr><td><span class="grade {{ k }}">{{ k }}</span></td><td>{{ d }}</td></tr>
+{% endfor %}
+<tr class="grp"><th colspan="2">Birth-time sensitivity (shown only where the calculation gives it)</th></tr>
+{% for k, label in sens_labels.items() %}<tr><td><span class="chip sens sens-{{ k }}">{{ label }}</span></td><td>{{ legend.sens[k] }}</td></tr>
+{% endfor %}
+<tr class="grp"><th colspan="2">Timeline bars</th></tr>
+{% for k, d in legend.line.items() %}<tr><td><span class="tl-bar {{ k }} tl-key"></span></td><td>{{ d }}</td></tr>
+{% endfor %}
+</tbody></table>

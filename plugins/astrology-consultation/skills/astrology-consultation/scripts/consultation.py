@@ -1267,7 +1267,7 @@ def _ctx(pack, model, rr, lk_rem=None, chart_svg=None):
         return ("Rests on: " + ", ".join(ids)) if ids else ""
 
     def tsmark(x):
-        return Markup(" <em class='flag'>(depends on the exact birth time)</em>") if x and x.get("time_sensitive") else ""
+        return Markup(" <em class='flag chip sens sens-depends'>(depends on the exact birth time)</em>") if x and x.get("time_sensitive") else ""
 
     def para(x):
         if not x:
@@ -1389,7 +1389,8 @@ def _ctx(pack, model, rr, lk_rem=None, chart_svg=None):
     m12 = [wrow(w) for w in tl.get("months_12", [])]
     years = [wrow(w) for w in tl.get("years", [])]
     bar = lambda ws: rr.timeline([{"start": w["from"], "end": w["to"], "label": w["label"],
-                                   "kind": {"opportunity": "window"}.get(w.get("kind", "opportunity"), w.get("kind"))} for w in ws]) if ws else None
+                                   "kind": {"opportunity": "window"}.get(w.get("kind", "opportunity"), w.get("kind")),
+                                   "sensitivity": "depends" if w.get("time_sensitive") else "stable" if approx else None} for w in ws]) if ws else None
     rem, remedies = m.get("remedies") or {}, []
     for v in rem.get("vedic") or []:
         why = v.get("why") or {}
@@ -1480,6 +1481,7 @@ def html_of(pack, model, rr, lk_rem=None, chart_svg=None):
     if lk_rem is None:
         import lk_remedies as lk_rem
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(ASSETS), autoescape=True)
+    env.globals.update(rr.TEMPLATE_GLOBALS)
     css = open(os.path.join(ASSETS, "report.css"), encoding="utf-8").read() + "\n" + \
         open(os.path.join(ASSETS, "consultation.css"), encoding="utf-8").read()
     ctx, cited = _ctx(pack, model, rr, lk_rem, chart_svg)

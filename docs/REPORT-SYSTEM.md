@@ -52,6 +52,7 @@ Rendering pitfalls found and fixed: Jinja2 auto-escaping broke the embedded styl
 CSS is marked safe; WeasyPrint ignores CSS variables inside `font` shorthands and margin boxes — fonts and page
 colours are spelled out.
 
+
 ## 4. Using it
 
 ```bash

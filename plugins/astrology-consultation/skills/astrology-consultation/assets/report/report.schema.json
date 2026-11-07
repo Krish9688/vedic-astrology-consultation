@@ -31,6 +31,10 @@
     "subtitle": {
       "type": "string"
     },
+    "answers": {
+      "type": "string",
+      "description": "optional: the question this report answers, in the reader's words; the renderer has a default per report_type"
+    },
     "prepared_for": {
       "type": "string",
       "description": "first name or initials only"
@@ -110,6 +114,9 @@
               "section": {
                 "type": "string",
                 "description": "id of the section that argues it"
+              },
+              "sensitivity": {
+                "$ref": "#/$defs/sensitivity"
               },
               "event_refs": {
                 "type": "array",
@@ -202,6 +209,9 @@
           "basis": {
             "type": "string",
             "description": "the layer that produces it, in plain words"
+          },
+          "sensitivity": {
+            "$ref": "#/$defs/sensitivity"
           }
         }
       }
@@ -312,6 +322,14 @@
     }
   },
   "$defs": {
+    "sensitivity": {
+      "enum": [
+        "stable",
+        "may_shift",
+        "depends"
+      ],
+      "description": "optional birth-time sensitivity from the calculation (get_birth_time_sensitivity): stable = holds across the plausible birth-time range; may_shift = a date edge or detail moves within the range; depends = the claim changes with the exact time (ascendant, houses, divisional lagna)"
+    },
     "grade": {
       "enum": [
         "Strong",
@@ -409,6 +427,9 @@
         "test_result": {
           "type": "string",
           "description": "for claim_basis TESTED: the prediction-log result, e.g. '7 of 12 hits, log PL-2026-03'"
+        },
+        "sensitivity": {
+          "$ref": "#/$defs/sensitivity"
         },
         "temporal_mode": {
           "enum": [

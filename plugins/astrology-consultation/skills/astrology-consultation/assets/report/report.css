@@ -23,7 +23,7 @@ p { margin: 0 0 8pt; }
 /* cover */
 .cover { page: cover; height: 297mm; box-sizing: border-box; padding: 58mm 26mm 30mm; background: var(--paper);
   position: relative; break-after: page; }
-.cover .kind { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 9.5pt; letter-spacing: .14em; text-transform: uppercase; color: var(--moss); }
+.cover .kind { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 9.5pt; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 .cover h1 { font-size: 30pt; margin: 10pt 0 6pt; }
 .cover .sub { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-size: 14pt; line-height: 1.4; color: var(--forest); margin-bottom: 26pt; }
 .cover .rule { width: 60mm; border-top: 1pt solid var(--bronze); margin: 0 0 18pt; }
@@ -38,9 +38,43 @@ p { margin: 0 0 8pt; }
 .keypoints li { background: var(--mint); border-left: 3pt solid var(--botanical); padding: 8pt 11pt; margin-bottom: 6pt;
   break-inside: avoid; }
 .keypoints .meta { display: block; font-size: 9pt; color: var(--muted); margin-top: 2pt; }
-.grade { font-weight: 600; color: var(--forest); }
-.grade.Weak, .grade.Unknown { color: var(--muted); }
-.grade.Contradictory { color: var(--clay); }
+.grade { font-weight: 600; color: var(--forest); padding: 0 2pt; border-bottom: 1pt solid var(--forest); }
+/* grade words differ by underline style as well as by word and colour (grayscale-safe) */
+.grade.Strong { border-bottom-width: 2.25pt; }
+.grade.Weak { color: var(--muted); border-bottom: 1pt dashed var(--muted); }
+.grade.Unknown { color: var(--muted); border-bottom: 1pt dotted var(--muted); }
+.grade.Contradictory { color: var(--clay); border-bottom: 3pt double var(--clay); }
+
+/* cover: the question this report answers */
+.answers { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-size: 12pt; line-height: 1.4; color: var(--pine); max-width: 120mm; margin: 0 0 20pt; }
+.answers span { display: block; font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 8pt; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.compact .answers { font-size: 10pt; margin: 0 0 4pt; max-width: none; }
+.compact .answers span { display: inline; margin-right: 6pt; }
+.compact .chip { line-height: 1.2; padding: 0 4pt; margin: 0 3pt 1pt 0; }
+.compact .tl-legend { margin: 4pt 0 6pt; }
+
+/* evidence chips: one per label; shape (border style, fill, corner) carries the class, colour only supports it */
+.chip { display: inline-block; font-size: 8pt; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; line-height: 1.3;
+  padding: 1pt 5pt; margin: 0 4pt 3pt 0; color: var(--pine); background: var(--ivory); border: 1pt solid var(--pine); }
+.chip.ev-fact { border-width: 1.5pt; background: var(--pistachio); }
+.chip.ev-rule { background: var(--mint); }
+.chip.ev-interpretation { border-style: dashed; }
+.chip.ev-prediction { border-style: dashed; border-radius: 8pt; font-style: italic; }
+.chip.ev-speculation { border-style: dotted; border-width: 1.5pt; border-radius: 8pt; font-style: italic; color: var(--muted); }
+.chip.ba-TEXT, .chip.ba-COMMENTARY, .chip.ba-DISPUTED, .chip.ba-COMPUTED, .chip.ba-TESTED, .chip.ba-SPECULATIVE, .chip.sys, .chip.past
+  { border-width: 0 0 .75pt; border-radius: 0; background: none; color: var(--muted); }
+.chip.sys, .chip.past { border-bottom-style: dotted; }
+.chip.sens { text-transform: none; letter-spacing: 0; color: var(--pine); }
+.chip.sens-stable { border: 1pt solid var(--moss); }
+.chip.sens-may_shift { border: 2pt dotted var(--pine); }
+.chip.sens-depends { border: 3pt double var(--pine); }
+.keypoints .chip { margin: 0 0 0 4pt; }
+
+/* the one legend block */
+table.legend { font-size: 9pt; margin: 12pt 0; break-inside: avoid; }
+table.legend tr.grp th { background: var(--pistachio); color: var(--pine); font-size: 8.5pt; }
+table.legend td:first-child { width: 58mm; }
+table.legend .chip { margin: 0; }
 
 /* life units */
 .unit { margin: 10pt 0 16pt; }
@@ -49,7 +83,7 @@ p { margin: 0 0 8pt; }
 .unit .theme { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; font-weight: 600; font-size: 12.5pt; line-height: 1.35; color: var(--pine); margin-bottom: 4pt; }
 .unit .basis { font-size: 8pt; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: -2pt 0 5pt; }
 .unit dl { margin: 0; display: grid; grid-template-columns: 33mm 1fr; gap: 3pt 10pt; }
-.unit dt { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: .04em; text-transform: uppercase; color: var(--moss); padding-top: 2.5pt; }
+.unit dt { font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 600; font-size: 8pt; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding-top: 2.5pt; }
 .unit dd { margin: 0; }
 .unit dd.counter { border-left: 2pt dashed var(--clay); padding-left: 7pt; }
 .conf { display: flex; gap: 6pt; margin-top: 6pt; font-size: 9pt; }
@@ -61,7 +95,7 @@ p { margin: 0 0 8pt; }
 .tl-row { display: flex; align-items: center; min-height: 18pt; }
 .tl-name { width: 38%; font-size: 8.5pt; padding-right: 8pt; box-sizing: border-box; }
 .tl-track { position: relative; width: 62%; height: 14pt; border-left: .5pt solid var(--eucalyptus); border-right: .5pt solid var(--eucalyptus); }
-.tl-scale .tl-track { height: 12pt; border: none; border-bottom: .75pt solid var(--eucalyptus); font-size: 7.5pt; color: var(--muted); }
+.tl-scale .tl-track { height: 12pt; border: none; border-bottom: .75pt solid var(--eucalyptus); font-size: 8pt; color: var(--muted); }
 .tl-scale .tl-track span { position: absolute; top: 0; transform: translateX(-50%); }
 .tl-bar { position: absolute; top: 2pt; height: 10pt; box-sizing: border-box; }
 .tl-bar.chapter { background: var(--pistachio); }
@@ -70,6 +104,11 @@ p { margin: 0 0 8pt; }
 .tl-bar.watch { background: var(--ivory); border: 1pt dotted var(--pine); }
 .tl-bar.cut-l { border-left: 2pt dashed var(--pine); }
 .tl-bar.cut-r { border-right: 2pt dashed var(--pine); }
+/* birth-time sensitivity on a bar (placed after the cut rules): dotted ends = may shift, faded ends = depends */
+.tl-bar.sens-may_shift { border-left: 2.5pt dotted var(--pine); border-right: 2.5pt dotted var(--pine); }
+.tl-bar.sens-depends { border-left-style: none; border-right-style: none;
+  background-image: linear-gradient(to right, #FFFDF7, rgba(255,253,247,0) 24%, rgba(255,253,247,0) 76%, #FFFDF7); }
+.tl-bar.watch.sens-depends { background-color: var(--pistachio); }   /* an ivory bar has nothing to fade */
 .tl-legend { font-size: 8.5pt; color: var(--muted); margin: 6pt 0 10pt; }
 .tl-key { display: inline-block; width: 16pt; height: 7pt; vertical-align: middle; margin: 0 3pt 0 8pt; position: static; }
 table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 6pt 0 12pt; }
@@ -91,6 +130,13 @@ a { color: var(--forest); }
 .compact .cover .rule { display: none; }
 .compact .cover .foot { position: static; margin-top: 6pt; }
 .compact h2 { font-size: 14pt; margin: 14pt 0 4pt; }
+/* outlook and compact pages are word-limited: tighter units and chips keep the two-page capacity */
+.compact .unit { margin: 6pt 0 10pt; }
+.compact .unit dl { gap: 2pt 10pt; }
+.compact .keypoints li { padding: 6pt 11pt; margin-bottom: 4pt; }
+.compact .unit .basis { margin: -2pt 0 3pt; }
+.compact .chip { font-size: 7.5pt; }
+.compact .tl-legend { font-size: 8pt; margin: 3pt 0 4pt; }
 .compact .appendix h2 { break-before: auto; }
 
 /* on screen (HTML viewed in a browser) the cover is not a fixed A4 page: let the disclaimer follow the details */

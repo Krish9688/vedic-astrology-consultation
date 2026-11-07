@@ -214,10 +214,33 @@ Reading: the method revisions of this cycle were not better than v3.5 and were d
 v3.5 plus corrections and safety rules, at parity or better. Shared gap in every round: Lal Kitab annual charts quoted
 without naming the table.
 
+## 5c. Round 13: voice edits (2026-11-07)
+
+Fresh synthetic chart **S6** (UTC+3 zone, no daylight saving; not used in any skill example), 15 items written by a fresh
+agent that saw only the chart data and a theme list (opening, uncertainty, ethics, hard news, timing language,
+remedies, follow-up, "should I" decisions, pushback, distress short of crisis, four ordinary topics). Baseline = the
+3.7 skill; candidate = baseline plus seven voice edits E1–E7.
+One fresh answerer per version, one at a time; X/Y labels random per item, key sealed; three blind graders (12 dimensions
+plus 4–5 expectations per item). Files and results database stay outside both repositories.
+
+| Grader | Baseline | Candidate | Wins (baseline / candidate / tie) |
+|---|---|---|---|
+| G1 | 774 | 725 | 13 / 2 / 0 |
+| G2 | 796 | 753 | 11 / 1 / 3 |
+| G3 | 800 | 773 | 10 / 1 / 4 |
+| **All** | **2370** | **2251** | **34 / 4 / 7** |
+
+Expectations passed: baseline 215/225, candidate 203/225. Accuracy equal (222–222); no unsafe answer in either. The
+candidate lost most on synthesis, contradictions, confidence (−22 each), timing (−20) and usefulness (−17); it gained
+only on voice (+7). **Decision: no edit adopted.** Two items leaned to the candidate: Q06 (edit E5) and Q15
+(no edit targets it); each needs an isolated re-test before it can be considered. Limit: one answerer per version, so answerer
+variance is not separated from the edits' effect.
+
 ## Contamination rules (council H-13)
 
 - **S1** (1992-03-14 09:40, London) is the bundled worked example (`assets/report/example-synthetic.json`,
   `references/examples.md`): fine for engine, interface and rendering tests; never evidence about reasoning quality.
 - **S2** drove the round-9 fixes and re-tests: a development set from 2026-10-02 on.
+- **S6** (round 13, 2026-11-07): used for the T2 voice edits; a development set from then on.
 - **S3** (round 10, 2026-10-07): questions written by a fresh agent that saw only the chart data; skills snapshotted
   before the round; answerers and graders are fresh agents; stored outside both repositories until grading ends.

@@ -44,6 +44,47 @@ TEXT_KEYS = ("theme", "meaning", "manifestation", "timing", "nuance", "counter",
 PROVEN = re.compile(r"\b(?:tested|proven|proved|proof|validated|statistically|scientifically|confirmed by (?:data|research|stud(?:y|ies)))\b", re.I)
 SYSTEM_LABELS = {"parashari": "Parashari", "jaimini": "Jaimini", "lal_kitab": "Lal Kitab",
                  "combined": "Combined (each system separately)"}
+# the question each type answers, what each chip and mark means (one legend)
+ANSWERS = {
+    "compact": "What did the chart say to the questions I asked, and what should I watch next?",
+    "outlook": "What is the running period asking of me in the coming weeks, and is any event actually timed?",
+    "career": "What kind of work suits me, which chapter am I in, and when are the next windows for a move or step up?",
+    "relationship": "How do I relate to others, and when is a relationship most likely to form or deepen?",
+    "marriage": "Is marriage supported, when is the main commitment window, and what themes shape married life?",
+    "dasha": "What is the running major period like in life terms, and which turning points follow?",
+    "12-month": "What is the theme of the coming year, and which stretches bring opportunity or pressure?",
+    "relocation": "Does the chart point to living or working far from home, in what form, and when?",
+    "complete-life": "What is the core pattern of this chart, and how does it show across life areas now and ahead?",
+}
+SENS_LABELS = {"stable": "Birth time: stable", "may_shift": "Birth time: may shift",
+               "depends": "Birth time: depends on exact time"}
+LEGEND = {
+    "claim": {"fact": "Computed by the engine from the birth data; no judgement involved.",
+              "rule": "A traditional rule from a named source, stated as that source states it.",
+              "interpretation": "The reader's judgement of what the chart relationships mean for you.",
+              "prediction": "An interpretive statement about what may happen and when; never a certainty.",
+              "speculation": "A guess the chart permits but does not support; weigh it lightly."},
+    "grade": {"Strong": "most of the chart's relevant factors agree.",
+              "Moderate": "the factors lean one way but some do not agree.",
+              "Weak": "little supports it; kept because the question was asked.",
+              "Contradictory": "the chart argues both ways; both sides are shown.",
+              "Unknown": "the chart or the data cannot settle it."},
+    "sens": {"stable": "unchanged across the plausible birth-time range; the bar has crisp ends.",
+             "may_shift": "a date edge or detail moves within that range; the bar has dotted ends.",
+             "depends": "changes with the exact birth time; the bar fades out at both ends."},
+    "line": {"chapter": "Calculated period (a dasha or other supplied span).",
+             "window": "Interpretive window (a judgement, not a calculation).",
+             "pressure": "Pressure period (cost, delay or strain).",
+             "watch": "Something to watch."},
+}
+TEMPLATE_GLOBALS = dict(sens_labels=SENS_LABELS, legend=LEGEND)
+
+
+def sens_state(x):
+    """Birth-time sensitivity of a unit, window or key point: an explicit `sensitivity` wins; the consultation model's
+    boolean time_sensitive means 'depends'. None = nothing to show (no state given)."""
+    s = x.get("sensitivity")
+    return s if s in SENS_LABELS else ("depends" if x.get("time_sensitive") else None)
 
 
 def validate(obj, schema, root=None, path="$"):
@@ -103,7 +144,7 @@ def timeline(rows):
             continue
         x = (max(s, lo) - lo) / span * 100
         w = max(1.2, (min(e, hi) - max(s, lo)) / span * 100)
-        bars.append(dict(kind=r["kind"], label=r["label"], x=round(x, 2), w=round(w, 2),
+        bars.append(dict(kind=r["kind"], label=r["label"], x=round(x, 2), w=round(w, 2), sens=sens_state(r),
                          cut=("cut-l " if s < lo else "") + ("cut-r" if e > hi else ""),
                          lx=round(x + w + 1 if x + w < 62 else max(0, x - 38), 2)))
     step = 1 if span <= 8 else 2 if span <= 16 else 5
@@ -572,17 +613,21 @@ def html_of(r):
     except ImportError:
         raise RuntimeError("render needs jinja2 (pip install jinja2); the JSON itself was valid")   # not sys.exit: callers are servers (council R3 M4)
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(ASSETS), autoescape=True)
+    env.globals.update(TEMPLATE_GLOBALS)
     bases = [dict(theme=u["theme"], basis=u["basis"]) for s in r["sections"] for u in s.get("units", []) if u.get("basis")]
     style = r.get("chart_style", "north")
     chart = chart_svg.chart((r.get("appendix") or {}).get("positions", []), style)   # P7-1; None without a lagna row
     calc = (r.get("engine") or {}).get("calculation", "")
     extra = {}
     extra["remedy_cards"], extra["remedy_sources"] = lk_remedies.cards_html(r)
+    moving = [(u["theme"], sens_state(u)) for s in r["sections"] for u in s.get("units", []) if sens_state(u) in ("may_shift", "depends")]
+    moving += [(t["label"], sens_state(t)) for t in r.get("timeline", []) if sens_state(t) in ("may_shift", "depends")]
     caption = f"{style.capitalize()} Indian rasi chart (signs only; degrees in the table below)" + (f"; {calc}" if calc else "")
     return env.get_template("template.html.j2").render(
         r=r, css=open(os.path.join(ASSETS, "report.css")).read(), type_name=TYPE_NAMES[r["report_type"]],
         default_how_to_read=HOW_TO_READ, tl=timeline(r.get("timeline", [])), bases=bases,
         appendix=bool(bases or r.get("appendix") or extra.get("remedy_sources")), section_titles={s["id"]: s["title"] for s in r["sections"]},
+        answers_line=r.get("answers") or ANSWERS[r["report_type"]], moving=moving, sens=sens_state, show_evidence=True,
         claim_labels=CLAIM_LABELS, system_labels=SYSTEM_LABELS, basis_labels=BASIS_LABELS,
         chart=chart, chart_caption=caption, **extra)
 
@@ -694,7 +739,9 @@ def selftest():
         pass                                   # labels are checked where jinja2 is installed (CI installs it)
     else:
         page = html_of(ex)
-        assert 'class="basis">Interpretation · Commentary · Parashari<' in page and "Prediction (interpretive)" in page, "unit labels"
+        assert re.search(r'class="basis">\s*<span class="chip ev-interpretation">Interpretation</span>\s*<span class="chip ba-COMMENTARY">Commentary</span>\s*<span class="chip sys">Parashari</span>', page), "unit chips"
+        assert "Prediction (interpretive)" in page and "Key to the labels" in page and ANSWERS["career"] in page, "legend, answers line"
+        assert set(ANSWERS) == set(TYPE_NAMES) and set(LEGEND["claim"]) == set(CLAIM_LABELS) and set(LEGEND["sens"]) == set(SENS_LABELS)
         assert set(CLAIM_LABELS) == set(schema["$defs"]["unit"]["properties"]["claim_type"]["enum"])
         assert set(BASIS_LABELS) == set(schema["$defs"]["unit"]["properties"]["claim_basis"]["enum"])
         assert set(SYSTEM_LABELS) == set(schema["$defs"]["unit"]["properties"]["system"]["enum"])

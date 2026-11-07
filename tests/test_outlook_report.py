@@ -102,6 +102,17 @@ def test_quarter_pdf_fits_two_pages():
     assert len(weasy.HTML(string=rr.html_of(draft(QUARTER)), base_url=rr.ASSETS).render().pages) <= 2
 
 
+@pytest.mark.parametrize("o", [MONTH, QUARTER], ids=["month", "quarter"])
+def test_default_outlook_draft_plus_15_percent_still_fits_two_pages(o):
+    weasy = pytest.importorskip("weasyprint")
+    pytest.importorskip("jinja2")
+    d = draft(o)
+    extra = int(len(rr.report_text(d).split()) * 0.15)
+    u = d["sections"][2]["units"][0]
+    u["nuance"] = (u.get("nuance") or "") + " word" * extra               # margin: the draft is not at the edge
+    assert len(weasy.HTML(string=rr.html_of(d), base_url=rr.ASSETS).render().pages) <= 2
+
+
 def test_texture_layer_matches_raw_swisseph():
     swe.set_sid_mode(swe.SIDM_LAHIRI)
     moon = lambda t: swe.calc_ut(swe.julday(t.year, t.month, t.day, t.hour + t.minute / 60 - 5.5), swe.MOON,

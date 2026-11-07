@@ -161,3 +161,22 @@ def test_sun_events_just_before_sunrise_near_earliest_sunrise_day():
     r1, s, r2, polar = S._sun_events(jd, 50.0, 0.0)
     assert not polar and r1 <= jd < r2 and s < jd      # night: yesterday's sunrise and sunset, today's sunrise ahead
     assert 0.9 < jd - r1 < 1.1
+
+
+# BPHS ch. 66 (Santhanam PDF p838, p843) and PVR Tables 20/24: four entries that Varahamihira's school reads differently.
+BPHS_BAV_FIXED = {("Mo", "Mo"): [1, 3, 6, 7, 9, 10, 11], ("Mo", "Ma"): [2, 3, 5, 6, 10, 11],
+                  ("Mo", "Ju"): [1, 2, 4, 7, 8, 10, 11], ("Ve", "Ma"): [3, 4, 6, 9, 11, 12]}
+# PVR Chart 6 (published sign placements) with the printed Moon and Venus BAVs (Exercises 19/20), Aries..Pisces.
+PVR_CHART6 = {"Asc": 5, "Ju": 4, "Ma": 2, "Me": 2, "Mo": 11, "Sa": 4, "Su": 2, "Ve": 0}
+PVR_CHART6_BAV = {"Mo": [3, 2, 5, 3, 6, 3, 4, 5, 5, 5, 3, 5], "Ve": [8, 7, 4, 3, 3, 2, 4, 6, 4, 4, 4, 3]}
+
+
+def test_bav_four_bphs_entries():
+    for (p, c), houses in BPHS_BAV_FIXED.items():
+        assert S.BAV_TABLE[p][c] == houses, (p, c)
+
+
+def test_bav_matches_pvr_chart6_published_moon_and_venus():
+    av = S.ashtakavarga({"bodies": {p: {"lon": s * 30 + 10.0} for p, s in PVR_CHART6.items()}})
+    for p, want in PVR_CHART6_BAV.items():
+        assert av["bav"][p] == want, p
