@@ -11,10 +11,10 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 Engine, plugin and skill move to 3.8.0 / v3.8. This release adds the engine-filled consultation report with its
 `/astro-report` skill, the report design (evidence chips, one key, birth-time states), the calculation accuracy score
 with its reference set in the public edition, and stricter input checks, and it corrects four ashtakavarga entries. It
-also carries the audit and review fixes made after 3.7.0. Three changes alter results or accepted input (marked
-"behaviour change" below): Moon and Venus bindus per sign and the sarvashtakavarga (SAV) per sign change in most
-charts; two ayanamsa options are removed; and time-zone input is stricter. The Parashari and Lal Kitab method is
-unchanged; reports keep each system's grade separate.
+also carries the audit and review fixes made after 3.7.0. Moon and Venus bindus per sign and the sarvashtakavarga (SAV) per
+sign change in most charts (marked "behaviour change" below). Two ayanamsa options are removed and time-zone input is
+stricter; both are listed under Removed and marked Breaking. The Parashari and Lal Kitab method is unchanged; reports
+keep each system's grade separate.
 
 ### Added
 - **Report design: evidence chips, one legend, a "This report answers" line and birth-time states.** Before, a
@@ -60,7 +60,9 @@ unchanged; reports keep each system's grade separate.
   tolerance). After the ashtakavarga fix, a labelled post-fix re-run of the same frozen set gives 99.60/100
   (`docs/accuracy/report-2026-11-07-post-B4.md`); 95.85 stays the score of record. An independent audit
   (`docs/accuracy/AUDIT-2026-11-07.md`) stands with corrections; its regrade (98.04) is informational only. The
-  scorer, rubric and reference set now ship in the public edition, and anyone can re-run the score.
+  scorer, rubric and reference set now ship in the public edition, and anyone can re-run the score. The public
+  copies of the reference set redact library file names and local paths; their checksums are listed in
+  `docs/accuracy/FREEZE-PUBLIC.md`.
 - **Report design specification.** `docs/REPORT-DESIGN-SPEC.md` describes the evidence chips, the key, the
   "This report answers" line and the birth-time states above. It is now part of the public edition.
 
@@ -97,18 +99,20 @@ unchanged; reports keep each system's grade separate.
 - **DOCX reports.** The public engine `report` and `all` extras now install python-docx, so DOCX reports work after a
   standard install.
 
+### Removed
+- **Breaking: ayanamsa options removed.** `lahiri_icrc` and `lahiri_1940` are no longer accepted; a call that
+  names one fails with an error. Use `lahiri` (the default), `true_chitra`, `kp` or `raman`.
+- **Breaking: stricter time-zone input.** A UTC offset written as bare digits (`0530`, `530`) is refused; write
+  `+HH:MM` (`+0530` with a sign is read as 5.5 hours). Offsets beyond -14:00..+14:00 are refused. A zone lookup that
+  lands in the tz database's local mean time (LMT) or a city mean time (such as Kolkata +05:21:10) is refused; give
+  the offset the birth record states. A stated offset that is not a standard offset is used as given and flagged.
+
 ### Security
 - The jinja2 minimum is raised to 3.1.6, which excludes releases with known template-sandbox vulnerabilities.
   The public install script and CI now also require jinja2 3.1.6.
 
 ### Changed
-- **Behaviour change: ayanamsa options.** The engine accepts `lahiri` (default), `true_chitra`, `kp` and `raman`.
-  `lahiri_icrc` and `lahiri_1940` are no longer accepted; a call that names one now fails with an error. One
-  ayanamsa applies per call, and a nested request for a different mode raises instead of being overridden.
-- **Behaviour change: time-zone input.** `+0530` is read as 5.5 hours; bare digits such as `0530` are refused with a
-  hint to write `+HH:MM`; offsets beyond +/-14 hours are refused. Local mean time and city mean times from the tz
-  database (such as Kolkata +05:21:10) are refused, and the skill asks for the recorded offset instead. An offset the
-  user states is used as given and flagged as non-standard.
+- **Behaviour change: ayanamsa calls.** One ayanamsa applies per call; a nested request for a different mode raises instead of being overridden.
 - **Behaviour change: unknown birth time.** With an unknown birth time `create_report` accepts compact reports only
   and refuses facts that depend on the time (lagna, lordships, lagna-based yogas, degrees), `event_refs` and dated
   windows. All MCP birth tools pass `time_source` through.
@@ -127,10 +131,6 @@ unchanged; reports keep each system's grade separate.
   unchanged. One answerer per version cannot separate answerer variance from the edits; two items that leaned to
   the candidate need an isolated re-test. Details in `docs/TESTING.md` §5c.
 
-### Known issues
-- The public mirror of the accuracy reference set depends on a pending owner decision about PDF file names that appear in
-  some frozen case files. Until it is settled, the reference set may be absent from the public repository and the
-  scorer test skips there.
 
 ## [3.7.0] — 2026-10-25 — roadmap phases 0–8: fact layer, evidence labels, new calculations, charts and outlook report
 
