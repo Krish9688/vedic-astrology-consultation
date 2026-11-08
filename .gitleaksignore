@@ -1,0 +1,13 @@
+# False positives: expected-value keys (such as ayan-1900.true) in the frozen T2.2 accuracy reference set (2026-11-07), not secrets.
+docs/accuracy/A1.json:generic-api-key:4059
+docs/accuracy/A1.json:generic-api-key:4067
+docs/accuracy/A1.json:generic-api-key:4083
+docs/accuracy/A1.json:generic-api-key:4134
+docs/accuracy/A1.json:generic-api-key:4142
+docs/accuracy/A1.json:generic-api-key:4158
+docs/accuracy/A1.json:generic-api-key:4209
+docs/accuracy/A1.json:generic-api-key:4217
+docs/accuracy/A1.json:generic-api-key:4233
+docs/accuracy/A1.json:generic-api-key:4284
+docs/accuracy/A1.json:generic-api-key:4292
+docs/accuracy/A1.json:generic-api-key:4308
