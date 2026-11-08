@@ -1,0 +1,643 @@
+{
+ "area": "A5",
+ "builder_sha256": "b6d79965f9963a38dbe050ab0c7cb46b911812f1e60cabd89828264aac619f8f",
+ "built_by": "tools/accuracy_build_cases.py",
+ "cases": [
+  {
+   "area": "A5",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "Aq",
+     "value": 8
+    },
+    {
+     "key": "Pi",
+     "value": 1
+    },
+    {
+     "key": "Ar",
+     "value": 1
+    },
+    {
+     "key": "Ta",
+     "value": 9
+    },
+    {
+     "key": "Ge",
+     "value": 8
+    },
+    {
+     "key": "Cn",
+     "value": 1
+    },
+    {
+     "key": "Le",
+     "value": 7
+    },
+    {
+     "key": "Vi",
+     "value": 7
+    },
+    {
+     "key": "Li",
+     "value": 4
+    },
+    {
+     "key": "Sg",
+     "value": 2
+    }
+   ],
+   "grade": "G4",
+   "id": "A5-G4-001",
+   "input": {
+    "chart": "BPHS ch. 46 example chart (published, signs only)",
+    "signs": {
+     "Ju": "Aq",
+     "Ke": "Le",
+     "La": "Aq",
+     "Ma": "Ta",
+     "Me": "Aq",
+     "Mo": "Ge",
+     "Ra": "Ge",
+     "Sa": "Sc",
+     "Su": "Cp",
+     "Ve": "Aq"
+    }
+   },
+   "notes": "alternatives: Rath's Jaimini Chara (JSR), PVR Narayana dasha, K. N. Rao's Chara (not built); Cp and Sc are separate misprint rows",
+   "quantity": "chara_years",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/chara.py:1-30; astro/service.py:486-494",
+    "school": "Chara dasha, BPHS ch. 46 sl. 155-167 (Santhanam), bphs_santhanam (decision D-3)",
+    "value_source": "Brihat Parasara Hora Sastra, tr. R. Santhanam (library PDF '[library copy]'), example chart PDF p546 (printed 555), table PDF p547 (printed 556); page-checked by the owner 2026-10-24 (tests/test_chara.py)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sign years (BPHS example, ten signs)",
+   "tolerance": 0,
+   "unit": "years"
+  },
+  {
+   "area": "A5",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "Cp",
+     "value": 2
+    }
+   ],
+   "grade": "G4",
+   "id": "A5-G4-002",
+   "input": {
+    "chart": "BPHS ch. 46 example chart (published, signs only)",
+    "signs": {
+     "Ju": "Aq",
+     "Ke": "Le",
+     "La": "Aq",
+     "Ma": "Ta",
+     "Me": "Aq",
+     "Mo": "Ge",
+     "Ra": "Ge",
+     "Sa": "Sc",
+     "Su": "Cp",
+     "Ve": "Aq"
+    }
+   },
+   "notes": "printed 5, corrected 2 (same book's other pages); excluded",
+   "quantity": "chara_years",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/chara.py:1-30; astro/service.py:486-494",
+    "evidence": "Yogardha PDF p551 prints 4 1/2 = (2 + 7) / 2; Kendradi PDF p553 prints 2",
+    "printed": 5,
+    "school": "Chara dasha, BPHS ch. 46 sl. 155-167 (Santhanam), bphs_santhanam (decision D-3)",
+    "value_source": "Brihat Parasara Hora Sastra, tr. R. Santhanam (library PDF '[library copy]'), example chart PDF p546 (printed 555), table PDF p547 (printed 556); page-checked by the owner 2026-10-24 (tests/test_chara.py)"
+   },
+   "status_before_run": "misprint",
+   "sub_item": "sign years: Capricorn",
+   "tolerance": 0,
+   "unit": "years"
+  },
+  {
+   "area": "A5",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "Sc",
+     "value": 9
+    }
+   ],
+   "grade": "G4",
+   "id": "A5-G4-003",
+   "input": {
+    "chart": "BPHS ch. 46 example chart (published, signs only)",
+    "signs": {
+     "Ju": "Aq",
+     "Ke": "Le",
+     "La": "Aq",
+     "Ma": "Ta",
+     "Me": "Aq",
+     "Mo": "Ge",
+     "Ra": "Ge",
+     "Sa": "Sc",
+     "Su": "Cp",
+     "Ve": "Aq"
+    }
+   },
+   "notes": "printed 6, rule value 9; excluded",
+   "quantity": "chara_years",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/chara.py:1-30; astro/service.py:486-494",
+    "evidence": "sl. 158-166: Mars and Ketu tie, the larger count (Ketu) gives 9; owner decision 2026-10-24 follows the rule and records the print",
+    "printed": 6,
+    "school": "Chara dasha, BPHS ch. 46 sl. 155-167 (Santhanam), bphs_santhanam (decision D-3)",
+    "value_source": "Brihat Parasara Hora Sastra, tr. R. Santhanam (library PDF '[library copy]'), example chart PDF p546 (printed 555), table PDF p547 (printed 556); page-checked by the owner 2026-10-24 (tests/test_chara.py)"
+   },
+   "status_before_run": "misprint",
+   "sub_item": "sign years: Scorpio",
+   "tolerance": 0,
+   "unit": "years"
+  },
+  {
+   "area": "A5",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "0",
+     "value": "Aq"
+    },
+    {
+     "key": "1",
+     "value": "Pi"
+    },
+    {
+     "key": "2",
+     "value": "Ar"
+    },
+    {
+     "key": "3",
+     "value": "Ta"
+    },
+    {
+     "key": "4",
+     "value": "Ge"
+    },
+    {
+     "key": "5",
+     "value": "Cn"
+    },
+    {
+     "key": "6",
+     "value": "Le"
+    },
+    {
+     "key": "7",
+     "value": "Vi"
+    },
+    {
+     "key": "8",
+     "value": "Li"
+    },
+    {
+     "key": "9",
+     "value": "Sc"
+    },
+    {
+     "key": "10",
+     "value": "Sg"
+    },
+    {
+     "key": "11",
+     "value": "Cp"
+    }
+   ],
+   "grade": "G4",
+   "id": "A5-G4-004",
+   "input": {
+    "chart": "BPHS ch. 46 example chart (published, signs only)",
+    "signs": {
+     "Ju": "Aq",
+     "Ke": "Le",
+     "La": "Aq",
+     "Ma": "Ta",
+     "Me": "Aq",
+     "Mo": "Ge",
+     "Ra": "Ge",
+     "Sa": "Sc",
+     "Su": "Cp",
+     "Ve": "Aq"
+    }
+   },
+   "notes": "alternatives: Rath's Jaimini Chara (JSR), PVR Narayana dasha, K. N. Rao's Chara (not built)",
+   "quantity": "chara_sequence",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/chara.py:1-30; astro/service.py:486-494",
+    "school": "Chara dasha, BPHS ch. 46 sl. 155-167 (Santhanam), bphs_santhanam (decision D-3)",
+    "value_source": "Brihat Parasara Hora Sastra, tr. R. Santhanam (library PDF '[library copy]'), PDF p547 (printed 556): Libra, 9th from the Aquarius lagna, in an odd pada: forward from the lagna"
+   },
+   "status_before_run": "scored",
+   "sub_item": "dasha order and direction (sl. 167)",
+   "tolerance": 0,
+   "unit": "sign"
+  },
+  {
+   "area": "A5",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "0",
+     "value": "Aq"
+    },
+    {
+     "key": "1",
+     "value": "Cn"
+    },
+    {
+     "key": "2",
+     "value": "Sg"
+    },
+    {
+     "key": "3",
+     "value": "Ta"
+    },
+    {
+     "key": "4",
+     "value": "Li"
+    },
+    {
+     "key": "5",
+     "value": "Pi"
+    },
+    {
+     "key": "6",
+     "value": "Le"
+    },
+    {
+     "key": "7",
+     "value": "Cp"
+    },
+    {
+     "key": "8",
+     "value": "Ge"
+    },
+    {
+     "key": "9",
+     "value": "Sc"
+    },
+    {
+     "key": "10",
+     "value": "Ar"
+    },
+    {
+     "key": "11",
+     "value": "Vi"
+    }
+   ],
+   "grade": "G4",
+   "id": "A5-G4-005",
+   "input": {
+    "sign": "Aq"
+   },
+   "notes": "alternative: BPHS ch. 50 sl. 90-96 (start from the lord's sign; no order given)",
+   "quantity": "chara_antardashas",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/service.py:488-491",
+    "school": "BPHS ch. 51 sl. 7-12 (owner default 2026-10-24)",
+    "value_source": "Brihat Parasara Hora Sastra, tr. R. Santhanam (library PDF '[library copy]'), worked lists PDF p614-615 (Santhanam's Aquarius list omits Leo: misprint, recorded in tests/test_chara.py)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "antardasha order ch. 51 (Aq)",
+   "tolerance": 0,
+   "unit": "sign"
+  },
+  {
+   "area": "A5",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "0",
+     "value": "Pi"
+    },
+    {
+     "key": "1",
+     "value": "Sg"
+    },
+    {
+     "key": "2",
+     "value": "Vi"
+    },
+    {
+     "key": "3",
+     "value": "Ge"
+    },
+    {
+     "key": "4",
+     "value": "Sc"
+    },
+    {
+     "key": "5",
+     "value": "Le"
+    },
+    {
+     "key": "6",
+     "value": "Ta"
+    },
+    {
+     "key": "7",
+     "value": "Aq"
+    },
+    {
+     "key": "8",
+     "value": "Cn"
+    },
+    {
+     "key": "9",
+     "value": "Ar"
+    },
+    {
+     "key": "10",
+     "value": "Cp"
+    },
+    {
+     "key": "11",
+     "value": "Li"
+    }
+   ],
+   "grade": "G4",
+   "id": "A5-G4-006",
+   "input": {
+    "sign": "Pi"
+   },
+   "notes": "alternative: BPHS ch. 50 sl. 90-96 (start from the lord's sign; no order given)",
+   "quantity": "chara_antardashas",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/service.py:488-491",
+    "school": "BPHS ch. 51 sl. 7-12 (owner default 2026-10-24)",
+    "value_source": "Brihat Parasara Hora Sastra, tr. R. Santhanam (library PDF '[library copy]'), worked lists PDF p614-615 (Santhanam's Aquarius list omits Leo: misprint, recorded in tests/test_chara.py)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "antardasha order ch. 51 (Pi)",
+   "tolerance": 0,
+   "unit": "sign"
+  },
+  {
+   "area": "A5",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "0",
+     "value": "Ar"
+    },
+    {
+     "key": "1",
+     "value": "Ta"
+    },
+    {
+     "key": "2",
+     "value": "Ge"
+    },
+    {
+     "key": "3",
+     "value": "Cn"
+    },
+    {
+     "key": "4",
+     "value": "Le"
+    },
+    {
+     "key": "5",
+     "value": "Vi"
+    },
+    {
+     "key": "6",
+     "value": "Li"
+    },
+    {
+     "key": "7",
+     "value": "Sc"
+    },
+    {
+     "key": "8",
+     "value": "Sg"
+    },
+    {
+     "key": "9",
+     "value": "Cp"
+    },
+    {
+     "key": "10",
+     "value": "Aq"
+    },
+    {
+     "key": "11",
+     "value": "Pi"
+    }
+   ],
+   "grade": "G4",
+   "id": "A5-G4-007",
+   "input": {
+    "sign": "Ar"
+   },
+   "notes": "alternative: BPHS ch. 50 sl. 90-96 (start from the lord's sign; no order given)",
+   "quantity": "chara_antardashas",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/service.py:488-491",
+    "school": "BPHS ch. 51 sl. 7-12 (owner default 2026-10-24)",
+    "value_source": "Brihat Parasara Hora Sastra, tr. R. Santhanam (library PDF '[library copy]'), worked lists PDF p614-615 (Santhanam's Aquarius list omits Leo: misprint, recorded in tests/test_chara.py)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "antardasha order ch. 51 (Ar)",
+   "tolerance": 0,
+   "unit": "sign"
+  },
+  {
+   "area": "A5",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "Li",
+     "value": 12
+    },
+    {
+     "key": "Sc",
+     "value": 12
+    },
+    {
+     "key": "Aq",
+     "value": 12
+    }
+   ],
+   "grade": "G4",
+   "id": "A5-G4-008",
+   "input": {
+    "chart": "synthetic sign chart (tests/test_chara.py)",
+    "signs": {
+     "Ju": "Cp",
+     "Ke": "Sc",
+     "La": "Sg",
+     "Ma": "Sc",
+     "Me": "Ge",
+     "Mo": "Ta",
+     "Ra": "Aq",
+     "Sa": "Aq",
+     "Su": "Ar",
+     "Ve": "Li"
+    }
+   },
+   "notes": "BPHS silent on a single lord at home (chara.py:20); other schools' rule: not located",
+   "quantity": "chara_years",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/chara.py:20-21",
+    "school": "a single lord in its own sign gives 12 (Rath's rule, labelled); both Sc/Aq co-lords at home give 12 (BPHS sl. 158)",
+    "value_source": "JSR p276 (rule statement); BPHS sl. 158 (rule statement)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "lord at home gives 12 years",
+   "tolerance": 0,
+   "unit": "years"
+  },
+  {
+   "area": "A5",
+   "boundary_threshold": null,
+   "comparison": "none",
+   "expected": [],
+   "grade": "G4",
+   "id": "A5-G4-009",
+   "input": {
+    "note": "dates are a labelled convention"
+   },
+   "notes": "BPHS states neither start nor year length",
+   "quantity": "none",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/service.py:487",
+    "school": "sidereal years from birth"
+   },
+   "status_before_run": "convention without source",
+   "sub_item": "Chara dates from birth",
+   "tolerance": null,
+   "unit": null
+  }
+ ],
+ "ephemeris_sha256": {
+  "semo_18.se1": "1ca07bd67c24374d77226180c20a4f9996cba013697894810518e7eb582ca4f7",
+  "sepl_18.se1": "ca1393ceab3a44fbc895887cf789c68819ae6a1cbc9b22225872dbe4ccd99a66"
+ },
+ "pyswisseph": "2.10.03",
+ "rubric": "docs/ACCURACY-RUBRIC.md",
+ "rubric_sha256": "0ee28d62bb73da4dfd7458bf0a728c00f5708eca018d714a63c5a585df9f0893"
+}

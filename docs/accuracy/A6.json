@@ -1,0 +1,4253 @@
+{
+ "area": "A6",
+ "builder_sha256": "b6d79965f9963a38dbe050ab0c7cb46b911812f1e60cabd89828264aac619f8f",
+ "built_by": "tools/accuracy_build_cases.py",
+ "cases": [
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "2000-01-01T08:07:24.752"
+    },
+    {
+     "key": "sunset",
+     "value": "2000-01-01T15:59:20.585"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "2000-01-02T08:07:19.342"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-001",
+   "input": {
+    "chart": "C1",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 23161.5,
+     "key": "tithi",
+     "value": 26
+    },
+    {
+     "boundary_margin": 3806.5,
+     "key": "nakshatra",
+     "value": 15
+    },
+    {
+     "boundary_margin": 17555.7,
+     "key": "yoga",
+     "value": 8
+    },
+    {
+     "boundary_margin": 23161.5,
+     "key": "karana",
+     "value": 51
+    },
+    {
+     "boundary_margin": 13955.2,
+     "key": "vara",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-002",
+   "input": {
+    "chart": "C1",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 9206.3,
+     "key": "tithi",
+     "value": 26
+    },
+    {
+     "boundary_margin": 17761.7,
+     "key": "nakshatra",
+     "value": 15
+    },
+    {
+     "boundary_margin": 3600.5,
+     "key": "yoga",
+     "value": 8
+    },
+    {
+     "boundary_margin": 9206.3,
+     "key": "karana",
+     "value": 51
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-003",
+   "input": {
+    "chart": "C1",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "2000-01-02T07:49:46.729"
+    },
+    {
+     "key": "nakshatra",
+     "value": "2000-01-01T13:03:26.468"
+    },
+    {
+     "key": "yoga",
+     "value": "2000-01-02T07:44:17.518"
+    },
+    {
+     "key": "karana",
+     "value": "2000-01-01T18:39:17.338"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-004",
+   "input": {
+    "chart": "C1",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "1990-06-14T23:53:59.371"
+    },
+    {
+     "key": "sunset",
+     "value": "1990-06-15T13:49:04.114"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "1990-06-15T23:54:05.323"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-005",
+   "input": {
+    "chart": "C2",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 4101.3,
+     "key": "tithi",
+     "value": 23
+    },
+    {
+     "boundary_margin": 33901.9,
+     "key": "nakshatra",
+     "value": 25
+    },
+    {
+     "boundary_margin": 4510.4,
+     "key": "yoga",
+     "value": 2
+    },
+    {
+     "boundary_margin": 4101.3,
+     "key": "karana",
+     "value": 45
+    },
+    {
+     "boundary_margin": 19505.3,
+     "key": "vara",
+     "value": "Ve"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-006",
+   "input": {
+    "chart": "C2",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 21387.9,
+     "key": "tithi",
+     "value": 22
+    },
+    {
+     "boundary_margin": 32998.7,
+     "key": "nakshatra",
+     "value": 24
+    },
+    {
+     "boundary_margin": 9334.4,
+     "key": "yoga",
+     "value": 2
+    },
+    {
+     "boundary_margin": 20993.5,
+     "key": "karana",
+     "value": 43
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-007",
+   "input": {
+    "chart": "C2",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "1990-06-16T16:05:03.790"
+    },
+    {
+     "key": "nakshatra",
+     "value": "1990-06-16T08:46:22.392"
+    },
+    {
+     "key": "yoga",
+     "value": "1990-06-15T19:44:10.388"
+    },
+    {
+     "key": "karana",
+     "value": "1990-06-16T04:47:41.747"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-008",
+   "input": {
+    "chart": "C2",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "1985-03-09T00:51:22.140"
+    },
+    {
+     "key": "sunset",
+     "value": "1985-03-09T12:47:54.031"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "1985-03-10T00:50:45.019"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-009",
+   "input": {
+    "chart": "C3",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 9944.3,
+     "key": "tithi",
+     "value": 19
+    },
+    {
+     "boundary_margin": 20847.6,
+     "key": "nakshatra",
+     "value": 14
+    },
+    {
+     "boundary_margin": 10371.4,
+     "key": "yoga",
+     "value": 12
+    },
+    {
+     "boundary_margin": 9944.3,
+     "key": "karana",
+     "value": 37
+    },
+    {
+     "boundary_margin": 22845.0,
+     "key": "vara",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-010",
+   "input": {
+    "chart": "C3",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 20572.7,
+     "key": "tithi",
+     "value": 18
+    },
+    {
+     "boundary_margin": 7126.6,
+     "key": "nakshatra",
+     "value": 13
+    },
+    {
+     "boundary_margin": 18941.5,
+     "key": "yoga",
+     "value": 11
+    },
+    {
+     "boundary_margin": 16399.6,
+     "key": "karana",
+     "value": 35
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-011",
+   "input": {
+    "chart": "C3",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "1985-03-10T12:37:42.649"
+    },
+    {
+     "key": "nakshatra",
+     "value": "1985-03-10T00:17:27.586"
+    },
+    {
+     "key": "yoga",
+     "value": "1985-03-10T11:53:12.928"
+    },
+    {
+     "key": "karana",
+     "value": "1985-03-10T02:08:16.343"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-012",
+   "input": {
+    "chart": "C3",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "1975-10-25T11:18:53.699"
+    },
+    {
+     "key": "sunset",
+     "value": "1975-10-25T22:00:52.772"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "1975-10-26T11:20:02.119"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-013",
+   "input": {
+    "chart": "C4",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 21468.1,
+     "key": "tithi",
+     "value": 21
+    },
+    {
+     "boundary_margin": 15580.5,
+     "key": "nakshatra",
+     "value": 6
+    },
+    {
+     "boundary_margin": 2380.0,
+     "key": "yoga",
+     "value": 20
+    },
+    {
+     "boundary_margin": 21198.2,
+     "key": "karana",
+     "value": 42
+    },
+    {
+     "boundary_margin": 21002.1,
+     "key": "vara",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-014",
+   "input": {
+    "chart": "C4",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 1074.3,
+     "key": "tithi",
+     "value": 20
+    },
+    {
+     "boundary_margin": 7242.9,
+     "key": "nakshatra",
+     "value": 6
+    },
+    {
+     "boundary_margin": 14381.1,
+     "key": "yoga",
+     "value": 20
+    },
+    {
+     "boundary_margin": 1074.3,
+     "key": "karana",
+     "value": 40
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-015",
+   "input": {
+    "chart": "C4",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "1975-10-26T11:27:48.138"
+    },
+    {
+     "key": "nakshatra",
+     "value": "1975-10-26T09:49:40.461"
+    },
+    {
+     "key": "yoga",
+     "value": "1975-10-26T06:09:40.008"
+    },
+    {
+     "key": "karana",
+     "value": "1975-10-26T11:27:48.138"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-016",
+   "input": {
+    "chart": "C4",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "2010-08-19T23:52:31.522"
+    },
+    {
+     "key": "sunset",
+     "value": "2010-08-20T12:51:25.236"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "2010-08-20T23:53:01.312"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-017",
+   "input": {
+    "chart": "C5",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 29056.1,
+     "key": "tithi",
+     "value": 11
+    },
+    {
+     "boundary_margin": 15740.7,
+     "key": "nakshatra",
+     "value": 19
+    },
+    {
+     "boundary_margin": 4314.3,
+     "key": "yoga",
+     "value": 2
+    },
+    {
+     "boundary_margin": 16854.3,
+     "key": "karana",
+     "value": 22
+    },
+    {
+     "boundary_margin": 1348.5,
+     "key": "vara",
+     "value": "Ve"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-018",
+   "input": {
+    "chart": "C5",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 30404.6,
+     "key": "tithi",
+     "value": 11
+    },
+    {
+     "boundary_margin": 17089.2,
+     "key": "nakshatra",
+     "value": 19
+    },
+    {
+     "boundary_margin": 2965.8,
+     "key": "yoga",
+     "value": 2
+    },
+    {
+     "boundary_margin": 15505.8,
+     "key": "karana",
+     "value": 22
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-019",
+   "input": {
+    "chart": "C5",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "2010-08-20T08:19:16.134"
+    },
+    {
+     "key": "nakshatra",
+     "value": "2010-08-20T04:37:20.694"
+    },
+    {
+     "key": "yoga",
+     "value": "2010-08-20T23:23:44.580"
+    },
+    {
+     "key": "karana",
+     "value": "2010-08-20T08:19:16.134"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-020",
+   "input": {
+    "chart": "C5",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "1965-01-31T20:05:49.413"
+    },
+    {
+     "key": "sunset",
+     "value": "1965-02-01T09:52:03.934"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "1965-02-01T20:06:51.515"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-021",
+   "input": {
+    "chart": "C6",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 43531.6,
+     "key": "tithi",
+     "value": 30
+    },
+    {
+     "boundary_margin": 23177.1,
+     "key": "nakshatra",
+     "value": 22
+    },
+    {
+     "boundary_margin": 9147.0,
+     "key": "yoga",
+     "value": 16
+    },
+    {
+     "boundary_margin": 3629.4,
+     "key": "karana",
+     "value": 60
+    },
+    {
+     "boundary_margin": 30250.6,
+     "key": "vara",
+     "value": "Mo"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-022",
+   "input": {
+    "chart": "C6",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 20828.8,
+     "key": "tithi",
+     "value": 30
+    },
+    {
+     "boundary_margin": 7073.5,
+     "key": "nakshatra",
+     "value": 21
+    },
+    {
+     "boundary_margin": 39397.6,
+     "key": "yoga",
+     "value": 16
+    },
+    {
+     "boundary_margin": 20828.8,
+     "key": "karana",
+     "value": 59
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-023",
+   "input": {
+    "chart": "C6",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "1965-02-01T16:35:31.559"
+    },
+    {
+     "key": "nakshatra",
+     "value": "1965-02-02T00:41:40.941"
+    },
+    {
+     "key": "yoga",
+     "value": "1965-02-01T07:02:26.981"
+    },
+    {
+     "key": "karana",
+     "value": "1965-02-01T16:35:31.559"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-024",
+   "input": {
+    "chart": "C6",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "1950-12-30T17:05:03.116"
+    },
+    {
+     "key": "sunset",
+     "value": "1950-12-31T07:41:56.384"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "1950-12-31T17:05:47.584"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-025",
+   "input": {
+    "chart": "C7",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 21978.7,
+     "key": "tithi",
+     "value": 22
+    },
+    {
+     "boundary_margin": 19984.0,
+     "key": "nakshatra",
+     "value": 12
+    },
+    {
+     "boundary_margin": 2205.2,
+     "key": "yoga",
+     "value": 4
+    },
+    {
+     "boundary_margin": 20283.9,
+     "key": "karana",
+     "value": 44
+    },
+    {
+     "boundary_margin": 20147.6,
+     "key": "vara",
+     "value": "Su"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-026",
+   "input": {
+    "chart": "C7",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 3195.1,
+     "key": "tithi",
+     "value": 21
+    },
+    {
+     "boundary_margin": 1033.0,
+     "key": "nakshatra",
+     "value": 12
+    },
+    {
+     "boundary_margin": 12863.3,
+     "key": "yoga",
+     "value": 4
+    },
+    {
+     "boundary_margin": 3195.1,
+     "key": "karana",
+     "value": 42
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-027",
+   "input": {
+    "chart": "C7",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "1950-12-31T17:36:18.670"
+    },
+    {
+     "key": "nakshatra",
+     "value": "1950-12-31T17:03:04.022"
+    },
+    {
+     "key": "yoga",
+     "value": "1950-12-31T12:06:45.240"
+    },
+    {
+     "key": "karana",
+     "value": "1950-12-31T17:36:18.670"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-028",
+   "input": {
+    "chart": "C7",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "2020-03-21T09:11:47.364"
+    },
+    {
+     "key": "sunset",
+     "value": "2020-03-21T21:14:55.848"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "2020-03-22T09:12:10.796"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-029",
+   "input": {
+    "chart": "C8",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 34425.6,
+     "key": "tithi",
+     "value": 28
+    },
+    {
+     "boundary_margin": 7774.3,
+     "key": "nakshatra",
+     "value": 23
+    },
+    {
+     "boundary_margin": 18511.6,
+     "key": "yoga",
+     "value": 22
+    },
+    {
+     "boundary_margin": 12645.7,
+     "key": "karana",
+     "value": 55
+    },
+    {
+     "boundary_margin": 10092.6,
+     "key": "vara",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-030",
+   "input": {
+    "chart": "C8",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 24333.0,
+     "key": "tithi",
+     "value": 28
+    },
+    {
+     "boundary_margin": 17867.0,
+     "key": "nakshatra",
+     "value": 23
+    },
+    {
+     "boundary_margin": 8418.9,
+     "key": "yoga",
+     "value": 22
+    },
+    {
+     "boundary_margin": 22738.3,
+     "key": "karana",
+     "value": 55
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-031",
+   "input": {
+    "chart": "C8",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "2020-03-22T04:38:26.995"
+    },
+    {
+     "key": "nakshatra",
+     "value": "2020-03-21T14:09:34.320"
+    },
+    {
+     "key": "yoga",
+     "value": "2020-03-22T07:32:24.941"
+    },
+    {
+     "key": "karana",
+     "value": "2020-03-21T15:30:45.656"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-032",
+   "input": {
+    "chart": "C8",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "1942-08-31T23:49:43.232"
+    },
+    {
+     "key": "sunset",
+     "value": "1942-09-01T12:23:25.801"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "1942-09-01T23:50:01.598"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-033",
+   "input": {
+    "chart": "C9",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 2265.0,
+     "key": "tithi",
+     "value": 22
+    },
+    {
+     "boundary_margin": 3961.0,
+     "key": "nakshatra",
+     "value": 3
+    },
+    {
+     "boundary_margin": 14103.7,
+     "key": "yoga",
+     "value": 13
+    },
+    {
+     "boundary_margin": 2265.0,
+     "key": "karana",
+     "value": 43
+    },
+    {
+     "boundary_margin": 6016.8,
+     "key": "vara",
+     "value": "Ma"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-034",
+   "input": {
+    "chart": "C9",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 3751.8,
+     "key": "tithi",
+     "value": 21
+    },
+    {
+     "boundary_margin": 2055.7,
+     "key": "nakshatra",
+     "value": 2
+    },
+    {
+     "boundary_margin": 8086.9,
+     "key": "yoga",
+     "value": 13
+    },
+    {
+     "boundary_margin": 3751.8,
+     "key": "karana",
+     "value": 42
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-035",
+   "input": {
+    "chart": "C9",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "1942-09-02T02:38:28.661"
+    },
+    {
+     "key": "nakshatra",
+     "value": "1942-09-02T02:44:52.020"
+    },
+    {
+     "key": "yoga",
+     "value": "1942-09-01T21:55:28.914"
+    },
+    {
+     "key": "karana",
+     "value": "1942-09-01T13:41:33.497"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-036",
+   "input": {
+    "chart": "C9",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "1992-03-14T06:17:54.715"
+    },
+    {
+     "key": "sunset",
+     "value": "1992-03-14T18:02:19.100"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "1992-03-15T06:15:38.809"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-037",
+   "input": {
+    "chart": "S1",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 593.3,
+     "key": "tithi",
+     "value": 11
+    },
+    {
+     "boundary_margin": 17479.5,
+     "key": "nakshatra",
+     "value": 7
+    },
+    {
+     "boundary_margin": 33172.2,
+     "key": "yoga",
+     "value": 5
+    },
+    {
+     "boundary_margin": 593.3,
+     "key": "karana",
+     "value": 21
+    },
+    {
+     "boundary_margin": 12125.3,
+     "key": "vara",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-038",
+   "input": {
+    "chart": "S1",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 11532.0,
+     "key": "tithi",
+     "value": 10
+    },
+    {
+     "boundary_margin": 29604.8,
+     "key": "nakshatra",
+     "value": 7
+    },
+    {
+     "boundary_margin": 29414.0,
+     "key": "yoga",
+     "value": 5
+    },
+    {
+     "boundary_margin": 11532.0,
+     "key": "karana",
+     "value": 20
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-039",
+   "input": {
+    "chart": "S1",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "1992-03-15T06:45:27.726"
+    },
+    {
+     "key": "nakshatra",
+     "value": "1992-03-14T14:31:19.466"
+    },
+    {
+     "key": "yoga",
+     "value": "1992-03-14T18:52:52.201"
+    },
+    {
+     "key": "karana",
+     "value": "1992-03-14T20:10:17.665"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-040",
+   "input": {
+    "chart": "S1",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "sunrise",
+     "value": "1990-05-17T00:34:20.834"
+    },
+    {
+     "key": "sunset",
+     "value": "1990-05-17T13:35:27.677"
+    },
+    {
+     "key": "next_sunrise",
+     "value": "1990-05-18T00:34:01.175"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-041",
+   "input": {
+    "chart": "S2",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "",
+   "quantity": "sun_events",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans(SUN, CALC_RISE/CALC_SET | BIT_DISC_CENTER)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "sunrise, sunset, next sunrise around the birth moment",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 24394.2,
+     "key": "tithi",
+     "value": 22
+    },
+    {
+     "boundary_margin": 3590.1,
+     "key": "nakshatra",
+     "value": 22
+    },
+    {
+     "boundary_margin": 31265.2,
+     "key": "yoga",
+     "value": 25
+    },
+    {
+     "boundary_margin": 19374.1,
+     "key": "karana",
+     "value": 44
+    },
+    {
+     "boundary_margin": 1539.2,
+     "key": "vara",
+     "value": "Ju"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-042",
+   "input": {
+    "chart": "S2",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "numbers 1-based (karana 1 = Kimstughna); vara as weekday lord; margin = seconds to the element's nearest change (vara: to sunrise); threshold 2 x 5 s",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut; tithi 12 deg, karana 6 deg of elongation, yoga 13 deg 20' of Sun+Moon, nakshatra 13 deg 20'; vara = weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana, vara at birth",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 25933.3,
+     "key": "tithi",
+     "value": 22
+    },
+    {
+     "boundary_margin": 5129.2,
+     "key": "nakshatra",
+     "value": 22
+    },
+    {
+     "boundary_margin": 29726.0,
+     "key": "yoga",
+     "value": 25
+    },
+    {
+     "boundary_margin": 17835.0,
+     "key": "karana",
+     "value": 44
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-043",
+   "input": {
+    "chart": "S2",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans, calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "tithi, nakshatra, yoga, karana at the sunrise that began the Hindu day",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "1990-05-17T07:46:34.161"
+    },
+    {
+     "key": "nakshatra",
+     "value": "1990-05-17T01:59:50.080"
+    },
+    {
+     "key": "yoga",
+     "value": "1990-05-17T15:29:39.456"
+    },
+    {
+     "key": "karana",
+     "value": "1990-05-17T07:46:34.161"
+    }
+   ],
+   "grade": "G1",
+   "id": "A6-G1-044",
+   "input": {
+    "chart": "S2",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "",
+   "quantity": "element_changes",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut"
+   },
+   "status_before_run": "scored",
+   "sub_item": "end instants of the elements running at birth",
+   "tolerance": 5.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 23161.5,
+     "key": "tithi",
+     "value": 26
+    },
+    {
+     "boundary_margin": 3806.5,
+     "key": "nakshatra",
+     "value": 15
+    },
+    {
+     "boundary_margin": 17555.7,
+     "key": "yoga",
+     "value": 8
+    },
+    {
+     "boundary_margin": 23161.5,
+     "key": "karana",
+     "value": 51
+    },
+    {
+     "boundary_margin": 13955.2,
+     "key": "vara",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-001",
+   "input": {
+    "chart": "C1",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at birth (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 9206.3,
+     "key": "tithi",
+     "value": 26
+    },
+    {
+     "boundary_margin": 17761.7,
+     "key": "nakshatra",
+     "value": 15
+    },
+    {
+     "boundary_margin": 3600.5,
+     "key": "yoga",
+     "value": 8
+    },
+    {
+     "boundary_margin": 9206.3,
+     "key": "karana",
+     "value": 51
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-002",
+   "input": {
+    "chart": "C1",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at sunrise (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 4101.3,
+     "key": "tithi",
+     "value": 23
+    },
+    {
+     "boundary_margin": 33901.9,
+     "key": "nakshatra",
+     "value": 25
+    },
+    {
+     "boundary_margin": 4510.4,
+     "key": "yoga",
+     "value": 2
+    },
+    {
+     "boundary_margin": 4101.3,
+     "key": "karana",
+     "value": 45
+    },
+    {
+     "boundary_margin": 19505.3,
+     "key": "vara",
+     "value": "Ve"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-003",
+   "input": {
+    "chart": "C2",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at birth (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 21387.9,
+     "key": "tithi",
+     "value": 22
+    },
+    {
+     "boundary_margin": 32998.7,
+     "key": "nakshatra",
+     "value": 24
+    },
+    {
+     "boundary_margin": 9334.4,
+     "key": "yoga",
+     "value": 2
+    },
+    {
+     "boundary_margin": 20993.5,
+     "key": "karana",
+     "value": 43
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-004",
+   "input": {
+    "chart": "C2",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at sunrise (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 9944.3,
+     "key": "tithi",
+     "value": 19
+    },
+    {
+     "boundary_margin": 20847.6,
+     "key": "nakshatra",
+     "value": 14
+    },
+    {
+     "boundary_margin": 10371.4,
+     "key": "yoga",
+     "value": 12
+    },
+    {
+     "boundary_margin": 9944.3,
+     "key": "karana",
+     "value": 37
+    },
+    {
+     "boundary_margin": 22845.0,
+     "key": "vara",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-005",
+   "input": {
+    "chart": "C3",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at birth (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 20572.7,
+     "key": "tithi",
+     "value": 18
+    },
+    {
+     "boundary_margin": 7126.6,
+     "key": "nakshatra",
+     "value": 13
+    },
+    {
+     "boundary_margin": 18941.5,
+     "key": "yoga",
+     "value": 11
+    },
+    {
+     "boundary_margin": 16399.6,
+     "key": "karana",
+     "value": 35
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-006",
+   "input": {
+    "chart": "C3",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at sunrise (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 21468.1,
+     "key": "tithi",
+     "value": 21
+    },
+    {
+     "boundary_margin": 15580.5,
+     "key": "nakshatra",
+     "value": 6
+    },
+    {
+     "boundary_margin": 2380.0,
+     "key": "yoga",
+     "value": 20
+    },
+    {
+     "boundary_margin": 21198.2,
+     "key": "karana",
+     "value": 42
+    },
+    {
+     "boundary_margin": 21002.1,
+     "key": "vara",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-007",
+   "input": {
+    "chart": "C4",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at birth (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 1074.3,
+     "key": "tithi",
+     "value": 20
+    },
+    {
+     "boundary_margin": 7242.9,
+     "key": "nakshatra",
+     "value": 6
+    },
+    {
+     "boundary_margin": 14381.1,
+     "key": "yoga",
+     "value": 20
+    },
+    {
+     "boundary_margin": 1074.3,
+     "key": "karana",
+     "value": 40
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-008",
+   "input": {
+    "chart": "C4",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at sunrise (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 29056.1,
+     "key": "tithi",
+     "value": 11
+    },
+    {
+     "boundary_margin": 15740.7,
+     "key": "nakshatra",
+     "value": 19
+    },
+    {
+     "boundary_margin": 4314.3,
+     "key": "yoga",
+     "value": 2
+    },
+    {
+     "boundary_margin": 16854.3,
+     "key": "karana",
+     "value": 22
+    },
+    {
+     "boundary_margin": 1348.5,
+     "key": "vara",
+     "value": "Ve"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-009",
+   "input": {
+    "chart": "C5",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at birth (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 30404.6,
+     "key": "tithi",
+     "value": 11
+    },
+    {
+     "boundary_margin": 17089.2,
+     "key": "nakshatra",
+     "value": 19
+    },
+    {
+     "boundary_margin": 2965.8,
+     "key": "yoga",
+     "value": 2
+    },
+    {
+     "boundary_margin": 15505.8,
+     "key": "karana",
+     "value": 22
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-010",
+   "input": {
+    "chart": "C5",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at sunrise (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 43531.6,
+     "key": "tithi",
+     "value": 30
+    },
+    {
+     "boundary_margin": 23177.1,
+     "key": "nakshatra",
+     "value": 22
+    },
+    {
+     "boundary_margin": 9147.0,
+     "key": "yoga",
+     "value": 16
+    },
+    {
+     "boundary_margin": 3629.4,
+     "key": "karana",
+     "value": 60
+    },
+    {
+     "boundary_margin": 30250.6,
+     "key": "vara",
+     "value": "Mo"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-011",
+   "input": {
+    "chart": "C6",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at birth (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 20828.8,
+     "key": "tithi",
+     "value": 30
+    },
+    {
+     "boundary_margin": 7073.5,
+     "key": "nakshatra",
+     "value": 21
+    },
+    {
+     "boundary_margin": 39397.6,
+     "key": "yoga",
+     "value": 16
+    },
+    {
+     "boundary_margin": 20828.8,
+     "key": "karana",
+     "value": 59
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-012",
+   "input": {
+    "chart": "C6",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at sunrise (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 21978.7,
+     "key": "tithi",
+     "value": 22
+    },
+    {
+     "boundary_margin": 19984.0,
+     "key": "nakshatra",
+     "value": 12
+    },
+    {
+     "boundary_margin": 2205.2,
+     "key": "yoga",
+     "value": 4
+    },
+    {
+     "boundary_margin": 20283.9,
+     "key": "karana",
+     "value": 44
+    },
+    {
+     "boundary_margin": 20147.6,
+     "key": "vara",
+     "value": "Su"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-013",
+   "input": {
+    "chart": "C7",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at birth (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 3195.1,
+     "key": "tithi",
+     "value": 21
+    },
+    {
+     "boundary_margin": 1033.0,
+     "key": "nakshatra",
+     "value": 12
+    },
+    {
+     "boundary_margin": 12863.3,
+     "key": "yoga",
+     "value": 4
+    },
+    {
+     "boundary_margin": 3195.1,
+     "key": "karana",
+     "value": 42
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-014",
+   "input": {
+    "chart": "C7",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at sunrise (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 34425.6,
+     "key": "tithi",
+     "value": 28
+    },
+    {
+     "boundary_margin": 7774.3,
+     "key": "nakshatra",
+     "value": 23
+    },
+    {
+     "boundary_margin": 18511.6,
+     "key": "yoga",
+     "value": 22
+    },
+    {
+     "boundary_margin": 12645.7,
+     "key": "karana",
+     "value": 55
+    },
+    {
+     "boundary_margin": 10092.6,
+     "key": "vara",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-015",
+   "input": {
+    "chart": "C8",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at birth (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 24333.0,
+     "key": "tithi",
+     "value": 28
+    },
+    {
+     "boundary_margin": 17867.0,
+     "key": "nakshatra",
+     "value": 23
+    },
+    {
+     "boundary_margin": 8418.9,
+     "key": "yoga",
+     "value": 22
+    },
+    {
+     "boundary_margin": 22738.3,
+     "key": "karana",
+     "value": 55
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-016",
+   "input": {
+    "chart": "C8",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at sunrise (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 2265.0,
+     "key": "tithi",
+     "value": 22
+    },
+    {
+     "boundary_margin": 3961.0,
+     "key": "nakshatra",
+     "value": 3
+    },
+    {
+     "boundary_margin": 14103.7,
+     "key": "yoga",
+     "value": 13
+    },
+    {
+     "boundary_margin": 2265.0,
+     "key": "karana",
+     "value": 43
+    },
+    {
+     "boundary_margin": 6016.8,
+     "key": "vara",
+     "value": "Ma"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-017",
+   "input": {
+    "chart": "C9",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_birth",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at birth (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 120.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 3751.8,
+     "key": "tithi",
+     "value": 21
+    },
+    {
+     "boundary_margin": 2055.7,
+     "key": "nakshatra",
+     "value": 2
+    },
+    {
+     "boundary_margin": 8086.9,
+     "key": "yoga",
+     "value": 13
+    },
+    {
+     "boundary_margin": 3751.8,
+     "key": "karana",
+     "value": 42
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-018",
+   "input": {
+    "chart": "C9",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "threshold 2 x 60 s (G3 change-instant tolerance); margins from the G1 change instants",
+   "quantity": "panchang_sunrise",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "PyJHora",
+    "run": "tests/reference_charts/crosscheck_2026_11.json",
+    "settings_read_back": {
+     "ayanamsa": "LAHIRI",
+     "dhasa_year": "MEAN_SIDEREAL_YEAR",
+     "nodes": "mean",
+     "planet_positions": "apparent (set_planet_positions_true(False))",
+     "refraction": true,
+     "varga_chart_method": "1 (D2: 2)"
+    },
+    "version": "4.8.7"
+   },
+   "status_before_run": "scored",
+   "sub_item": "panchang at sunrise (PyJHora)",
+   "tolerance": 0,
+   "unit": "number"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "2024-01-11T11:57:00.000"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-019",
+   "input": {
+    "event": "USNO new Moon",
+    "kind": "tithi",
+    "search_from_days_before": 0.3
+   },
+   "notes": "USNO rounds to the minute; tolerance 1 min (rubric 6.1 G3)",
+   "quantity": "element_end_after",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "US Naval Observatory, Phases of the Moon 2024 (aa.usno.navy.mil, public domain), as stored in tests/test_panchang.py",
+    "precision": "minute"
+   },
+   "status_before_run": "scored",
+   "sub_item": "lunar phase instant = tithi change (USNO new Moon)",
+   "tolerance": 60.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "2024-04-23T23:49:00.000"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-020",
+   "input": {
+    "event": "USNO full Moon",
+    "kind": "tithi",
+    "search_from_days_before": 0.3
+   },
+   "notes": "USNO rounds to the minute; tolerance 1 min (rubric 6.1 G3)",
+   "quantity": "element_end_after",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "US Naval Observatory, Phases of the Moon 2024 (aa.usno.navy.mil, public domain), as stored in tests/test_panchang.py",
+    "precision": "minute"
+   },
+   "status_before_run": "scored",
+   "sub_item": "lunar phase instant = tithi change (USNO full Moon)",
+   "tolerance": 60.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "karana",
+     "value": "2024-07-13T22:49:00.000"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-021",
+   "input": {
+    "event": "USNO first quarter",
+    "kind": "karana",
+    "search_from_days_before": 0.3
+   },
+   "notes": "USNO rounds to the minute; tolerance 1 min (rubric 6.1 G3)",
+   "quantity": "element_end_after",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "US Naval Observatory, Phases of the Moon 2024 (aa.usno.navy.mil, public domain), as stored in tests/test_panchang.py",
+    "precision": "minute"
+   },
+   "status_before_run": "scored",
+   "sub_item": "lunar phase instant = karana change (USNO first quarter)",
+   "tolerance": 60.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "tithi",
+     "value": "2024-10-02T18:49:00.000"
+    }
+   ],
+   "grade": "G3",
+   "id": "A6-G3-022",
+   "input": {
+    "event": "USNO new Moon",
+    "kind": "tithi",
+    "search_from_days_before": 0.3
+   },
+   "notes": "USNO rounds to the minute; tolerance 1 min (rubric 6.1 G3)",
+   "quantity": "element_end_after",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "engine": "US Naval Observatory, Phases of the Moon 2024 (aa.usno.navy.mil, public domain), as stored in tests/test_panchang.py",
+    "precision": "minute"
+   },
+   "status_before_run": "scored",
+   "sub_item": "lunar phase instant = tithi change (USNO new Moon)",
+   "tolerance": 60.0,
+   "unit": "s"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 444.8,
+     "key": "hora",
+     "value": "Su"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-001",
+   "input": {
+    "chart": "C1",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 1499.4,
+     "key": "hora",
+     "value": "Ju"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-002",
+   "input": {
+    "chart": "C2",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 1282.1,
+     "key": "hora",
+     "value": "Su"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-003",
+   "input": {
+    "chart": "C3",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 666.3,
+     "key": "hora",
+     "value": "Ve"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-004",
+   "input": {
+    "chart": "C4",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 1348.5,
+     "key": "hora",
+     "value": "Ve"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-005",
+   "input": {
+    "chart": "C5",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 1450.6,
+     "key": "hora",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-006",
+   "input": {
+    "chart": "C6",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 1496.9,
+     "key": "hora",
+     "value": "Sa"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-007",
+   "input": {
+    "chart": "C7",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 707.4,
+     "key": "hora",
+     "value": "Ma"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-008",
+   "input": {
+    "chart": "C8",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 1183.2,
+     "key": "hora",
+     "value": "Su"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-009",
+   "input": {
+    "chart": "C9",
+    "chart_file": "crosscheck_2026_11.json"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 1325.3,
+     "key": "hora",
+     "value": "Su"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-010",
+   "input": {
+    "chart": "S1",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A6",
+   "boundary_threshold": 10.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 1539.2,
+     "key": "hora",
+     "value": "Ju"
+    }
+   ],
+   "grade": "G4",
+   "id": "A6-G4-011",
+   "input": {
+    "chart": "S2",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "alternative: day and night each divided into 12 (Light on Life PDF p211), different-school row",
+   "quantity": "hora",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/strength.py:55",
+    "school": "equal 60-minute horas from sunrise in Chaldean order (owner Q11, 2026-11-07)",
+    "value_source": "the school's rule on the G1 sunrise (rise_trans) and weekday"
+   },
+   "status_before_run": "scored",
+   "sub_item": "hora lord at birth",
+   "tolerance": 0,
+   "unit": "lord"
+  }
+ ],
+ "ephemeris_sha256": {
+  "semo_18.se1": "1ca07bd67c24374d77226180c20a4f9996cba013697894810518e7eb582ca4f7",
+  "sepl_18.se1": "ca1393ceab3a44fbc895887cf789c68819ae6a1cbc9b22225872dbe4ccd99a66"
+ },
+ "pyswisseph": "2.10.03",
+ "rubric": "docs/ACCURACY-RUBRIC.md",
+ "rubric_sha256": "0ee28d62bb73da4dfd7458bf0a728c00f5708eca018d714a63c5a585df9f0893"
+}

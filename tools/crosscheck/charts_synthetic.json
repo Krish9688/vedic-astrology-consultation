@@ -1,0 +1,86 @@
+{
+ "about": "Synthetic edge-case charts C1..C9 for tools/crosscheck (no real person). Times are civil with an explicit UTC offset.",
+ "charts": [
+  {
+   "id": "C1",
+   "date": "2000-01-01",
+   "time": "12:00:00",
+   "off": "+00:00",
+   "lat": 51.4769,
+   "lon": -0.0005,
+   "note": "Greenwich J2000"
+  },
+  {
+   "id": "C2",
+   "date": "1990-06-15",
+   "time": "23:59:00",
+   "off": "+05:30",
+   "lat": 28.6139,
+   "lon": 77.209,
+   "note": "Delhi pre-midnight"
+  },
+  {
+   "id": "C3",
+   "date": "1985-03-10",
+   "time": "00:00:00",
+   "off": "+05:30",
+   "lat": 13.0827,
+   "lon": 80.2707,
+   "note": "Chennai exact midnight"
+  },
+  {
+   "id": "C4",
+   "date": "1975-10-26",
+   "time": "01:30:00",
+   "off": "-04:00",
+   "lat": 40.7128,
+   "lon": -74.006,
+   "note": "New York US DST day"
+  },
+  {
+   "id": "C5",
+   "date": "2010-08-20",
+   "time": "06:00:00",
+   "off": "+05:45",
+   "lat": 27.7172,
+   "lon": 85.324,
+   "note": "Kathmandu +05:45"
+  },
+  {
+   "id": "C6",
+   "date": "1965-02-01",
+   "time": "14:00:00",
+   "off": "+09:30",
+   "lat": -34.9285,
+   "lon": 138.6007,
+   "note": "Adelaide +09:30"
+  },
+  {
+   "id": "C7",
+   "date": "1950-12-31",
+   "time": "23:30:00",
+   "off": "+12:00",
+   "lat": -36.8485,
+   "lon": 174.7633,
+   "note": "Auckland year rollover"
+  },
+  {
+   "id": "C8",
+   "date": "2020-03-21",
+   "time": "09:00:00",
+   "off": "-03:00",
+   "lat": -23.5505,
+   "lon": -46.6333,
+   "note": "Sao Paulo"
+  },
+  {
+   "id": "C9",
+   "date": "1942-09-01",
+   "time": "08:00:00",
+   "off": "+06:30",
+   "lat": 22.5726,
+   "lon": 88.3639,
+   "note": "Kolkata wartime +06:30"
+  }
+ ]
+}
