@@ -41,9 +41,10 @@ Astrology Books/
     │   │                         system, tier, text layer, page convention, page count, SHA-256, duplicates
     │   ├── chapters/<ID>.json    chapter marks (PDF outline or heading heuristic)
     │   └── extraction.json       Graphify-schema extraction (nodes + edges), rebuilt from sources
-    ├── graphify-out/             graph.json (the graph), GRAPH_REPORT.md, graph.html (+ optional wiki/, obsidian/)
+    ├── graphify-out/             graph.json (the graph), GRAPH_REPORT.md, graph.html, project.json + project.html (+ optional wiki/, obsidian/)
     ├── text/, index/, sourcemaps/   (from v3)
-    ├── tools/kg/                 extract.py, build_graph.py, add_book.py ; tools/release_skill.py
+    ├── tools/kg/                 extract.py, build_graph.py, add_book.py, project_graph.py, graph_view.py, viewer.html ;
+    │                             tools/release_skill.py
     ├── validation/               graph_checks.py, retrieval_eval.py (private build) and generated reports
     ├── vendor/graphify/          the inspected Graphify source (commit 4c73561, v0.9.67)
     ├── .venv-graphify/           Graphify + deps (project-local)
@@ -63,7 +64,7 @@ API, and for 3,459 pages it would be slow, costly and non-deterministic. Instead
 - **Extraction is ours and deterministic** (`tools/kg/extract.py`): it turns the already page-cited source maps, the
   audited Lal Kitab KB and the contradiction register into Graphify's documented extraction schema.
 - **Graphify does what it is good at**: schema validation (`validate_extraction`), graph assembly (`build`),
-  community detection (`cluster`), hub/"god node" and surprise analysis, `GRAPH_REPORT.md`, `graph.html`, optional
+  community detection (`cluster`), hub/"god node" and surprise analysis, `GRAPH_REPORT.md`, optional
   wiki/Obsidian export, and its CLI (`graphify query/explain/path --graph graphify-out/graph.json`).
 - **Graphify's fuzzy entity de-duplication is switched off** (`build(..., dedup=False)`), because it merges
   similar-sounding labels — exactly what must not happen to rules. Possible duplicates are listed for review instead.
@@ -154,8 +155,29 @@ python3 kg.py pages "Guru 7th house marriage"            # pages in all 18 books
 python3 kg.py terms "Guru in 7th, navamsa"               # how the query is understood
 # Graphify's own tools on the same graph:
 _skill_workspace/.venv-graphify/bin/graphify explain "Gajakesari yoga" --graph _skill_workspace/graphify-out/graph.json
-open _skill_workspace/graphify-out/graph.html            # visual map of the 167 communities
+open _skill_workspace/graphify-out/graph.html            # the knowledge graph, offline, in one file
+open _skill_workspace/graphify-out/project.html          # the map of the code and documents
 ```
+
+Both pages come from one template, `tools/kg/viewer.html`, and load nothing from the network. `graph.html` carries every
+rule, concept, book, dispute and person; page nodes and their concept mentions are folded into the details. `build_graph.py`
+writes both.
+
+### Project map
+
+`tools/kg/project_graph.py` maps the project itself: files and folders, Python imports, tests, Markdown links, file
+mentions, external packages, and the engine's MCP tools, CLI commands and REST routes. It uses the standard library, reads
+names, docstrings and titles only, and writes the same bytes for the same tree. The output follows Graphify's node-link
+schema, so `graphify explain "service.py" --graph project.json` works on it.
+
+| Where | Files | Written by |
+|---|---|---|
+| Workspace | `graphify-out/project.json`, `project.html` | `build_graph.py` |
+| Private repository | `knowledge/graph/project.json`, `project.html`, `graph.html` | `export_repo.py --archive` |
+| Public repository | `docs/project-graph/project.json`, `project.html` | `export_public.py` |
+
+The public repository gets the project map only: it lists the public tree and holds no book-derived material, so the
+knowledge graph stays private. `python3 tools/kg/project_graph.py --check` exits 1 if a stored map is out of date.
 
 ## 9. Update, backup, restore
 

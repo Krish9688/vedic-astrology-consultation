@@ -6,6 +6,22 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 ## [Unreleased]
 
+### Added
+- **Project map, in every edition.** Nothing described how the code, tests, documents and packages connect, and the public
+  repository had no graph at all. `tools/kg/project_graph.py` now maps files, imports, tests, document links, packages and
+  the engine's MCP, CLI and REST interfaces. It is deterministic and uses only the standard library. The public export
+  writes it to `docs/project-graph/`; it covers the public tree and holds no book-derived material.
+- **One offline viewer for both graphs (`tools/kg/viewer.html`).** The previous `graph.html` loaded its drawing library from
+  a CDN and showed 257 community bubbles. The new page is a single file with no network requests: folders open in place, a
+  file shows everything connected to it, a line lists the links it stands for, and a path can be traced between two items.
+  It works on phones and follows the system's light or dark setting. Validated with `tests/test_project_graph.py` and
+  browser runs at five screen sizes.
+
+### Fixed
+- **Knowledge graph: references between register rows were lost.** Row CR-V21 says it is superseded by CR-X01, but the
+  extractor read that as Lal Kitab entry X01, found no such entry and dropped the link. `CR-` references now link to the row
+  they name.
+
 ## [3.8.0] — 2026-11-08 — consultation report, report design, accuracy score, ashtakavarga fix
 
 Engine, plugin and skill move to 3.8.0 / v3.8. This release adds the engine-filled consultation report with its
