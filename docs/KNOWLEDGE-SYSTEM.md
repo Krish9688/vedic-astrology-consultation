@@ -159,7 +159,8 @@ open _skill_workspace/graphify-out/graph.html            # the knowledge graph, 
 open _skill_workspace/graphify-out/project.html          # the map of the code and documents
 ```
 
-Both pages come from one template, `tools/kg/viewer.html`, and load nothing from the network. `graph.html` carries every
+Both pages come from one template, `tools/kg/viewer.html`, and load nothing from the network. The look is a drafting
+sheet: colours are the tokens at the top of the template (the white Drafting theme by default; the Dark button in the header switches to Cyanotype and remembers the choice), and relationships are told apart by line pattern, never by colour alone. `graph.html` carries every
 rule, concept, book, dispute and person; page nodes and their concept mentions are folded into the details. `build_graph.py`
 writes both.
 

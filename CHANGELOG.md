@@ -14,8 +14,10 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 - **One offline viewer for both graphs (`tools/kg/viewer.html`).** The previous `graph.html` loaded its drawing library from
   a CDN and showed 257 community bubbles. The new page is a single file with no network requests: folders open in place, a
   file shows everything connected to it, a line lists the links it stands for, and a path can be traced between two items.
-  It works on phones and follows the system's light or dark setting. Validated with `tests/test_project_graph.py` and
-  browser runs at five screen sizes.
+  It is drawn like a drafting sheet: grid paper, square tiles with a coloured kind tab, right-angle connectors, and line
+  patterns (solid, dashed, dotted) rather than colours to tell relationships apart. It works on phones and always opens
+  in the white Drafting theme; a Dark button switches to Cyanotype and remembers the choice. The six kind colours were checked for colour-blind separation.
+  Validated with `tests/test_project_graph.py` and browser runs at five screen sizes.
 
 ### Fixed
 - **Knowledge graph: references between register rows were lost.** Row CR-V21 says it is superseded by CR-X01, but the
