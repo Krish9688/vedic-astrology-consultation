@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>__PAGE_TITLE__</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23232C66'/%3E%3Cpath d='M6 6h20v20H6zM6 6l20 20M26 6 6 26M16 6l10 10-10 10L6 16z' fill='none' stroke='%23F2B632' stroke-width='1.8'/%3E%3C/svg%3E">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#eaeef7;--panel:#f6f8fd;--tile:#ffffff;--ink:#1c2450;--muted:#566089;--line:#c6cde3;--edge:#98a3c7;--hover:#e3e8f6;
+  --accent:#a86a00;--accent-soft:#f6e5bf;--neutral:#7c86a8;
+  --k0:#2a78d6;--k1:#e87ba4;--k2:#008300;--k3:#6250d6;--k4:#eb6834;--k5:#1baf7a;--k6:#e34948;
+  --ui:"Avenir Next","Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+  --title:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --code:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  color-scheme:dark;
+  --bg:#161b36;--panel:#1c2245;--tile:#262e5c;--ink:#eef1fc;--muted:#aeb6da;--line:#3b4478;--edge:#6a75a8;--hover:#2d3668;
+  --accent:#f2b632;--accent-soft:#4a3d24;--neutral:#8e98bf;
+  --k0:#3987e5;--k1:#d55181;--k2:#2f9e3f;--k3:#9085e9;--k4:#d95926;--k5:#199e70;--k6:#e66767;
+}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 var(--ui);display:flex;flex-direction:column;overflow:hidden}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.bar{display:flex;align-items:center;gap:16px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line);min-height:56px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{flex:none;width:28px;height:28px}
+.brand b{font:600 19px/1.1 var(--title);display:block;white-space:nowrap}
+.brand small{color:var(--muted);font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.switch{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:none}
+.switch a{padding:5px 12px;color:var(--muted);text-decoration:none;font-size:13px}
+.switch a[aria-current]{background:var(--ink);color:var(--panel)}
+.search{position:relative;flex:1;max-width:520px;margin-left:auto}
+.search input{width:100%;height:36px;padding:0 34px 0 12px;background:var(--tile);border:1px solid var(--line);border-radius:8px}
+.search kbd{position:absolute;right:8px;top:7px;font:12px var(--code);color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.results{position:absolute;z-index:30;top:42px;left:0;right:0;margin:0;padding:4px;list-style:none;background:var(--tile);border:1px solid var(--line);border-radius:10px;max-height:min(420px,60vh);overflow:auto;box-shadow:0 12px 32px rgb(0 0 0/.28)}
+.results[hidden]{display:none}
+.results button{display:flex;gap:8px;align-items:baseline;width:100%;text-align:left;padding:6px 8px;border-radius:6px}
+.results li[aria-selected=true] button,.results button:hover{background:var(--hover)}
+.results .label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 1 auto}
+.results small{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 40%;text-align:right}
+.results .none{padding:10px;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--kc,var(--neutral));flex:none;display:inline-block}
+.trace-note{display:none;align-items:center;gap:8px;padding:6px 16px;background:var(--accent-soft);font-size:13px}
+.trace-note.on{display:flex}
+.trace-note button{text-decoration:underline}
+main{flex:1;display:grid;grid-template-columns:272px minmax(0,1fr) 348px;min-height:0}
+#outline,#detail{background:var(--panel);overflow:auto;min-height:0}
+#outline{border-right:1px solid var(--line);padding:10px 8px}
+#detail{border-left:1px solid var(--line);padding:18px}
+.tree,.tree ul{list-style:none;margin:0;padding:0}
+.tree ul{margin-left:13px;border-left:1px solid var(--line);padding-left:5px}
+.tree summary,.tree .leaf{display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:6px;cursor:pointer;width:100%;text-align:left;min-height:28px}
+.tree summary{list-style:none}
+.tree summary::-webkit-details-marker{display:none}
+.tree summary::before{content:"";flex:none;width:0;height:0;border-left:5px solid var(--muted);border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .12s}
+.tree details[open]>summary::before{transform:rotate(90deg)}
+.tree summary:hover,.tree .leaf:hover{background:var(--hover)}
+.tree .here>summary,.tree .leaf.here{background:var(--accent-soft)}
+.tree .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.tree .leaf .name{font-size:13px}
+.tree .n{color:var(--muted);font-size:12px}
+.tree .cap{color:var(--muted);font-size:12px;padding:3px 6px}
+#stage{position:relative;display:flex;flex-direction:column;min-width:0;min-height:0}
+.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:2px 4px;padding:8px 14px;font-size:13px;border-bottom:1px solid var(--line);min-height:37px}
+.crumbs button{padding:1px 4px;border-radius:4px;color:var(--muted)}
+.crumbs button:hover{background:var(--hover);color:var(--ink)}
+.crumbs [aria-current]{color:var(--ink);font-weight:600}
+.crumbs i{color:var(--muted);font-style:normal}
+.crumbs .hint{margin-left:auto;color:var(--muted);font-size:12px}
+#canvas{flex:1;width:100%;min-height:0;touch-action:none;cursor:grab;display:block}
+#canvas.drag{cursor:grabbing}
+#world.glide{transition:transform .22s ease-out}
+.dock{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:8px 14px;border-top:1px solid var(--line);background:var(--panel)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--line);border-radius:14px;font-size:12px;white-space:nowrap;background:var(--tile)}
+.chip[aria-pressed=false]{opacity:.5;background:none;text-decoration:line-through}
+.chip .n{color:var(--muted)}
+.strip{display:flex;align-items:center;border-bottom:1px solid var(--line);padding-right:10px}
+.strip .crumbs{flex:1;border-bottom:0}
+.zoom{display:flex;flex:none;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.zoom button{width:30px;height:26px;display:grid;place-items:center;font-size:15px;color:var(--muted)}
+.zoom button+button{border-left:1px solid var(--line)}
+.zoom button:hover{background:var(--hover);color:var(--ink)}
+.empty{position:absolute;inset:40% 10% auto;text-align:center;color:var(--muted);pointer-events:none}
+.edge{fill:none;stroke:var(--edge);opacity:.62;pointer-events:none}
+.edge.soft{stroke-dasharray:4 4}
+.hit{fill:none;stroke:transparent;stroke-width:14;cursor:pointer}
+.tile{cursor:pointer}
+.tile:focus{outline:none}
+.tile .box{fill:var(--tile);stroke:var(--line);stroke-width:1}
+.tile .back{fill:var(--panel);stroke:var(--line)}
+.tile:hover .box{stroke:var(--accent);stroke-width:1.5}
+.tile:focus-visible .box{stroke:var(--accent);stroke-width:2.5}
+.tile .t{fill:var(--ink);font-size:13px;font-weight:600;font-family:var(--ui)}
+.tile .t.code{font-family:var(--code);font-size:12.5px}
+.tile .s{fill:var(--muted);font-size:11.5px;font-family:var(--ui)}
+.tile .chev{fill:none;stroke:var(--muted);stroke-width:1.6}
+.tile.focus .box{stroke:var(--accent);stroke-width:2.5;fill:var(--accent-soft)}
+.tile.more .box{fill:none;stroke-dasharray:3 3}
+.tile.more .t{fill:var(--muted);font-weight:500}
+.head{fill:var(--muted);font-size:12px;font-weight:600;font-family:var(--ui)}
+.conn{fill:var(--muted);font-size:12px;font-family:var(--ui)}
+svg.lit .tile{opacity:.3}
+svg.lit .edge{opacity:.12}
+svg.lit .tile.on{opacity:1}
+svg.lit .edge.on,.edge.sel{opacity:1;stroke:var(--accent)}
+.tip{position:fixed;z-index:40;max-width:320px;padding:6px 9px;background:var(--ink);color:var(--panel);font-size:12px;border-radius:6px;pointer-events:none}
+.tip[hidden]{display:none}
+#detail h2{font:600 20px/1.25 var(--title);margin:6px 0 8px;overflow-wrap:anywhere}
+#detail h3{font:600 13px var(--ui);margin:18px 0 6px;display:flex;justify-content:space-between}
+#detail h3 span{color:var(--muted);font-weight:400}
+#detail p{margin:0 0 10px;max-width:62ch}
+.kindline{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:13px}
+.path{display:flex;gap:8px;align-items:flex-start;font:12px/1.5 var(--code);color:var(--muted);overflow-wrap:anywhere;margin-bottom:10px}
+.path button{flex:none;font:12px var(--ui);text-decoration:underline}
+dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:10px 0;font-size:13px}
+dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}
+.defs{font:12px/1.7 var(--code);color:var(--muted);overflow-wrap:anywhere}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 2px}
+.btn{padding:5px 11px;border:1px solid var(--line);border-radius:7px;background:var(--tile);font-size:13px}
+.btn:hover{border-color:var(--accent)}
+.rel{list-style:none;margin:0;padding:0}
+.rel button{display:flex;align-items:center;gap:7px;width:100%;text-align:left;padding:4px 6px;border-radius:6px;min-height:30px}
+.rel button:hover{background:var(--hover)}
+.rel .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;font-size:13px}
+.rel small{color:var(--muted);font-size:12px;flex:none}
+.rel .pair{display:block;white-space:normal;overflow-wrap:anywhere}
+.more-link{font-size:13px;text-decoration:underline;color:var(--muted);padding:4px 6px}
+.close,.menu{display:none}
+.scrim{display:none}
+@media (max-width:1180px){
+  main{grid-template-columns:240px minmax(0,1fr)}
+  #detail{position:fixed;z-index:20;top:0;right:0;bottom:0;width:min(380px,92vw);transform:translateX(102%);transition:transform .18s ease-out;box-shadow:-12px 0 32px rgb(0 0 0/.28)}
+  #detail.open{transform:none}
+  .close{display:block;position:absolute;top:10px;right:12px;width:36px;height:36px;font-size:20px;color:var(--muted)}
+}
+@media (max-width:760px){
+  .bar{flex-wrap:wrap;gap:8px 10px;padding:8px 12px}
+  .menu{display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--line);border-radius:8px;flex:none}
+  .brand{flex:1 1 60%}
+  .switch{order:4;flex:0 0 100%}
+  .switch a{flex:1;text-align:center;padding:6px 8px}
+  .search{order:5;flex:0 0 100%;max-width:none}
+  .search kbd{display:none}
+  main{grid-template-columns:minmax(0,1fr)}
+  #outline{position:fixed;z-index:20;top:0;left:0;bottom:0;width:min(320px,86vw);transform:translateX(-102%);transition:transform .18s ease-out;box-shadow:12px 0 32px rgb(0 0 0/.28)}
+  #outline.open{transform:none}
+  #detail{top:auto;left:0;right:0;width:auto;height:min(58vh,520px);border-left:0;border-top:1px solid var(--line);border-radius:14px 14px 0 0;transform:translateY(102%)}
+  .scrim.on{display:block;position:fixed;inset:0;z-index:15;background:rgb(16 20 50/.4)}
+  .crumbs .hint{display:none}
+  .dock{flex-direction:column;align-items:stretch;flex-wrap:nowrap;padding:6px 12px}
+  .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .chip{flex:none;min-height:30px}
+  .tree summary,.tree .leaf{min-height:36px}
+  .rel button{min-height:40px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <button class="menu" id="menu" aria-label="Open outline"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h14M2 9h14M2 14h14"/></svg></button>
+  <div class="brand">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#232C66"/><path d="M6 6h20v20H6zM6 6l20 20M26 6 6 26M16 6l10 10-10 10L6 16z" fill="none" stroke="#F2B632" stroke-width="1.8"/></svg>
+    <span><b id="title"></b><small id="subtitle"></small></span>
+  </div>
+  <nav class="switch" id="switch" aria-label="Choose a graph" hidden></nav>
+  <div class="search" role="search">
+    <input id="q" type="search" autocomplete="off" spellcheck="false" aria-label="Search the graph" aria-controls="results" placeholder="Search by name">
+    <kbd>/</kbd>
+    <ul class="results" id="results" role="listbox" hidden></ul>
+  </div>
+</header>
+<div class="trace-note" id="traceNote"><span id="traceText"></span><button id="traceCancel">Cancel</button></div>
+<main>
+  <aside id="outline" aria-label="Outline"></aside>
+  <section id="stage" aria-label="Diagram">
+    <div class="strip"><nav class="crumbs" id="crumbs" aria-label="Location"></nav><div class="zoom"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">&minus;</button><button id="zfit" aria-label="Fit to screen"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 5V1h4M9 1h4v4M13 9v4H9M5 13H1V9"/></svg></button></div></div>
+    <svg id="canvas" role="group" aria-label="Relationship diagram"><defs>
+      <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M0 0 8 4 0 8z" fill="var(--edge)"/></marker>
+    </defs><g id="world"><g id="edges"></g><g id="labels"></g><g id="tiles"></g></g></svg>
+    <div class="empty" id="empty" hidden></div>
+    <div class="dock"><div class="chips" id="relChips" role="group" aria-label="Relationships shown"></div><div class="chips" id="kindChips" role="group" aria-label="Kinds shown"></div></div>
+  </section>
+  <aside id="detail" aria-label="Details"></aside>
+</main>
+<div class="scrim" id="scrim"></div>
+<div class="tip" id="tip" hidden></div>
+<script type="application/json" id="graph-data">/*GRAPH_DATA*/null</script>
+<script>
+'use strict';
+const D=JSON.parse(document.getElementById('graph-data').textContent);
+const $=id=>document.getElementById(id);
+const SVGNS='http://www.w3.org/2000/svg';
+function el(tag,attrs,...kids){const e=document.createElement(tag);for(const k in attrs||{}){if(k==='on'){for(const ev in attrs.on)e.addEventListener(ev,attrs.on[ev])}else if(k==='class')e.className=attrs[k];else if(attrs[k]!=null&&attrs[k]!==false)e.setAttribute(k,attrs[k])}for(const c of kids)if(c!=null)e.append(c);return e}
+function sv(tag,attrs,...kids){const e=document.createElementNS(SVGNS,tag);for(const k in attrs||{})if(attrs[k]!=null)e.setAttribute(k,attrs[k]);for(const c of kids)if(c!=null)e.append(c);return e}
+const fmt=n=>n.toLocaleString('en-US');
+const plural=(n,w)=>fmt(n)+' '+w+(n===1?'':'s');
+
+// ---------- data ----------
+const nodes=D.nodes.map(([id,label,kind,group,sub,detail],i)=>({i,id,label,kind,group,sub,detail}));
+const groups=D.groups.map(([label,parent,key],i)=>({i,label,parent,key:key||'',kids:[],leaves:[],count:0,mix:{}}));
+groups.forEach(g=>{if(g.parent>=0)groups[g.parent].kids.push(g.i)});
+const kindIx=Object.fromEntries(D.kinds.map((k,i)=>[k.id,i]));
+const kindColor=k=>k==='package'?'var(--neutral)':`var(--k${kindIx[k]})`;
+const relOn=D.rels.map(()=>true),kindOn=D.kinds.map(()=>true);
+const relTotal=D.rels.map(()=>0),kindTotal=D.kinds.map(()=>0);
+const out=nodes.map(()=>[]),inc=nodes.map(()=>[]);
+for(let i=0;i<D.edges.length;i+=3){const[s,t,r]=[D.edges[i],D.edges[i+1],D.edges[i+2]];out[s].push(t,r);inc[t].push(s,r);relTotal[r]++}
+for(const n of nodes){groups[n.group].leaves.push(n.i);kindTotal[kindIx[n.kind]]++;for(let g=n.group;g>=0;g=groups[g].parent){groups[g].count++;groups[g].mix[n.kind]=(groups[g].mix[n.kind]||0)+1}}
+const nodeById=new Map(nodes.map(n=>[n.id,n])),groupByKey=new Map(groups.map(g=>[g.key,g]));
+const pathOf=g=>{const p=[];for(let x=g;x>=0;x=groups[x].parent)p.unshift(x);return p};
+const groupLabel=g=>pathOf(g).slice(1).map(x=>groups[x].label).join(' / ');
+const unit=()=>D.title==='Project map'?'file':'item';
+const nodeVisible=n=>kindOn[kindIx[nodes[n].kind]];
+$('title').textContent=D.title;$('subtitle').textContent=D.subtitle;
+if(D.switch.length){const s=$('switch');s.hidden=false;for(const x of D.switch)s.append(el('a',{href:x.href,'aria-current':x.here?'page':null},x.label))}
+
+// ---------- state ----------
+let view={t:'map',g:0};
+const expanded=new Set();
+let tracing=null;
+const K={k:1,x:0,y:0};
+const canvas=$('canvas'),world=$('world');
+const narrow=()=>window.innerWidth<=760,sheeted=()=>window.innerWidth<=1180;
+const hashOf=v=>v.t==='map'?(v.g?'#g='+encodeURIComponent(groups[v.g].key):'#'):v.t==='node'?'#n='+encodeURIComponent(nodes[v.n].id):'#p='+encodeURIComponent(nodes[v.a].id)+'~'+encodeURIComponent(nodes[v.b].id);
+function fromHash(){const h=location.hash.slice(1);const[k,v]=[h.slice(0,2),h.slice(2)];
+  if(k==='g='){const g=groupByKey.get(decodeURIComponent(v));if(g)return{t:'map',g:g.i}}
+  if(k==='n='){const n=nodeById.get(decodeURIComponent(v));if(n)return{t:'node',n:n.i}}
+  if(k==='p='){const[a,b]=v.split('~').map(x=>nodeById.get(decodeURIComponent(x)));if(a&&b)return{t:'path',a:a.i,b:b.i}}
+  return{t:'map',g:0}}
+function go(v,push=true){view=v;if(push)history.pushState(null,'',hashOf(v)||'#');selection=null;render(true);if(v.t==='node'&&sheeted())openDetail()}
+addEventListener('popstate',()=>{view=fromHash();selection=null;render(true)});
+let selection=null;
+
+// ---------- aggregation for the map ----------
+function childOf(scope){const memo=new Int32Array(groups.length).fill(-2);
+  return g=>{if(memo[g]!==-2)return memo[g];let x=g,r=-1;while(x>=0){if(groups[x].parent===scope){r=x;break}x=groups[x].parent}memo[g]=r;return r}}
+function mapScene(scope){const g=groups[scope];const sub=childOf(scope);
+  const items=[];for(const k of g.kids)if(groups[k].count)items.push({key:'g'+k,type:'group',g:k,weight:groups[k].count});
+  const leaves=g.leaves.filter(nodeVisible).sort((a,b)=>(out[b].length+inc[b].length)-(out[a].length+inc[a].length));
+  const shown=leaves.slice(0,400);for(const n of shown)items.push({key:'n'+n,type:'node',n,weight:1});
+  const has=new Set(items.map(x=>x.key));
+  const inside=n=>{const gg=nodes[n].group;if(gg===scope)return'n'+n;const c=sub(gg);return c>=0?'g'+c:null};
+  const agg=new Map();
+  for(let i=0;i<D.edges.length;i+=3){const s=D.edges[i],t=D.edges[i+1],r=D.edges[i+2];if(!relOn[r]||!nodeVisible(s)||!nodeVisible(t))continue;
+    const a=inside(s),b=inside(t);if(!a||!b||a===b||!has.has(a)||!has.has(b))continue;
+    const k=a+'>'+b;let e=agg.get(k);if(!e){e={from:a,to:b,w:0,rels:{}};agg.set(k,e)}e.w++;e.rels[r]=(e.rels[r]||0)+1}
+  return{items,links:[...agg.values()].sort((x,y)=>y.w-x.w).slice(0,1500),hidden:leaves.length-shown.length}}
+
+// ---------- layout ----------
+function tileSize(){const vw=canvas.clientWidth;return narrow()?{W:Math.min(vw-40,300),H:52,GX:14,GY:12,RG:48}:{W:236,H:52,GX:20,GY:12,RG:104}}
+function layered(items,links){const S=tileSize(),n=items.length,idx=new Map(items.map((x,i)=>[x.key,i]));
+  const L=links.map(l=>({...l,a:idx.get(l.from),b:idx.get(l.to)}));
+  const outL=items.map(()=>[]),inDeg=new Array(n).fill(0);L.forEach(l=>{outL[l.a].push(l);inDeg[l.b]++});
+  const col=new Uint8Array(n);function dfs(u){col[u]=1;for(const l of outL[u]){if(col[l.b]===1)l.rev=true;else if(!col[l.b])dfs(l.b)}col[u]=2}
+  [...items.keys()].sort((x,y)=>inDeg[x]-inDeg[y]).forEach(i=>{if(!col[i])dfs(i)});
+  const rank=new Array(n).fill(0),deg=new Array(n).fill(0),dag=L.filter(l=>!l.rev);L.forEach(l=>{deg[l.a]++;deg[l.b]++});
+  for(let pass=0;pass<n;pass++){let moved=false;for(const l of dag){if(rank[l.b]<rank[l.a]+1){rank[l.b]=rank[l.a]+1;moved=true}}if(!moved)break}
+  const span0=Math.max(...rank,0)+1,maxRanks=narrow()?span0:Math.max(2,Math.floor((canvas.clientWidth/.85+S.RG)/(S.W+S.RG)));
+  if(span0>maxRanks)for(let i=0;i<n;i++)rank[i]=Math.min(maxRanks-1,Math.floor(rank[i]*maxRanks/span0));
+  const iso=[],ranks=[];items.forEach((_,i)=>{if(!deg[i])iso.push(i);else(ranks[rank[i]]=ranks[rank[i]]||[]).push(i)});
+  const R=ranks.filter(Boolean),pos=new Array(n);R.forEach((r,ri)=>r.forEach((i,o)=>pos[i]={r:ri,o}));
+  const bary=(dir)=>{R.forEach(r=>{const score=new Map(r.map(i=>{const near=L.filter(l=>(l.a===i&&pos[l.b]&&pos[l.b].r===pos[i].r+dir)||(l.b===i&&pos[l.a]&&pos[l.a].r===pos[i].r+dir)).map(l=>pos[l.a===i?l.b:l.a].o);return[i,near.length?near.reduce((s,v)=>s+v,0)/near.length:pos[i].o]}));r.sort((x,y)=>score.get(x)-score.get(y));r.forEach((i,o)=>pos[i].o=o)})};
+  if(n<=200)for(let s=0;s<4;s++){bary(-1);bary(1)}
+  const vh=Math.max(canvas.clientHeight,320),vw=Math.max(canvas.clientWidth,320),place=new Array(n);let extent=0;
+  if(narrow()){const cols=Math.max(1,Math.floor((vw-24)/(S.W+S.GX)));let y=0;R.forEach(r=>{r.forEach((i,o)=>{const c=o%cols;place[i]={x:c*(S.W+S.GX),y:y+Math.floor(o/cols)*(S.H+S.GY)}});y+=Math.ceil(r.length/cols)*(S.H+S.GY)-S.GY+S.RG});extent=y;
+  }else{let maxRows=Math.max(5,Math.floor((vh-70)/(S.H+S.GY)));const budget=vw/.82,span=mr=>R.reduce((w,r)=>w+Math.ceil(r.length/mr)*(S.W+S.GX)-S.GX+S.RG,0)-S.RG;while(span(maxRows)>budget&&maxRows<n)maxRows++;let x=0,tallest=0;const heights=R.map(r=>Math.min(r.length,maxRows)*(S.H+S.GY)-S.GY);tallest=Math.max(0,...heights);
+    R.forEach((r,ri)=>{const cols=Math.ceil(r.length/maxRows),top=(tallest-heights[ri])/2;r.forEach((i,o)=>{place[i]={x:x+Math.floor(o/maxRows)*(S.W+S.GX),y:top+(o%maxRows)*(S.H+S.GY)}});x+=cols*(S.W+S.GX)-S.GX+S.RG});extent=tallest+(R.length?56:0)}
+  if(iso.length){iso.sort((a,b)=>items[b].weight-items[a].weight);const span=Math.max(1,Math.floor((Math.max(vw/.8,((R.length?Object.values(place).reduce((m,p)=>p?Math.max(m,p.x+S.W):m,0):0)))+S.GX)/(S.W+S.GX)));iso.forEach((i,o)=>{const c=narrow()?o%Math.max(1,Math.floor((vw-24)/(S.W+S.GX))):o%span,cols=narrow()?Math.max(1,Math.floor((vw-24)/(S.W+S.GX))):span;place[i]={x:c*(S.W+S.GX),y:extent+Math.floor(o/cols)*(S.H+S.GY)}})}
+  return{place,L,S,isoStart:iso.length?extent:null,hasRanks:R.length>0}}
+function curve(a,b,S,rev){if(narrow()){const x1=a.x+S.W/2,y1=a.y+S.H,x2=b.x+S.W/2,y2=b.y;if(y2>y1+2){const c=Math.max(20,(y2-y1)/2);return`M${x1} ${y1}C${x1} ${y1+c} ${x2} ${y2-c} ${x2} ${y2-1}`}return null}
+  if(b.x>a.x+S.W-2){const x1=a.x+S.W,y1=a.y+S.H/2,x2=b.x,y2=b.y+S.H/2,c=Math.max(36,(x2-x1)/2);return`M${x1} ${y1}C${x1+c} ${y1} ${x2-c} ${y2} ${x2-1} ${y2}`}
+  if(a.x>=b.x+S.W-2){const x1=a.x,y1=a.y+S.H/2,x2=b.x+S.W,y2=b.y+S.H/2,c=Math.max(36,(x1-x2)/2);return`M${x1} ${y1}C${x1-c} ${y1} ${x2+c} ${y2} ${x2+1} ${y2}`}
+  const bx=Math.max(a.x,b.x)+S.W+34;return`M${a.x+S.W} ${a.y+S.H/2}C${bx} ${a.y+S.H/2} ${bx} ${b.y+S.H/2} ${b.x+S.W+1} ${b.y+S.H/2}`}
+
+// ---------- drawing ----------
+const measure=document.createElement('canvas').getContext('2d');
+function fit(text,max,font){measure.font=font;if(measure.measureText(text).width<=max)return text;let lo=0,hi=text.length;while(lo<hi){const m=(lo+hi+1)>>1;measure.measureText(text.slice(0,m)+'…').width<=max?lo=m:hi=m-1}return text.slice(0,lo).trimEnd()+'…'}
+const uiFont=getComputedStyle(document.body).getPropertyValue('--ui'),codeFont=getComputedStyle(document.body).getPropertyValue('--code');
+function tileEl(item,x,y,S,extra){const isG=item.type==='group',isMore=item.type==='more';const c=['tile',extra||'',isG?'group':'',isMore?'more':''].join(' ').trim();let label,sub,color;
+  if(isG){const g=groups[item.g];label=g.label;sub=plural(g.count,unit())}else if(isMore){label=item.text;sub=''}else{const n=nodes[item.n];label=n.label;sub=item.sub||n.sub||'';color=kindColor(n.kind)}
+  const code=!isG&&!isMore&&/\.\w{1,6}$/.test(label);const font=code?`12.5px ${codeFont}`:`600 13px ${uiFont}`;const pad=isG?30:18;
+  const g=sv('g',{class:c,transform:`translate(${x} ${y})`,tabindex:0,role:'button','aria-label':(isG?'Open folder ':'')+label+(sub?', '+sub:''),'data-key':item.key});
+  if(isG)g.append(sv('rect',{class:'back',x:4,y:4,width:S.W,height:S.H,rx:8}));
+  g.append(sv('rect',{class:'box',width:S.W,height:S.H,rx:8}));
+  if(color)g.append(sv('rect',{x:6,y:9,width:4,height:S.H-18,rx:2,fill:color}));
+  const tx=isG?12:18;const yT=sub?22:S.H/2+4;
+  g.append(sv('text',{class:'t'+(code?' code':''),x:tx,y:yT},fit(label,S.W-tx-pad+6,font)));
+  if(sub)g.append(sv('text',{class:'s',x:tx,y:39},fit(sub,S.W-tx-pad+6,`11.5px ${uiFont}`)));
+  if(isG){g.append(sv('path',{class:'chev',d:`M${S.W-18} ${S.H/2-5}l5 5-5 5`}));const mix=Object.entries(groups[item.g].mix),tot=groups[item.g].count;let bx=12;const bw=S.W-24;for(const[k,v]of mix.sort((a,b)=>kindIx[a[0]]-kindIx[b[0]])){const w=Math.max(1.5,bw*v/tot);g.append(sv('rect',{x:bx,y:S.H-6,width:Math.max(w-1,1),height:2.5,fill:kindColor(k)}));bx+=w}}
+  g.addEventListener('click',()=>activate(item));
+  g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate(item)}});
+  g.addEventListener('pointerenter',()=>lightUp(item.key));g.addEventListener('pointerleave',clearLight);
+  g.addEventListener('focus',()=>{lightUp(item.key);reveal(x,y,S)});g.addEventListener('blur',clearLight);
+  return g}
+function activate(item){if(moved)return;if(item.type==='group')go({t:'map',g:item.g});else if(item.type==='more'){if(expanded.has(item.id)){if(sheeted())openDetail();return}expanded.add(item.id);render(false)}else if(tracing!=null){finishTrace(item.n)}else go({t:'node',n:item.n})}
+let sceneEdges=[];
+function reveal(x,y,S){const vw=canvas.clientWidth,vh=canvas.clientHeight,m=12,sx=K.x+x*K.k,sy=K.y+y*K.k,w=S.W*K.k,h=S.H*K.k;const dx=sx<m?m-sx:sx+w>vw-m?vw-m-sx-w:0,dy=sy<m?m-sy:sy+h>vh-m?vh-m-sy-h:0;if(dx||dy)setK(K.k,K.x+dx,K.y+dy,true)}
+function lightUp(key){const on=new Set([key]);for(const e of sceneEdges){if(e.from===key||e.to===key){e.el.classList.add('on');on.add(e.from);on.add(e.to)}}canvas.classList.add('lit');for(const t of $('tiles').children)if(on.has(t.dataset.key))t.classList.add('on')}
+function clearLight(){canvas.classList.remove('lit');for(const e of sceneEdges)e.el.classList.remove('on');for(const t of $('tiles').children)t.classList.remove('on')}
+function edgeTitle(e){const a=e.from,b=e.to;return `${itemName(a)} to ${itemName(b)}: `+Object.entries(e.rels).map(([r,c])=>`${D.rels[r].label} ${fmt(c)}`).join(', ')}
+function itemName(k){return k[0]==='g'?groups[+k.slice(1)].label:nodes[+k.slice(1)].label}
+function drawEdge(e,d){const soft=Object.keys(e.rels).every(r=>D.rels[r].soft);const w=Math.min(1+Math.log2(e.w||1)*.75,6);const p=sv('path',{class:'edge'+(soft?' soft':''),d,'stroke-width':w,'marker-end':'url(#arrow)'});$('edges').append(p);const hit=sv('path',{class:'hit',d});hit.addEventListener('pointerenter',ev=>{showTip(ev,edgeTitle(e));p.classList.add('sel')});hit.addEventListener('pointermove',moveTip);hit.addEventListener('pointerleave',()=>{hideTip();if(selection!==e)p.classList.remove('sel')});hit.addEventListener('click',()=>{if(moved)return;selection=e;sceneEdges.forEach(x=>x.el.classList.toggle('sel',x===e));renderDetail();if(sheeted())openDetail()});$('edges').append(hit);e.el=p;sceneEdges.push(e)}
+function clear(){$('edges').replaceChildren();$('labels').replaceChildren();$('tiles').replaceChildren();sceneEdges=[]}
+function focusScene(n){const S=tileSize(),mk=(dir,list)=>{const by=new Map();for(let i=0;i<list.length;i+=2){const o=list[i],r=list[i+1];if(!relOn[r]||!nodeVisible(o))continue;if(!by.has(r))by.set(r,[]);by.get(r).push(o)}return by};
+  const cols={in:mk('in',inc[n]),out:mk('out',out[n])};const rows=(dir,by)=>{const b=[];for(const[r,arr]of [...by.entries()].sort((a,b)=>a[0]-b[0])){arr.sort((x,y)=>nodes[x].label.localeCompare(nodes[y].label));const id=`${n}:${dir}:${r}`,cap=expanded.has(id)?Math.min(arr.length,200):12;b.push({head:`${dir==='in'?D.rels[r].inverse:D.rels[r].label} (${fmt(arr.length)})`,r});arr.slice(0,cap).forEach(o=>b.push({item:{type:'node',key:'n'+o+dir,n:o,sub:groupLabel(nodes[o].group)||nodes[o].sub},r,dir}));if(arr.length>cap)b.push({item:{type:'more',key:'m'+id,id,text:expanded.has(id)?`${fmt(arr.length-cap)} more in the details`:`Show ${fmt(Math.min(arr.length,200))} of ${fmt(arr.length)}`}})}return b};
+  clear();const left=rows('in',cols.in),right=rows('out',cols.out);const center={type:'node',key:'n'+n,n,sub:groupLabel(nodes[n].group)};const HD=26;
+  const height=b=>b.reduce((h,x)=>h+(x.head?HD:S.H+S.GY),0);const place=(b,x,y0,tiles,labels)=>{let y=y0;for(const row of b){if(row.head){labels.push({x:x+2,y:y+16,t:row.head.charAt(0).toUpperCase()+row.head.slice(1)});y+=HD}else{tiles.push({row,x,y});y+=S.H+S.GY}}return y};
+  const tiles=[],labels=[];let cPos;
+  if(narrow()){let y=0;if(left.length){y=place(left,0,0,tiles,labels)+20}cPos={x:0,y};y+=S.H+36;place(right,0,y,tiles,labels)}
+  else{const hl=height(left),hr=height(right),h=Math.max(hl,hr,S.H);const xL=0,xC=(left.length?S.W+S.RG:0),xR=xC+S.W+S.RG;place(left,xL,(h-hl)/2,tiles,labels);place(right,xR,(h-hr)/2,tiles,labels);cPos={x:xC,y:(h-S.H)/2}}
+  for(const l of labels)$('labels').append(sv('text',{class:'head',x:l.x,y:l.y},l.t));
+  const ck=center.key;for(const t of tiles){if(t.row.item.type==='more')continue;const e=t.row.dir==='in'?{from:t.row.item.key,to:ck,w:1,rels:{[t.row.r]:1}}:{from:ck,to:t.row.item.key,w:1,rels:{[t.row.r]:1}};const a=t.row.dir==='in'?t:cPos,b=t.row.dir==='in'?cPos:t,d=curve(a,b,S);if(d)drawEdge(e,d)}
+  anchor=cPos.y+S.H/2;$('tiles').append(tileEl(center,cPos.x,cPos.y,S,'focus'));for(const t of tiles)$('tiles').append(tileEl(t.row.item,t.x,t.y,S));
+  return!(left.length||right.length)}
+function bfs(a,b){const prev=new Map([[a,null]]),q=[a];for(let h=0;h<q.length;h++){const u=q[h];if(u===b)break;for(const[list,dir]of [[out[u],1],[inc[u],-1]])for(let i=0;i<list.length;i+=2){const v=list[i],r=list[i+1];if(relOn[r]&&!prev.has(v)){prev.set(v,{u,r,dir});q.push(v)}}}if(!prev.has(b))return null;const chain=[];for(let x=b;x!=null;){const p=prev.get(x);chain.unshift({n:x,via:p});x=p?p.u:null}return chain}
+function pathScene(a,b){clear();const chain=bfs(a,b);if(!chain){$('empty').hidden=false;$('empty').textContent=`No path between ${nodes[a].label} and ${nodes[b].label} with the relationships shown.`;return}
+  const S=tileSize(),gap=46;chain.forEach((c,i)=>{const y=i*(S.H+gap);$('tiles').append(tileEl({type:'node',key:'n'+c.n,n:c.n,sub:groupLabel(nodes[c.n].group)},0,y,S,(i===0||i===chain.length-1)?'focus':''));if(i){const v=c.via,lab=(v.dir>0?D.rels[v.r].label:D.rels[v.r].inverse);const from=v.dir>0?{from:'n'+chain[i-1].n,to:'n'+c.n}:{from:'n'+c.n,to:'n'+chain[i-1].n};const x=S.W/2,y1=y-gap+4,y2=y-4,e={...from,w:1,rels:{[v.r]:1}};drawEdge(e,v.dir>0?`M${x} ${y1}L${x} ${y2}`:`M${x} ${y2}L${x} ${y1}`);$('labels').append(sv('text',{class:'conn',x:x+12,y:y-gap/2+4},lab))}})}
+function render(fitView){$('empty').hidden=true;hideTip();anchor=null;
+  if(view.t==='map'){const sc=mapScene(view.g);clear();if(!sc.items.length){$('empty').hidden=false;$('empty').textContent='Nothing matches these filters. Turn a kind back on below.'}
+    const lay=layered(sc.items,sc.links),S=lay.S;
+    if(lay.isoStart!=null&&lay.hasRanks)$('labels').append(sv('text',{class:'head',x:2,y:lay.isoStart-14},'No relationships inside this folder'));
+    lay.L.forEach(l=>{const d=curve(lay.place[l.a],lay.place[l.b],S,l.rev);if(d)drawEdge(l,d)});
+    sc.items.forEach((it,i)=>$('tiles').append(tileEl(it,lay.place[i].x,lay.place[i].y,S)));
+    scopeHidden=sc.hidden;
+  }else if(view.t==='node'){scopeHidden=0;if(focusScene(view.n)){$('empty').hidden=false;$('empty').textContent='No relationships to show. Turn a relationship type back on below.'}}
+  else{scopeHidden=0;pathScene(view.a,view.b)}
+  renderCrumbs();renderDetail();syncOutline();if(fitView)fit2();}
+let scopeHidden=0;
+
+let anchor=null;
+function fit2(animate=true){const b=world.getBBox(),vw=canvas.clientWidth,vh=canvas.clientHeight,m=narrow()?12:28;if(!b.width){setK(1,0,0,false);return}
+  const k=narrow()?Math.min(1,(vw-2*m)/b.width):Math.max(.8,Math.min(1,Math.min((vw-2*m)/b.width,(vh-2*m)/b.height)));
+  const x=b.width*k<vw-2*m?(vw-b.width*k)/2-b.x*k:m-b.x*k;let y=b.height*k<vh-2*m?(vh-b.height*k)/2-b.y*k:m-b.y*k;if(anchor!=null&&b.height*k>=vh-2*m)y=Math.min(m,Math.max(vh-m-b.height*k,vh/2-anchor*k));setK(k,x,y,animate)}
+function setK(k,x,y,animate){K.k=k;K.x=x;K.y=y;world.classList.toggle('glide',!!animate);world.style.transform=`translate(${x}px,${y}px) scale(${k})`}
+function zoomAt(f,cx,cy){const k=Math.max(.3,Math.min(2.5,K.k*f)),r=k/K.k;setK(k,cx-(cx-K.x)*r,cy-(cy-K.y)*r,false)}
+$('zin').onclick=()=>zoomAt(1.25,canvas.clientWidth/2,canvas.clientHeight/2);
+$('zout').onclick=()=>zoomAt(.8,canvas.clientWidth/2,canvas.clientHeight/2);
+$('zfit').onclick=()=>fit2();
+let moved=false;const pts=new Map();let pinch=0,dragStart=null;
+canvas.addEventListener('pointerdown',e=>{pts.set(e.pointerId,e);moved=false;dragStart={x:e.clientX,y:e.clientY,kx:K.x,ky:K.y};if(pts.size===2){const[a,b]=[...pts.values()];pinch=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)}});
+addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,e);
+  if(pts.size===2){const[a,b]=[...pts.values()],d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),r=canvas.getBoundingClientRect();if(pinch)zoomAt(d/pinch,(a.clientX+b.clientX)/2-r.left,(a.clientY+b.clientY)/2-r.top);pinch=d;moved=true;return}
+  if(!dragStart)return;const dx=e.clientX-dragStart.x,dy=e.clientY-dragStart.y;if(!moved&&Math.hypot(dx,dy)<5)return;moved=true;canvas.classList.add('drag');setK(K.k,dragStart.kx+dx,dragStart.ky+dy,false)});
+function endPtr(e){pts.delete(e.pointerId);if(pts.size<2)pinch=0;if(!pts.size){dragStart=null;canvas.classList.remove('drag');setTimeout(()=>{moved=false},0)}}
+addEventListener('pointerup',endPtr);addEventListener('pointercancel',endPtr);
+canvas.addEventListener('wheel',e=>{e.preventDefault();const r=canvas.getBoundingClientRect();if(e.ctrlKey||e.metaKey)zoomAt(Math.exp(-e.deltaY*.01),e.clientX-r.left,e.clientY-r.top);else setK(K.k,K.x-e.deltaX,K.y-e.deltaY,false)},{passive:false});
+function showTip(ev,t){const tip=$('tip');tip.textContent=t;tip.hidden=false;moveTip(ev)}
+function moveTip(ev){const tip=$('tip'),w=tip.offsetWidth;tip.style.left=Math.min(ev.clientX+12,innerWidth-w-8)+'px';tip.style.top=(ev.clientY+14)+'px'}
+function hideTip(){$('tip').hidden=true}
+
+// ---------- crumbs, outline ----------
+function renderCrumbs(){const c=$('crumbs');c.replaceChildren();const trail=view.t==='map'?pathOf(view.g):view.t==='node'?pathOf(nodes[view.n].group):[0];
+  trail.forEach((g,i)=>{if(i)c.append(el('i',{'aria-hidden':'true'},'/'));const last=view.t==='map'&&i===trail.length-1;c.append(el('button',{'aria-current':last?'location':null,on:{click:()=>go({t:'map',g})}},groups[g].label))});
+  if(view.t==='node'){c.append(el('i',{'aria-hidden':'true'},'/'),el('button',{'aria-current':'location'},nodes[view.n].label))}
+  if(view.t==='path')c.append(el('i',{'aria-hidden':'true'},'/'),el('button',{'aria-current':'location'},`Path: ${nodes[view.a].label} to ${nodes[view.b].label}`));
+  if(scopeHidden)c.append(el('span',{class:'hint'},`${fmt(scopeHidden)} more in search and the outline`))}
+const treeNodes=new Map();
+function buildTree(g){const li=el('li');if(groups[g].count===0)return null;const d=el('details',{}),s=el('summary',{},el('span',{class:'name',title:groups[g].label},groups[g].label),el('span',{class:'n'},fmt(groups[g].count)));d.append(s);treeNodes.set(g,d);s.addEventListener('click',e=>{if(!e.target.closest('.name'))return;e.preventDefault();d.open=true;go({t:'map',g});if(narrow())closeOutline()});
+  d.addEventListener('toggle',()=>{if(d.open&&!d.dataset.ready){d.dataset.ready='1';const ul=el('ul',{role:'group'});for(const k of [...groups[g].kids].sort((a,b)=>groups[b].count-groups[a].count)){const c=buildTree(k);if(c)ul.append(c)}const ls=groups[g].leaves;for(const n of [...ls].sort((a,b)=>nodes[a].label.localeCompare(nodes[b].label)).slice(0,300))ul.append(el('li',{},el('button',{class:'leaf','data-n':n,on:{click:()=>{go({t:'node',n});if(narrow())closeOutline()}}},el('span',{class:'dot',style:`--kc:${kindColor(nodes[n].kind)}`}),el('span',{class:'name',title:nodes[n].label},nodes[n].label))));if(ls.length>300)ul.append(el('li',{class:'cap'},`${fmt(ls.length-300)} more: use search`));d.append(ul);syncOutline()}});li.append(d);return li}
+const treeRoot=el('ul',{class:'tree',role:'tree'});for(const k of [...groups[0].kids].sort((a,b)=>groups[b].count-groups[a].count)){const c=buildTree(k);if(c)treeRoot.append(c)}$('outline').append(treeRoot);
+function syncOutline(){document.querySelectorAll('#outline .here').forEach(e=>e.classList.remove('here'));const g=view.t==='map'?view.g:view.t==='node'?nodes[view.n].group:0;for(const x of pathOf(g)){const d=treeNodes.get(x);if(d&&!d.open)d.open=true}const d=treeNodes.get(g);if(view.t==='map'&&d)d.classList.add('here');if(view.t==='node'){const b=document.querySelector(`#outline .leaf[data-n="${view.n}"]`);if(b){b.classList.add('here');b.scrollIntoView({block:'nearest'})}}}
+
+// ---------- details ----------
+function openDetail(){$('detail').classList.add('open');$('scrim').classList.toggle('on',narrow())}
+function closeDetail(){$('detail').classList.remove('open');$('scrim').classList.remove('on')}
+function closeOutline(){$('outline').classList.remove('open');$('scrim').classList.remove('on')}
+$('menu').onclick=()=>{$('outline').classList.add('open');$('scrim').classList.add('on')};
+$('scrim').onclick=()=>{closeOutline();closeDetail()};
+const closeBtn=()=>el('button',{class:'close','aria-label':'Close details',on:{click:closeDetail}},'×');
+function relList(title,count,ids,fn){const box=el('section',{});box.append(el('h3',{},title,el('span',{},fmt(count))));const ul=el('ul',{class:'rel'});const add=(from,to)=>{for(const x of ids.slice(from,to))ul.append(fn(x))};add(0,12);box.append(ul);if(ids.length>12){const b=el('button',{class:'more-link',on:{click:()=>{add(12,600);b.remove();if(ids.length>600)box.append(el('p',{class:'cap'},`${fmt(ids.length-600)} more: narrow with search`))}}},`Show all ${fmt(ids.length)}`);box.append(b)}return box}
+const nodeRow=n=>el('li',{},el('button',{on:{click:()=>go({t:'node',n})}},el('span',{class:'dot',style:`--kc:${kindColor(nodes[n].kind)}`}),el('span',{class:'name',title:nodes[n].label},nodes[n].label),el('small',{},groups[nodes[n].group].label.slice(0,18))));
+function renderDetail(){const p=$('detail');p.replaceChildren(closeBtn());
+  if(selection){const e=selection;const[a,b]=[e.from,e.to];const pairs=[];const inA=keyMembers(a),inB=keyMembers(b);for(let i=0;i<D.edges.length&&pairs.length<800;i+=3){const s=D.edges[i],t=D.edges[i+1],r=D.edges[i+2];if(relOn[r]&&inA(s)&&inB(t))pairs.push([s,t,r])}
+    p.append(el('div',{class:'kindline'},'Connection'),el('h2',{},`${itemName(a)} to ${itemName(b)}`),el('p',{},plural(e.w,'relationship')+': '+Object.entries(e.rels).map(([r,c])=>`${D.rels[r].label} ${fmt(c)}`).join(', ')));
+    p.append(relList('Underlying links',pairs.length,pairs,([s,t,r])=>el('li',{},el('button',{on:{click:()=>go({t:'node',n:s})}},el('span',{class:'name pair'},`${nodes[s].label} ${D.rels[r].label} ${nodes[t].label}`)))));return}
+  if(view.t==='node')return nodeDetail(p,view.n);
+  if(view.t==='path'){p.append(el('div',{class:'kindline'},'Path'),el('h2',{},`${nodes[view.a].label} to ${nodes[view.b].label}`),el('p',{},'Shortest route using the relationships shown. Direction can change along the route.'));const c=bfs(view.a,view.b);if(c)p.append(relList('Steps',c.length,c.map(x=>x.n),nodeRow));return}
+  groupDetail(p,view.g)}
+function keyMembers(k){if(k[0]==='n'){const id=+k.slice(1);return n=>n===id}const g=+k.slice(1);const memo=new Map();return n=>{const gg=nodes[n].group;if(memo.has(gg))return memo.get(gg);let x=gg,hit=false;while(x>=0){if(x===g){hit=true;break}x=groups[x].parent}memo.set(gg,hit);return hit}}
+function nodeDetail(p,n){const N=nodes[n],d=N.detail||{};const kind=D.kinds[kindIx[N.kind]].label;
+  p.append(el('div',{class:'kindline'},el('span',{class:'dot',style:`--kc:${kindColor(N.kind)}`}),kind+(d.role?` (${d.role})`:'')),el('h2',{},N.label));
+  if(d.path){const b=el('button',{on:{click:()=>{navigator.clipboard&&navigator.clipboard.writeText(d.path).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)})}}},'Copy');p.append(el('div',{class:'path'},el('span',{},d.path),b))}
+  if(d.summary)p.append(el('p',{},d.summary));
+  const facts=Object.entries(d).filter(([k])=>!['path','summary','defines','role'].includes(k));if(facts.length){const dl=el('dl',{});for(const[k,v]of facts)dl.append(el('dt',{},k.charAt(0).toUpperCase()+k.slice(1).replace(/_/g,' ')),el('dd',{},String(typeof v==='number'?fmt(v):v)));p.append(dl)}
+  if(d.defines)p.append(el('h3',{},'Defines',el('span',{},fmt(d.defines.length))),el('div',{class:'defs'},d.defines.join('  ')));
+  p.append(el('div',{class:'actions'},el('button',{class:'btn',on:{click:()=>startTrace(n)}},'Trace a path from here'),el('button',{class:'btn',on:{click:()=>go({t:'map',g:N.group})}},'Open folder')));
+  const sec=(list,field)=>{const by=new Map();for(let i=0;i<list.length;i+=2){const r=list[i+1];if(!by.has(r))by.set(r,[]);by.get(r).push(list[i])}for(const[r,ids]of [...by.entries()].sort((a,b)=>a[0]-b[0])){const t=D.rels[r][field];p.append(relList(t.charAt(0).toUpperCase()+t.slice(1),ids.length,ids.sort((a,b)=>nodes[a].label.localeCompare(nodes[b].label)),nodeRow))}};sec(out[n],'label');sec(inc[n],'inverse')}
+function groupDetail(p,g){const G=groups[g];
+  p.append(el('div',{class:'kindline'},g?'Folder':'Overview'),el('h2',{},g?G.label:D.title));if(!g)p.append(el('p',{},D.note));
+  const dl=el('dl',{});for(const k of D.kinds){const v=G.mix[k.id];if(v)dl.append(el('dt',{},k.label),el('dd',{},fmt(v)))}p.append(dl);
+  if(!g)p.append(el('p',{},'Select a tile to follow it. Folders open in place, files show everything connected to them. Select a line to list the links it stands for.'));
+  if(g){const inside=keyMembers('g'+g),count=new Map();const top=(x)=>{const pp=pathOf(nodes[x].group);return pp[1]};for(let i=0;i<D.edges.length;i+=3){const s=D.edges[i],t=D.edges[i+1],r=D.edges[i+2];if(!relOn[r])continue;const a=inside(s),b=inside(t);if(a===b)continue;const o=top(a?t:s);if(o==null)continue;const c=count.get(o)||{o:0,i:0};a?c.o++:c.i++;count.set(o,c)}
+    const ids=[...count.entries()].sort((a,b)=>(b[1].o+b[1].i)-(a[1].o+a[1].i));if(ids.length)p.append(relList('Connected areas',ids.length,ids,([o,c])=>el('li',{},el('button',{on:{click:()=>go({t:'map',g:o})}},el('span',{class:'name'},groups[o].label),el('small',{},`${fmt(c.o)} out, ${fmt(c.i)} in`)))))}}
+
+// ---------- filters ----------
+function chips(host,cfg,on,totals,dot){host.replaceChildren();cfg.forEach((c,i)=>{if(!totals[i])return;const b=el('button',{class:'chip','aria-pressed':'true',on:{click:()=>{on[i]=!on[i];b.setAttribute('aria-pressed',on[i]);selection=null;render(false)}}},dot?el('span',{class:'dot',style:`--kc:${kindColor(c.id)}`}):null,c.label,el('span',{class:'n'},fmt(totals[i])));host.append(b)})}
+chips($('relChips'),D.rels,relOn,relTotal,false);chips($('kindChips'),D.kinds,kindOn,kindTotal,true);
+
+// ---------- search and trace ----------
+const hay=nodes.map(n=>(n.label+' '+(n.detail&&n.detail.path||'')).toLowerCase());
+const q=$('q'),list=$('results');let hits=[],cursor=-1;
+function search(s){s=s.trim().toLowerCase();if(!s)return[];const scored=[];for(let i=0;i<hay.length;i++){const p=hay[i].indexOf(s);if(p<0)continue;scored.push([(p===0?0:hay[i][p-1]===' '||hay[i][p-1]==='/'?1:2)*1e4+hay[i].length,i])}groups.forEach((g,i)=>{if(i&&g.label.toLowerCase().includes(s))scored.push([g.label.toLowerCase().startsWith(s)?-1:9999,-i])});return scored.sort((a,b)=>a[0]-b[0]).slice(0,40).map(x=>x[1])}
+function showResults(){list.replaceChildren();list.hidden=!q.value.trim();cursor=-1;if(list.hidden)return;if(!hits.length){list.append(el('li',{class:'none'},`No match for “${q.value.trim()}”. Try part of a name.`));return}hits.forEach((h,i)=>{const isG=h<0;const label=isG?groups[-h].label:nodes[h].label,where=isG?'Folder':groupLabel(nodes[h].group);list.append(el('li',{role:'option','data-i':i},el('button',{tabindex:-1,on:{click:()=>pick(h)}},el('span',{class:'dot',style:`--kc:${isG?'var(--neutral)':kindColor(nodes[h].kind)}`}),el('span',{class:'label',title:label},label),el('small',{},where))))})}
+function pick(h){q.value='';hits=[];showResults();q.blur();if(h<0){if(tracing==null)go({t:'map',g:-h});return}if(tracing!=null)finishTrace(h);else go({t:'node',n:h})}
+let timer;q.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(()=>{hits=search(q.value);showResults()},70)});
+q.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!hits.length)return;cursor=(cursor+(e.key==='ArrowDown'?1:-1)+hits.length)%hits.length;[...list.children].forEach((li,i)=>li.setAttribute('aria-selected',i===cursor));list.children[cursor].scrollIntoView({block:'nearest'})}else if(e.key==='Enter'){if(hits.length)pick(hits[Math.max(cursor,0)])}else if(e.key==='Escape'){q.value='';hits=[];showResults();q.blur()}});
+addEventListener('click',e=>{if(!e.target.closest('.search')){list.hidden=true}});
+addEventListener('keydown',e=>{const typing=/INPUT|TEXTAREA/.test(document.activeElement.tagName);if(!typing&&(e.key==='/'||(e.key==='k'&&(e.metaKey||e.ctrlKey)))){e.preventDefault();q.focus()}else if(e.key==='k'&&(e.metaKey||e.ctrlKey)){e.preventDefault()}else if(e.key==='Escape'){if(tracing!=null)endTrace();closeDetail();closeOutline()}else if(!typing&&(e.key==='+'||e.key==='=')){$('zin').click()}else if(!typing&&e.key==='-'){$('zout').click()}else if(!typing&&e.key==='0'){fit2()}});
+function startTrace(n){tracing=n;$('traceText').textContent=`Choose where the path from ${nodes[n].label} should end: search, or select a tile.`;$('traceNote').classList.add('on');closeDetail();q.focus()}
+function endTrace(){tracing=null;$('traceNote').classList.remove('on')}
+function finishTrace(b){const a=tracing;endTrace();if(a!==b)go({t:'path',a,b})}
+$('traceCancel').onclick=endTrace;
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>render(true),120)});
+
+view=fromHash();render(true);
+if(window.innerWidth>1180||view.t!=='node')closeDetail();
+</script>
+</body>
+</html>
