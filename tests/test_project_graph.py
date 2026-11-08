@@ -100,6 +100,19 @@ def test_page_data_cannot_close_its_script_tag(tmp_path):
     assert json.loads(data)["nodes"][0][1] == "</script><b>"
 
 
+def test_knowledge_view_withholds_birth_details():
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    from privacy_check import records
+    sample = "[AB] Example chart: born " + "on 1 May 2000 at 10:30"       # invented; split so this file holds no record
+    assert records(sample)
+    g = {"nodes": [{"id": "book:AB", "label": "B", "node_type": "Book", "attributes": {"source_id": "AB", "system": "Parashari"}},
+                   {"id": "rule:AB:1", "label": sample, "node_type": "Rule", "attributes": {"source": "AB", "section": "6. Examples", "tier": "modern"}}],
+         "links": []}
+    v = graph_view.knowledge_view(g, "1.0", None)
+    assert not records(json.dumps(v))
+    assert [n[1] for n in v["nodes"] if n[0] == "rule:AB:1"] == ["[AB] Worked example, birth details withheld"]
+
+
 def test_knowledge_view_folds_pages_and_keeps_rules():
     node = lambda i, t, **a: {"id": i, "label": i, "node_type": t, "attributes": a}  # noqa: E731
     g = {"nodes": [node("book:AB", "Book", source_id="AB", system="Parashari", author="A"), node("page:AB:1", "Page", book="AB"),

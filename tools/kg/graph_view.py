@@ -119,6 +119,19 @@ CONCEPT_TITLES = {"planet": "Planets", "house": "Houses", "sign": "Signs", "naks
 SUMMARY_TYPES = {"Page", "DuplicateFile"}
 
 
+def withhold_birth_details(nodes, groups):
+    """Worked examples can quote a chart's birth details. The page shows that an example exists; graph.json keeps the text."""
+    sys.path.insert(0, os.path.join(HERE, ".."))
+    from privacy_check import records
+    for n in nodes:
+        if records(n[1]):
+            n[1] = (n[1].split("]")[0] + "] " if n[1].startswith("[") else "") + "Worked example, birth details withheld"
+        n[5] = {k: v for k, v in n[5].items() if not (isinstance(v, str) and records(v))}
+    for g in groups:
+        if records(g[0]):
+            g[0] = "Section with birth details withheld"
+
+
 def knowledge_view(g, release="", switch=None):
     v = View()
     books_root, concepts, disputes, people = [v.group(k, label) for k, label in (("books", "Books"), ("concepts", "Concepts"),
@@ -192,6 +205,7 @@ def knowledge_view(g, release="", switch=None):
         for b in books:
             if b in book_node and node_src.get(s) != b:
                 edges.append((s, book_node[b], "CITES"))
+    withhold_birth_details(nodes, v.groups)
     counts = Counter(t for t in types.values())
     meta = {"release": release, "nodes": len(g["nodes"]), "links": len(g["links"]), "pages": counts["Page"], "near_duplicate_page_pairs": near_dup}
     note = (f"Every rule, concept, book, person and dispute from the full graph ({meta['nodes']:,} nodes, {meta['links']:,} edges). "
