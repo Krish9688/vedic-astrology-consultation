@@ -6,7 +6,15 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 ## [Unreleased]
 
-Review fixes made after 3.7.0, and the T2 research round of 2026-11-07; the version number is the owner's decision.
+## [3.8.0] — 2026-11-08 — consultation report, report design, accuracy score, ashtakavarga fix
+
+Engine, plugin and skill move to 3.8.0 / v3.8. This release adds the engine-filled consultation report with its
+`/astro-report` skill, the report design (evidence chips, one key, birth-time states), the calculation accuracy score
+with its reference set in the public edition, and stricter input checks, and it corrects four ashtakavarga entries. It
+also carries the audit and review fixes made after 3.7.0. Moon and Venus bindus per sign and the sarvashtakavarga (SAV) per
+sign change in most charts (marked "behaviour change" below). Two ayanamsa options are removed and time-zone input is
+stricter; both are listed under Removed and marked Breaking. The Parashari and Lal Kitab method is unchanged; reports
+keep each system's grade separate.
 
 ### Added
 - **Report design: evidence chips, one legend, a "This report answers" line and birth-time states.** Before, a
@@ -20,18 +28,64 @@ Review fixes made after 3.7.0, and the T2 research round of 2026-11-07; the vers
   chip, as dotted or faded bar ends, and in a "What moves with the birth time" list. Existing report JSON still
   validates; the boolean `time_sensitive` maps to `depends`. Validated by new tests (`tests/test_report_design.py`)
   and by HTML, PDF and DOCX renders of the synthetic personas P2–P6.
+- **Consultation report from the engine.** `create_report` (MCP, REST and CLI) and the `/astro-report` skill produce
+  a written report in HTML, PDF or DOCX: an engine-filled kundli, an optional Lal Kitab section, and an
+  interpretation model that a checker ties to engine fact and event ids (a dated window must match the events it
+  names). Key points can cite exact events (`event_refs`, such as a dasha, an ingress or a conjunction), and each
+  must exist in the recomputed facts and fall inside the window. Births with an unknown or approximate time get
+  Moon-based charts and time-sampled packs without false precision. The report also carries a page-numbered
+  contents, a deterministic output and a PDF page check; Lal Kitab remedies show the edition dispute in both
+  directions. An invented sample report (Asha) and `references/consultation-report.md` show the format.
+- **Task-based communication styles, `astro-sources` skill and `report-reviewer` agent.**
+  `references/communication.md` section 8 defines six styles (normal interaction, technical assistance, astrology
+  consultation, astrology report, research and audit, project management). `astro-sources` wraps the source search
+  and rule lookup tools. `report-reviewer` is a read-only agent that checks a rendered report against the report
+  standard and the engine fact ids.
+- **Ayanamsa and calendar on every birth tool.** Every MCP birth tool and the panchang (service, MCP, REST and CLI)
+  take `ayanamsa` and `calendar`; the sensitivity and applicability tools take `span_min`. Chart output now carries
+  the mean and true ayanamsa values (`ayanamsa_deg_mean`, `ayanamsa_deg_true`).
+- **Chart facts and charts.** `F.<planet>.d10_dignity` makes the dignity in the tenth divisional chart visible to
+  report writers (a debilitated D10 lord had been presented as a strength). SVG charts get distinct ids, a
+  retrograde mark and an optional Ascendant label; Moon charts and the Lal Kitab chart no longer draw "Asc".
+- **Place list consent.** `/astrology-consultation:setup` asks before it downloads the GeoNames place list (about 7 MB,
+  CC BY 4.0), and `doctor` shows a places row.
+- **Regression charts.** Nine edge-case charts (midnight, a US daylight-saving day, +05:45, +09:30, +12:00, -03:00,
+  the southern hemisphere, India 1942 at +06:30) hold reference values checked against independent calculations.
+- **Community files.** Issue templates (bug, calculation, docs) with a birth-data warning, a pull request template, a
+  code of conduct and a `CLAUDE.md` for contributors.
+- **Calculation accuracy score.** `tools/accuracy_score.py` scores the engine against a frozen reference set
+  (`docs/accuracy/`, 387 cases, hashes in `docs/accuracy/FREEZE.md`) under the rubric `docs/ACCURACY-RUBRIC.md`
+  (method C: grades G1–G4, ten weighted areas). Score of record, 2026-11-07: 95.85/100 (16 failing cases: 14 from
+  ashtakavarga entries that followed Varahamihira rather than the documented BPHS rows, 2 from the A7 lagna
+  tolerance). After the ashtakavarga fix, a labelled post-fix re-run of the same frozen set gives 99.60/100
+  (`docs/accuracy/report-2026-11-07-post-B4.md`); 95.85 stays the score of record. An independent audit
+  (`docs/accuracy/AUDIT-2026-11-07.md`) stands with corrections; its regrade (98.04) is informational only. The
+  scorer, rubric and reference set now ship in the public edition, and anyone can re-run the score. The public
+  copies of the reference set redact library file names and local paths; their checksums are listed in
+  `docs/accuracy/FREEZE-PUBLIC.md`.
+- **Report design specification.** `docs/REPORT-DESIGN-SPEC.md` describes the evidence chips, the key, the
+  "This report answers" line and the birth-time states above. It is now part of the public edition.
 
 ### Fixed
-- **Ashtakavarga Moon and Venus rows.** Four entries of the bindu table followed Varahamihira while the engine
+- **Ashtakavarga Moon and Venus rows (behaviour change).** Four entries of the bindu table followed Varahamihira while the engine
   documents BPHS ch. 66: the Moon's row from the Moon (house 9 missing), from Mars (extra 9) and from Jupiter (12
   instead of 2), and Venus's row from Mars (5 instead of 4). Totals were unaffected, which is why the totals test never
   caught it; Moon and Venus bindus per sign, and the SAV per sign, differed from BPHS in most charts. Now BPHS, checked against
   the BPHS dot lists and PVR's tables; a regression test reproduces PVR's published Moon and Venus rows.
+- **Mislabelled ayanamsa under concurrent calls.** A non-Lahiri call running at the same time as another could
+  return positions in one mode labelled as another (26 to 29 of 3000 calls in a reproduction). The engine now holds a
+  lock across positions, ascendant, angles, houses and panchang; the reproduction gives 0 of 3000.
+- **Panchang with a `+0530` offset** was read as 530 hours and could return the wrong day. An offset written
+  `+05:30` in the local engine adapter was read as 5.0 hours. Both are fixed.
+- **Panchang on Julian leap days** is corrected, and the Raman ayanamsa now changes the pada where it should (2026-01-15
+  in Mumbai); Julian 2026-01-02 equals Gregorian 2026-01-15.
+- **Viparita yoga (Raman) label** described a narrower rule than the code tests; it now names the coded rule.
+- **Shipped files no longer cite documents that are not part of this repository.**
 - **Report text contrast.** Small text in moss or sage on the light backgrounds was below the WCAG AA ratio of 4.5:1
   (sage on ivory 4.2). It now uses the muted colour, and the smallest text in full reports is 8 pt (was 7.5 pt);
   compact and outlook chips stay at 7.5 pt to keep their page limit. A test checks the colour pairs.
 - **Outlook headroom.** The new chips and key left the quarter outlook with almost no spare room on its two pages.
-  Tighter compact spacing restores about 20 % headroom (pre-T2: about 24 %); a test adds 15 % to the default month
+  Tighter compact spacing restores about 20 % headroom (before the chips: about 24 %); a test adds 15 % to the default month
   and quarter drafts and checks that each still fits on two pages.
 - **Calculation engines document.** `docs/CALCULATION-ENGINES.md` named engine 3.6.1, listed two ayanamsa options
   the engine no longer accepts, and said Chara and Yogini dasha and time-zone lookup were missing. It now matches the
@@ -45,17 +99,38 @@ Review fixes made after 3.7.0, and the T2 research round of 2026-11-07; the vers
 - **DOCX reports.** The public engine `report` and `all` extras now install python-docx, so DOCX reports work after a
   standard install.
 
+### Removed
+- **Breaking: ayanamsa options removed.** `lahiri_icrc` and `lahiri_1940` are no longer accepted; a call that
+  names one fails with an error. Use `lahiri` (the default), `true_chitra`, `kp` or `raman`.
+- **Breaking: stricter time-zone input.** A UTC offset written as bare digits (`0530`, `530`) is refused; write
+  `+HH:MM` (`+0530` with a sign is read as 5.5 hours). Offsets beyond -14:00..+14:00 are refused. A zone lookup that
+  lands in the tz database's local mean time (LMT) or a city mean time (such as Kolkata +05:21:10) is refused; give
+  the offset the birth record states. A stated offset that is not a standard offset is used as given and flagged.
+
 ### Security
 - The jinja2 minimum is raised to 3.1.6, which excludes releases with known template-sandbox vulnerabilities.
   The public install script and CI now also require jinja2 3.1.6.
 
 ### Changed
+- **Behaviour change: ayanamsa calls.** One ayanamsa applies per call; a nested request for a different mode raises instead of being overridden.
+- **Behaviour change: unknown birth time.** With an unknown birth time `create_report` accepts compact reports only
+  and refuses facts that depend on the time (lagna, lordships, lagna-based yogas, degrees), `event_refs` and dated
+  windows. All MCP birth tools pass `time_source` through.
+- **Report grades.** In a written report each system keeps its own grade and agreement never lifts a grade; Lal Kitab
+  units carry their edition. `life_lint.py` flags guarantee and legal-outcome promises in report mode.
+- **Privacy check.** `tools/privacy_check.py` recognises more birth-data shapes (`datetime(...)`, `--date` and
+  `--time`, a quoted ISO date with time under any key, "birth <date>", Windows home paths), accepts exact-path
+  exemptions only, and exits with an error when it is given no files.
+- Running `pytest` from the repository root now finds the engine.
+- The accuracy scorer test now runs in the public repository (it was skipped there while the scorer was private), and
+  `.gitleaksignore` lists the 12 accuracy case ids that the secret scan flags as generic API keys (false positives).
 - The README is rewritten in both repositories, so install and first use are easier to follow.
 - **Consultation voice: seven edits tested, none adopted.** Seven proposed edits to the consultation voice were
   tested in blind round 13 on a fresh synthetic chart (S6): one answerer per version, three blind graders. The
   candidate scored lower (2251 against 2370; 4 wins, 34 losses, 7 ties) with equal accuracy, so the skill text is
   unchanged. One answerer per version cannot separate answerer variance from the edits; two items that leaned to
   the candidate need an isolated re-test. Details in `docs/TESTING.md` §5c.
+
 
 ## [3.7.0] — 2026-10-25 — roadmap phases 0–8: fact layer, evidence labels, new calculations, charts and outlook report
 

@@ -1,0 +1,10 @@
+{
+ "about": "Invented consultation-report personas P2..P6 (no real person). P5 has no birth time: its row is computed at the 12:00 placeholder and checks the engine only. Times are civil with an explicit UTC offset.",
+ "charts": [
+  {"id": "P2", "date": "1996-02-14", "time": "14:35:00", "off": "+05:30", "lat": 18.5204, "lon": 73.8567, "note": "female persona, Pune"},
+  {"id": "P3", "date": "2001-01-01", "time": "00:00:00", "off": "+05:30", "lat": 13.0827, "lon": 80.2707, "note": "midnight birth, Chennai"},
+  {"id": "P4", "date": "1996-10-27", "time": "01:30:00", "off": "-04:00", "lat": 43.6532, "lon": -79.3832, "note": "Toronto, DST fall-back night, first 01:30 (EDT)"},
+  {"id": "P5", "date": "1988-09-09", "time": "12:00:00", "off": "+05:30", "lat": 22.5726, "lon": 88.3639, "note": "unknown time, 12:00 placeholder"},
+  {"id": "P6", "date": "1979-12-03", "time": "18:00:00", "off": "+05:30", "lat": 23.0225, "lon": 72.5714, "note": "approximate time, Ahmedabad"}
+ ]
+}

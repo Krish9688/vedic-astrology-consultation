@@ -1,0 +1,1807 @@
+{
+ "area": "A10",
+ "builder_sha256": "b6d79965f9963a38dbe050ab0c7cb46b911812f1e60cabd89828264aac619f8f",
+ "built_by": "tools/accuracy_build_cases.py",
+ "cases": [
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 14.81,
+     "key": "Mo.sign",
+     "value": 8
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-001",
+   "input": {
+    "chart": "moon-sign-before",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mo sign 30 s before an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 15.219,
+     "key": "Mo.sign",
+     "value": 9
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-002",
+   "input": {
+    "chart": "moon-sign-after",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mo sign 30 s after an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 15.28,
+     "key": "Mo.nak",
+     "value": 18
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-003",
+   "input": {
+    "chart": "moon-nak-before",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mo nak 30 s before an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 15.492,
+     "key": "Mo.nak",
+     "value": 19
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-004",
+   "input": {
+    "chart": "moon-nak-after",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mo nak 30 s after an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 11984.368,
+     "key": "Mo.nak",
+     "value": 18
+    },
+    {
+     "boundary_margin": 15.632,
+     "key": "Mo.pada",
+     "value": 1
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-005",
+   "input": {
+    "chart": "moon-pada-before",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mo pada 30 s before an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 12015.707,
+     "key": "Mo.nak",
+     "value": 18
+    },
+    {
+     "boundary_margin": 15.707,
+     "key": "Mo.pada",
+     "value": 2
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-006",
+   "input": {
+    "chart": "moon-pada-after",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mo pada 30 s after an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 864.171,
+     "key": "Asc.sign",
+     "value": 9
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-007",
+   "input": {
+    "chart": "asc-sign-before",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Asc sign 30 s before an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 906.61,
+     "key": "Asc.sign",
+     "value": 10
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-008",
+   "input": {
+    "chart": "asc-sign-after",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Asc sign 30 s after an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 12504.025,
+     "key": "Asc.nak",
+     "value": 3
+    },
+    {
+     "boundary_margin": 504.025,
+     "key": "Asc.pada",
+     "value": 3
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-009",
+   "input": {
+    "chart": "d9-lagna-before",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block; Asc pada with nakshatra = the navamsa division (D9 lagna edge)",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Asc pada 30 s before an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 11464.308,
+     "key": "Asc.nak",
+     "value": 3
+    },
+    {
+     "boundary_margin": 535.692,
+     "key": "Asc.pada",
+     "value": 4
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-010",
+   "input": {
+    "chart": "d9-lagna-after",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block; Asc pada with nakshatra = the navamsa division (D9 lagna edge)",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Asc pada 30 s after an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 15.265,
+     "key": "Mo.nak",
+     "value": 26
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-011",
+   "input": {
+    "chart": "dasha-edge-before",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mo nak 30 s before an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 15.295,
+     "key": "Mo.nak",
+     "value": 0
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-012",
+   "input": {
+    "chart": "dasha-edge-after",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "edge chart from edge_suite.json; the side comes from swe directly, not the engine's golden block",
+   "quantity": "sign_nak_pada",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut / houses_ex; fixed divisions"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mo nak 30 s after an edge",
+   "tolerance": 0,
+   "unit": "index"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "polar",
+     "value": true
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-013",
+   "input": {
+    "chart": "polar-day",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "",
+   "quantity": "polar_flag",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans returns -2 (circumpolar)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "polar day/night flag",
+   "tolerance": 0,
+   "unit": "flag"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "polar",
+     "value": true
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-014",
+   "input": {
+    "chart": "polar-night",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "",
+   "quantity": "polar_flag",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans returns -2 (circumpolar)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "polar day/night flag",
+   "tolerance": 0,
+   "unit": "flag"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 26201.5,
+     "key": "vara",
+     "value": "Ma"
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-015",
+   "input": {
+    "chart": "midnight-before",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "",
+   "quantity": "vara",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans; weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "vara of the Hindu day near midnight/sunrise",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 26141.5,
+     "key": "vara",
+     "value": "Ma"
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-016",
+   "input": {
+    "chart": "midnight-after",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "",
+   "quantity": "vara",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans; weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "vara of the Hindu day near midnight/sunrise",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": 2.0,
+   "comparison": "exact",
+   "expected": [
+    {
+     "boundary_margin": 9971.5,
+     "key": "vara",
+     "value": "Ma"
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-017",
+   "input": {
+    "chart": "pre-sunrise",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "",
+   "quantity": "vara",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "rise_trans; weekday of the local civil date of the sunrise before birth"
+   },
+   "status_before_run": "scored",
+   "sub_item": "vara of the Hindu day near midnight/sunrise",
+   "tolerance": 0,
+   "unit": "lord"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "circular_diff",
+   "expected": [
+    {
+     "key": "Su",
+     "value": 315.9537432264139
+    },
+    {
+     "key": "Mo",
+     "value": 187.3558685822783
+    },
+    {
+     "key": "Ma",
+     "value": 288.1511549572179
+    },
+    {
+     "key": "Me",
+     "value": 316.73557792789126
+    },
+    {
+     "key": "Ju",
+     "value": 16.995135904482645
+    },
+    {
+     "key": "Ve",
+     "value": 291.3841965626462
+    },
+    {
+     "key": "Sa",
+     "value": 315.62946792184476
+    },
+    {
+     "key": "Ra",
+     "value": 353.5457218668099
+    },
+    {
+     "key": "Ke",
+     "value": 173.5457218668099
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-018",
+   "input": {
+    "chart": "leap-2024",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "",
+   "quantity": "longitude",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut(FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "longitudes on a leap day / far-past date / south-west",
+   "tolerance": 0.5,
+   "unit": "arcsec"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "circular_diff",
+   "expected": [
+    {
+     "key": "Su",
+     "value": 316.84533355283196
+    },
+    {
+     "key": "Mo",
+     "value": 257.5165201413869
+    },
+    {
+     "key": "Ma",
+     "value": 349.7366627244362
+    },
+    {
+     "key": "Me",
+     "value": 318.1493964608226
+    },
+    {
+     "key": "Ju",
+     "value": 8.8150468538579
+    },
+    {
+     "key": "Ve",
+     "value": 290.71022552597736
+    },
+    {
+     "key": "Sa",
+     "value": 18.550597140583708
+    },
+    {
+     "key": "Ra",
+     "value": 98.03476688844053
+    },
+    {
+     "key": "Ke",
+     "value": 278.0347668884405
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-019",
+   "input": {
+    "chart": "leap-2000",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "",
+   "quantity": "longitude",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut(FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "longitudes on a leap day / far-past date / south-west",
+   "tolerance": 0.5,
+   "unit": "arcsec"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "circular_diff",
+   "expected": [
+    {
+     "key": "Su",
+     "value": 113.85329418276461
+    },
+    {
+     "key": "Mo",
+     "value": 70.86753159841057
+    },
+    {
+     "key": "Ma",
+     "value": 97.15980749281154
+    },
+    {
+     "key": "Me",
+     "value": 131.25648615068843
+    },
+    {
+     "key": "Ju",
+     "value": 125.79995797144694
+    },
+    {
+     "key": "Ve",
+     "value": 121.54559255746322
+    },
+    {
+     "key": "Sa",
+     "value": 214.2671814574792
+    },
+    {
+     "key": "Ra",
+     "value": 159.11239306676237
+    },
+    {
+     "key": "Ke",
+     "value": 339.11239306676237
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-020",
+   "input": {
+    "chart": "south-west",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "",
+   "quantity": "longitude",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut(FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "longitudes on a leap day / far-past date / south-west",
+   "tolerance": 0.5,
+   "unit": "arcsec"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "circular_diff",
+   "expected": [
+    {
+     "key": "Su",
+     "value": 183.650215969176
+    },
+    {
+     "key": "Mo",
+     "value": 53.954020514983426
+    },
+    {
+     "key": "Ma",
+     "value": 88.3436749871087
+    },
+    {
+     "key": "Me",
+     "value": 178.20307100479621
+    },
+    {
+     "key": "Ju",
+     "value": 294.2870339493048
+    },
+    {
+     "key": "Ve",
+     "value": 149.6504157738147
+    },
+    {
+     "key": "Sa",
+     "value": 316.5914713250001
+    },
+    {
+     "key": "Ra",
+     "value": 256.35477866965493
+    },
+    {
+     "key": "Ke",
+     "value": 76.35477866965493
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-021",
+   "input": {
+    "chart": "cal-1582",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "",
+   "quantity": "longitude",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut(FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "longitudes on a leap day / far-past date / south-west",
+   "tolerance": 0.5,
+   "unit": "arcsec"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "circular_diff",
+   "expected": [
+    {
+     "key": "Su",
+     "value": 323.55507771922214
+    },
+    {
+     "key": "Mo",
+     "value": 208.17024402446032
+    },
+    {
+     "key": "Ma",
+     "value": 35.85015180593479
+    },
+    {
+     "key": "Me",
+     "value": 321.84013515160046
+    },
+    {
+     "key": "Ju",
+     "value": 319.24586600671154
+    },
+    {
+     "key": "Ve",
+     "value": 334.3499240887867
+    },
+    {
+     "key": "Sa",
+     "value": 28.966770072112734
+    },
+    {
+     "key": "Ra",
+     "value": 55.56084370864766
+    },
+    {
+     "key": "Ke",
+     "value": 235.56084370864767
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-022",
+   "input": {
+    "chart": "cal-1500",
+    "chart_file": "oracle_pyjhora.py EXTRA"
+   },
+   "notes": "1500 lies outside sepl_18/semo_18 (1800-2399): Swiss Ephemeris falls back to Moshier on both sides",
+   "quantity": "longitude",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut(FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "longitudes on a leap day / far-past date / south-west",
+   "tolerance": 0.5,
+   "unit": "arcsec"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "comparison": "exact",
+     "key": "Me.retro",
+     "tolerance": 0,
+     "value": false
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-023",
+   "input": {
+    "chart": "me-station-before",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "",
+   "quantity": "motion",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut speed sign"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mercury retrograde flag a day either side of a station",
+   "tolerance": 0,
+   "unit": "flag"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "comparison": "exact",
+     "key": "Me.retro",
+     "tolerance": 0,
+     "value": true
+    }
+   ],
+   "grade": "G1",
+   "id": "A10-G1-024",
+   "input": {
+    "chart": "me-station-after",
+    "chart_file": "edge_suite.json"
+   },
+   "notes": "",
+   "quantity": "motion",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "calc_ut speed sign"
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mercury retrograde flag a day either side of a station",
+   "tolerance": 0,
+   "unit": "flag"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": 6.5
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-001",
+   "input": {
+    "fold": null,
+    "local": "1943-06-01T06:30",
+    "zone": "Asia/Kolkata"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": 6.5
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-002",
+   "input": {
+    "fold": null,
+    "local": "1942-09-01T08:00",
+    "zone": "Asia/Kolkata"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": 1.0
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-003",
+   "input": {
+    "fold": null,
+    "local": "1969-01-15T12:00",
+    "zone": "Europe/London"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": -4.0
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-004",
+   "input": {
+    "fold": null,
+    "local": "2021-07-04T13:15",
+    "zone": "America/New_York"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": "fold required"
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-005",
+   "input": {
+    "fold": null,
+    "local": "1975-10-26T01:30",
+    "zone": "America/New_York"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": 5.5
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-006",
+   "input": {
+    "fold": null,
+    "local": "1980-06-01T12:00",
+    "zone": "Asia/Kathmandu"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": 5.75
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-007",
+   "input": {
+    "fold": null,
+    "local": "1990-06-01T12:00",
+    "zone": "Asia/Kathmandu"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": 9.5
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-008",
+   "input": {
+    "fold": null,
+    "local": "1965-02-01T14:00",
+    "zone": "Australia/Adelaide"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": 12.0
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-009",
+   "input": {
+    "fold": null,
+    "local": "1950-12-31T23:30",
+    "zone": "Pacific/Auckland"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": -3.0
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-010",
+   "input": {
+    "fold": null,
+    "local": "2020-03-21T09:00",
+    "zone": "America/Sao_Paulo"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": "gap"
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-011",
+   "input": {
+    "fold": null,
+    "local": "2021-03-14T02:30",
+    "zone": "America/New_York"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": "fold required"
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-012",
+   "input": {
+    "fold": null,
+    "local": "2021-11-07T01:30",
+    "zone": "America/New_York"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": -4.0
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-013",
+   "input": {
+    "fold": 0,
+    "local": "2021-11-07T01:30",
+    "zone": "America/New_York"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "offset",
+     "value": -5.0
+    }
+   ],
+   "grade": "G3",
+   "id": "A10-G3-014",
+   "input": {
+    "fold": 1,
+    "local": "2021-11-07T01:30",
+    "zone": "America/New_York"
+   },
+   "notes": "synthetic clock times (tests/test_timezones.py and the C1..C9 places)",
+   "quantity": "tz_offset",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "call": "datetime.replace(tzinfo=ZoneInfo(zone), fold).utcoffset(); gap/fold by round trip",
+    "engine": "IANA tz database through Python zoneinfo",
+    "tzdb": "2026e-rearguard"
+   },
+   "status_before_run": "scored",
+   "sub_item": "UTC offset from the tz database (gap refused, fold required)",
+   "tolerance": 0,
+   "unit": "hours"
+  },
+  {
+   "area": "A10",
+   "boundary_threshold": null,
+   "comparison": "none",
+   "expected": [],
+   "grade": "G4",
+   "id": "A10-G4-001",
+   "input": {
+    "charts": [
+     "polar-day",
+     "polar-night"
+    ]
+   },
+   "notes": "no published school; only the flag is scored",
+   "quantity": "none",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "documented": "astro/calc/panchang.py:31; astro/calc/strength.py:119-122",
+    "school": "06:00/18:00 local apparent time"
+   },
+   "status_before_run": "convention without source",
+   "sub_item": "polar sunrise fallback 06:00/18:00 local apparent time",
+   "tolerance": null,
+   "unit": null
+  }
+ ],
+ "ephemeris_sha256": {
+  "semo_18.se1": "1ca07bd67c24374d77226180c20a4f9996cba013697894810518e7eb582ca4f7",
+  "sepl_18.se1": "ca1393ceab3a44fbc895887cf789c68819ae6a1cbc9b22225872dbe4ccd99a66"
+ },
+ "pyswisseph": "2.10.03",
+ "rubric": "docs/ACCURACY-RUBRIC.md",
+ "rubric_sha256": "0ee28d62bb73da4dfd7458bf0a728c00f5708eca018d714a63c5a585df9f0893"
+}

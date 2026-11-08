@@ -1,0 +1,1608 @@
+{
+ "area": "A7",
+ "builder_sha256": "b6d79965f9963a38dbe050ab0c7cb46b911812f1e60cabd89828264aac619f8f",
+ "built_by": "tools/accuracy_build_cases.py",
+ "cases": [
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "2010-01-01T01:33:07.853"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-001",
+   "input": {
+    "chart": "C1",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 10
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 10 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "2030-01-01T04:34:33.748"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-002",
+   "input": {
+    "chart": "C1",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 30
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 30 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "2000-06-15T07:57:27.663"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-003",
+   "input": {
+    "chart": "C2",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 10
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 10 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "2020-06-15T10:59:18.031"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-004",
+   "input": {
+    "chart": "C2",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 30
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 30 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "1995-03-10T07:57:12.658"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-005",
+   "input": {
+    "chart": "C3",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 10
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 10 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "2015-03-10T11:17:52.706"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-006",
+   "input": {
+    "chart": "C3",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 30
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 30 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "1985-10-25T18:58:24.869"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-007",
+   "input": {
+    "chart": "C4",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 10
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 10 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "2005-10-25T22:04:46.892"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-008",
+   "input": {
+    "chart": "C4",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 30
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 30 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "2020-08-19T13:50:12.574"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-009",
+   "input": {
+    "chart": "C5",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 10
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 10 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "2040-08-19T16:54:22.275"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-010",
+   "input": {
+    "chart": "C5",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 30
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 30 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "1975-02-01T18:13:01.612"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-011",
+   "input": {
+    "chart": "C6",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 10
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 10 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "1995-02-01T21:02:44.674"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-012",
+   "input": {
+    "chart": "C6",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 30
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 30 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "1960-12-31T00:52:53.176"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-013",
+   "input": {
+    "chart": "C7",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 10
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 10 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "1980-12-31T03:58:37.543"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-014",
+   "input": {
+    "chart": "C7",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 30
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 30 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "2030-03-22T01:39:54.601"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-015",
+   "input": {
+    "chart": "C8",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 10
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 10 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "2050-03-22T04:49:29.404"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-016",
+   "input": {
+    "chart": "C8",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 30
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 30 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "1952-08-31T15:06:44.963"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-017",
+   "input": {
+    "chart": "C9",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 10
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 10 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "instant_diff",
+   "expected": [
+    {
+     "key": "return",
+     "value": "1972-08-31T18:10:37.886"
+    }
+   ],
+   "grade": "G1",
+   "id": "A7-G1-018",
+   "input": {
+    "chart": "C9",
+    "chart_file": "crosscheck_2026_11.json",
+    "completed": 30
+   },
+   "notes": "",
+   "quantity": "varsha_pravesh",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "astro_imported": false,
+    "pyswisseph": "2.10.03",
+    "reference_script": "tools/accuracy_build_cases.py",
+    "swe_call": "bisection on calc_ut sidereal Sun to the natal sidereal Sun (unrounded)"
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant, 30 completed years",
+   "tolerance": 1.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "local_diff",
+   "expected": [
+    {
+     "key": "local",
+     "value": "2000-03-08T04:41:21"
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-001",
+   "input": {
+    "chart": "PVR-Ex118",
+    "chart_file": "tests/test_tajika.py",
+    "year": 34
+   },
+   "notes": "",
+   "quantity": "tajika_return",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Example 118",
+    "pdf_page": 379,
+    "printed_page": 367
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant (Ex 118, 34th year)",
+   "tolerance": 60.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "local_diff",
+   "expected": [
+    {
+     "key": "local",
+     "value": "1993-03-08T09:36:18"
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-002",
+   "input": {
+    "chart": "PVR-Ex118",
+    "chart_file": "tests/test_tajika.py",
+    "year": 27
+   },
+   "notes": "",
+   "quantity": "tajika_return",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Exercise 47 answer (exact method)",
+    "pdf_page": 385,
+    "printed_page": 373
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant (Exercise 47, 27th year)",
+   "tolerance": 60.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "local_diff",
+   "expected": [
+    {
+     "key": "local",
+     "value": "1993-06-01T13:30:04"
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-003",
+   "input": {
+    "chart": "PVR-Ex122",
+    "chart_file": "tests/test_tajika.py",
+    "year": 22
+   },
+   "notes": "",
+   "quantity": "tajika_return",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value entered by T2.2b: independent check pending T2.2c",
+    "example": "Example 122",
+    "pdf_page": 408,
+    "printed_page": 396
+   },
+   "status_before_run": "scored",
+   "sub_item": "varsha pravesh instant (Ex 122, 22nd year)",
+   "tolerance": 60.0,
+   "unit": "s"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "lagna_sign",
+     "value": "Capricorn"
+    },
+    {
+     "key": "day_or_night",
+     "value": "night"
+    },
+    {
+     "key": "muntha",
+     "value": "Taurus"
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-004",
+   "input": {
+    "chart": "PVR-Ex118",
+    "chart_file": "tests/test_tajika.py",
+    "year": 34
+   },
+   "notes": "",
+   "quantity": "tajika_frame",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Chart 66, Example 120",
+    "pdf_page": "380, 393",
+    "printed_page": "368, 381"
+   },
+   "status_before_run": "scored",
+   "sub_item": "annual lagna sign, day/night, muntha (Ex 118)",
+   "tolerance": 0,
+   "unit": "category"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "circular_diff",
+   "expected": [
+    {
+     "key": "Asc",
+     "value": 280.81666666666666
+    },
+    {
+     "key": "Su",
+     "value": 323.8333333333333
+    },
+    {
+     "key": "Mo",
+     "value": 345.21666666666664
+    },
+    {
+     "key": "Ma",
+     "value": 354.96666666666664
+    },
+    {
+     "key": "Me",
+     "value": 311.45
+    },
+    {
+     "key": "Ju",
+     "value": 10.166666666666666
+    },
+    {
+     "key": "Ve",
+     "value": 299.3333333333333
+    },
+    {
+     "key": "Sa",
+     "value": 19.15
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-005",
+   "input": {
+    "chart": "PVR-Ex118",
+    "chart_file": "tests/test_tajika.py",
+    "year": 34
+   },
+   "notes": "Moon and Mars were in tests/test_tajika.py; the other six read by T2.2b from the chart table",
+   "quantity": "tajika_positions",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value entered by T2.2b: independent check pending T2.2c",
+    "example": "Chart 66 table",
+    "pdf_page": 380,
+    "printed_page": 368
+   },
+   "status_before_run": "scored",
+   "sub_item": "annual positions (Ex 118, Chart 66)",
+   "tolerance": 2.0,
+   "unit": "arcmin"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "Su",
+     "value": 0
+    },
+    {
+     "key": "Mo",
+     "value": 15
+    },
+    {
+     "key": "Ma",
+     "value": 0
+    },
+    {
+     "key": "Me",
+     "value": 10
+    },
+    {
+     "key": "Ju",
+     "value": 5
+    },
+    {
+     "key": "Ve",
+     "value": 10
+    },
+    {
+     "key": "Sa",
+     "value": 5
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-006",
+   "input": {
+    "chart": "PVR-Ex118",
+    "chart_file": "tests/test_tajika.py",
+    "year": 34
+   },
+   "notes": "",
+   "quantity": "tajika_harsha",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Example 119",
+    "pdf_page": 388,
+    "printed_page": 376
+   },
+   "status_before_run": "scored",
+   "sub_item": "harsha bala (Ex 119 on Ex 118)",
+   "tolerance": 0,
+   "unit": "units"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "candidate1",
+     "value": "Ju"
+    },
+    {
+     "key": "candidate2",
+     "value": "Su"
+    },
+    {
+     "key": "candidate3",
+     "value": "Ve"
+    },
+    {
+     "key": "candidate4",
+     "value": "Sa"
+    },
+    {
+     "key": "candidate5",
+     "value": "Ma"
+    },
+    {
+     "key": "year_lord",
+     "value": "Ma"
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-007",
+   "input": {
+    "chart": "PVR-Ex118",
+    "chart_file": "tests/test_tajika.py",
+    "year": 34
+   },
+   "notes": "",
+   "quantity": "tajika_year_lord",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Example 120",
+    "pdf_page": 393,
+    "printed_page": 381
+   },
+   "status_before_run": "scored",
+   "sub_item": "year-lord candidates and year lord (Ex 120)",
+   "tolerance": 0,
+   "unit": "planet"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "abs_diff",
+   "expected": [
+    {
+     "key": "Ma",
+     "value": 13.7
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-008",
+   "input": {
+    "chart": "PVR-Ex118",
+    "chart_file": "tests/test_tajika.py",
+    "year": 34
+   },
+   "notes": "printed 13.7; tolerance half the last printed digit",
+   "quantity": "tajika_pvb",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Example 120",
+    "pdf_page": 393,
+    "printed_page": 381
+   },
+   "status_before_run": "scored",
+   "sub_item": "pancha vargeeya bala of Mars (Ex 120)",
+   "tolerance": 0.05,
+   "unit": "units"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "circular_diff",
+   "expected": [
+    {
+     "key": "Samartha",
+     "value": 335.03333333333336
+    },
+    {
+     "key": "Vanik",
+     "value": 247.06666666666666
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-009",
+   "input": {
+    "chart": "PVR-Ex118",
+    "chart_file": "tests/test_tajika.py",
+    "year": 34
+   },
+   "notes": "Samartha (night reversal + 30 deg) and Vanik; Artha (2 Sc 30) needs the 2nd house cusp, which the engine does not compute (tajika.NOT_COMPUTED): out of scope, not a case",
+   "quantity": "tajika_sahams",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Example 121",
+    "pdf_page": 396,
+    "printed_page": 384
+   },
+   "status_before_run": "scored",
+   "sub_item": "sahams Samartha and Vanik (Ex 121)",
+   "tolerance": 2.0,
+   "unit": "arcmin"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "circular_diff",
+   "expected": [
+    {
+     "key": "Asc",
+     "value": 157.21666666666667
+    },
+    {
+     "key": "Su",
+     "value": 47.06666666666667
+    },
+    {
+     "key": "Mo",
+     "value": 184.8
+    },
+    {
+     "key": "Ma",
+     "value": 113.88333333333334
+    },
+    {
+     "key": "Me",
+     "value": 64.78333333333333
+    },
+    {
+     "key": "Ju",
+     "value": 160.98333333333332
+    },
+    {
+     "key": "Ve",
+     "value": 1.6166666666666667
+    },
+    {
+     "key": "Sa",
+     "value": 306.48333333333335
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-010",
+   "input": {
+    "chart": "PVR-Ex122",
+    "chart_file": "tests/test_tajika.py",
+    "year": 22
+   },
+   "notes": "",
+   "quantity": "tajika_positions",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value entered by T2.2b: independent check pending T2.2c",
+    "example": "Chart 67 table",
+    "pdf_page": 409,
+    "printed_page": 397
+   },
+   "status_before_run": "scored",
+   "sub_item": "annual positions (Ex 122, Chart 67)",
+   "tolerance": 2.0,
+   "unit": "arcmin"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "circular_diff",
+   "expected": [
+    {
+     "key": "Vivaha",
+     "value": 242.36666666666667
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-011",
+   "input": {
+    "chart": "PVR-Ex122",
+    "chart_file": "tests/test_tajika.py",
+    "year": 22
+   },
+   "notes": "",
+   "quantity": "tajika_sahams",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Example 122",
+    "pdf_page": 409,
+    "printed_page": 397
+   },
+   "status_before_run": "scored",
+   "sub_item": "vivaha saham (Ex 122)",
+   "tolerance": 2.0,
+   "unit": "arcmin"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "0",
+     "value": "Ra"
+    },
+    {
+     "key": "1",
+     "value": "Ju"
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-012",
+   "input": {
+    "chart": "PVR-Ex122",
+    "chart_file": "tests/test_tajika.py",
+    "year": 22
+   },
+   "notes": "",
+   "quantity": "tajika_mudda_lords",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Example 122 (Mudda dasa)",
+    "pdf_page": 412,
+    "printed_page": 400
+   },
+   "status_before_run": "scored",
+   "sub_item": "Mudda dasha: first two lords (Ex 122)",
+   "tolerance": 0,
+   "unit": "planet"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "date_exact",
+   "expected": [
+    {
+     "key": "Ra.end",
+     "value": "1993-07-14"
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-013",
+   "input": {
+    "chart": "PVR-Ex122",
+    "chart_file": "tests/test_tajika.py",
+    "year": 22
+   },
+   "notes": "recorded in astro/calc/tajika.py SOURCES['mudda']; excluded",
+   "quantity": "tajika_mudda_end",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "corrected": "1993-07-16",
+    "evidence": "same page defines a Mudda day as the Sun moving exactly 1 deg; 42.66 such days from 1 Jun 1993 end on 16 Jul (the print adds 42.66 civil days)",
+    "example": "Example 122",
+    "pdf_page": 412,
+    "printed_page": 400
+   },
+   "status_before_run": "misprint",
+   "sub_item": "Mudda dasha: end of Rahu (Ex 122)",
+   "tolerance": 0,
+   "unit": "day"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "0",
+     "value": "Ve"
+    },
+    {
+     "key": "1",
+     "value": "Me"
+    },
+    {
+     "key": "2",
+     "value": "Mo"
+    },
+    {
+     "key": "3",
+     "value": "Sa"
+    },
+    {
+     "key": "4",
+     "value": "Lg"
+    },
+    {
+     "key": "5",
+     "value": "Ju"
+    },
+    {
+     "key": "6",
+     "value": "Su"
+    },
+    {
+     "key": "7",
+     "value": "Ma"
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-014",
+   "input": {
+    "chart": "PVR-Ex122",
+    "chart_file": "tests/test_tajika.py",
+    "year": 22
+   },
+   "notes": "",
+   "quantity": "tajika_patyayini_order",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Example 122, Table 75",
+    "pdf_page": 411,
+    "printed_page": 399
+   },
+   "status_before_run": "scored",
+   "sub_item": "Patyayini dasha order (Ex 122, Table 75)",
+   "tolerance": 0,
+   "unit": "planet"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "date_diff",
+   "expected": [
+    {
+     "key": "Me.start",
+     "value": "1993-06-26"
+    },
+    {
+     "key": "Me.end",
+     "value": "1993-08-13"
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-015",
+   "input": {
+    "chart": "PVR-Ex122",
+    "chart_file": "tests/test_tajika.py",
+    "year": 22
+   },
+   "notes": "PVR prints dates only; +-1 day (rubric 6.1, book rounding)",
+   "quantity": "tajika_patyayini_me",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Example 122",
+    "pdf_page": 410,
+    "printed_page": 398
+   },
+   "status_before_run": "scored",
+   "sub_item": "Patyayini Mercury dasha dates (Ex 122)",
+   "tolerance": 1,
+   "unit": "day"
+  },
+  {
+   "area": "A7",
+   "boundary_threshold": null,
+   "comparison": "exact",
+   "expected": [
+    {
+     "key": "year_lord",
+     "value": "Me"
+    }
+   ],
+   "grade": "G2",
+   "id": "A7-G2-016",
+   "input": {
+    "chart": "PVR-Ex122",
+    "chart_file": "tests/test_tajika.py",
+    "year": 22
+   },
+   "notes": "",
+   "quantity": "tajika_year_lord",
+   "settings": {
+    "ayanamsa": "Lahiri (SIDM_LAHIRI)",
+    "ayanamsa_value": "true (mean + nutation) in positions; mean also reported",
+    "ephemeris": "Swiss Ephemeris 2.10.03 files sepl_18.se1/semo_18.se1 (SHA-256 pinned, docs/CALCULATION-ENGINES.md)",
+    "houses": "whole sign; Asc/MC from houses_ex 'W' sidereal",
+    "nodes": "mean (Ketu = Rahu + 180)",
+    "positions": "apparent geocentric sidereal: FLG_SIDEREAL|FLG_SWIEPH|FLG_SPEED, FLG_TRUEPOS off",
+    "sunrise": "centre of the disc, standard refraction (rise_trans BIT_DISC_CENTER, pressure/temperature 0 = default)",
+    "time": "civil time minus the UTC offset taken as UT (swe.julday)",
+    "varga_method": "Parashari (astro VARGA_METHODS; PyJHora method 1, D2 method 2)",
+    "year_length": "365.256363 d (sidereal)"
+   },
+   "source": {
+    "book": "P. V. R. Narasimha Rao, Vedic Astrology: An Integrated Approach (library PDF, edition with the 'Looking Back' preface)",
+    "checker": "T2.2b against the rendered page/text layer, 2026-11-07; value first entered by an earlier node in tests/test_tajika*.py",
+    "example": "Example 122 ('varsheswara')",
+    "pdf_page": 411,
+    "printed_page": 399
+   },
+   "status_before_run": "scored",
+   "sub_item": "year lord (Ex 122)",
+   "tolerance": 0,
+   "unit": "planet"
+  }
+ ],
+ "ephemeris_sha256": {
+  "semo_18.se1": "1ca07bd67c24374d77226180c20a4f9996cba013697894810518e7eb582ca4f7",
+  "sepl_18.se1": "ca1393ceab3a44fbc895887cf789c68819ae6a1cbc9b22225872dbe4ccd99a66"
+ },
+ "pyswisseph": "2.10.03",
+ "rubric": "docs/ACCURACY-RUBRIC.md",
+ "rubric_sha256": "0ee28d62bb73da4dfd7458bf0a728c00f5708eca018d714a63c5a585df9f0893"
+}

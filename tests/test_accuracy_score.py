@@ -8,7 +8,7 @@ import pytest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
-A = pytest.importorskip("accuracy_score")   # the scorer is private-edition only; the public export ships this test without it
+import accuracy_score as A  # noqa: E402   ships in both editions (owner decision 2026-11-08)
 
 
 def row(i, area, grade, outcome):
@@ -59,8 +59,10 @@ TOY = [
 ]
 
 
-@pytest.mark.skipif(not os.path.exists(os.path.join(ROOT, "ephe", "sepl_18.se1")), reason="ephemeris files absent")
-def test_two_runs_are_byte_identical_apart_from_run_time(tmp_path):
+def test_two_runs_are_byte_identical_apart_from_run_time(tmp_path, monkeypatch):
+    # the toy cases read no positions (chara from given signs, war from given latitudes), so the Swiss Ephemeris
+    # gate, which guards real scoring runs, is stubbed: the test runs the same with or without ephe/ (public CI)
+    monkeypatch.setattr(A, "check_ephemeris", lambda engine: {"ephemeris": "not checked (toy cases)"})
     (tmp_path / "A5.json").write_text(json.dumps({"cases": [TOY[0]]}))
     (tmp_path / "A8.json").write_text(json.dumps({"cases": [TOY[1]]}))
     outs = []

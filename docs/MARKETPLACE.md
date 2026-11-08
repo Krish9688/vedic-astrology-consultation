@@ -4,7 +4,7 @@
 |---|---|
 | Marketplace | `vedic-astrology` — repository `Krish9688/vedic-astrology-consultation` |
 | Plugin | `astrology-consultation` (install id `astrology-consultation@vedic-astrology`) |
-| Version | 3.7.0 (plugin = engine = skill) |
+| Version | 3.8.0 (plugin = engine = skill) |
 | Platforms | macOS (full flow tested) · Linux (engine, launcher and MCP tested in CI) · Windows: WSL 2 only, untested · native Windows: unsupported |
 | Default privacy mode | **private** — every calculation runs on your computer; nothing is sent anywhere |
 

@@ -52,6 +52,7 @@ Rendering pitfalls found and fixed: Jinja2 auto-escaping broke the embedded styl
 CSS is marked safe; WeasyPrint ignores CSS variables inside `font` shorthands and margin boxes — fonts and page
 colours are spelled out.
 
+Evidence chips, the one legend block, birth-time sensitivity states, the per-type "This report answers" line, the type scale and contrast figures are specified in [`REPORT-DESIGN-SPEC.md`](REPORT-DESIGN-SPEC.md).
 
 ## 4. Using it
 
