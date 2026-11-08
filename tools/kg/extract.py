@@ -390,8 +390,11 @@ def add_contradiction(cid, topic, side_a, side_b, klass, default, path, default_
                    text=re.sub(r"\*\*", "", txt), side=side, pages=sorted({f"{s} p{p}" for s, p, _ in citations(txt, default_src)}))
         edge(nid, pid, "HAS_POSITION", source_file=path)
         link_rule(pid, txt, path, citations(txt, default_src), default_src)
-        for x in re.findall(r"\bX(\d{1,2})\b", txt):
+        for x in re.findall(r"(?<!CR-)\bX(\d{1,2})\b", txt):   # a bare X7 is a Lal Kitab KB entry; CR-X01 is a register row
             edge(nid, f"contradiction:KB-X{x}", "REFERS_TO", source_file=path)
+        for row in re.findall(r"\bCR-[A-Z]+\d+\b", txt):
+            if row != cid:
+                edge(nid, f"contradiction:{row}", "REFERS_TO", source_file=path)
         pos.append(pid)
     if dtype != "reviewed_non_conflict":
         edge(pos[0], pos[1], "CONTRADICTS", source_file=path, classification=klass)
