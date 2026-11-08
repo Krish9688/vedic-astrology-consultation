@@ -280,7 +280,7 @@ def scan_python(p, rel, kind, log, text):
                 p.edge(file_id(rel), package(p, top, rel), "DEPENDS_ON")
         if isinstance(n, ast.Constant) and isinstance(n.value, str) and len(n.value) < 120 and re.fullmatch(r"[\w./@-]+\.[a-z]{1,5}", n.value):
             t = p.resolve(n.value, d)
-            if t and t != rel and (kind == "test" or not logical(t, p.edition).startswith("tests/")):
+            if t and t != rel and not (kind == "module" and logical(t, p.edition).startswith("tests/")):   # engine code never reads test fixtures
                 p.edge(file_id(rel), file_id(t), "USES", True)
     if log.startswith("astro/"):
         add_entries(p, rel, tree, log)
