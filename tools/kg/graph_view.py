@@ -84,7 +84,7 @@ def project_view(g, switch=None):
         if t == "Package":
             gid = v.group("area:external", "External packages")
             nodes.append([n["id"], n["label"], "package", gid, "", {}])
-        elif t == "Interface":
+        elif t == "Interface" and "channel" in a:
             nodes.append([n["id"], n["label"], "interface", group_of(parent.get(n["id"])), a.get("channel", ""),
                           {"path": n["source_file"] + (":" + n["source_location"][1:] if n["source_location"] else "")}])
         else:
@@ -217,7 +217,7 @@ def knowledge_view(g, release="", switch=None):
 def write_html(view, out):
     with open(TEMPLATE, encoding="utf-8") as f:
         page = f.read()
-    data = json.dumps(view, ensure_ascii=False, separators=(",", ":"), sort_keys=True).replace("</", "<\\/")
+    data = json.dumps(view, ensure_ascii=False, separators=(",", ":"), sort_keys=True).replace("<", "\\u003c")
     if "/*GRAPH_DATA*/null" not in page:
         sys.exit("viewer.html has no /*GRAPH_DATA*/ slot")
     page = page.replace("/*GRAPH_DATA*/null", data).replace("__PAGE_TITLE__", view["title"])

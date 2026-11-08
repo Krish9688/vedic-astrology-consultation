@@ -33,6 +33,7 @@ button{background:none;border:0;padding:0;cursor:pointer}
 .brand b{font:600 19px/1.1 var(--title);display:block;white-space:nowrap}
 .brand small{color:var(--muted);font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .switch{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:none}
+.switch[hidden]{display:none}
 .switch a{padding:5px 12px;color:var(--muted);text-decoration:none;font-size:13px}
 .switch a[aria-current]{background:var(--ink);color:var(--panel)}
 .search{position:relative;flex:1;max-width:520px;margin-left:auto}
@@ -230,10 +231,11 @@ const K={k:1,x:0,y:0};
 const canvas=$('canvas'),world=$('world');
 const narrow=()=>window.innerWidth<=760,sheeted=()=>window.innerWidth<=1180;
 const hashOf=v=>v.t==='map'?(v.g?'#g='+encodeURIComponent(groups[v.g].key):'#'):v.t==='node'?'#n='+encodeURIComponent(nodes[v.n].id):'#p='+encodeURIComponent(nodes[v.a].id)+'~'+encodeURIComponent(nodes[v.b].id);
-function fromHash(){const h=location.hash.slice(1);const[k,v]=[h.slice(0,2),h.slice(2)];
+function fromHash(){const h=location.hash.slice(1);const[k,v]=[h.slice(0,2),h.slice(2)];try{
   if(k==='g='){const g=groupByKey.get(decodeURIComponent(v));if(g)return{t:'map',g:g.i}}
   if(k==='n='){const n=nodeById.get(decodeURIComponent(v));if(n)return{t:'node',n:n.i}}
   if(k==='p='){const[a,b]=v.split('~').map(x=>nodeById.get(decodeURIComponent(x)));if(a&&b)return{t:'path',a:a.i,b:b.i}}
+  }catch(e){}
   return{t:'map',g:0}}
 function go(v,push=true){view=v;if(push)history.pushState(null,'',hashOf(v)||'#');selection=null;render(true);if(v.t==='node'&&sheeted())openDetail()}
 addEventListener('popstate',()=>{view=fromHash();selection=null;render(true)});
@@ -306,7 +308,7 @@ function reveal(x,y,S){const vw=canvas.clientWidth,vh=canvas.clientHeight,m=12,s
 function lightUp(key){const on=new Set([key]);for(const e of sceneEdges){if(e.from===key||e.to===key){e.el.classList.add('on');on.add(e.from);on.add(e.to)}}canvas.classList.add('lit');for(const t of $('tiles').children)if(on.has(t.dataset.key))t.classList.add('on')}
 function clearLight(){canvas.classList.remove('lit');for(const e of sceneEdges)e.el.classList.remove('on');for(const t of $('tiles').children)t.classList.remove('on')}
 function edgeTitle(e){const a=e.from,b=e.to;return `${itemName(a)} to ${itemName(b)}: `+Object.entries(e.rels).map(([r,c])=>`${D.rels[r].label} ${fmt(c)}`).join(', ')}
-function itemName(k){return k[0]==='g'?groups[+k.slice(1)].label:nodes[+k.slice(1)].label}
+function itemName(k){return k[0]==='g'?groups[parseInt(k.slice(1))].label:nodes[parseInt(k.slice(1))].label}
 function drawEdge(e,d){const soft=Object.keys(e.rels).every(r=>D.rels[r].soft);const w=Math.min(1+Math.log2(e.w||1)*.75,6);const p=sv('path',{class:'edge'+(soft?' soft':''),d,'stroke-width':w,'marker-end':'url(#arrow)'});$('edges').append(p);const hit=sv('path',{class:'hit',d});hit.addEventListener('pointerenter',ev=>{showTip(ev,edgeTitle(e));p.classList.add('sel')});hit.addEventListener('pointermove',moveTip);hit.addEventListener('pointerleave',()=>{hideTip();if(selection!==e)p.classList.remove('sel')});hit.addEventListener('click',()=>{if(moved)return;selection=e;sceneEdges.forEach(x=>x.el.classList.toggle('sel',x===e));renderDetail();if(sheeted())openDetail()});$('edges').append(hit);e.el=p;sceneEdges.push(e)}
 function clear(){$('edges').replaceChildren();$('labels').replaceChildren();$('tiles').replaceChildren();sceneEdges=[]}
 function focusScene(n){const S=tileSize(),mk=(dir,list)=>{const by=new Map();for(let i=0;i<list.length;i+=2){const o=list[i],r=list[i+1];if(!relOn[r]||!nodeVisible(o))continue;if(!by.has(r))by.set(r,[]);by.get(r).push(o)}return by};
@@ -384,7 +386,7 @@ function renderDetail(){const p=$('detail');p.replaceChildren(closeBtn());
   if(view.t==='node')return nodeDetail(p,view.n);
   if(view.t==='path'){p.append(el('div',{class:'kindline'},'Path'),el('h2',{},`${nodes[view.a].label} to ${nodes[view.b].label}`),el('p',{},'Shortest route using the relationships shown. Direction can change along the route.'));const c=bfs(view.a,view.b);if(c)p.append(relList('Steps',c.length,c.map(x=>x.n),nodeRow));return}
   groupDetail(p,view.g)}
-function keyMembers(k){if(k[0]==='n'){const id=+k.slice(1);return n=>n===id}const g=+k.slice(1);const memo=new Map();return n=>{const gg=nodes[n].group;if(memo.has(gg))return memo.get(gg);let x=gg,hit=false;while(x>=0){if(x===g){hit=true;break}x=groups[x].parent}memo.set(gg,hit);return hit}}
+function keyMembers(k){if(k[0]==='n'){const id=parseInt(k.slice(1));return n=>n===id}const g=parseInt(k.slice(1));const memo=new Map();return n=>{const gg=nodes[n].group;if(memo.has(gg))return memo.get(gg);let x=gg,hit=false;while(x>=0){if(x===g){hit=true;break}x=groups[x].parent}memo.set(gg,hit);return hit}}
 function nodeDetail(p,n){const N=nodes[n],d=N.detail||{};const kind=D.kinds[kindIx[N.kind]].label;
   p.append(el('div',{class:'kindline'},el('span',{class:'dot',style:`--kc:${kindColor(N.kind)}`}),kind+(d.role?` (${d.role})`:'')),el('h2',{},N.label));
   if(d.path){const b=el('button',{on:{click:()=>{navigator.clipboard&&navigator.clipboard.writeText(d.path).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)})}}},'Copy');p.append(el('div',{class:'path'},el('span',{},d.path),b))}
