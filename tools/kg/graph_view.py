@@ -40,7 +40,7 @@ class View:
         return self.index[key]
 
 
-def pack(view, title, subtitle, kinds, rels, nodes, edges, note, switch, meta):
+def pack(view, title, subtitle, kinds, rels, nodes, edges, note, switch, meta, legend):
     pos = {n[0]: i for i, n in enumerate(nodes)}
     rel_ix = {r["id"]: i for i, r in enumerate(rels)}
     flat = []
@@ -48,19 +48,22 @@ def pack(view, title, subtitle, kinds, rels, nodes, edges, note, switch, meta):
         if s in pos and t in pos and r in rel_ix:
             flat += [pos[s], pos[t], rel_ix[r]]
     return {"title": title, "subtitle": subtitle, "kinds": kinds, "rels": rels, "groups": view.groups, "nodes": nodes, "edges": flat,
-            "note": note, "switch": switch or [], "meta": meta}
+            "note": note, "switch": switch or [], "meta": meta, "legend": legend}
 
 
 # ---------- project map ----------
-PROJECT_KINDS = [{"id": "module", "label": "Engine module"}, {"id": "script", "label": "Script or tool"}, {"id": "test", "label": "Test"},
-                 {"id": "doc", "label": "Document"}, {"id": "config", "label": "Configuration"}, {"id": "data", "label": "Data or asset"},
-                 {"id": "interface", "label": "Interface"}, {"id": "package", "label": "External package"}]
-PROJECT_RELS = [{"id": "IMPORTS", "label": "imports", "inverse": "imported by"}, {"id": "TESTS", "label": "tests", "inverse": "tested by"},
-                {"id": "USES", "label": "uses file", "inverse": "used by", "soft": True}, {"id": "EXPOSES", "label": "exposes", "inverse": "exposed by"},
+# slot = colour in the viewer (six hues, validated for colour-blind separation); -1 = neutral
+PROJECT_KINDS = [{"id": "module", "label": "Engine module", "slot": 0}, {"id": "script", "label": "Script or tool", "slot": 1}, {"id": "test", "label": "Test", "slot": 2},
+                 {"id": "doc", "label": "Document", "slot": 3}, {"id": "config", "label": "Config and data", "slot": 4},
+                 {"id": "interface", "label": "Interface", "slot": 5}, {"id": "package", "label": "External package", "slot": -1}]
+PROJECT_LEGEND = [{"dash": "", "label": "read from code"}, {"dash": "6 4", "label": "test of"}, {"dash": "2 4", "label": "matched by name"}]
+KNOWLEDGE_LEGEND = [{"dash": "", "label": "stated in a source"}, {"dash": "6 4", "label": "disputed"}, {"dash": "2 4", "label": "similar wording"}]
+PROJECT_RELS = [{"id": "IMPORTS", "label": "imports", "inverse": "imported by"}, {"id": "TESTS", "label": "tests", "inverse": "tested by", "dash": "6 4"},
+                {"id": "USES", "label": "uses file", "inverse": "used by", "dash": "2 4"}, {"id": "EXPOSES", "label": "exposes", "inverse": "exposed by"},
                 {"id": "DEPENDS_ON", "label": "needs package", "inverse": "needed by"},
                 {"id": "DECLARES", "label": "declares", "inverse": "declared in"},
                 {"id": "LINKS_TO", "label": "links to", "inverse": "linked from"},
-                {"id": "REFERENCES", "label": "mentions", "inverse": "mentioned in", "soft": True}]
+                {"id": "REFERENCES", "label": "mentions", "inverse": "mentioned in", "dash": "2 4"}]
 
 
 def project_view(g, switch=None):
@@ -94,23 +97,24 @@ def project_view(g, switch=None):
                     d[k] = a[k]
             if a.get("defs"):
                 d["defines"] = a["defs"]
-            nodes.append([n["id"], n["label"], a["kind"], group_of(parent.get(n["id"])), a.get("summary", ""), d])
+            kind = "config" if a["kind"] in ("config", "data") else a["kind"]
+            nodes.append([n["id"], n["label"], kind, group_of(parent.get(n["id"])), a.get("summary", ""), d])
     edges = [(e["source"], e["target"], e["relation"]) for e in g["links"] if e["relation"] != "CONTAINS"]
     meta = g["graph"]
     return pack(v, "Project map", f"{meta['edition'].capitalize()} edition, release {meta['release']}", PROJECT_KINDS, PROJECT_RELS, nodes, edges,
                 "Every file in this edition, its imports, tests, document links and external packages, plus the engine's "
-                "interfaces. Solid lines are read from the code. Mentions and file uses are matched by name.", switch, meta)
+                "interfaces. Solid lines are read from the code. Dotted lines are matched by name.", switch, meta, PROJECT_LEGEND)
 
 
 # ---------- knowledge graph ----------
-KNOWLEDGE_KINDS = [{"id": "rule", "label": "Rule"}, {"id": "concept", "label": "Concept"}, {"id": "book", "label": "Book"},
-                   {"id": "dispute", "label": "Dispute"}, {"id": "position", "label": "Position"}, {"id": "person", "label": "Person"}]
+KNOWLEDGE_KINDS = [{"id": "rule", "label": "Rule", "slot": 0}, {"id": "concept", "label": "Concept", "slot": 1}, {"id": "book", "label": "Book", "slot": 2},
+                   {"id": "dispute", "label": "Dispute", "slot": 3}, {"id": "position", "label": "Position", "slot": 4}, {"id": "person", "label": "Person", "slot": 5}]
 KNOWLEDGE_RELS = [{"id": "APPLIES_TO", "label": "applies to", "inverse": "rules about this"},
                   {"id": "CITES", "label": "cites", "inverse": "cited by"},
                   {"id": "HAS_POSITION", "label": "has position", "inverse": "position of"},
-                  {"id": "CONTRADICTS", "label": "contradicts", "inverse": "contradicted by"},
+                  {"id": "CONTRADICTS", "label": "contradicts", "inverse": "contradicted by", "dash": "6 4"},
                   {"id": "DISCUSSED_IN", "label": "discussed in", "inverse": "discusses"},
-                  {"id": "SIMILAR_TO", "label": "similar to", "inverse": "similar to"},
+                  {"id": "SIMILAR_TO", "label": "similar to", "inverse": "similar to", "dash": "2 4"},
                   {"id": "REFERS_TO", "label": "refers to", "inverse": "referred to by"},
                   {"id": "WRITTEN_BY", "label": "written by", "inverse": "author of"},
                   {"id": "TRANSLATED_BY", "label": "translated by", "inverse": "translator of"}]
@@ -211,7 +215,7 @@ def knowledge_view(g, release="", switch=None):
     note = (f"Every rule, concept, book, person and dispute from the full graph ({meta['nodes']:,} nodes, {meta['links']:,} edges). "
             f"{counts['Page']:,} page nodes and their {sum(mentions.values()):,} concept mentions are folded into the details.")
     return pack(v, "Knowledge graph", f"Book library, release {release}" if release else "Book library", KNOWLEDGE_KINDS, KNOWLEDGE_RELS, nodes, edges,
-                note, switch, meta)
+                note, switch, meta, KNOWLEDGE_LEGEND)
 
 
 def write_html(view, out):

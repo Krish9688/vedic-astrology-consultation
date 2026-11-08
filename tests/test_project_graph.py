@@ -117,6 +117,20 @@ def test_knowledge_view_withholds_birth_details():
     assert [n[1] for n in v["nodes"] if n[0] == "rule:AB:1"] == ["[AB] Worked example, birth details withheld"]
 
 
+def test_viewer_data_has_colour_slots_and_line_patterns(tmp_path):
+    for kinds, rels in ((graph_view.PROJECT_KINDS, graph_view.PROJECT_RELS), (graph_view.KNOWLEDGE_KINDS, graph_view.KNOWLEDGE_RELS)):
+        assert all(-1 <= k["slot"] <= 5 for k in kinds)                       # six hues, -1 = neutral
+        coloured = [k["slot"] for k in kinds if k["slot"] >= 0]
+        assert len(set(coloured)) == len(coloured)
+        assert all(r.get("dash", "") in ("", "6 4", "2 4") for r in rels)      # solid, dashed, dotted
+    tree(tmp_path)
+    write(tmp_path, "tests/fixtures/sample.json", "{}")                        # kind "data": shares the config colour
+    g, _ = PG.generate(tmp_path, tmp_path / "out", "workspace")
+    v = graph_view.project_view(g)
+    assert {n[2] for n in v["nodes"]} <= {k["id"] for k in v["kinds"]}
+    assert any(n[0] == "file:tests/fixtures/sample.json" and n[2] == "config" for n in v["nodes"])
+
+
 def test_knowledge_view_folds_pages_and_keeps_rules():
     node = lambda i, t, **a: {"id": i, "label": i, "node_type": t, "attributes": a}  # noqa: E731
     g = {"nodes": [node("book:AB", "Book", source_id="AB", system="Parashari", author="A"), node("page:AB:1", "Page", book="AB"),
