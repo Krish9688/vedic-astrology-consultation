@@ -23,7 +23,7 @@ def tree(root):
     write(root, "astro/service.py", "from astro.calc import total\nfrom astro import calc\n")
     write(root, "astro/mcp_server.py", 'from astro.service import total\n@tool("x")\ndef chart(): ...\n')
     write(root, "astro/cli.py", 'for name in ("doctor", "sky"):\n    sub.add_parser(name)\nsub.add_parser("serve")\n')
-    write(root, "tests/test_calc.py", "from astro.calc import total\n")
+    write(root, "tests/test_calc.py", 'from astro.calc import total\nPATH = "astro/service.py"\n')
     write(root, "docs/GUIDE.md", "# Guide\nSee [other](OTHER.md), `astro/service.py` and [gone](MISSING.md).\n")
     write(root, "docs/OTHER.md", "# Other\n")
     write(root, "astrology-prediction/SKILL.md", "# Skill\n")
@@ -42,6 +42,7 @@ def test_scan_finds_structure(tmp_path):
     e = edges(g)
     assert ("file:astro/service.py", "file:astro/calc.py", "IMPORTS") in e
     assert ("file:tests/test_calc.py", "file:astro/calc.py", "TESTS") in e
+    assert ("file:tests/test_calc.py", "file:astro/service.py", "USES") in e          # a path in a string is only a name match
     assert ("file:astro/calc.py", "pkg:pyswisseph", "DEPENDS_ON") in e
     assert ("file:repo-root/pyproject.toml", "pkg:pyswisseph", "DECLARES") in e
     assert ("file:docs/GUIDE.md", "file:docs/OTHER.md", "LINKS_TO") in e
@@ -72,11 +73,14 @@ def test_repeat_scan_is_identical_and_check_notices_change(tmp_path):
 
 def test_public_layout_maps_to_the_same_areas(tmp_path):
     write(tmp_path, "plugins/astrology-consultation/.claude-plugin/plugin.json", '{"version": "1.0.0"}')
+    write(tmp_path, ".git", "gitdir: elsewhere\n")                    # a linked worktree
+    write(tmp_path, "docs/project-graph/cache/last_query_stamp", "1")   # left by graphify query commands
     write(tmp_path, "plugins/astrology-consultation/engine/astro/calc.py", "")
     write(tmp_path, "plugins/astrology-consultation/engine/astro/service.py", "from astro import calc\n")
     write(tmp_path, "plugins/astrology-consultation/skills/astrology-consultation/SKILL.md", "# Skill\n")
     g, _ = PG.generate(tmp_path, tmp_path / "docs" / "project-graph")
     assert g["graph"]["edition"] == "public"
+    assert not [n["id"] for n in g["nodes"] if n["id"] == "file:.git" or "last_query_stamp" in n["id"]]
     by = {n["id"]: n for n in g["nodes"]}
     assert by["file:plugins/astrology-consultation/engine/astro/calc.py"]["attributes"]["area"] == "Engine"
     assert by["file:plugins/astrology-consultation/skills/astrology-consultation/SKILL.md"]["attributes"]["area"] == "Skill"
@@ -97,7 +101,7 @@ def test_page_data_cannot_close_its_script_tag(tmp_path):
     graph_view.write_html(graph_view.project_view(g), str(out))
     html = out.read_text(encoding="utf-8")
     data = html.split('id="graph-data">')[1].split("</script>")[0]
-    assert json.loads(data)["nodes"][0][1] == "</script><b>"
+    assert json.loads(data)["nodes"][0][1] == "</script><b>" and "<" not in data
 
 
 def test_knowledge_view_withholds_birth_details():

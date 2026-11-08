@@ -38,6 +38,8 @@ AREAS = (("astro/", "Engine"), ("astrology-prediction/", "Skill"), ("plugin/", "
 UNPARSED = ("knowledge/", "sourcemaps/", "releases/", ".agents/", ".project-council/", "research/", "notes/", "legacy/", "archive/")
 DIST = {"swisseph": "pyswisseph", "fitz": "pymupdf", "docx": "python-docx", "yaml": "pyyaml", "PIL": "pillow",
         "graphify": "graphifyy", "dateutil": "python-dateutil"}
+# shortcut: names of private-only tools imported by tests that skip in the public edition; extend if a new one is added
+INTERNAL_ONLY = {"export_public", "export_repo", "findings_check", "public_edition", "ref_check"}
 TEXT_REF = (".md", ".yml", ".yaml", ".toml", ".sh")
 PATH_TOKEN = re.compile(r"(?<![\w/.-])(?:\.{0,2}/)?[\w@+-][\w@.+-]*(?:/[\w@.+-]+)+\.[a-z]{1,5}\b|`[\w.-]+\.(?:py|md|json|toml|sh|html|css|ya?ml)`")
 MD_LINK = re.compile(r"\]\(([^)\s]+)\)")
@@ -61,7 +63,7 @@ def list_files(root, edition, outdir):
             ds[:] = sorted(x for x in ds if x not in SKIP_DIRS and not x.startswith(".venv")
                            and x != "private" and not (x == "results" and posix(d).endswith("/tests")))
             for f in fs:
-                if f == ".DS_Store" or f.endswith(".pyc") or f == "uv.lock":
+                if f in (".DS_Store", ".git", "uv.lock") or f.endswith(".pyc") or (os.path.dirname(d) == outdir and os.path.basename(d) == "cache"):
                     continue
                 path = os.path.join(d, f)
                 if os.path.islink(path) or (f in OUTPUTS and os.path.dirname(path) == outdir):
@@ -233,7 +235,7 @@ def add_entries(p, rel, tree, log):
                 f = d.func if isinstance(d, ast.Call) else d
                 attr = f.attr if isinstance(f, ast.Attribute) else f.id if isinstance(f, ast.Name) else ""
                 if log.endswith("mcp_server.py") and attr in ("tool", "resource", "prompt"):
-                    entry("mcp", "MCP tools", n.name, n.lineno)
+                    entry("mcp", "MCP server", n.name, n.lineno)
                 elif log.endswith("rest.py") and attr in ("get", "post", "put", "delete") and isinstance(d, ast.Call) and d.args \
                         and isinstance(d.args[0], ast.Constant):
                     entry("rest", "REST routes", f"{attr.upper()} {d.args[0].value}", n.lineno)
@@ -274,13 +276,12 @@ def scan_python(p, rel, kind, log, text):
                 if t != rel:
                     link_import(p, rel, kind, t)
             top = dotted.split(".")[0]
-            if not hits and not whole and not level and top and top not in stdlib:
+            if not hits and not whole and not level and top and top not in stdlib and top not in INTERNAL_ONLY:
                 p.edge(file_id(rel), package(p, top, rel), "DEPENDS_ON")
         if isinstance(n, ast.Constant) and isinstance(n.value, str) and len(n.value) < 120 and re.fullmatch(r"[\w./@-]+\.[a-z]{1,5}", n.value):
             t = p.resolve(n.value, d)
-            if t and t != rel:
-                is_code = kind_of(logical(t, p.edition)) in ("module", "script")
-                p.edge(file_id(rel), file_id(t), "TESTS" if kind == "test" and is_code else "USES", True)
+            if t and t != rel and (kind == "test" or not logical(t, p.edition).startswith("tests/")):
+                p.edge(file_id(rel), file_id(t), "USES", True)
     if log.startswith("astro/"):
         add_entries(p, rel, tree, log)
     defs = [n.name for n in tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))]
