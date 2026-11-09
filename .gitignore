@@ -16,3 +16,4 @@ graphify-out/
 *.pdf
 .env
 .env.*
+docs/project-graph/cache/

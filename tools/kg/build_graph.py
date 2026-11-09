@@ -11,7 +11,10 @@ from graphify.build import build
 from graphify.cluster import cluster, score_all, label_communities_by_hub
 from graphify.analyze import god_nodes, surprising_connections, suggest_questions
 from graphify.report import generate
-from graphify.export import to_json, to_html
+from graphify.export import to_json
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import graph_view, project_graph  # noqa: E402   the single-file viewer (no CDN) and the map of the code
 
 WS = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT = os.path.join(WS, "graphify-out")
@@ -37,10 +40,8 @@ def main():
                       {"warning": "built from knowledge/extraction.json by tools/kg (deterministic, no LLM)"},
                       {"input": 0, "output": 0}, WS, suggested_questions=questions)
     open(os.path.join(OUT, "GRAPH_REPORT.md"), "w", encoding="utf-8").write(report)
-    try:
-        to_html(G, communities, os.path.join(OUT, "graph.html"), community_labels=labels, node_limit=5000)
-    except ValueError as e:
-        print("graph.html skipped:", e)
+    graph_view.write_knowledge(os.path.join(OUT, "graph.json"), os.path.join(OUT, "graph.html"), WS)
+    project_graph.generate(WS, OUT, "workspace", graph_view.SWITCH_PROJECT)
     if "--wiki" in sys.argv:
         from graphify.wiki import to_wiki
         shutil.rmtree(os.path.join(OUT, "wiki"), ignore_errors=True)
