@@ -1,5 +1,9 @@
 # Install from the Claude plugin marketplace
 
+> **What:** how to install the public plugin from the Claude marketplace and roll it back. **Read it when:** you release, install or support the plugin.
+> **Last checked:** 2026-11-12 (the version row, 3.8.0, matches the package version; the rest not checked).
+> **Related:** CLIENT-INTEGRATIONS.md, RELEASE-PROCESS.md, VERSION-HISTORY.md.
+
 | | |
 |---|---|
 | Marketplace | `vedic-astrology` — repository `Krish9688/vedic-astrology-consultation` |

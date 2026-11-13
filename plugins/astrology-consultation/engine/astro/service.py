@@ -329,13 +329,25 @@ def divisional_chart(b: BirthInput, division: int, o: Options = DEFAULTS) -> dic
 
 
 @_calc
-def dasha(b: BirthInput, o: Options = DEFAULTS) -> dict:
+def dasha(b: BirthInput, o: Options = DEFAULTS, levels: int = 3, from_date=None, to_date=None) -> dict:
+    """levels 1-3 (mahadasha, +antardasha, +pratyantar) and an optional from/to window (periods overlapping it) trim the
+    list for a chat client (F19); `running` is always taken from the full tree. Defaults: everything, as before."""
+    if levels not in (1, 2, 3):
+        raise ValueError("levels must be 1, 2 or 3")
+    lo, hi = (str(x) if x else None for x in (from_date, to_date))
+    if lo and hi and lo > hi:
+        raise ValueError("from_date is after to_date")
     c = _compute(b, o, extras=False)
     on = _args(b, o)[1]["on"]
     running = next(([md["lord"], ad["lord"], pd["lord"]] for md in c["vimshottari"] for ad in md["sub"]
                     for pd in ad["sub"] if pd["start"] <= on < pd["end"]), None)
+    def trim(rows, depth):
+        return [dict(r, **({"sub": trim(r["sub"], depth + 1)} if depth < levels else {})) if depth < levels else
+                {k: v for k, v in r.items() if k != "sub"}
+                for r in rows if (not lo or r["end"] > lo) and (not hi or r["start"] < hi)]
+    periods = c["vimshottari"] if (levels, lo, hi) == (3, None, None) else trim(c["vimshottari"], 1)
     return _with_meta(c, {"system": "Vimshottari", "year_days": engine.YEAR[o.year], "running_on": on,
-                          "running": running, "periods": c["vimshottari"]})
+                          "running": running, "periods": periods})
 
 
 def julian_to_gregorian(d) -> dt.date:
@@ -391,7 +403,7 @@ def gochara(b: BirthInput, o: Options = DEFAULTS) -> dict:
 
 
 @_calc
-def outlook(b: BirthInput, period: str = "month", start=None, o: Options = DEFAULTS) -> dict:
+def outlook(b: BirthInput, period: str = "month", start=None, o: Options = DEFAULTS, layers=None) -> dict:
     """Chart-specific factors for a day, week, month or year from `start` (default today): dashas, gochara, sade sati,
     sign changes, stations, slow-planet contacts and (day/week) the Moon's transit. Facts only; see timing.md §3a."""
     from .calc import transit as TR
@@ -401,7 +413,13 @@ def outlook(b: BirthInput, period: str = "month", start=None, o: Options = DEFAU
     o = Options(on=d, months=o.months, node=o.node, year=o.year, ayanamsa=o.ayanamsa)
     c = _compute(b, o, extras=False)
     y = yogini_dasha(b, o)["periods"]
-    return _with_meta(c, TR.outlook(c, d, period, b.tz, y, o.node))
+    out = _with_meta(c, TR.outlook(c, d, period, b.tz, y, o.node))
+    if layers:                                      # F19: keep only these layers (event, backdrop, texture); ids stay as numbered
+        keep = {x.strip() for x in layers.split(",")}
+        if keep - {"event", "backdrop", "texture"}:
+            raise ValueError("layers must be a comma list of event, backdrop, texture")
+        out = out | {"factors": [f for f in out["factors"] if f["layer"] in keep], "layers": sorted(keep)}
+    return out
 
 
 @_calc

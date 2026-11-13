@@ -40,6 +40,46 @@ K. N. Rao's *Timing through Vimshottari Dasha*, Sanjay Rath's *Crux*, P. V. R. N
 Not in the library, and therefore only "external knowledge" if used: KP, Raman's *Varshaphal*, the other volumes and
 works of these authors (v2.2 used some via web pages — see §5).
 
+### 1a. Added 2026-11-12: Vedic books (searchable page by page; no source maps yet)
+
+No rule from these books is in the graph. Read the page with `search.py --src <ID>` before using one, and cite PDF pages.
+
+| ID | Work | Author / translator | Tradition and tier | Text layer | Use it for |
+|---|---|---|---|---|---|
+| PDK | Phaladeepika | Mantreswara, tr. and notes G. S. Kapoor | Classical Parashari (verse) + translator notes (traditional) | Clean text | The same verses as PD in a second translation, with notes: planets in the houses (ch. 8), rising signs (ch. 9), 7th house (ch. 10). Cite Adh./sloka; keep verse and note apart |
+| BHRIGU | Bhrigu Sutras | translator not shown; attribution to Bhrigu unverified | Planet-in-house sutras (catalogued as Nadi; treat as traditional, not as classical verse) | Clean text | Each planet in each house with its conditions (dignity, lordship, companions) and the parallel lines of four other texts. Ages, illnesses and moral labels in it are never forecast |
+| UKAL | Uttara Kalamrita | Kalidasa, tr. and notes P. S. Sastri | Classical Parashari (verse) + translator notes | Text + local OCR; lists lose items | What each house and planet signifies (ch. V), wealth and Viparita yogas (ch. IV). Check the page before citing |
+| SARH | Saravali, Sanskrit with Hindi commentary | Kalyana Varma, Hindi by M. Chaturvedi | Classical Parashari (verse) | Local OCR, Hindi | The full text behind SAR1's paraphrase: planets in the houses (ch. 30). Search in Hindi |
+| BEHARI2A, BEHARI2B | Planets in the Signs and Houses | Bepin Behari (two printings of one text; BEHARI2A is the cleaner copy) | Modern Parashari, one author's readings, unsourced | Clean text, some OCR slips | Sign-by-sign and planet-by-planet readings of each house, as one modern opinion. Never a stand-alone verdict; filter its moral, medical and death statements |
+| SEERS | Astrology of the Seers | David Frawley | Modern Parashari introduction | Local OCR | Plain-language meanings of planets, signs and houses; not a rule source |
+| BPHSGS2 | Brihat Parasara Hora Sastra Vol. 2 | Parasara, tr. G. C. Sharma | Classical Parashari (verse) | Local OCR, Sanskrit garbled | Dasha chapters in a second translation, to compare with BPHS |
+| MC5, MCKDJ, MCKDJM, MCHI | Muhurta Chintamani (Sanskrit and Hindi editions) | Rama Daivajna, with commentaries | Classical Muhurta | Mixed, Sanskrit and Hindi | Electional rules only, not natal reading |
+| MUHRAM | Muhurtha or Electional Astrology | B. V. Raman | Modern Muhurta | Clean text | Electional rules only |
+
+A planet-in-house line from any of these is **one input**. Weigh it with the planet's lordship, dignity, aspects and
+companions ([vedic-natal.md](vedic-natal.md) §3–5) before it enters an answer; PDK's own closing note says so.
+
+### 1b. Added 2026-11-12: Western and Hellenistic books (a different system)
+
+These use the tropical zodiac, other house systems, the outer planets and psychological meanings. **They are never
+mixed into a Vedic reading and never cited as support for a Vedic rule.** They share the full-text index, but `search.py`, `kg.py` and the MCP search tools skip them by default (`kg.py` and the MCP tools have no switch: they always skip them) (only
+the catalog systems Parashari, Jaimini, Lal Kitab, Nadi, Kerala Prashna, Tajika and Muhurta are searched); they are reached
+only with `--src <ID>` or `--include-other-systems`. Use them only when the person asks for a Western view, in a
+separate, labelled note, and say that this skill calculates sidereal positions, so their sign descriptions do not apply
+to the chart as calculated.
+
+| ID | Work | Author | System | Covers |
+|---|---|---|---|---|
+| TOMPKINS | The Contemporary Astrologer's Handbook | Sue Tompkins | Western modern | Signs, planets, aspects, houses, synthesis |
+| RISKE | Llewellyn's Complete Book of Astrology | Kris Brandt Riske | Western modern | Signs, planets in signs and houses, aspects |
+| TWELVEH | The Twelve Houses | author not shown; scan, local OCR | Western modern | The twelve houses and planets in them |
+| KENTEG, WOOLFOLK, FORREST, ASTYOU, ARCHSTAN, DKASTRO, DKSECRETS | General introductions | Kent; Woolfolk; Forrest; Bloch and George; Stanley; Taylor (two titles, likely one text, not compared) | Western modern | Sun signs, rising signs, planets, houses |
+| ARROYOKT, GREENESAT | Astrology, Karma & Transformation; Saturn | Stephen Arroyo; Liz Greene | Western modern (psychological) | Saturn, outer planets, ascendant, relationships |
+| HANDPT, KENTTR | Planets in Transit; Astrological Transits | Robert Hand; April Elliott Kent | Western modern | Tropical transits |
+| GREENELOV, GOLDYM | Astrology for Lovers; The Astrology of You and Me | Liz Greene; Gary Goldschneider | Western modern | Sun-sign relationships |
+| BRENNAN | Hellenistic Astrology | Chris Brennan | Hellenistic (history and technique) | Places, lots, sect, time lords; its own system |
+| TARNAS, ALTEA, GOLDBD | Cosmos and Psyche; Soul Signs; The Secret Language of Birthdays | Tarnas; Altea; Goldschneider and Elffers | Not chart technique | Reference only; never a source for a reading |
+
 ## 2. Reliability notes
 
 - **Classical verse vs commentary.** PD and BJ mix verse translations with the translators' notes; BJ's Vimshottari
@@ -50,6 +90,11 @@ works of these authors (v2.2 used some via web pages — see §5).
   image was read. BJ digits are sometimes garbled (e.g. Saturn's 19 read as 9).
 - **Lal Kitab**: KB/VT fidelity is to Shrimali's English book (plus LK1952 for the table), not to the Urdu original.
   LK1952 in this folder is a Hindi re-typeset with its own errors (e.g. VT rows 21, 78). Authorship is disputed (R52).
+- **Books added 2026-11-12**: PDK and PD translate the same verses, so the two count as one authority, not two; where
+  the translations differ, name both. BHRIGU names no translator and its attribution is unverified: cite it as "the
+  Bhrigu Sutras translation", never as a sage's verse. UKAL's OCR drops list items. Behari gives no sources: modern
+  opinion. House-by-house lines in all of them are blunt (death, illness, moral and caste labels) and pass through
+  [vedic-natal.md](vedic-natal.md) §9 before use.
 - **No source here establishes predictive validity.** Textual authority shows what a tradition teaches.
 
 ## 3. Citation format
@@ -85,6 +130,12 @@ python3 scripts/search.py --page PD:184                     # read the whole pag
 
 Search in each book's own vocabulary: Shrimali (LKS) writes "permanent house" (not *pakka ghar*), "debt" (not *rin*);
 LK1952 is Hindi (पक्का घर, ऋण, वर्षफल); Raman writes "Dasa/Bhukti", LOL "dasha/bhukti", PD "Dasa/Apahara".
+A plain question rarely matches a book's words, so search the book's vocabulary: appearance - physique, complexion,
+stature, "rising Navamsa"; intimacy - "bed comforts", "bed pleasures", conjugal; sudden gains - legacy, lottery, windfall,
+speculation. The books added in 2026-11 use other words again: PDK and BHRIGU write "Ascendant", "native", "posited",
+"first house" and "comforts of bed"; UKAL uses Sanskrit names (Ravi, Chandra, Kuja, Budha, Guru, Shukra, Shani),
+"Bhava" and "Karakatvas"; Behari writes "the individual", "marriage partner", "legacy", "libido"; SARH is Hindi
+(लग्नस्थ शुक्र का फल, सप्तमभावस्थ, द्वादशभावस्थ). A plain-word query that finds no page with every word is retried once with OR and says so.
 Use it to confirm a rule before citing it, to fetch a disputed passage, or to answer "where does this come from?".
 Nothing leaves the machine. The index contains copyrighted text for the user's private use: quote briefly, paraphrase
 otherwise, and do not bundle it into distributable packages. Rebuild with
@@ -95,6 +146,7 @@ otherwise, and do not bundle it into distributable packages. Rebuild with
 v2.2's Vedic references were drawn from web transcriptions (wisdomlib Phaladeepika OCR, a BPHS blog transcription,
 Barbara Pijan Lama's BPHS ch. 34 compilation, PVR's online textbook, Rath's argala article, publisher metadata for
 K. N. Rao, Swiss Ephemeris docs, Drik Panchang). v3 replaces the Phaladeepika and Brihat Jataka web citations with the
-local editions. PVR, Rath, BPHS and K. N. Rao remain **external** and are flagged as such wherever a rule still rests
-on them (vargas.md D9/D10 arithmetic and PVR varga usage; argala; double transit). The full v2.2 source ledger is
+local editions. PVR, Rath's *Crux*, BPHS and K. N. Rao's *Timing* are in the library since v3.3 (§1); what still rests
+on the v2.2 web pages (Rath's argala article, PVR's online textbook) remains **external** and is flagged as such wherever
+a rule uses it (vargas.md D9/D10 arithmetic and PVR varga usage; argala; double transit). The full v2.2 source ledger is
 preserved in `docs/legacy-v2.2-sources.md`.

@@ -65,9 +65,9 @@ plugins/astrology-consultation/
   skills/                    consultation, report and source-lookup skills
   agents/  commands/         report reviewer; /setup and /doctor commands
   scripts/astro              launcher that builds the engine on first run
-docs/                        guides (see below)
-tests/                       engine, interface, security and property tests
-tools/                       link, version, privacy and package checks
+docs/                        guides (see below) and the accuracy rubric and score reports
+tools/                       book ingestion for `astro add-book`, privacy check, install smoke test (mcp_smoke.py)
+schemas/  knowledge/         JSON schemas of the engine's facts; book catalogue (metadata only)
 LICENSES/                    full licence texts
 ```
 
@@ -92,17 +92,17 @@ Optional install extras: `mcp`, `api`, `report`, `all`. Servers bind to 127.0.0.
 | [ARCHITECTURE](docs/ARCHITECTURE.md) | How the engine, skill and interfaces fit together |
 | [CALCULATION-ENGINES](docs/CALCULATION-ENGINES.md) | Conventions, ayanamsa and cross-checks |
 | [PRIVACY](docs/PRIVACY.md) | What stays local and how remote mode works |
-| [TESTING](docs/TESTING.md) | Test method and results |
+| [ACCURACY-RUBRIC](docs/ACCURACY-RUBRIC.md) | How accuracy is scored; reports in `docs/accuracy/` |
 | [ADD-A-BOOK](docs/ADD-A-BOOK.md), [COPYRIGHT](docs/COPYRIGHT.md) | Using your own books; what is not distributed |
 | [VERSION-HISTORY](docs/VERSION-HISTORY.md), [CHANGELOG](CHANGELOG.md) | Release history |
 
 ## Privacy and limits
 
-Calculation is local and nothing is sent to an outside service. This repository holds no personal data and no book text. Ascendant and divisional-chart claims depend on the birth time (see [TESTING](docs/TESTING.md)). There is no time-zone lookup from a birth place without the optional gazetteer, so give the UTC offset at birth if you use coordinates.
+Calculation is local and nothing is sent to an outside service. This repository holds no personal data and no book text. Ascendant and divisional-chart claims depend on the birth time: a few minutes can change them, so `get_birth_time_sensitivity` reports how stable each one is and the skill treats "high" sensitivity as uncertain (see the sensitivity grid in [CALCULATION-ENGINES](docs/CALCULATION-ENGINES.md)). There is no time-zone lookup from a birth place without the optional gazetteer, so give the UTC offset at birth if you use coordinates.
 
 ## Contributing
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) first. Use invented charts only. Report security problems as described in [SECURITY.md](SECURITY.md). Before a pull request, run `uvx ruff check .`, `python3 tools/privacy_check.py`, `python3 tools/check_versions.py` and `python3 tools/check_links.py`.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) first. Use invented charts only. Report security problems as described in [SECURITY.md](SECURITY.md). Before a pull request, run `uvx ruff check .` and `python3 tools/privacy_check.py`.
 
 ## License
 

@@ -15,6 +15,10 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
       bhava (the engine's `bhavas`), say so and judge it by hand.
 - [ ] Every placement, conjunction and aspect restated in the reply matches the `chart_facts.py` output (no "together
       with" for planets in different houses; no aspect the script does not list).
+- [ ] **Facts checked before sending**: every placement, dignity (in the birth chart or a divisional chart), degree
+      relation and date stated in the answer was looked up in the engine output, not recalled. A relation ("on the
+      rising degree", "hemmed in", "own sign in the navamsa", "exact") must be true in those facts for the planet
+      named, with the degrees or signs to show it; if it was inferred, cut it.
 - [ ] Any statement that a Lal Kitab planet can or cannot be remedied names the source dispute (CR-L01).
 - [ ] Yogas verified by definition and constituents; no double counting of a yoga and its parts; bhanga checked.
 - [ ] The strongest contrary factor is stated, and delay vs denial is distinguished where relevant.
@@ -64,7 +68,7 @@ not just the wording. Adding a disclaimer never repairs an unsupported claim.
 
 ## Regression scenarios (for testing changes to the skill)
 
-The behavioural test set lives in `tests/test-cases.md`. After any change to reasoning or voice files, rerun at least
+After any change to reasoning or voice files, rerun at least
 the regression subset and compare with your earlier outputs, if you keep them. Also keep the v2.2 regression ideas:
 removing natal support must weaken a transit-only claim; duplicating one placement as yoga/dignity/vargottama must not
 raise confidence; changing the ascendant must change functional ownership; unstable birth time must stop a high varga
@@ -101,7 +105,18 @@ from confirming; reversed period dates must be caught; a diagnosis/death/guarant
 - [ ] **Absence claims name what was checked** ("the 12th lord, the 4th and the D9 12th show no residence-abroad
   signature") rather than "the usual indicators are not there".
 - [ ] **No source footer or technical block** unless the person asked for detail or sources; no page or verse numbers
-  in an ordinary consultation reply; at most one book named in passing.
+  in an ordinary consultation reply. **Books named**: each rule that carries a conclusion names its book (name only),
+  up to about three in an answer; a description (appearance, partner, temperament) names its text
+  (communication.md §4).
+- [ ] **Grade beside the claim**: whether, when and what form each carry their grade where they are stated; the
+  grade word was explained once in the conversation (agreement under the tradition's rules, not a probability); the
+  closing line, if any, says what would sharpen this answer from the engine's figures and is not a repeated
+  confidence paragraph; a broad label was resolved into its best-supported meanings, not repeated
+  (consultation-reasoning §5).
+- [ ] **Same fact, same grade**: a fact keeps its grade across the answers of a conversation unless new data
+  arrived, and no answer contradicts an earlier one without saying so and why. A plain title ("your partnership
+  planet") means the same planet all through a conversation; when another planet is meant (the navamsa's 7th
+  lord), name it. A premise the chart does not bear out is corrected first, not half-accepted.
 
 
 ## Life-first and report checks (v3.4)

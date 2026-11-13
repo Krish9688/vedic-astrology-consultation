@@ -2,7 +2,7 @@
 
 Contents: [A. Parashari / Vedic](#a-parashari--vedic)
 [B. Lal Kitab (Shrimali knowledge base, audited)](#b-lal-kitab-shrimali-knowledge-base-audited) · [C. Lal Kitab 1952 vs Shrimali (new in v3)](#c-lal-kitab-1952-vs-shrimali-new-in-v3) · [D. Between systems](#d-between-systems)
-[E. Disputes introduced by the new books (v3.3; curated from the source maps' §7)](#e-disputes-introduced-by-the-new-books-v33-curated-from-the-source-maps-7) · [F. Curated from the automatic cross-book disputes (v3.5)](#f-curated-from-the-automatic-cross-book-disputes-v35) · [G. Empirical-test disputes (CR-E)](#g-empirical-test-disputes-cr-e)
+[E. Disputes introduced by the new books (v3.3; curated from the source maps' §7)](#e-disputes-introduced-by-the-new-books-v33-curated-from-the-source-maps-7) · [F. Curated from the automatic cross-book disputes (v3.5)](#f-curated-from-the-automatic-cross-book-disputes-v35) · [G. Empirical-test disputes (CR-E)](#g-empirical-test-disputes-cr-e) · [H. Disputes introduced by the books added in 2026-11](#h-disputes-introduced-by-the-books-added-in-2026-11)
 
 Disputed rules that can change a reading. For each: both versions with pages, a classification, the default this
 skill uses, and how confident that default is. **Never pick a version silently because it makes a cleaner
@@ -172,3 +172,15 @@ through snippets or an opponent, and it never counts as validation. Both sides s
 |---|---|---|---|---|---|
 | CR-E01 | Carlson 1985: did astrologers beat chance? | Chance-level matching, 40 of 116 first choices against the pre-agreed 50% — EVID-F1 (Nature paper opened) | Reanalysis of the same data reported to find a marginal effect and Carlson's verdict "untenable" — EVID-F2 (Ertel; **unverified**, not opened, snippets only) | U | Cite Carlson only, name the Ertel challenge as unverified, never as validation [Medium] |
 | CR-E02 | Mars effect: real or an artefact? | CFEPP protocol fell to base rate, 18.66% against 17.70%; discrepancies attributed to bias — EVID-F6 (Nienhuys 1997, opened; one partisan secondary source) | The effect is real among eminent champions — EVID-F6 (Ertel and Irving book, **unverified**, not opened; known only through Nienhuys) | U | Say the dispute is live, the unopened side is unverified, and the claim concerns diurnal sectors, not Jyotish rules [Medium] |
+
+## H. Disputes introduced by the books added in 2026-11
+
+From the book study of 2026-11-12 (pages read in the Markdown library; SARH is Hindi OCR). A side marked "as recorded
+in" another row was not re-read. None of these books has a source map yet.
+
+| ID | Topic | Version A | Version B | Class | Default [confidence] |
+|---|---|---|---|---|---|
+| CR-X19 | Stature of the rising sign | Three classes by length of ascension: Aries, Taurus, Aquarius, Pisces short; Gemini, Cancer, Sagittarius, Capricorn middling; Leo to Scorpio long — LOL p133 | Sign-by-sign verses: Cancer short, Sagittarius short, Libra tall — PD IX.4, IX.7, IX.9 p129–131; PDK p105–106 (same verses, second translation); a modern list gives Aries average, Gemini tall, Cancer medium — BEHARI2A p6–9 | R | Give LOL's class first; where the verse for that sign differs (Cancer, Sagittarius) say the texts differ and let the body-type planet decide; never state height from the sign alone [Medium] |
+| CR-X20 | Venus in the 12th and wealth (extends CR-X10) | Rich, with bed comforts — PDK VIII.17–19 p99; the translator of the Bhrigu Sutras sides with this, citing Brihat Jataka — BHRIGU p185 | Great poverty unless Venus is with a benefic — BHRIGU sutras 65–68 p185; comforts and ease, no wealth named — SARH XXX.73 p251; enjoyment that costs something — LOL p175–176 (as recorded in topic-relationships-marriage §9) | R | Comforts and spending both; read wealth from the 2nd and 11th and from Venus's lordship and companions, never from this placement alone [Medium] |
+| CR-X21 | Viparita raja yoga: must the lords be linked? (extends CR-V29) | Lords of the 6th, 8th and 12th in one another's houses and tied to each other by conjunction, mutual aspect or exchange, with no such tie to other planets — UKAL IV.22 p87 | Not by exchange — LOL p327; one dusthana lord in another dusthana is enough — HJH2 p296, p353 (both as recorded in CR-V29) | R | As CR-V29: name the definition used; a rise after a setback is a possibility, never promised [Medium] |
+| CR-X22 | Venus in the 7th: the result (see CR-V02) | Favourable: an attractive partner, no quarrels, good fortune — SARH XXX.68 p250; Raman's experience — HJH2 p65 (as recorded in CR-V02) | Mixed: a good partner with loss or outside involvements — PDK VIII.17–19 p98; outside interests, and loss with remarriage when Venus is with a malefic, in a malefic's sign or debilitated — BHRIGU sutras 37–44 p177 | R | Read Venus's dignity, companions and lordship first; supportive when Venus is unafflicted; never a statement about fidelity or a partner's death [Medium] |

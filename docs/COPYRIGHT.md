@@ -1,5 +1,9 @@
 # Copyright and the library
 
+> **What:** the status of every book, what is derived from them and what is published. **Read it when:** you add a book or decide what may be public.
+> **Last checked:** not checked in the 2026-11-12 pass.
+> **Related:** LICENSING-DECISION.md, REPOSITORY-EDITIONS.md, ADD-A-BOOK.md.
+
 The skill reasons from a private library of astrology books. **No book, no extracted page text, no full-text index,
 no book-by-book source map and no knowledge graph built from them is published** — whatever the book's status — because
 together they would reproduce the books. The repository contains only code, the skill's own reference files (the

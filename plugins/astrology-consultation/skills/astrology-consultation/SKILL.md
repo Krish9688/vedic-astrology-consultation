@@ -54,6 +54,7 @@ The reasoning discipline is [consultation-reasoning.md](references/consultation-
    | career, business, income, wealth, debt | [topic-career-money.md](references/topic-career-money.md) |
    | home, property, parents, siblings, children, family, friends | [topic-home-family-children.md](references/topic-home-family-children.md) |
    | relocation/foreign travel, education, health symbolism, spirituality, big life changes, a year ahead | [topic-travel-education-health-life.md](references/topic-travel-education-health-life.md) |
+   | your own appearance, body, constitution | [vedic-natal.md](references/vedic-natal.md) |
 
    Weighing and grading rules: [synthesis-method.md](references/synthesis-method.md). Parashari detail:
    [vedic-natal.md](references/vedic-natal.md); vargas: [vargas.md](references/vargas.md). Separate systems, each in
