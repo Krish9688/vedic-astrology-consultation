@@ -17,7 +17,7 @@ from collections import defaultdict
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import vocab
 
-from paths import VARIANTS, fts_terms, knowledge_file  # noqa: F401 (fts_terms re-exported)
+from paths import VARIANTS, fts_terms, knowledge_file, own_source_ids  # noqa: F401 (fts_terms re-exported)
 
 STOPWORDS = set("what which when where why does have that this with from into about there their them they will would "
                 "should could chart horoscope person native planet planets house houses considered make makes "
@@ -273,9 +273,10 @@ def cmd_sources(a, N, out, inc):
         c = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
         print("\n## Full-text pages not already cited above")
         shown = 0
+        own = own_source_ids(c)   # never surface Western/Hellenistic pages beside Vedic rules
         for expr in (" AND ".join(words), " OR ".join(words)):
             for src, page, snip in c.execute("select src, page, snippet(pages, 3, '[', ']', '…', 14) from pages "
-                                             "where pages match ? order by rank limit 12", (expr,)):
+                                             f"where pages match ? and src in ({','.join('?' * len(own))}) order by rank limit 12", (expr, *own)):
                 if f"{src} p{page}" in cited or shown >= 5:
                     continue
                 cited.add(f"{src} p{page}")

@@ -106,12 +106,13 @@ def get_gochara(date: dt.date, time: str, lat: float, lon: float, tz: Union[floa
 
 @tool("Personal outlook facts for a period (day, week, month, quarter, year) from `start`: running dashas, gochara, sade sati, "
       "sign changes, stations, exact slow-planet contacts and, for day/week, the Moon's transit. Every factor has an id, "
-      "dates and a source; write the horoscope from these ids only (timing.md §3a).")
+      "dates and a source; write the horoscope from these ids only (timing.md §3a). layers: optional comma list of "
+      "event, backdrop, texture to shorten the result (ids stay as numbered).")
 def get_outlook(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None, period: str = "month",
                 start: Optional[dt.date] = None, zone: Optional[str] = None, fold: Optional[int] = None,
         ayanamsa: str = "lahiri", calendar: str = "gregorian",
-        time_source: Optional[str] = None) -> dict:
-    return S.outlook(_b(date, time, tz, lat, lon, zone, fold, calendar, time_source), period, start, _o(ayanamsa=ayanamsa))
+        time_source: Optional[str] = None, layers: Optional[str] = None) -> dict:
+    return S.outlook(_b(date, time, tz, lat, lon, zone, fold, calendar, time_source), period, start, _o(ayanamsa=ayanamsa), layers)
 
 
 @tool("Panchang of a local day (no birth data): tithi, vara, nakshatra and pada, yoga, karana at sunrise and every "
@@ -199,13 +200,16 @@ def get_compatibility(date1: dt.date, time1: str, lat1: float, lon1: float, date
 
 
 @tool("Vimshottari periods (3 levels) and the periods running on `on`. year: sidereal (default), "
-                      "365.25 or 360 (a convention some programs use).")
+                      "365.25 or 360 (a convention some programs use). Optional, to shorten the result: levels 1-3 and "
+                      "from_date/to_date (periods overlapping the window).")
 def get_dasha(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None, on: Optional[dt.date] = None,
               year: str = "sidereal",
         zone: Optional[str] = None, fold: Optional[int] = None,
         ayanamsa: str = "lahiri", calendar: str = "gregorian",
-        time_source: Optional[str] = None) -> dict:
-    return S.dasha(_b(date, time, tz, lat, lon, zone, fold, calendar, time_source), _o(on, year=year, ayanamsa=ayanamsa))
+        time_source: Optional[str] = None, levels: int = 3,
+        from_date: Optional[dt.date] = None, to_date: Optional[dt.date] = None) -> dict:
+    return S.dasha(_b(date, time, tz, lat, lon, zone, fold, calendar, time_source), _o(on, year=year, ayanamsa=ayanamsa),
+                   levels, from_date, to_date)
 
 
 @tool("Transits on `on` (houses from lagna and Moon), slow-planet sign changes and exact "

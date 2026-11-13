@@ -16,7 +16,7 @@ to their own questions. The other report types (`/astro-report`, reports.md) rem
   The engine refuses unknown ids, and it refuses any window that does not contain the events it cites (±45 days).
 
 ## Steps
-1. **Intake** (see `tests/fixtures/consultation/P2-intake.json` for the shape):
+1. **Intake** (the fields below):
    - **client:** full name, gender, current city and country, language (English), and relationship, occupation and
      education if given.
    - **birth:** date, time, `time_reliability` (exact, approximate with `time_uncertainty_min`, or unknown with no
@@ -84,4 +84,4 @@ to their own questions. The other report types (`/astro-report`, reports.md) rem
 - **P5:** unknown time.
 - **P6:** approximate time, ±45 minutes.
 
-These are in `tests/fixtures/consultation/`. The owner's own chart is a local-only case.
+These cases are kept with the test suite in the development repository.

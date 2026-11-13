@@ -230,8 +230,24 @@ def outlook(c, start, period, tz, yogini_rows=None, node="mean"):
             planet=ch["planet"], house_from_moon=(E.SIGNS.index(ch["to"]) - moon_sign) % 12 + 1,
             house_from_lagna=(E.SIGNS.index(ch["to"]) - asc_sign) % 12 + 1)
         if ch["planet"] == "Sa":
-            new = sade_sati(E.SIGNS.index(ch["to"]), moon_sign)
-            add("sade_sati", f"Sade sati {'now: ' + new if new else 'ends'}", ch["date"], SOURCES["sade_sati"])
+            to, frm = E.SIGNS.index(ch["to"]), E.SIGNS.index(ch["from"])
+            new, old = sade_sati(to, moon_sign), sade_sati(frm, moon_sign)
+            if new or old:                                  # F04: only a move into, within or out of the 12th-1st-2nd
+                # a retrograde loop across a zone edge lasts well under a year; one year of daily steps tells a
+                # first entry from a re-entry, and a final exit from a pause
+                at = dt.datetime.fromisoformat(ch["date"]) + dt.timedelta(hours=12 - tz)
+                in_sign = lambda sg, step, at=at: any(int(E.positions(E.jd_of(at + dt.timedelta(days=step * k)), node)["Sa"]
+                                                   ["lon"] // 30) == sg for k in range(1, 366))
+                if old and new:
+                    text = f"Sade sati now: {new}"
+                elif new:
+                    text = f"Sade sati {'resumes' if in_sign(to, -1) else 'begins'}: {new}"
+                elif in_sign(frm, 1):
+                    text = (f"Sade sati pauses (Saturn {'retrograde ' if (frm - to) % 12 == 1 else ''}"
+                            f"into the {_ord((to - moon_sign) % 12 + 1)} from the Moon; it returns within a year)")
+                else:
+                    text = "Sade sati ends"
+                add("sade_sati", text, ch["date"], SOURCES["sade_sati"])
     lon_of = lambda p, d: E.positions(E.jd_of(dt.datetime.fromisoformat(d) + dt.timedelta(hours=12 - tz)), node)[p]["lon"]
     for st in sky["stations"]:
         sg = int(lon_of(st["planet"], st["date"]) // 30)

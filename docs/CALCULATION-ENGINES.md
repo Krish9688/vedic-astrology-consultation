@@ -1,5 +1,9 @@
 # Calculation engines
 
+> **What:** what the calculation engine computes, its conventions, its cross-checks and its limits. **Read it when:** you change a calculation or doubt a number.
+> **Last checked:** 2026-11-12 (section 1 conventions and versions, and section 7 limits, against the code; the rest not checked).
+> **Related:** ARCHITECTURE.md, TESTING.md, ACCURACY-RUBRIC.md (frozen).
+
 Calculation and interpretation are separate layers. The engines below compute facts; they never interpret. The skill
 reads only normalized facts and never an engine's own JSON.
 

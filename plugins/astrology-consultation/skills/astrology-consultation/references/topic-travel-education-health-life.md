@@ -20,7 +20,8 @@ Separate **trip**, **study/work stint**, **long residence/settlement** and **ret
 - **Purpose from the planets involved**: 4th/9th lords study; 9th/10th career (+6th: employer-sponsored); 11th lord
   business; Venus/7th lord after marriage; weak lagna lord + 6th medical; 6th/8th forced departure [HJH2 p225–226].
 - Earnings abroad: 10th sign or 10th lord's navamsa sign occupied/aspected by planets other than its lord [PD V.9];
-  Rahu linked to the 11th or to the Sun → foreign employers/earnings [HJH2 p285, p375].
+  Rahu linked to the 11th → foreign earnings [HJH2 p375]; the Sun aspected by Rahu → work for foreign concerns
+  [HJH2 p285].
 - Sahams (Paradesha, Jalapatana) are Tajika tools Raman "can be tried" — his two statements of the Paradesha formula
   differ (CR-V10); use only as a labelled supplement.
 - **Timing**: 9th-house significator list plus the 12th lord (esp. in a dual sign) [HJH2 p464–465]; slower of dasha/

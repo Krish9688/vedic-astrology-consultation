@@ -1,6 +1,6 @@
 {
  "version": 2,
- "updated": "2026-09-26",
+ "updated": "2026-11-12",
  "tiers": {
   "classical": "classical textual rule (verse or root text)",
   "traditional": "traditional commentary/translator note on a classical text",
@@ -599,6 +599,1227 @@
     "redistribution": "metadata-only"
    },
    "owner_checks": {}
+  },
+  {
+   "id": "ARCHSTAN",
+   "title": "Archetypes of Astrology: Unlocking the Mysteries of the Planets, Signs & Houses",
+   "author": "Ena Stanley",
+   "translator": "",
+   "edition": "",
+   "year": "2012",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "ARCHSTAN.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 158,
+   "added": "2026-11-12",
+   "work_id": "work:archetypes-of-astrology-unlocking-the-mysteries-of-the-planets-signs-houses",
+   "volume": null,
+   "publisher": "ACS Publications (Starcrafts)",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Ena Stanley": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "KENTTR",
+   "title": "Astrological Transits: The Beginner's Guide to Using Planetary Cycles",
+   "author": "April Elliott Kent",
+   "translator": "",
+   "edition": "",
+   "year": "2015",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "KENTTR.jsonl",
+   "text_layer": "epub text",
+   "page_convention": "epub section",
+   "pages": 37,
+   "added": "2026-11-12",
+   "work_id": "work:astrological-transits-the-beginner-s-guide-to-using-planetary-cycles",
+   "volume": null,
+   "publisher": "Fair Winds Press",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "April Elliott Kent": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "GREENELOV",
+   "title": "Astrology for Lovers",
+   "author": "Liz Greene",
+   "translator": "",
+   "edition": "",
+   "year": "not shown",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "GREENELOV.jsonl",
+   "text_layer": "epub text",
+   "page_convention": "epub section",
+   "pages": 30,
+   "added": "2026-11-12",
+   "work_id": "work:astrology-for-lovers",
+   "volume": null,
+   "publisher": "Weiser Books",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Liz Greene": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "ASTYOU",
+   "title": "Astrology for Yourself: How to Understand and Interpret Your Own Birth Chart",
+   "author": "Douglas Bloch and Demetra George",
+   "translator": "",
+   "edition": "",
+   "year": "not shown",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "ASTYOU.jsonl",
+   "text_layer": "epub text",
+   "page_convention": "epub section",
+   "pages": 29,
+   "added": "2026-11-12",
+   "work_id": "work:astrology-for-yourself-how-to-understand-and-interpret-your-own-birth-chart",
+   "volume": null,
+   "publisher": "Bang Printing",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Douglas Bloch and Demetra George": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "ARROYOKT",
+   "title": "Astrology, Karma & Transformation: The Inner Dimensions of the Birth Chart",
+   "author": "Stephen Arroyo",
+   "translator": "",
+   "edition": "",
+   "year": "1978, 2nd ed 1992",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "ARROYOKT.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 363,
+   "added": "2026-11-12",
+   "work_id": "work:astrology-karma-transformation-the-inner-dimensions-of-the-birth-chart",
+   "volume": null,
+   "publisher": "CRCS Publications",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Stephen Arroyo": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "SEERS",
+   "title": "Astrology of the Seers: A Guide to Vedic/Hindu Astrology",
+   "author": "David Frawley",
+   "translator": "",
+   "edition": "",
+   "year": "not shown",
+   "language": "English",
+   "system": "Parashari",
+   "tier": "modern",
+   "text_file": "SEERS.jsonl",
+   "text_layer": "Apple Vision OCR en-US",
+   "page_convention": "PDF p",
+   "pages": 337,
+   "added": "2026-11-12",
+   "work_id": "work:astrology-of-the-seers-a-guide-to-vedic-hindu-astrology",
+   "volume": null,
+   "publisher": "not shown",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "David Frawley": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "DKASTRO",
+   "title": "Astrology: Using the Wisdom of the Stars in Your Everyday Life",
+   "author": "Mary-Clare Jerram",
+   "translator": "",
+   "edition": "",
+   "year": "2018",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "DKASTRO.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 258,
+   "added": "2026-11-12",
+   "work_id": "work:astrology-using-the-wisdom-of-the-stars-in-your-everyday-life",
+   "volume": null,
+   "publisher": "DK Publishing",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Mary-Clare Jerram": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "BHRIGU",
+   "title": "Bhrigu Sutras (Translated to English)",
+   "author": "not shown",
+   "translator": "not shown",
+   "edition": "",
+   "year": "not shown",
+   "language": "English translation",
+   "system": "Nadi",
+   "tier": "classical",
+   "text_file": "BHRIGU.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 218,
+   "added": "2026-11-12",
+   "work_id": "work:bhrigu-sutras-translated-to-english",
+   "volume": null,
+   "publisher": "not shown",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "not shown": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "BPHSGS2",
+   "title": "Brihat Parasara Hora Sastra (Sanskrit/Hindi with English translation), Vol 2",
+   "author": "Maharshi Parasara",
+   "translator": "Girish Chand Sharma",
+   "edition": "",
+   "year": "imprint 1995, reprints 1997, 2000 (Devanagari numerals, OCR noise)",
+   "language": "Sanskrit, Hindi, English",
+   "system": "Parashari",
+   "tier": "classical",
+   "text_file": "BPHSGS2.jsonl",
+   "text_layer": "Apple Vision OCR hi-IN",
+   "page_convention": "PDF p",
+   "pages": 818,
+   "added": "2026-11-12",
+   "work_id": "work:brihat-parasara-hora-sastra-sanskrit-hindi-with-english-translation-vol-2",
+   "volume": null,
+   "publisher": "not read",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Girish Chand Sharma": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "TARNAS",
+   "title": "Cosmos and Psyche: Intimations of a New World View",
+   "author": "Richard Tarnas",
+   "translator": "",
+   "edition": "",
+   "year": "2006",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "experimental",
+   "text_file": "TARNAS.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 856,
+   "added": "2026-11-12",
+   "work_id": "work:cosmos-and-psyche-intimations-of-a-new-world-view",
+   "volume": null,
+   "publisher": "Viking (Penguin)",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Richard Tarnas": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "MC5",
+   "title": "Muhurta Chintamani (Sanskrit text with Piyushadhara commentary, 5th ed)",
+   "author": "Rama Daivajna (Ramacharya)",
+   "translator": "",
+   "edition": "",
+   "year": "1945 (Saka 1860, from printing note; verify)",
+   "language": "Sanskrit",
+   "system": "Muhurta",
+   "tier": "classical",
+   "text_file": "MC5.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 432,
+   "added": "2026-11-12",
+   "work_id": "work:muhurta-chintamani-sanskrit-text-with-piyushadhara-commentary-5th-ed",
+   "volume": null,
+   "publisher": "not shown",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Rama Daivajna (Ramacharya)": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "BRENNAN",
+   "title": "Hellenistic Astrology: The Study of Fate and Fortune",
+   "author": "Chris Brennan",
+   "translator": "",
+   "edition": "",
+   "year": "2017",
+   "language": "English",
+   "system": "Hellenistic",
+   "tier": "modern",
+   "text_file": "BRENNAN.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 698,
+   "added": "2026-11-12",
+   "work_id": "work:hellenistic-astrology-the-study-of-fate-and-fortune",
+   "volume": null,
+   "publisher": "Amor Fati Publications",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Chris Brennan": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "RISKE",
+   "title": "Llewellyn's Complete Book of Astrology: The Easy Way to Learn Astrology",
+   "author": "Kris Brandt Riske",
+   "translator": "",
+   "edition": "",
+   "year": "2007",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "RISKE.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 454,
+   "added": "2026-11-12",
+   "work_id": "work:llewellyn-s-complete-book-of-astrology-the-easy-way-to-learn-astrology",
+   "volume": null,
+   "publisher": "Llewellyn Publications",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Kris Brandt Riske": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "PDK",
+   "title": "Mantreswara's Phala Deepika",
+   "author": "Mantreswara",
+   "translator": "Dr. G. S. Kapoor (English translation, commentary and annotation)",
+   "edition": "",
+   "year": "not shown",
+   "language": "English translation",
+   "system": "Parashari",
+   "tier": "classical",
+   "text_file": "PDK.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 265,
+   "added": "2026-11-12",
+   "work_id": "work:mantreswara-s-phala-deepika",
+   "volume": null,
+   "publisher": "not shown",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Dr. G. S. Kapoor (English translation, commentary and annotation)": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "MCKDJ",
+   "title": "Muhurta Chintamani with Piyushadhara (Sanskrit commentary) and Pitambara (Hindi)",
+   "author": "Rama Daivajna; Hindi by Kedar Datt Joshi",
+   "translator": "Kedar Datt Joshi (Hindi)",
+   "edition": "",
+   "year": "1st ed Varanasi 1972, 2nd 1979, reprints Delhi 1983-1995",
+   "language": "Sanskrit and Hindi",
+   "system": "Muhurta",
+   "tier": "classical",
+   "text_file": "MCKDJ.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 660,
+   "added": "2026-11-12",
+   "work_id": "work:muhurta-chintamani-with-piyushadhara-sanskrit-commentary-and-pitambara-hindi",
+   "volume": null,
+   "publisher": "DPB Publications (Delhi, Varanasi)",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Kedar Datt Joshi (Hindi)": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "MUHRAM",
+   "title": "Muhurtha or Electional Astrology",
+   "author": "B. V. Raman",
+   "translator": "",
+   "edition": "",
+   "year": "1969 (4th ed)",
+   "language": "English",
+   "system": "Muhurta",
+   "tier": "modern",
+   "text_file": "MUHRAM.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 208,
+   "added": "2026-11-12",
+   "work_id": "work:muhurtha-or-electional-astrology",
+   "volume": null,
+   "publisher": "Raman Publications, Bangalore",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "B. V. Raman": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "BEHARI2A",
+   "title": "Planets in the Signs and Houses (Vedic Astrologer's Handbook Vol II)",
+   "author": "Bepin Behari",
+   "translator": "",
+   "edition": "",
+   "year": "foreword dated August 1991 (Kenneth Johnson)",
+   "language": "English",
+   "system": "Parashari",
+   "tier": "modern",
+   "text_file": "BEHARI2A.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 169,
+   "added": "2026-11-12",
+   "work_id": "work:planets-in-the-signs-and-houses-vedic-astrologer-s-handbook-vol-ii",
+   "volume": null,
+   "publisher": "not shown",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Bepin Behari": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "BEHARI2B",
+   "title": "Planets in the Signs and Houses (Vedic Astrologer's Handbook Vol II)",
+   "author": "Bepin Behari",
+   "translator": "",
+   "edition": "",
+   "year": "Indian edition 2004",
+   "language": "English",
+   "system": "Parashari",
+   "tier": "modern",
+   "text_file": "BEHARI2B.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 251,
+   "added": "2026-11-12",
+   "work_id": "work:planets-in-the-signs-and-houses-vedic-astrologer-s-handbook-vol-ii",
+   "volume": null,
+   "publisher": "Sagar Publications, New Delhi",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Bepin Behari": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "HANDPT",
+   "title": "Planets in Transit: Life Cycles for Living",
+   "author": "Robert Hand",
+   "translator": "",
+   "edition": "",
+   "year": "1976",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "HANDPT.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 540,
+   "added": "2026-11-12",
+   "work_id": "work:planets-in-transit-life-cycles-for-living",
+   "volume": null,
+   "publisher": "Para Research (Whitford Press reprint)",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Robert Hand": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "SARH",
+   "title": "Saravali (Sanskrit) with Kanti Mati Hindi commentary",
+   "author": "Kalyana Varma",
+   "translator": "Dr. Muralidhar Chaturvedi (Hindi commentary)",
+   "edition": "",
+   "year": "not shown",
+   "language": "Sanskrit and Hindi",
+   "system": "Parashari",
+   "tier": "classical",
+   "text_file": "SARH.jsonl",
+   "text_layer": "Apple Vision OCR hi-IN",
+   "page_convention": "PDF p",
+   "pages": 526,
+   "added": "2026-11-12",
+   "work_id": "work:saravali-sanskrit-with-kanti-mati-hindi-commentary",
+   "volume": null,
+   "publisher": "Motilal Banarsidass, Delhi",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Dr. Muralidhar Chaturvedi (Hindi commentary)": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "GREENESAT",
+   "title": "Saturn: A New Look at an Old Devil",
+   "author": "Liz Greene (foreword Robert Hand)",
+   "translator": "",
+   "edition": "",
+   "year": "1976, 2011 ed",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "GREENESAT.jsonl",
+   "text_layer": "Apple Vision OCR en-US",
+   "page_convention": "PDF p",
+   "pages": 202,
+   "added": "2026-11-12",
+   "work_id": "work:saturn-a-new-look-at-an-old-devil",
+   "volume": null,
+   "publisher": "Red Wheel/Weiser",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Liz Greene (foreword Robert Hand)": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "ALTEA",
+   "title": "Soul Signs: An Elemental Guide to Your Spiritual Destiny",
+   "author": "Rosemary Altea",
+   "translator": "",
+   "edition": "",
+   "year": "2004",
+   "language": "English",
+   "system": "other",
+   "tier": "experimental",
+   "text_file": "ALTEA.jsonl",
+   "text_layer": "epub text",
+   "page_convention": "epub section",
+   "pages": 34,
+   "added": "2026-11-12",
+   "work_id": "work:soul-signs-an-elemental-guide-to-your-spiritual-destiny",
+   "volume": null,
+   "publisher": "Harmony/Rodale",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Rosemary Altea": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "GOLDYM",
+   "title": "The Astrology of You and Me",
+   "author": "Gary Goldschneider",
+   "translator": "",
+   "edition": "",
+   "year": "2009, 2018",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "GOLDYM.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 570,
+   "added": "2026-11-12",
+   "work_id": "work:the-astrology-of-you-and-me",
+   "volume": null,
+   "publisher": "Quirk Books",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Gary Goldschneider": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "TOMPKINS",
+   "title": "The Contemporary Astrologer's Handbook",
+   "author": "Sue Tompkins",
+   "translator": "",
+   "edition": "",
+   "year": "2006 (preface August 2006)",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "TOMPKINS.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 548,
+   "added": "2026-11-12",
+   "work_id": "work:the-contemporary-astrologer-s-handbook",
+   "volume": null,
+   "publisher": "Flare Publications",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Sue Tompkins": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "KENTEG",
+   "title": "The Essential Guide to Practical Astrology",
+   "author": "April Elliott Kent",
+   "translator": "",
+   "edition": "",
+   "year": "2011, digital 2015",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "KENTEG.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 523,
+   "added": "2026-11-12",
+   "work_id": "work:the-essential-guide-to-practical-astrology",
+   "volume": null,
+   "publisher": "not shown",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "April Elliott Kent": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "WOOLFOLK",
+   "title": "The Only Astrology Book You'll Ever Need",
+   "author": "Joanna Martine Woolfolk",
+   "translator": "",
+   "edition": "",
+   "year": "1982, 2008 ed",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "WOOLFOLK.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 549,
+   "added": "2026-11-12",
+   "work_id": "work:the-only-astrology-book-you-ll-ever-need",
+   "volume": null,
+   "publisher": "Taylor Trade Publishing",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Joanna Martine Woolfolk": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "DKSECRETS",
+   "title": "The Secrets of Astrology: A Complete Guide to Sun Signs, Planets, Houses, and More",
+   "author": "Carole Taylor (original Astrology); DK",
+   "translator": "",
+   "edition": "",
+   "year": "2018, US ed 2020",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "DKSECRETS.jsonl",
+   "text_layer": "pdf text + Apple Vision OCR en-US on 1 pages with little or no text layer",
+   "page_convention": "PDF p",
+   "pages": 192,
+   "added": "2026-11-12",
+   "work_id": "work:the-secrets-of-astrology-a-complete-guide-to-sun-signs-planets-houses-and-more",
+   "volume": null,
+   "publisher": "DK Publishing",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Carole Taylor (original Astrology); DK": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "TWELVEH",
+   "title": "The Twelve Houses: Understanding the Importance of the 12 Houses in Your Astrological Birthchart",
+   "author": "not shown",
+   "translator": "",
+   "edition": "",
+   "year": "not shown",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "TWELVEH.jsonl",
+   "text_layer": "Apple Vision OCR en-US",
+   "page_convention": "PDF p",
+   "pages": 63,
+   "added": "2026-11-12",
+   "work_id": "work:the-twelve-houses-understanding-the-importance-of-the-12-houses-in-your-astrological-birthchart",
+   "volume": null,
+   "publisher": "not shown",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "not shown": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "FORREST",
+   "title": "The Inner Sky: The Dynamic New Astrology for Everyone",
+   "author": "Steven Forrest",
+   "translator": "",
+   "edition": "",
+   "year": "not shown",
+   "language": "English",
+   "system": "Western modern",
+   "tier": "modern",
+   "text_file": "FORREST.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 290,
+   "added": "2026-11-12",
+   "work_id": "work:the-inner-sky-the-dynamic-new-astrology-for-everyone",
+   "volume": null,
+   "publisher": "Bantam (ISBN 0-553-24351-9)",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Steven Forrest": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "GOLDBD",
+   "title": "The Secret Language of Birthdays: Personology Profiles for Each Day of the Year",
+   "author": "Gary Goldschneider and Joost Elffers",
+   "translator": "",
+   "edition": "",
+   "year": "1994",
+   "language": "English",
+   "system": "other",
+   "tier": "experimental",
+   "text_file": "GOLDBD.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 838,
+   "added": "2026-11-12",
+   "work_id": "work:the-secret-language-of-birthdays-personology-profiles-for-each-day-of-the-year",
+   "volume": null,
+   "publisher": "Viking Penguin",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Gary Goldschneider and Joost Elffers": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "UKAL",
+   "title": "Uttara Kalamrita (text with translation, notes and illustrations)",
+   "author": "Kalidasa",
+   "translator": "Prof. P. S. Sastri",
+   "edition": "",
+   "year": "not shown",
+   "language": "English translation",
+   "system": "Parashari",
+   "tier": "classical",
+   "text_file": "UKAL.jsonl",
+   "text_layer": "pdf text + Apple Vision OCR en-US on 76 pages with little or no text layer",
+   "page_convention": "PDF p",
+   "pages": 256,
+   "added": "2026-11-12",
+   "work_id": "work:uttara-kalamrita-text-with-translation-notes-and-illustrations",
+   "volume": null,
+   "publisher": "Ranjan Publications, New Delhi",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Prof. P. S. Sastri": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "MCHI",
+   "title": "Muhurta Chintamani (Hindi edition)",
+   "author": "not shown",
+   "translator": "not shown",
+   "edition": "",
+   "year": "not shown",
+   "language": "Hindi (Devanagari)",
+   "system": "Muhurta",
+   "tier": "traditional",
+   "text_file": "MCHI.jsonl",
+   "text_layer": "pdf text",
+   "page_convention": "PDF p",
+   "pages": 207,
+   "added": "2026-11-12",
+   "work_id": "work:muhurta-chintamani-hindi-edition",
+   "volume": null,
+   "publisher": "not shown",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "not shown": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
+  },
+  {
+   "id": "MCKDJM",
+   "title": "Muhurta Chintamani with Piyushadhara and Pitambara (Sanskrit with Hindi, Motilal Banarsidass 1979 scan)",
+   "author": "Rama Daivajna (Shriramacharya); Hindi by Kedardatta Joshi",
+   "translator": "Kedardatta Joshi (Hindi)",
+   "edition": "",
+   "year": "1979",
+   "language": "Sanskrit and Hindi",
+   "system": "Muhurta",
+   "tier": "classical",
+   "text_file": "MCKDJM.jsonl",
+   "text_layer": "Apple Vision OCR hi-IN",
+   "page_convention": "PDF p",
+   "pages": 540,
+   "added": "2026-11-12",
+   "work_id": "work:muhurta-chintamani-with-piyushadhara-and-pitambara-sanskrit-with-hindi-motilal-banarsidass-1979-scan",
+   "volume": null,
+   "publisher": "Motilal Banarsidass, Delhi",
+   "base_text": "unknown",
+   "tier_translation": "unknown",
+   "rights": {
+    "checked_on": "2026-11-12",
+    "sources": [
+     "not yet checked (registered by add_book.py)"
+    ],
+    "death_years": {
+     "Kedardatta Joshi (Hindi)": "unknown"
+    },
+    "redistribution": "metadata-only"
+   },
+   "owner_checks": {
+    "publisher": "publisher (imprint) on the title page",
+    "base_text": "source text the translation follows",
+    "tier_translation": "is this a translation, and of what layer"
+   },
+   "copyright": "copyrighted — keep a legally obtained copy locally; not redistributed"
   }
  ],
  "derived": [

@@ -29,6 +29,15 @@ def knowledge_file(env, rel):
 VARIANTS = [("sh", "s"), ("aa", "a"), ("ee", "i"), ("oo", "u")]   # common transliteration spellings
 
 
+OWN_SYSTEMS = re.compile(r"(Parashari|Jaimini|Lal Kitab|Nadi|Kerala Prashna|Tajika|Muhurta)")
+
+
+def own_source_ids(conn):
+    """Ids of the books whose catalog system is one of this project's traditions (the index keeps it in `tradition`).
+    Western, Hellenistic and reference-only books are left out: systems are never mixed unless the caller asks."""
+    return [i for i, t in conn.execute("select id, tradition from sources") if OWN_SYSTEMS.match(t or "")]
+
+
 def fts_terms(query, stop=("the", "and", "for", "with", "from", "its")):
     """Words of a question as FTS5 terms; a word with transliteration variants becomes (word OR variant ...),
     e.g. vimshottari → (vimshottari OR vimsottari)."""

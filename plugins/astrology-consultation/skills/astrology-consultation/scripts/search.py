@@ -1,16 +1,18 @@
 # Search the local astrology library index. Every hit carries source id + PDF page for citation.
-# usage: python3 search.py "seventh lord" [--src HJH2,PD] [-n 8] [--page SRC:N]
+# usage: python3 search.py "seventh lord" [--src HJH2,PD] [--include-other-systems] [-n 8] [--page SRC:N]
+#   default: only this project's own traditions; Western/Hellenistic/reference books need --src <ID> or --include-other-systems
 #   query uses SQLite FTS5 syntax: words AND-ed, "exact phrase", a OR b, NEAR(a b, 10), prefix*
 #   --page SRC:N prints the full text of one page (to read context around a hit)
 import argparse, os, re, sqlite3, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from paths import fts_terms, knowledge_file  # noqa: E402
+from paths import fts_terms, knowledge_file, own_source_ids  # noqa: E402
 DB = knowledge_file("ASTRO_LIBRARY_DB", os.path.join("index", "library.sqlite"))
 
 ap = argparse.ArgumentParser()
 ap.add_argument("query", nargs="?")
 ap.add_argument("--src", help="comma-separated source ids")
+ap.add_argument("--include-other-systems", action="store_true", help="also search Western, Hellenistic and reference-only books")
 ap.add_argument("-n", type=int, default=8)
 ap.add_argument("--page", help="SRC:N full page text")
 a = ap.parse_args()
@@ -35,16 +37,22 @@ if not a.query:
 
 sql = "select src, page, printed, snippet(pages, 3, '[', ']', ' … ', 40) from pages where pages match ?"
 args = [a.query]
+terms = []
 if re.fullmatch(r"[A-Za-z\s]+", a.query):   # plain words: add transliteration variants (vimshottari ~ vimsottari)
-    args = [" AND ".join(fts_terms(a.query, ()))]
-if a.src:
-    ids = a.src.split(",")
+    terms = fts_terms(a.query, ())
+    args = [" AND ".join(terms)]
+ids = a.src.split(",") if a.src else None if a.include_other_systems else own_source_ids(c)   # naming a book is explicit
+if ids is not None:
     sql += f" and src in ({','.join('?' * len(ids))})"
     args += ids
 sql += " order by rank limit ?"
 args.append(a.n)
 try:
     rows = c.execute(sql, args).fetchall()
+    if not rows and len(terms) > 1:   # a plain question rarely has every word on one page: retry once with OR
+        rows = c.execute(sql, [" OR ".join(terms)] + args[1:]).fetchall()
+        if rows:
+            print("No page held every word, so this is a looser OR search (any word). Check each hit.\n")
 except sqlite3.OperationalError as e:
     sys.exit(f"Query syntax not understood by the index ({e}). Put phrases in double quotes, use AND/OR in capitals, "
              "and avoid bare punctuation, e.g. '\"tawny eyes\" OR honey'.")

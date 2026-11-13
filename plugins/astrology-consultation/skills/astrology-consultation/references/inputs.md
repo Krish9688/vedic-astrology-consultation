@@ -65,9 +65,23 @@ people's data, and say plainly when a report was set aside and why, without repe
 
 ## Sensitivity protocol (DESIGN)
 
-When chart variants across the stated time interval are supplied or legitimately computed, compare the interval endpoints **and any boundaries inside it**, not just one nominal time. Record which of D1 ascendant, Moon nakshatra, varga signs, varga ascendant and MD/AD dates change. Equal endpoints can conceal intervening changes in a higher varga. No blanket ±2-hour assurance establishes Moon/nakshatra or dasha-date stability; a boundary may occur inside even a short interval. D60 has 30′ (0.5°) divisions, not 1°; this angular width is not a universal clock-minute tolerance. See [source-index.md](source-index.md), PVR-60 and PVR-B.
+When chart variants across the stated time interval are supplied or legitimately computed, compare the interval endpoints **and any boundaries inside it**, not just one nominal time. Record which of D1 ascendant, Moon nakshatra, varga signs, varga ascendant and MD/AD dates change. Equal endpoints can conceal intervening changes in a higher varga. No blanket ±2-hour assurance establishes Moon/nakshatra or dasha-date stability; a boundary may occur inside even a short interval. D60 has 30′ (0.5°) divisions, not 1°; this angular width is not a universal clock-minute tolerance. See [source-index.md](source-index.md) and, for the two PVR passages (§6.2.20 on sixty divisions, §32.2.2 on dasha start dates), `docs/legacy-v2.2-sources.md`.
 
 Use only invariant facts in the common interpretation. Describe variant-dependent alternatives conditionally. If no variant calculation is available, say stability is untested; do not declare a high varga stable. Do not rectify time by selecting whichever minute produces the desired story. Rectification needs multiple preselected events and held-out checks; this skill does not claim to establish a uniquely correct birth time.
+
+**Unknown birth time: procedure.** The engine needs a time, so run it at several times across the birth day (at
+least the start, midday and the end; add runs near any sign change) and compare the outputs. Use only what is identical
+in every run: usually the planets' signs and their sign-based aspects; the Moon's sign and nakshatra only if they do
+not change that day. The ascendant, houses, house lords, vargas and dasha dates are Unknown unless every run agrees.
+Tell the person once, in plain words, that the time is unknown, that the reading uses only what holds for the whole
+day, and what a birth record would add. For timing see [timing.md](timing.md) Step 0: a year or more for periods,
+month-level transit markers only as labelled background. Never a day.
+
+**Approximate birth time (about ±15 min or wider): procedure.** Run the engine at both ends of the stated range as well
+as the given time. Where the ascendant, a house placement or a dasha boundary differs between the runs, say so in the
+answer that relies on it, in plain words ("your birth time is approximate, so this house reading may shift"), and widen
+any window that moves. Do not write that only planet-based facts were used unless the answer really uses none of the
+houses.
 
 Precise ephemeris arithmetic measures positions and dates. It does not establish astrological predictive validity. Ayanamsa and house-system differences are documented by [Swiss Ephemeris](https://www.astro.com/swisseph/swisseph.htm), sections 2.8 and 6.2.
 

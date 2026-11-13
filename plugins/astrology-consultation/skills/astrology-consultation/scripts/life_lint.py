@@ -116,7 +116,7 @@ AUDIT = [
               r"speculat\w*|lottery)\b"),
     ("costly-remedy", r"\b(?:gemstones?|(?:blue|yellow) sapphire|emerald|ruby|diamond|cat'?s eye|hessonite)\b"),
 ]
-AUDIT += [   # Lal Kitab-style remedy wording (LAL-KITAB-ROADMAP §4): check each against remedy-safety.md first
+AUDIT += [   # Lal Kitab-style remedy wording (docs/ROADMAP.md Lal Kitab section, LK §4): check each against remedy-safety.md first
     ("unsafe-remedy", r"\b(?:float\w*|immers\w*|throw\w*|drop\w*|pour\w*)\b[^.]{0,60}\b(?:river|running water|"
                       r"flowing water|stream|sea|drain|canal)\b|\bbur(?:y|ied|ying)\b|\bnose[- ]?(?:piercing|pierced)\b|"
                       r"\bwithout water\b|\b(?:collect|take|accept)\w* money from\b|\bivory\b|\b(?:deer|animal) skin\b|"

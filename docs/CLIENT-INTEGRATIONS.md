@@ -1,5 +1,9 @@
 # Client integrations
 
+> **What:** which AI clients can use the engine (MCP, REST, CLI) and how. **Read it when:** you set up or test a client.
+> **Last checked:** not checked (the matrix is dated 2026-10-03).
+> **Related:** MARKETPLACE.md, REPOSITORY-EDITIONS.md.
+
 One local service (`astro`), three interfaces: **MCP** (stdio or Streamable HTTP), **REST** (`/api/v1`, OpenAPI) and
 the **CLI**. Every interface calls the same `astro.service` functions, so a chart computed through Claude, ChatGPT,
 Cursor or a script is the same chart. The AI client does the reasoning; the service supplies facts, the skill's method

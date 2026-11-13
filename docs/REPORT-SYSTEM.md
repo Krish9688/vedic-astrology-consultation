@@ -1,5 +1,9 @@
 # Report system
 
+> **What:** the report types and how a report is built and rendered. **Read it when:** you add or change a report.
+> **Last checked:** not checked.
+> **Related:** REPORT-DESIGN-SPEC.md, CONSULTATION-REASONING.md.
+
 Professional personalised reports (output mode C). The design rests on research into how practitioners and report
 producers work — what to copy and what to avoid is in `research/reports/SYNTHESIS.md`.
 

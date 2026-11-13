@@ -2,7 +2,9 @@
 
 Contents: [How to use this card](#how-to-use-this-card) · [Opened tests](#opened-tests) · [Not opened](#not-opened-no-figures-stated) · [Our methods](#our-methods) · [Answer template](#answer-template-offered-on-request)
 
-Reference for the question "does astrology work?". Offer it when the person asks, not unprompted. Every row cites the
+Reference for the question "does astrology work?". Offer it when the person asks, not unprompted. Two things are not
+this card and belong in ordinary answers: the one sentence on what a grade word means (communication.md §3), and the
+answer to "how sure are you?" (communication.md §3a), which names no study from here unless the person asks. Every row cites the
 repo's research record (`research/ledger/findings.json`, finding id) and says whether that source was actually opened
 (`accessed`). Figures appear only for opened sources and are the sources' own, as audited in that ledger; none is
 page-checked by the owner. Readings stay interpretive, never certainties.
@@ -46,7 +48,8 @@ Carlson versus Ertel and the Mars-effect dispute are recorded as CR-E01 and CR-E
   test consultation synthesis, and a null there does not show the skill's methods fail. It does show that a chart reading
   has not been shown to beat chance.
 - The way to learn more is prospective: the prediction log (`astro predict`) records a hit criterion and a baseline
-  before the outcome is known.
+  before the outcome is known; neither can be changed afterwards, and a real person's entry needs their consent.
+  Until that log holds predictions with outcomes, there is no accuracy figure for this skill, and none is stated.
 
 ## Answer template (offered on request)
 

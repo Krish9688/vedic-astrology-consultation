@@ -1,5 +1,9 @@
 # Version history
 
+> **What:** the lineage of the skill and plugin, with package checksums. **Read it when:** you need to know what shipped when.
+> **Last checked:** 2026-11-12 (the current stable and public rows, v3.8 and 3.8.0, exist; older rows not checked).
+> **Related:** CHANGELOG.md (repository root), MARKETPLACE.md.
+
 The complete lineage of the skill, reconstructed on 2026-09-27 from the preserved packages, their manifests, backup
 archives, release and implementation reports, test logs and file timestamps. **This project was not under git before
 2026-10-01**: every package up to v3.4 predates the repository (v3.4's source is its first commit, three minutes after

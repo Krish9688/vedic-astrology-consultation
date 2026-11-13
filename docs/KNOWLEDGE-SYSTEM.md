@@ -1,4 +1,4 @@
-# Knowledge system: Graphify knowledge graph over the astrology library (v3.1; 18 books since v3.3)
+# Knowledge system: Graphify knowledge graph over the astrology library (v3.1; 18 books with source maps, 51 registered since 2026-11-12)
 
 > **Editions.** This describes the owner's build. The public edition (from 3.7.0) carries the Lal Kitab rules, code and
 > remedies but not the Lal Kitab knowledge base, its audit, the Varshaphal table or any graph. `kg.py` and `search.py`
@@ -49,7 +49,7 @@ Astrology Books/
     ├── vendor/graphify/          the inspected Graphify source (commit 4c73561, v0.9.67)
     ├── .venv-graphify/           Graphify + deps (project-local)
     ├── backups/                  pre-change archives and every previous installed skill
-    └── docs/                     this file, ADD-A-BOOK.md, ARCHITECTURE.md, CHANGELOG.md, TOOLING.md, reports
+    └── docs/                     this file, ADD-A-BOOK.md, ARCHITECTURE.md, CHANGELOG-v3.0-v3.3.md, TOOLING-INVENTORY.md, reports
 ```
 
 The suggested `books/ lal-kitab/ vedic/ …` layout was **not** imposed: moving the PDFs would break every recorded
@@ -175,7 +175,6 @@ schema, so `graphify explain "service.py" --graph project.json` works on it.
 |---|---|---|
 | Workspace | `graphify-out/project.json`, `project.html` | `build_graph.py` |
 | Private repository | `knowledge/graph/project.json`, `project.html`, `graph.html` | `export_repo.py --archive` |
-| Public repository | `docs/project-graph/project.json`, `project.html` | `export_public.py` |
 
 The public repository gets the project map only: it lists the public tree and holds no book-derived material, so the
 knowledge graph stays private. `python3 tools/kg/project_graph.py --check` exits 1 if a stored map is out of date.
@@ -213,3 +212,5 @@ It recovers image tables the text layer loses entirely and repairs broken OCR li
 pages. It is therefore an **opt-in** step for new English books (`add_book.py text ID --docling`), merged page by page
 with the baseline so no page gets worse (`tools/docling_text.py`). The existing library was not re-extracted; see
 ROADMAP.md. Graphify remains the retrieval/evidence layer only — it neither calculates nor reasons.
+
+

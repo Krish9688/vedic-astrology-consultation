@@ -1,6 +1,6 @@
 # Question trees: which techniques a question actually needs
 
-Contents: [1. Relationship (romance, dating, a serious relationship)](#1-relationship-romance-dating-a-serious-relationship) · [2. Marriage (promise, timing, relationship vs marriage)](#2-marriage-promise-timing-relationship-vs-marriage) · [3. How will I meet them / who initiates (description of form)](#3-how-will-i-meet-them--who-initiates-description-of-form) · [4. Future spouse: nature and appearance](#4-future-spouse-nature-and-appearance) · [5. Career (change, direction, promotion, job vs business)](#5-career-change-direction-promotion-job-vs-business) · [6. Money](#6-money) · [7. Travel, study abroad and relocation](#7-travel-study-abroad-and-relocation) · [8. Open activation: "what is active now", "next 30 days", "the theme of my period", "what am I overlooking"](#8-open-activation-what-is-active-now-next-30-days-the-theme-of-my-period-what-am-i-overlooking) · [9. Explaining a past period ("why was X hard?")](#9-explaining-a-past-period-why-was-x-hard) · [10. Children, property, education, health symbolism](#10-children-property-education-health-symbolism)
+Contents: [1. Relationship (romance, dating, a serious relationship)](#1-relationship-romance-dating-a-serious-relationship) · [2. Marriage (promise, timing, relationship vs marriage)](#2-marriage-promise-timing-relationship-vs-marriage) · [3. How will I meet them / who initiates (description of form)](#3-how-will-i-meet-them--who-initiates-description-of-form) · [4. Future spouse: nature and appearance](#4-future-spouse-nature-and-appearance) · [5. Career (change, direction, promotion, job vs business)](#5-career-change-direction-promotion-job-vs-business) · [6. Money](#6-money) · [7. Travel, study abroad and relocation](#7-travel-study-abroad-and-relocation) · [8. Open activation: "what is active now", "next 30 days", "the theme of my period", "what am I overlooking"](#8-open-activation-what-is-active-now-next-30-days-the-theme-of-my-period-what-am-i-overlooking) · [9. Explaining a past period ("why was X hard?")](#9-explaining-a-past-period-why-was-x-hard) · [10. Children, property, education, health symbolism](#10-children-property-education-health-symbolism) · [11. Own appearance and constitution](#11-own-appearance-and-constitution)
 
 Each tree is the **order of judgement** for one family of questions, with a stop rule at each step. Walk only the
 branches the question needs; the rules themselves live in the topic files, [timing.md](timing.md) and
@@ -75,8 +75,9 @@ These are **form** questions: rank candidate routes, don't pick the first house 
    7th sign or its navamsa (temperament, age, fortune) [BJ p243]; D9 7th and its lord; planets joined to Venus
    [PM2 XX.17–18]. Keep a trait only when two indicators agree.
 2. **S — Appearance**: the stronger of the 7th lord's dispositor and its navamsa lord [PM2 XX.20], described through
-   the planet body-types [BJ p52–53; PD p42–44] as **themes and ranges** — never measurements, complexion rankings,
-   ethnicity or caste; say plainly this is the least reliable output [R3-AP3, AP4].
+   that planet's body-type [BJ p52–53; PD p42–44]: build, stature and features as **tendencies** (complexion only if asked, never ranked),
+   each with its reason from the chart; one or two texts named in total, in passing. No exact measurements; never to
+   identify, pick or reject a real person; one reliability sentence, said once [R3-AP3, AP4]. Caste, community, religion or ethnicity are not named, predicted or asked about unless the person raises them; the chart is not read for sexual orientation or gender identity.
 3. **X — Jaimini** (separate note): Darakaraka and its sign quality.
 4. Synthesis: two or three repeated traits, then one qualifier. Confidence: Moderate at best for nature, Weak for looks.
 
@@ -95,7 +96,8 @@ These are **form** questions: rank candidate routes, don't pick the first house 
 
 ## 6. Money
 
-Income (11th, its lord) vs savings and family wealth (2nd) vs expenses (12th) vs sudden gains/losses (8th); Jupiter
+Income (11th, its lord) vs savings and family wealth (2nd) vs expenses (12th) vs sudden gains/losses (8th; legacy,
+prize or windfall → topic-career-money §5a); Jupiter
 and the 2nd/11th lords as karakas; D2 only as a secondary lens; activation by 2nd/11th-linked periods. Never
 investment signals [topic-career-money.md].
 
@@ -148,3 +150,44 @@ Do **not** tour the planets. Build an activation list, rank it, answer from the 
 Use the topic files' networks with the same skeleton — promise (house/lord/karaka, Moon), relevant varga with a stable
 time (D7, D4, D24; health only as symbolism), activation, trigger, scenarios, confidence — and their safety limits
 (no fertility, pregnancy, diagnosis or legal verdicts).
+
+## 11. Own appearance and constitution
+
+"What do I look like", build, height, complexion, features, physique. Answer it: the texts describe the body from the
+lagna. A natal description, so no dasha or transit step.
+1. **P — Rising sign**: its stature class (Aries, Taurus, Aquarius, Pisces short; Gemini, Cancer, Sagittarius,
+   Capricorn middling; Leo to Scorpio long [LOL p133]) and its sketch of frame and face, which is a modern
+   compilation [CRUX p66–67]. If the lagna degree is near a sign boundary, give both signs and say which wins if the
+   time is right.
+2. **P — The planet the person "resembles"**: the lord of the rising navamsa or the strongest planet, whichever is
+   stronger [BJ p88–89; HJH1 p159; SAR1 p158]; other statements of the same rule take a strong planet *in* the lagna
+   [JP2 XI.15; LOL p140–141] or add the lagna lord [BPHS ch. 3, translator's note, PDF p44]. List this chart's
+   candidates (rising-navamsa lord, lagna occupant, lagna lord, highest supplied Shadbala), rank them by dignity and
+   Shadbala, and say which one you chose and why. Read its body-type [BJ p52–53; PD p42–44; SAR1 p53–56; BPHS ch. 3
+   sl. 23–30, PDF p43–45]; the texts differ on details (the Moon's build, Saturn's height), so keep a feature two
+   texts share or name the one text. The rising navamsa changes about every 13 minutes: without a stable time, drop
+   it and rank the other candidates.
+3. **S — Modifiers**: planets in or aspecting the lagna — a benefic in the lagna adds to looks, a malefic takes from
+   them [BPHS ch. 12 sl. 3–4, PDF p139]; the lagna lord's sign, dignity and companions, and the Sun as karaka of the
+   body [HJH1 p62–90].
+4. **S — Complexion** (only if the person asks about it): the lord of the navamsa the Moon occupies [BJ p88–89;
+   HJH1 p159; JP2 XI.15] with the planet's colour [BJ p51]. Say it at most once, neutrally, as the text's tendency
+   within the person's own family and region, because the texts themselves say country must be allowed for [BJ p88;
+   SAR1 p158]. Never rank or value a complexion, never treat one tone as better, never compare with other people.
+5. **S — Constitution** (only if the person asks about stamina or vigour): the lagna lord in a kendra or trikona and
+   benefics on the lagna = robust; the lagna lord in 6/8/12, debilitated, combust or with malefics = stamina needs
+   more looking after [BPHS ch. 12 sl. 1–4, PDF p138–139]. Symbolism only; nothing medical, no diagnosis.
+6. **Counter-check**: do steps 1 and 2 point the same way (a long sign and a tall planet; a stocky sign and a heavy
+   planet)? Agreement → say it plainly. Disagreement, or two planets of near-equal strength → say "mixed", which is
+   what the text predicts [SAR1 p158], and give the stronger factor first. Check every position you mention against
+   the engine facts (a planet is "on the lagna" only if it is in the lagna sign).
+7. **Synthesis — a short portrait in prose, not an inventory** (portrait 120–150 words; the whole answer, with any
+   birth-time caveat and the grade, at most about 200): the overall impression first (frame, stature, bearing); then
+   two or three distinctive features, each with its reason from this chart; name one or two texts in total, in
+   passing, not one per feature, and do not explain the method; one clause where the texts or the two factors disagree; then the grade — Moderate only where sign and
+   planet agree on a stable time, otherwise Weak — and, once, that this is the tradition's description, untested,
+   and that family and region decide more. Do not list every trait the texts give for the sign or planet; leave out
+   hair and eye colour unless asked. End by asking what fits (calibration, consultation-reasoning §8).
+
+Limits: tendencies, never exact measurements. Caste, community, religion or ethnicity are not named, predicted or asked about unless the person raises them; the chart is not read for sexual orientation or gender identity. (The caste clause in
+the same verses is not used.) Also: no ranking or valuing of complexion; never to identify, pick or reject a real person; nothing medical. Partner's looks → tree 4.

@@ -7,6 +7,26 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 ## [Unreleased]
 
 ### Added
+- **Answers for appearance, intimacy, sudden gains and broad labels.** Questions about the person's own appearance or about
+  intimacy had no method and fell to a generic route, so answers were thin. The skill now has a question tree for own
+  appearance, partner description as tendencies with the text named, a section on intimacy, a section on unearned and
+  sudden gains, and a rule that a broad label such as "unconventional" is worked out for the chart instead of repeated.
+  Guards are stated in each section (nothing medical, no caste, community, religion or ethnicity, no orientation reading,
+  no ranking of complexion, nothing about a named third person). Routing sends these questions to the right files and
+  treats plain "when", "within two years" or "in 2027" as timing questions.
+- **How far to trust an answer.** Each claim carries its own grade in the sentence that makes it; the meaning of a grade is
+  said once (agreement inside the tradition, not a probability); a direct "how sure are you" gets a short fixed answer and
+  an offer to log the prediction. No percentage is printed: there are no logged outcomes to calibrate against yet. Books
+  are now named in answers; pages stay available on request.
+- **Five project documents:** `docs/CONTEXT.md` (what a new session needs), `docs/HISTORY.md` (append-only log),
+  `docs/ROADMAP.md` (all future work and the clean-up backlog), `docs/ARCHITECTURE.md` (refreshed from the code) and
+  `docs/IMPACT-MAP.md` (what else to check when a file changes). Eleven older documents were merged into them or retired.
+- **EPUB books and a local Markdown copy of the library.** `tools/kg/add_book.py` reads EPUB files directly, and
+  `tools/kg/books_md.py` writes each book's extracted text as Markdown chapters with page markers for local reading. Book
+  text stays on the owner's machine: three export guards and a test keep it out of every repository.
+  Validated by two blind comparisons against the unedited skill (graders did not know which was which; the second round:
+  338 against 312 of 400 on five shared questions, no question lost; one grader, one synthetic chart, one run each) and
+  by the test suite.
 - **Project map, in every edition.** Nothing described how the code, tests, documents and packages connect, and the public
   repository had no graph at all. `tools/kg/project_graph.py` now maps files, imports, tests, document links, packages and
   the engine's MCP, CLI and REST interfaces. It is deterministic and uses only the standard library. The public export
@@ -20,6 +40,12 @@ problem was observed, what exposed it, what changed, why that solution, and how 
   Validated with `tests/test_project_graph.py` and browser runs at five screen sizes.
 
 ### Fixed
+- **Search no longer mixes systems.** After books from other astrological systems were registered, a full-text search
+  could return their pages to a Vedic question. `search.py` and `kg.py` now return only the project's own traditions by
+  default; another system needs an explicit option or a named source. A plain-language query that finds nothing is retried
+  once as an OR query and says so.
+- **Timing windows.** "Both period lords are in the topic network" was true for most periods when the network was wide.
+  A main window now needs a primary role (house lord, occupant, significator or the lord's dispositor).
 - **Knowledge graph: references between register rows were lost.** Row CR-V21 says it is superseded by CR-X01, but the
   extractor read that as Lal Kitab entry X01, found no such entry and dropped the link. `CR-` references now link to the row
   they name.
@@ -227,7 +253,7 @@ against v3.6) showed parity.
   bala, activation tables, North/South SVG charts, the outlook report, six ayanamsa modes, Julian-calendar input and
   the evidence card.
 
-### Blocked (recorded in [docs/ROADMAP.md](docs/ROADMAP.md))
+### Blocked (recorded in `docs/ROADMAP.md`, development repository)
 - Narayana dasha (competing schools) and 36-point Ashtakoota (the vashya, yoni, gana and varna sources conflict).
 
 ## [3.6.3] — 2026-10-19 — identity check, sky events, report audit tools, content-integrity privacy checks
@@ -238,7 +264,7 @@ method change that needs a v3.7 benchmark). Validated: workspace suite 362 passe
 
 ### Added
 - `astro sky FROM TO`: retrograde stations and sign changes between two dates, with no birth data — for checking
-  generic "year ahead" claims ([docs/TESTING.md](docs/TESTING.md)).
+  generic "year ahead" claims (`docs/TESTING.md`, development repository).
 - Report identity check (`astro.identity`): compares the birth details a report prints with a person's own and
   returns BOUND / PROVISIONAL / UNBOUND / REJECT, naming fields and statuses, never values (skill:
   `references/inputs.md`).

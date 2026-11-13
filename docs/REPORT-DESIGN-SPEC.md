@@ -1,5 +1,9 @@
 # Report design spec (T2.3b, 2026-11-07)
 
+> **What:** the visual design of client reports. **Read it when:** you change a report's look.
+> **Last checked:** not checked.
+> **Related:** REPORT-SYSTEM.md.
+
 Our own design for client reports. It extends `references/visuals.md` (palette, figure contract) and
 `references/reports.md` (content, unit model); it does not replace them. Applies to the structured report
 (`render_report.py`: HTML, PDF) and the consultation report (`consultation.py`: HTML, PDF, DOCX). Implemented in
