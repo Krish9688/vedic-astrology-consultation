@@ -222,7 +222,8 @@ def build():
 <main><nav class="bar" aria-label="Page navigation"><button id="pv" type="button">&larr; Prev</button>
 <span id="ctr" aria-live="polite">1 / {len(P)}</span><button id="nx" type="button">Next &rarr;</button></nav>{body}</main>
 <footer>Graph counts were read from the graph file when this guide was built. Left and Right arrow keys, or a swipe, turn the page.</footer>
-<script>{JS}</script></body></html>""", encoding="utf-8")
+<script>{JS}</script></body></html>
+""", encoding="utf-8")
     print(f"pages={len(P)} nodes={s['nodes']} edges={s['edges']} books={s['books']}")
     print("node types:", s["types"]); print("relations:", s["rels"]); print("communities:", s["communities"])
     print(f"{OUT} {OUT.stat().st_size} bytes")

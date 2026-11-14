@@ -225,4 +225,3 @@ hybrid 0.75 (17 cases). The book verdicts behind the rebuild are in the workspac
 
 `tools/kg/user_guide.py` turns these counts into one page of the offline user guide (`docs/USER-GUIDE.html`). It reads
 counts only, never names a book, and `--check` fails when the page is stale. Run it after every rebuild.
-
