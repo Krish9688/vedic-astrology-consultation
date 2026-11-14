@@ -55,6 +55,10 @@ rules first obstructs, then restores, the house's inanimate matters while more l
 (5th lord in the 10th: intelligence prospers, children are a concern) — with stated exceptions when the lord still
 aspects its own house.
 
+A planet-in-house line from a text is one input. State the planet's lordship, dignity, aspects and companions
+first, then the line, then what it adds; a line with no supporting factor is Weak [PDK ch. 8 closing note, p104;
+BHRIGU p165, p185]. A planet close to the lagna's degree gives its house result most fully [PD VIII.34; PDK p103–104].
+
 ## 3. Functional nature (lordship) — the most common source of error
 
 - Trine lords are always auspicious; lords of 3/6/11 cause trouble; 8th lord is bad unless also lagna lord (Sun/Moon as
@@ -195,5 +199,7 @@ never pool its aspects with graha drishti. [carried over from v2.2 natal.md]
 ## 9. What the classical texts say that this skill will not state as fact
 
 Death timing, longevity spans, widowhood, "certain" disease, child sex, caste/gender judgements and "destruction"
-language appear throughout PD, BJ, HJH2, HPA and PM2 (each source map lists them in its §8). Report them only as "the
+language appear throughout PD, BJ, HJH2, HPA and PM2 (each source map lists them in its §8), and also in PDK, BHRIGU, UKAL, SARH
+and Behari (BEHARI2A). Never stated either: potency, ages given for events, after-death states, and any statement
+about orientation. Report them only as "the
 text says…" when the user asks about doctrine, never as a forecast. See [communication.md](communication.md).

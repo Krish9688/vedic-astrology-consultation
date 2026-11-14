@@ -56,6 +56,8 @@ Rendering pitfalls found and fixed: Jinja2 auto-escaping broke the embedded styl
 CSS is marked safe; WeasyPrint ignores CSS variables inside `font` shorthands and margin boxes — fonts and page
 colours are spelled out.
 
+Changes of 2026-11-14 (T11): the cover prints the birth-time source once; the kundli snapshot column reads "How clear the chart is"; "That it happens" appears only on predictions; raw claim tokens are gone; the key lists only the labels a report uses; months print as words; an empty best window reads "no single window"; the chart caption says the numbers are signs; every remedies unit must carry the no-efficacy line.
+
 Evidence chips, the one legend block, birth-time sensitivity states, the per-type "This report answers" line, the type scale and contrast figures are specified in [`REPORT-DESIGN-SPEC.md`](REPORT-DESIGN-SPEC.md).
 
 ## 4. Using it
@@ -67,6 +69,10 @@ python3 scripts/render_report.py --selftest                      # uses assets/r
 ```
 In Claude Code on the development Mac: `_skill_workspace/.venv-report/bin/python` has Jinja2 and WeasyPrint.
 Personal reports are saved where the person asks; never inside the skill or the repository.
+
+Unknown birth time: `create_report` refuses house, lagna, varga and dasha claims by a word and fact-id guard
+(`render_report.unknown_time_errors`). That guard is a backstop, not proof; the skill's rules and an independent
+checker are the main safety.
 
 ## 5. Tests
 

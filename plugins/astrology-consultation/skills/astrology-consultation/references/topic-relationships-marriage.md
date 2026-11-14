@@ -85,8 +85,8 @@ own indicators in this chart:
 
 | Possible meaning | Its own indicators |
 |---|---|
-| Form of the union (own choice, outside the family's circle, partner married before) | Raman's 8th-house test and his supporting factors, above |
-| Partner's background (another culture or country) | Saturn or Rahu tied to the 7th or its lord [LOL p401]; malefics in watery signs on the 8th with Jupiter's influence, one case [HJH2 p74–75]; 7th–12th links |
+| Form of the union (own choice, outside the family's circle, partner married before) | Raman's 8th-house test and his supporting factors, above; 8th lord in the 7th or 8th [BEHARI2A p98, modern] |
+| Partner's background (another culture or country) | Saturn or Rahu tied to the 7th or its lord [LOL p401]; malefics in watery signs on the 8th with Jupiter's influence, one case [HJH2 p74–75]; 7th–12th links; Sun in the 7th [BEHARI2A p87, modern]; direction of the partner's home region from the strongest of 7th occupant, 7th lord and Venus [PD X.12; PDK p113], Weak |
 | Courtship (how it starts) | Rahu in or on the 5th [HJH1 p221–222]; 5th–7th activity without the 2nd/11th (§1) |
 | Living arrangement (distance, not formalised, late) | 7th active without 2nd/11th or D9 support (§1); Saturn's delay (below) |
 | Intimate life | 12th house, its lord, Venus, Rahu in the 12th (§9) |
@@ -194,7 +194,9 @@ the 7th sign or its navamsa — Saturn older/serious, Mars spirited/irascible, V
 learned and skilled, Moon tender, Jupiter principled and self-controlled, Sun gentle and hard-working [BJ p243,
 stated for a woman's chart; apply symmetrically as "partner"]. PM2: the stronger of Venus, the 7th lord and any
 7th-house occupant gives the partner's nature; physical features from the stronger of the 7th lord's dispositor and
-its navamsa lord; planets joined to Venus colour the partner [PM2 XX.17–21, p89]. Planet body-types come from
+its navamsa lord; planets joined to Venus colour the partner [PM2 XX.17–21, p89]. A benefic in the 7th counts for a
+pleasant partner only if it does not own the 6th, 8th or 12th; a malefic that owns the 7th and sits in it counts as
+supportive [PD X.6; PDK p112]. Planet body-types come from
 BJ II [BJ p52–53] and PD II [PD p42–44]. When the candidates for "the stronger" are close (no clear margin in the
 engine's strength output), do not pick one: name both, describe only the traits they share, and grade the description
 Weak (the skill's rule, not a book rule).
@@ -241,8 +243,9 @@ Read in this order, and say what each step shows in this chart:
    JP2 XV.79–81]; BPHS states the fullest form only for the Moon as 12th lord (exalted, own, or in the 5th, 9th or
    11th) [BPHS ch. 23 sl. 1–4, PDF p198]. Strained: an afflicted 12th lord, or
    one in the 6th or 8th or in a debilitation or enemy navamsa [HJH2 p422–423; BPHS ch. 23 sl. 5–6].
-2. **P — Venus**: dignity, combustion, companions and D9 sign (vedic-natal §4). Venus in the 12th: enjoyment that
-   costs something [LOL p175–176]; Mercury with Venus in the 12th supports [JP2 XV.79]; Venus afflicted by the Sun:
+2. **P — Venus**: dignity, combustion, companions and D9 sign (vedic-natal §4). Venus in the 12th: bed comforts [PD VIII.19;
+   PDK p99]; what comes with them depends on Venus's companion: with a benefic, ease and means, with a malefic,
+   excess and cost [BHRIGU p185; LOL p175–176; CR-X20]; Mercury with Venus in the 12th supports [JP2 XV.79]; Venus afflicted by the Sun:
    less physical pull in the marriage [HJH2 p19]; the Venus–Mars relation carries physical attraction and needs
    Jupiter's steadying [HJH2 p64].
 3. **S — Lagna lord**: in the 6th, 8th or 12th, debilitated, or with Saturn or Rahu, the comfort is held back on the
@@ -258,8 +261,9 @@ Read in this order, and say what each step shows in this chart:
 health, the body, or restraint chosen for spiritual reasons [HJH2 p422–423]. Never choose a health cause for the
 person. Rank the others for this chart and give the best two with their support: living apart, travel or work away
 (12th factors in movable signs or tied to Saturn [JP2 XV.73]; foreign-residence links); too little rest or privacy
-(the 12th is also sleep; a strained 4th); restraint by choice (the skill's own inference, no library rule: Ketu,
-Jupiter or Saturn on the 12th in a chart that leans to renunciation); indulgence and its cost (Venus or Rahu in the 12th); the relationship itself
+(the 12th is also sleep; a strained 4th); restraint by choice (modern and list support only, Weak: the Sun in the 12th
+[BEHARI2A p157–158]; malefics in the 7th [BEHARI2A p86]; 'giving up the bed' among the 12th's meanings [UKAL V p121];
+plus Ketu, Jupiter or Saturn on the 12th in a chart that leans to renunciation, the skill's inference); indulgence and its cost (Venus or Rahu in the 12th); the relationship itself
 (7th and Venus strained, §2). Mixed results are normal: "desire strong, opportunity limited" is a valid reading.
 
 **Phases, not a verdict.** In Raman's worked case the comfort was normal for about fifteen years and then absent,

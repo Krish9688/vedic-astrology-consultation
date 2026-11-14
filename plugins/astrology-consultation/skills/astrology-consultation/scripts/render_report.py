@@ -9,6 +9,7 @@ Validates against assets/report/report.schema.json (a stdlib subset of JSON Sche
 life-first checks, renders assets/report/template.html.j2 with Jinja2, and writes a PDF with WeasyPrint when it is
 installed (otherwise the HTML prints to PDF from any browser). Needs: jinja2; optional: weasyprint.
 """
+import calendar
 import datetime as dt
 import json
 import os
@@ -20,12 +21,14 @@ ASSETS = os.path.join(HERE, "..", "assets", "report")
 sys.path.insert(0, HERE)
 import chart_svg  # noqa: E402
 import lk_remedies  # noqa: E402  (REP-X7 remedy cards)
+import vocab  # noqa: E402  (the project's term list: houses, vargas, dasha names and their spellings)
 from life_lint import BUDGET, FACT, lint, report_text  # noqa: E402
 
-TYPE_NAMES = {"complete-life": "Complete life report", "career": "Career report", "relationship": "Relationship report",
+TYPE_NAMES = {"kundli": "Kundli report", "complete-life": "Complete life report", "career": "Career report", "relationship": "Relationship report",
               "marriage": "Marriage report", "dasha": "Dasha report", "12-month": "Twelve-month forecast",
               "relocation": "Relocation and foreign travel report", "compact": "Consultation summary",
-              "outlook": "Personal outlook"}
+              "outlook": "Personal outlook", "wealth": "Wealth report", "education": "Education report",
+              "reputation": "Reputation report"}
 HOW_TO_READ = ("Each section starts from what a theme means in your life, then how it is likely to show, when, what "
                "argues against it and what to watch for. Confidence words — Strong, Moderate, Weak, Contradictory, "
                "Unknown — describe how much of the chart agrees, not a probability. Dates are periods, never exact days. "
@@ -46,6 +49,7 @@ SYSTEM_LABELS = {"parashari": "Parashari", "jaimini": "Jaimini", "lal_kitab": "L
                  "combined": "Combined (each system separately)"}
 # the question each type answers, what each chip and mark means (one legend)
 ANSWERS = {
+    "kundli": "What does my birth chart show about who I am, where my strengths lie and which period I am in now?",
     "compact": "What did the chart say to the questions I asked, and what should I watch next?",
     "outlook": "What is the running period asking of me in the coming weeks, and is any event actually timed?",
     "career": "What kind of work suits me, which chapter am I in, and when are the next windows for a move or step up?",
@@ -55,6 +59,9 @@ ANSWERS = {
     "12-month": "What is the theme of the coming year, and which stretches bring opportunity or pressure?",
     "relocation": "Does the chart point to living or working far from home, in what form, and when?",
     "complete-life": "What is the core pattern of this chart, and how does it show across life areas now and ahead?",
+    "wealth": "How does money come and stay in this chart, when are the stronger and the tighter stretches, and what are the sudden-gain tendencies?",
+    "education": "How do I learn, which fields suit the chart, and which periods favour study?",
+    "reputation": "How do others see me, what does my standing rest on, and when is recognition or a setback more likely?",
 }
 SENS_LABELS = {"stable": "Birth time: stable", "may_shift": "Birth time: may shift",
                "depends": "Birth time: depends on exact time"}
@@ -262,6 +269,267 @@ def checks(r):
     if cites:
         warns.append(f"page/verse references in client text ({', '.join(cites[:4])}) — keep them in appendix.sources")
     return errs, warns
+
+
+# ---- T10 spec reports (references/report-specs/<id>.md): the owner's frame and QC checklist, automated ----------------
+# Body section ids per type and depth, in order. A section may be left out only with a `dropped` entry and its reason.
+SPEC_SECTIONS = {
+    "kundli": {"standard": ["foundation", "windows", "self", "strengths", "current"],
+               "full": ["foundation", "windows", "self", "career", "relationship", "partner", "intimacy", "wealth",
+                        "health", "family", "friends", "education", "home", "travel", "inner", "challenges", "remedies"]},
+    "relationship": {"standard": ["windows", "relate", "partner"]},
+    "career": {"standard": ["windows", "pattern", "chapter", "next", "money", "choices"]},
+    "wealth": {"standard": ["windows", "pattern", "retention", "sudden", "choices"]},
+    "education": {"standard": ["windows", "learning", "fields", "next"]},
+    "reputation": {"standard": ["windows", "standing", "image", "setbacks", "choices"]},
+}
+LEDGER = {"fact": "Confirmed", "rule": "Inferred", "interpretation": "Inferred", "prediction": "Hypothesis",
+          "speculation": "Hypothesis"}
+PARTNER_CAVEAT = ("This is an archetype derived from the chart. It is not a description of a real person. Appearance "
+                  "and age, where given, are the lowest-confidence parts and are graded Weak.")
+# copied exactly from astro/service.py (the skill runs without the engine); tests/test_report_specs.py keeps them equal
+UNKNOWN_TIME = re.compile(r"^\s*(unknown|not known|n/?a|none|no (birth )?time)\s*($|[;,(:.-])"
+                          r"|\b(birth )?time\s+(is\s+)?(unknown|not known)\b|\bno birth time\b", re.I)
+HEALTH_CAVEAT = ("This describes tendencies and stress periods. It is not medical advice or a diagnosis; see a "
+                 "clinician for any symptom.")
+PERCENT = re.compile(r"\d\s?%|\bper ?cent\b|\bpercentage\b", re.I)
+ORGANS = re.compile(r"\b(?:liver|kidneys?|lungs?|stomach|intestin\w*|bowels?|colon|bladder|uterus|womb|ovar\w*|testic\w*|"
+                    r"prostate|thyroid|pancrea\w*|spleen|gall ?bladder|genital\w*)\b", re.I)
+BODY = re.compile(r"\b(?:heart|brain|spine|spinal|bones?|blood|eyes?|skin|teeth|throat|nerves?|joints?)\b", re.I)  # health section
+DAY = re.compile(rf"\b\d{{4}}-\d{{2}}-\d{{2}}\b|\b\d{{1,2}}(?:st|nd|rd|th)? {MON}\.? \d{{4}}\b|\b{MON}\.? \d{{1,2}}(?:st|nd|rd|th)?,? \d{{4}}\b", re.I)
+HOUSE = re.compile(r"\b(?:\d{1,2}(?:st|nd|rd|th)|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|"
+                   r"eleventh|twelfth) (?:house|lord)\b|\bhouses?\b|\blagna\b|\bascendant\b|\bD-?(?:9|10)\b|\bnavamsa\b|"
+                   r"\bdasamsa\b|\bdasha\b|\bmajor period\b|\bsub-period\b", re.I)
+TIME_DEP = re.compile(r"\b(?:house|lord|lagna|ascendant|D-?\d+|navamsa|dasamsa|dasha|period)\b", re.I)
+LOOKS = re.compile(r"\b(?:height|tall|complexion|appearance|good-looking|handsome|beautiful|physique|stature|hair|age gap|"
+                   r"(?:slim|slender|stocky|athletic|sturdy|heavy|medium|lean) build)\b", re.I)
+AGE = re.compile(r"\b(?:older|younger)\b", re.I)            # an age claim only in a sentence about a partner
+PARTNER = re.compile(r"\b(?:partner|spouse|husband|wife)\b", re.I)
+AFFAIR = re.compile(r"\b(?:affairs?|cheat\w*|unfaithful\w*|infidelit\w*|fidelity|extramarital)\b", re.I)
+OWN = re.compile(r"\byour own (?:chart|tendenc\w*)\b", re.I)     # the caveat itself ("your own tendencies, never ...")
+OTHER = re.compile(r"\b(?:partner|spouse|husband|wife|boyfriend|girlfriend|he|she|his|her|they|them|their)\b", re.I)
+
+
+# type gates (batch 1): refused wording per report type, run on the client text of a spec report. A negated clause is
+# excused (the spec caveats: "This is not investment advice"), as life_lint does for its certainty probes.
+_S = r"[^.!?;]*"
+_NEG = re.compile(r"\b(?:not|cannot|can't|won't|don't|never|no|nor|neither|none|nothing|without)\b", re.I)
+_CLAUSE = re.compile(r"[;:—–]|,\s+(?:so|but|yet|and so)\b")   # a negation in one clause never excuses the next
+_BUY = r"(?:now|stocks?|shares|gold|property|land|tickets?|crypto\w*|futures|options)"
+TYPE_GATES = {
+    "wealth": [(re.compile(r"[₹$€£]|\bRs\.?\s?\d|\b(?:lakhs?|crores?|rupees?|dollars?|USD|INR)\b", re.I), "money amounts"),
+               (re.compile(rf"\b(?:invest\w*|stocks?|bets?|betting|gambl\w*|lotter(?:y|ies)|tickets?|crypto\w*|mutual funds?|"
+                           rf"(?:stock|share) market|time to (?:buy|sell)|(?:buy|sell)(?:ing)?\s+{_BUY}\b|"
+                           rf"trad(?:e|es|ed|ing)\s+(?:in\s+)?(?:stocks?|shares|futures|options|crypto\w*|the market)|"
+                           rf"shares?\s+(?:in|of)\s+(?:a |the )?(?:company|companies|market)\b)", re.I),
+                "investment, trading, bet or lottery wording"),
+               (re.compile(rf"\b(?:inherit\w*|legac(?:y|ies)){_S}\b(?:dies?|death|dead|passes? away|passing)\b|"
+                           rf"\b(?:dies?|death|dead|passes? away|passing){_S}\b(?:inherit\w*|legac(?:y|ies))", re.I),
+                "an inheritance tied to a relative's death")],
+    "education": [(re.compile(r"\bguarantee\w*|\b(?:will|shall|surely|definitely)\s+(?:(?:surely|definitely)\s+)?(?:"
+                              r"get\s+(?:\w+\s+){0,2}?(?:admission|seat|rank|marks|scholarship|degree)|gain admission|"
+                              r"win\s+(?:\w+\s+)?(?:seat|scholarship|rank|admission)|"
+                              r"(?:clear|pass|crack)\s+(?:the |your )?(?:exams?|tests?|papers?|courses?|entrance)|"
+                              r"top\s+(?:the |your )?(?:class|exams?)|score|be admitted)\b", re.I),
+                   "an admission, pass or result promise"),
+                  (re.compile(rf"\b(?:scores?|scored|marks|rank|percentile|c?gpa){_S}\d|\d{_S}\b(?:marks|scores?|rank|c?gpa)\b", re.I),
+                   "scores, marks or rank figures")],
+    "reputation": [(re.compile(r"\b(?:famous|fame|celebrity|stardom|elections?|elected|public office|scandals?|go(?:es)? viral)\b", re.I),
+                    "fame, election or scandal wording"),
+                   (re.compile(r"\b(?:courts?\b(?!-)|lawsuits?|sue[ds]?|convict\w*|acquit\w*|verdicts?|jail|prison|arrest\w*|litigation)\b", re.I),
+                    "legal outcomes")],
+}
+
+
+def gate_hits(t, strings):
+    """(what, word) for each gate match that no negation in the same clause excuses."""
+    out = []
+    for rx, what in TYPE_GATES.get(t, []):
+        for s in strings:
+            for m in rx.finditer(s):
+                cuts = [x.end() for x in _CLAUSE.finditer(s[:m.start()])]
+                nxt = _CLAUSE.search(s, m.end())
+                if not _NEG.search(s[cuts[-1] if cuts else 0:nxt.start() if nxt else len(s)]):
+                    out.append((what, m.group().lower()))
+    return out
+
+
+def is_marker(x):
+    """A labelled monthly transit marker: a one-month 'watch' row whose label says 'marker' (= service.is_marker)."""
+    return (x.get("kind") == "watch" and len(str(x.get("start", ""))) == 7 and x.get("start") == x.get("end")
+            and "marker" in str(x.get("label", "")).lower())
+
+
+PLANET_NAMES = "|".join(l for _, l, _, _ in vocab.PLANETS)
+PLANET_ANY = "|".join(p for _, _, lat, _ in vocab.PLANETS for p in lat)     # English and Sanskrit names (vocab.py)
+# Unknown birth time: the refused vocabulary comes from vocab.py (houses and Sanskrit lord names via house_refs; every
+# varga but D1; every dasha system and level; chart-angle techniques), plus the few words vocab has no entity for.
+TIME_BOUND_IDS = {"varga:" + d.lower() for d, _, _ in vocab.VARGAS if d != "D1"} | {
+    "technique:" + vocab._slug(t) for t in ("Vimshottari dasha", "Antardasha (bhukti)", "Pratyantardasha", "Chara dasha",
+                                            "Narayana dasha", "Yogini dasha", "Ashtottari dasha", "Kalachakra dasha",
+                                            "Sookshma dasha", "Bhava chalit / cusps", "Karakamsa", "Arudha",
+                                            "Moon chart (Chandra lagna)")}
+TIME_BOUND_WORDS = re.compile(
+    r"\w*das(?:h)?a\b|\w*ams(?:h)?a\b|\bbhavas?\b|\bkendras?\b|\b(?:tri)?konas?\b|\brising (?:sign|degree)\b|\bcusps?\b|\bD\d{1,2}\b|"
+    rf"\b(?:{PLANET_NAMES}|period|sub|major|minor)(?:'s)?\s+(?:major |sub-|minor )?periods?\b|\b(?:major|sub|minor)-?periods?\b|"
+    r"\bperiod lords?\b|\bantar\b|\byogini\b|\bperiods? of (?:the )?(?:" + PLANET_ANY + r")\b|\bbhukti\b|\bhouses?\b|\blords?\b|\bfrom the (?:Moon|Sun|lagna)\b", re.I)
+MOON_WORDS = re.compile(r"\bMoon(?:'s)?\s+(?:sign|nakshatra|star)\b|\bbirth star\b|\bjanma\b|\bnakshatras?\b|\brash?is?\b"
+                        r"|\bMoon (?:is )?in (?:" + "|".join(l for _, l, _ in vocab.SIGNS) + r")\b", re.I)
+FACT_TIME_BOUND = re.compile(r"^F\.(asc|H\d+)\.|^F\.\w+\.(house|dispositor_house|owns|deg|d\d+\w*)$|^F\.yoga\.|^F\.moon\.elongation")
+
+
+def _time_bound_terms(text):
+    """Terms in text that need the birth time. Hyphens and spaces inside a compound are folded first ("maha-dasha",
+    "antar dasha", "nav amsha") so spelling cannot slip past."""
+    folded = re.sub(r"(?<=[a-z])-(?=(?:dash?a|ams?h?a|bhukti)\b)", "", text, flags=re.I)
+    folded = re.sub(r"\b(maha|antar|pratyantar|nav|das|dash|vims|sapt)\s+(dash?a|ams?h?a)\b", r"\1\2", folded, flags=re.I)
+    hits = {m.group().lower() for m in TIME_BOUND_WORDS.finditer(folded)}
+    hits |= {f"house {n}" for n, _ in vocab.house_refs(folded)}
+    hits |= {e for e in vocab.find_entities(folded) if e in TIME_BOUND_IDS or e.startswith("yoga:")}   # yogas: mostly lagna-based
+    return hits
+
+
+def unknown_time_errors(r):
+    """Unknown birth time (owner decision 2026-11-14, any report type): no house, lagna, varga or dasha claims, no
+    time-dependent fact ids or dasha event ids, the Moon's sign or star only when the writer marked the Moon stable
+    across the day (birth.moon_stable; create_report verifies it), no date ranges, and a timeline of labelled monthly
+    transit markers only. create_report runs it too."""
+    errs = []
+    free = _strings([v for k, v in r.items() if k not in ("appendix", "birth", "engine", "uncertainty", "dropped",
+                                                          "prepared_on", "report_type")])
+    if hits := sorted({h for s in free for h in _time_bound_terms(s)}):
+        errs.append(f"birth time unknown: no house, lagna, varga or dasha claims ({', '.join(hits[:5])}); drop those "
+                    "sections with the reason")
+    units = [u for s in r.get("sections", []) for u in s.get("units", [])]
+    if refs := sorted({x for u in units for x in u.get("fact_refs", []) if FACT_TIME_BOUND.search(x)}):
+        errs.append(f"birth time unknown: time-dependent fact ids cannot be cited ({', '.join(refs[:5])})")
+    if any(k.get("event_refs") for k in (r.get("summary") or {}).get("key_points", [])):
+        errs.append("birth time unknown: event_refs depend on the birth time")
+    moon = any(MOON_WORDS.search(s) or any(e.startswith("nakshatra:") for e in vocab.find_entities(s)) for s in free)
+    if moon and not (r.get("birth") or {}).get("moon_stable"):
+        errs.append("birth time unknown: the Moon's sign or nakshatra is used only when it is the same across the whole "
+                    "birth day (set birth.moon_stable after checking; inputs.md)")
+    errs += [f"birth time unknown: timeline row '{x.get('label')}' must be a one-month 'watch' row labelled as a "
+             "transit marker" for x in r.get("timeline", []) if not is_marker(x)]
+    if any(WIN.search(s) for s in free):
+        errs.append("birth time unknown: no date ranges, only labelled monthly transit markers")
+    return errs
+
+
+def time_class(r):
+    """exact | approximate | unknown, from the model's birth block (the engine gate uses the same unknown test)."""
+    b = r.get("birth") or {}
+    src, rel = str(b.get("time_source") or ""), str(b.get("time_reliability") or "")
+    if UNKNOWN_TIME.search(src) or UNKNOWN_TIME.search(rel):
+        return "unknown"
+    return "exact" if re.search(r"\bexact\b", rel, re.I) and not re.search(r"\b(?:not|approx\w*)\b", rel, re.I) else "approximate"
+
+
+def spec_checks(r):
+    """Errors for a model written to a T10 spec (it carries `depth`); legacy models (no depth) are left alone."""
+    t, depth = r.get("report_type"), r.get("depth")
+    if t not in SPEC_SECTIONS:
+        return ([f"depth is only for spec reports ({', '.join(SPEC_SECTIONS)})"] if depth else []), []
+    if not depth:
+        return ([], ["written before the T10 spec (no depth): spec checks skipped"]) if t != "kundli" else (
+            ["a kundli report needs depth (standard or full)"], [])
+    if depth not in SPEC_SECTIONS[t]:
+        return [f"{t} has no depth '{depth}' (only {', '.join(SPEC_SECTIONS[t])})"], []
+    errs = [f"spec report needs '{k}' (the frame, report-specs/{t}.md)" for k in ("scope", "confidence_note", "next_step")
+            if not r.get(k)]
+    if not (r.get("birth") or {}).get("time_reliability"):
+        errs.append("spec report needs birth.time_reliability (exact, approximate or unknown): it decides what may be dated")
+    ids = [s["id"] for s in r["sections"]]
+    dropped = {d["item"] for d in r.get("dropped", [])}
+    if len(ids) != len(set(ids)):
+        errs.append("section ids repeat: one section per id (one timing framework: a single 'windows')")
+    want = SPEC_SECTIONS[t][depth]
+    errs += [f"section '{x}' is missing: write it or list it in dropped with the reason" for x in want
+             if x not in ids and x not in dropped]
+    order = [x for x in ids if x in want]
+    if order != [x for x in want if x in order]:
+        errs.append(f"spec sections out of order: {order}, spec order {want}")
+    if not r.get("ranking") and "ranking" not in dropped:
+        errs.append("the ranking table is missing: give ranking rows or list 'ranking' in dropped with the reason")
+    if any(x["kind"] in ("window", "pressure") for x in r.get("timeline", [])) and "windows" not in ids:
+        errs.append("timeline windows need the one 'windows' section that the other sections point to")
+    for s in r["sections"]:
+        for u in s.get("units", []):
+            name = f"[{s['id']}] '{u['theme'][:50]}'"
+            text = " ".join(str(u.get(k, "")) for k in TEXT_KEYS)
+            if not u.get("claim_type"):
+                errs.append(f"{name} has no claim_type: its fact or interpretation label cannot be shown")
+            if u.get("claim_type") != "fact" and not any((u.get("confidence") or {}).values()):
+                errs.append(f"{name} has no grade word (confidence)")
+            if LOOKS.search(text) or any(AGE.search(x) and PARTNER.search(x) for x in re.split(r"(?<=[.!?;])\s+", text)):
+                c = u.get("confidence") or {}
+                if s["id"] != "partner":
+                    errs.append(f"{name} describes looks or age outside the 'partner' section")
+                elif c.get("manifestation", c.get("event")) not in ("Weak", "Unknown"):
+                    errs.append(f"{name} describes looks or age: its form must be graded Weak or Unknown")
+            if s["id"] == "health" and (m := BODY.search(text)):
+                errs.append(f"{name} names a body part ('{m.group()}'): health is lifestyle and stress periods only")
+    if r.get("remedies") or any(u.get("system") == "lal_kitab" for s in r["sections"] for u in s.get("units", [])):
+        errs.append("Lal Kitab stays out of these Parashari reports (remedies section included); it has its own report")
+    for s in r["sections"]:
+        if s["id"] == "remedies":
+            errs += [f"[remedies] '{u['theme'][:50]}' has no 'no efficacy established' line (remedy-safety.md)"
+                     for u in s.get("units", []) if "no efficacy" not in " ".join(str(u.get(k, "")) for k in TEXT_KEYS).lower()]
+    if t == "kundli" and r.get("ranking"):     # the snapshot: one row per life-area section present
+        rows = {x["item"].lower() for x in r["ranking"]}
+        errs += [f"snapshot has no row for '{s['title']}' (one row per life area)" for s in r["sections"]
+                 if s["id"] not in ("foundation", "windows", "remedies") and s["title"].lower() not in rows]
+    for x in r.get("timeline", []):
+        if x["kind"] in ("window", "pressure") and not x.get("confidence"):
+            errs.append(f"timeline row '{x['label']}' has no grade word (confidence)")
+    client = [v for k, v in r.items() if k not in ("appendix", "birth", "engine", "prepared_on", "period")]
+    strings = _strings(client)
+    if hits := sorted({m.group() for s in strings for m in PERCENT.finditer(s)}):
+        errs.append(f"percentages in the report ({', '.join(hits)}): grade words only")
+    if hits := sorted({m.group().lower() for s in _strings(r) for m in ORGANS.finditer(s)}):
+        errs.append(f"organ words in the report ({', '.join(hits)}): health is lifestyle and stress periods only")
+    hits = gate_hits(t, strings)
+    for what in sorted({w for w, _ in hits}):
+        words = sorted({h for w, h in hits if w == what})
+        errs.append(f"{t} report: {what} are not allowed ({', '.join(words[:4])}; report-specs/{t}.md caveats)")
+    for s in strings:
+        for sent in re.split(r"(?<=[.!?;])\s+", s):
+            if AFFAIR.search(sent) and OTHER.search(sent) and not OWN.search(sent):
+                errs.append(f"fidelity is read from the person's own chart only, never about another person: '{sent[:70]}'")
+    tc = time_class(r)
+    if tc != "exact":
+        days = sorted({m.group() for s in strings for m in DAY.finditer(s)})
+        days += [x["start"] for x in r.get("timeline", []) if len(x["start"]) > 7] + [x["end"] for x in r.get("timeline", []) if len(x["end"]) > 7]
+        if days:
+            errs.append(f"birth time is {tc}: no exact days ({', '.join(days[:4])}); months at most")
+    if tc == "approximate":
+        for s in r["sections"]:
+            errs += [f"[{s['id']}] '{u['theme'][:50]}' rests on a time-dependent factor but has no sensitivity "
+                     "(get_birth_time_sensitivity)" for u in s.get("units", [])
+                     if TIME_DEP.search(u.get("basis", "")) and not u.get("sensitivity")]
+    if tc == "unknown":
+        errs += unknown_time_errors(r)
+    srcs = (r.get("appendix") or {}).get("sources") or []
+    if not srcs:
+        errs.append("appendix.sources is empty: name the books (id, author, title, page)")
+    cat = _catalog()
+    for x in srcs:
+        book = (re.match(r"[A-Z][A-Z0-9]+\b", x) or [""])[0]
+        if not book or re.search(r"\.md\b|\bskill\b|\breferences/", x):
+            errs.append(f"source '{x[:60]}' is not a book: start with the catalog id (e.g. 'BPHS ...')")
+        elif cat is not None and book not in cat:
+            errs.append(f"source '{x[:60]}': '{book}' is not a catalog book")
+    return errs, []
+
+
+def ledger(r):
+    """Evidence ledger (frame item 9): unit themes by Confirmed / Inferred / Hypothesis, from each unit's claim_type."""
+    out = {"Confirmed": [], "Inferred": [], "Hypothesis": []}
+    for s in r["sections"]:
+        for u in s.get("units", []):
+            if u.get("claim_type"):
+                out[LEDGER[u["claim_type"]]].append(u["theme"])
+    return out
 
 
 # ---- grounding, citations, fact_refs (P3-3): invented dates and citations are caught before a report goes out ----
@@ -607,6 +875,22 @@ def _strings(x):
     return []
 
 
+def month_name(s):
+    """'2026-05' -> 'May 2026'; anything else (a day, a word) is left as written."""
+    m = re.fullmatch(r"(\d{4})-(0[1-9]|1[0-2])", str(s))
+    return f"{calendar.month_name[int(m.group(2))]} {m.group(1)}" if m else s
+
+
+def used_marks(r):
+    """Which claim types, grades, birth-time states and bar kinds the report really uses: the legend lists only those."""
+    units = [u for s in r["sections"] for u in s.get("units", [])]
+    kp, tl = r["summary"]["key_points"], r.get("timeline", [])
+    grades = {k.get("confidence") for k in kp} | {x.get("support") for x in r.get("ranking", [])} | {t.get("confidence") for t in tl}
+    grades |= {v for u in units for v in (u.get("confidence") or {}).values()}
+    return dict(claim={u.get("claim_type") for u in units}, grade=grades, sens={sens_state(x) for x in units + kp + tl} - {None},
+                line={t["kind"] for t in tl})
+
+
 def html_of(r):
     try:
         import jinja2
@@ -614,6 +898,7 @@ def html_of(r):
         raise RuntimeError("render needs jinja2 (pip install jinja2); the JSON itself was valid")   # not sys.exit: callers are servers (council R3 M4)
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(ASSETS), autoescape=True)
     env.globals.update(TEMPLATE_GLOBALS)
+    env.filters["mon"] = month_name
     bases = [dict(theme=u["theme"], basis=u["basis"]) for s in r["sections"] for u in s.get("units", []) if u.get("basis")]
     style = r.get("chart_style", "north")
     chart = chart_svg.chart((r.get("appendix") or {}).get("positions", []), style)   # P7-1; None without a lagna row
@@ -622,14 +907,15 @@ def html_of(r):
     extra["remedy_cards"], extra["remedy_sources"] = lk_remedies.cards_html(r)
     moving = [(u["theme"], sens_state(u)) for s in r["sections"] for u in s.get("units", []) if sens_state(u) in ("may_shift", "depends")]
     moving += [(t["label"], sens_state(t)) for t in r.get("timeline", []) if sens_state(t) in ("may_shift", "depends")]
-    caption = f"{style.capitalize()} Indian rasi chart (signs only; degrees in the table below)" + (f"; {calc}" if calc else "")
+    caption = f"{style.capitalize()} Indian rasi chart (numbers are signs, 1 = Aries; degrees in the table below)" + (f"; {calc}" if calc else "")
     return env.get_template("template.html.j2").render(
         r=r, css=open(os.path.join(ASSETS, "report.css")).read(), type_name=TYPE_NAMES[r["report_type"]],
         default_how_to_read=HOW_TO_READ, tl=timeline(r.get("timeline", [])), bases=bases,
         appendix=bool(bases or r.get("appendix") or extra.get("remedy_sources")), section_titles={s["id"]: s["title"] for s in r["sections"]},
-        answers_line=r.get("answers") or ANSWERS[r["report_type"]], moving=moving, sens=sens_state, show_evidence=True,
+        answers_line=r.get("answers") or ANSWERS[r["report_type"]], moving=moving, sens=sens_state, show_evidence=True, used=used_marks(r),
         claim_labels=CLAIM_LABELS, system_labels=SYSTEM_LABELS, basis_labels=BASIS_LABELS,
-        chart=chart, chart_caption=caption, **extra)
+        chart=chart, chart_caption=caption, spec=bool(r.get("depth")), ledger=ledger(r), partner_caveat=PARTNER_CAVEAT, health_caveat=HEALTH_CAVEAT,
+        **extra)
 
 
 def render(r, out_dir, base):
@@ -662,7 +948,7 @@ def report_checks(r, schema, facts=None, fact_ids=None, outlook=None):
         return errs, []
     e2, warns = checks(r)
     errs += e2
-    extra = [citations(r)]
+    extra = [spec_checks(r), citations(r)]
     if facts is not None:
         extra.append(grounding(r, facts))
     else:
@@ -674,6 +960,14 @@ def report_checks(r, schema, facts=None, fact_ids=None, outlook=None):
         errs += e3
         warns += w3
     return errs, warns
+
+
+def cli_refusals(r):
+    """The script cannot recompute the birth day, so it does not trust birth.moon_stable on an unknown time."""
+    if time_class(r) == "unknown" and (r.get("birth") or {}).get("moon_stable"):
+        return ["birth.moon_stable can only be verified by create_report (the engine recomputes the birth day); "
+                "remove it here or render through create_report"]
+    return []
 
 
 def main():
@@ -692,6 +986,7 @@ def main():
     o = json.load(open(sys.argv[sys.argv.index("--outlook") + 1], encoding="utf-8")) if "--outlook" in sys.argv else None
     ids = json.load(open(sys.argv[sys.argv.index("--fact-ids") + 1], encoding="utf-8")) if "--fact-ids" in sys.argv else None
     errs, warns = report_checks(r, schema, facts, ids, o)
+    errs += cli_refusals(r)
     for w in warns:
         print("warning:", w)
     if errs:

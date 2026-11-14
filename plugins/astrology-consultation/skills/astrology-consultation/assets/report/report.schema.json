@@ -14,6 +14,7 @@
   "properties": {
     "report_type": {
       "enum": [
+        "kundli",
         "complete-life",
         "career",
         "relationship",
@@ -22,7 +23,10 @@
         "12-month",
         "relocation",
         "compact",
-        "outlook"
+        "outlook",
+        "wealth",
+        "education",
+        "reputation"
       ]
     },
     "title": {
@@ -34,6 +38,93 @@
     "answers": {
       "type": "string",
       "description": "optional: the question this report answers, in the reader's words; the renderer has a default per report_type"
+    },
+    "depth": {
+      "enum": [
+        "standard",
+        "full"
+      ],
+      "description": "T10 spec reports (references/report-specs/<id>.md): standard, or full (kundli only: the 21-section master). A model with a depth is checked against its spec (render_report.spec_checks); one without is a legacy model and is not."
+    },
+    "scope": {
+      "type": "string",
+      "description": "frame item 1: one sentence on what the report covers and how to read it"
+    },
+    "confidence_note": {
+      "type": "string",
+      "description": "frame item 2: which parts are firm and which are loose, in grade words (no percentages)"
+    },
+    "ranking_title": {
+      "type": "string"
+    },
+    "ranking": {
+      "type": "array",
+      "description": "frame item 6: options or themes ranked by support (kundli: the snapshot by life area)",
+      "items": {
+        "type": "object",
+        "required": [
+          "item",
+          "support"
+        ],
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "support": {
+            "$ref": "#/$defs/grade"
+          },
+          "why": {
+            "type": "string"
+          },
+          "window": {
+            "type": "string"
+          },
+          "caution": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "next_step": {
+      "type": "object",
+      "required": [
+        "questions"
+      ],
+      "description": "frame item 10: what only the person can tell us, and one or two follow-ups",
+      "properties": {
+        "questions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "follow_ups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dropped": {
+      "type": "array",
+      "description": "spec sections or fields left out because the chart or the data does not support them, each with its reason (shown under What is uncertain)",
+      "items": {
+        "type": "object",
+        "required": [
+          "item",
+          "reason"
+        ],
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
     },
     "prepared_for": {
       "type": "string",
@@ -60,6 +151,13 @@
         },
         "time_reliability": {
           "type": "string"
+        },
+        "moon_stable": {
+          "enum": [
+            true,
+            false
+          ],
+          "description": "unknown birth time: true only when the Moon's sign and nakshatra are the same across the whole birth day (inputs.md); create_report verifies it"
         }
       }
     },
@@ -212,6 +310,10 @@
           },
           "sensitivity": {
             "$ref": "#/$defs/sensitivity"
+          },
+          "confidence": {
+            "$ref": "#/$defs/grade",
+            "description": "grade of this window (spec reports need it on window and pressure rows)"
           }
         }
       }

@@ -56,6 +56,20 @@ In Claude, ask:
 
 Claude calls `calculate_birth_chart`, then `prepare_consultation` and `get_dasha` as the question needs. `get_transits` covers timing.
 
+## User guide and knowledge graph
+
+Open [docs/USER-GUIDE.html](docs/USER-GUIDE.html) in a browser. It is one offline page you can flip through with the Prev and Next buttons, the arrow keys or a swipe. It covers install, asking questions, the report types, how to read a report, what the skill does well, its known limits, what you can learn from it, the safety rules and a glossary.
+
+One page explains the knowledge graph. The graph is built by Graphify from page-cited rule maps of the astrology books, with no language model in the build:
+
+- **Nodes** are books, pages, rules and the chart concepts the rules talk about: planets, houses, signs, yogas, nakshatras, divisional charts and techniques.
+- **Edges** say how they connect. A rule comes from a page of a book (`RULE_FROM`, `PART_OF`), applies to or mentions concepts (`APPLIES_TO`, `MENTIONS`), and may disagree with another rule (`CONTRADICTS`).
+- Rules are never merged. Disagreements between books stay visible as Contradiction nodes, with both sides cited.
+
+The guide prints the real counts of each node and edge type. They are regenerated with `python3 tools/kg/user_guide.py`, and `--check` fails if they go stale.
+
+The public edition ships the tools that build such a graph from your own books (`astro add-book`) and the offline viewer that draws it (`tools/kg/viewer.html`, the same design as the guide), not the owner's library graph.
+
 ## Project structure
 
 ```text
@@ -87,6 +101,7 @@ Optional install extras: `mcp`, `api`, `report`, `all`. Servers bind to 127.0.0.
 
 | Page | Covers |
 |---|---|
+| [USER-GUIDE](docs/USER-GUIDE.html) | Page-by-page guide: use, reports, the knowledge graph, strengths and limits |
 | [MARKETPLACE](docs/MARKETPLACE.md) | Install, update, roll back, uninstall, troubleshooting |
 | [CLIENT-INTEGRATIONS](docs/CLIENT-INTEGRATIONS.md) | Claude Desktop, ChatGPT, Cursor, Open WebUI; what was tested |
 | [ARCHITECTURE](docs/ARCHITECTURE.md) | How the engine, skill and interfaces fit together |

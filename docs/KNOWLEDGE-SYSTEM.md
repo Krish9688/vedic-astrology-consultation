@@ -1,4 +1,4 @@
-# Knowledge system: Graphify knowledge graph over the astrology library (v3.1; 18 books with source maps, 51 registered since 2026-11-12)
+# Knowledge system: Graphify knowledge graph over the astrology library (v3.9; 51 books registered, 19 with source maps; graph rebuilt 2026-11-14: 32,213 nodes, 289,498 edges)
 
 > **Editions.** This describes the owner's build. The public edition (from 3.7.0) carries the Lal Kitab rules, code and
 > remedies but not the Lal Kitab knowledge base, its audit, the Varshaphal table or any graph. `kg.py` and `search.py`
@@ -151,7 +151,7 @@ python3 kg.py sources "karaka in its own house"          # best first call: rule
 python3 kg.py find "Saturn in the 10th" --system "Lal Kitab" -n 5
 python3 kg.py find "Jupiter aspecting the 7th lord" --tier classical
 python3 kg.py contradictions "Rahu exaltation"
-python3 kg.py pages "Guru 7th house marriage"            # pages in all 18 books, Hindi LK1952 included
+python3 kg.py pages "Guru 7th house marriage"            # pages in the Vedic books by default (51 indexed), Hindi LK1952 included
 python3 kg.py terms "Guru in 7th, navamsa"               # how the query is understood
 # Graphify's own tools on the same graph:
 _skill_workspace/.venv-graphify/bin/graphify explain "Gajakesari yoga" --graph _skill_workspace/graphify-out/graph.json
@@ -213,4 +213,16 @@ pages. It is therefore an **opt-in** step for new English books (`add_book.py te
 with the baseline so no page gets worse (`tools/docling_text.py`). The existing library was not re-extracted; see
 ROADMAP.md. Graphify remains the retrieval/evidence layer only — it neither calculates nor reasons.
 
+
+
+## 14. Rebuild of 2026-11-14 (T11) and the user guide
+
+The Bhrigu Sutras map for chapters 7 to 10 (`sourcemaps/BHRIGU_part1.md`) was promoted with `add_book.py promote`;
+the graph now holds every catalogued book's pages. Counts from the build: 51 Book, 20,669 Page, 10,660 Rule,
+200 Contradiction and 400 Position nodes; 172,116 MENTIONS, 73,994 APPLIES_TO and 20,759 RULE_FROM edges.
+`validation/graph_checks.py`: 63 pass, 0 fail. `validation/retrieval_eval.py`: mean recall full text 0.35, graph 0.74,
+hybrid 0.75 (17 cases). The book verdicts behind the rebuild are in the workspace note `notes/t11/book-evaluation.md`.
+
+`tools/kg/user_guide.py` turns these counts into one page of the offline user guide (`docs/USER-GUIDE.html`). It reads
+counts only, never names a book, and `--check` fails when the page is stale. Run it after every rebuild.
 

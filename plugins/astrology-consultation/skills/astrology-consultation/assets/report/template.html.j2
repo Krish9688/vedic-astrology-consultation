@@ -8,7 +8,7 @@
 </head>
 <body{% if r.report_type in ("compact", "outlook") %} class="compact"{% endif %}>
 <section class="cover">
-  <div class="kind">{{ type_name }}</div>
+  <div class="kind">{{ type_name }}{% if spec and r.depth == "full" %} · full depth{% endif %}</div>
   <h1>{{ r.title }}</h1>
   {% if r.subtitle %}<div class="sub">{{ r.subtitle }}</div>{% endif %}
   <p class="answers"><span>This report answers</span> {{ answers_line }}</p>
@@ -17,14 +17,20 @@
     <dt>Prepared for</dt><dd>{{ r.prepared_for }}</dd>
     <dt>Prepared on</dt><dd>{{ r.prepared_on }}</dd>
     {% if r.birth %}{% if r.birth.date %}<dt>Birth data</dt><dd>{{ r.birth.date }}{% if r.birth.time %}, {{ r.birth.time }}{% endif %}{% if r.birth.place %}, {{ r.birth.place }}{% endif %}</dd>{% endif %}
-    {% if r.birth.time_reliability or r.birth.time_source %}<dt>Birth time</dt><dd>{{ r.birth.time_source or "" }}{% if r.birth.time_reliability %} ({{ r.birth.time_reliability }}){% endif %}</dd>{% endif %}{% endif %}
+    {% if r.birth.time_reliability or r.birth.time_source %}<dt>Birth time</dt><dd>{% set _src = r.birth.time_source or "" %}{% set _rel = r.birth.time_reliability or "" %}{% if _rel and (not _src or _src.lower() in _rel.lower()) %}{{ _rel }}{% else %}{{ _src }}{% if _rel %} ({{ _rel }}){% endif %}{% endif %}</dd>{% endif %}{% endif %}
     {% if r.engine and r.engine.calculation %}<dt>Calculated with</dt><dd>{{ r.engine.calculation }}{% if r.engine.cross_check and not r.engine.cross_check.strip().lower().startswith(('none', 'no ', 'not')) %}; checked against {{ r.engine.cross_check }}{% endif %}</dd>{% endif %}
   </dl>
   <p class="foot">A traditional Vedic astrological interpretation using documented methods. It describes tendencies and
   timing within that tradition; it is not a guarantee, and it is not medical, legal or financial advice.</p>
 </section>
 
+{% macro ranking() %}{% if r.ranking %}<h2 id="ranking">{{ r.ranking_title or ("Snapshot by life area" if r.report_type == "kundli" else "Ranked by support") }}</h2>
+<table><thead><tr><th>{{ "Area" if r.report_type == "kundli" else "Option or theme" }}</th><th>{{ "How clear the chart is" if r.report_type == "kundli" else "Support" }}</th><th>Why</th>{% if r.ranking|selectattr("window")|list %}<th>Best window</th>{% endif %}{% if r.ranking|selectattr("caution")|list %}<th>Caution</th>{% endif %}</tr></thead><tbody>
+{% for x in r.ranking %}<tr><td>{{ x.item }}</td><td><span class="grade {{ x.support }}">{{ x.support }}</span></td><td>{{ x.why or "" }}</td>{% if r.ranking|selectattr("window")|list %}<td>{{ x.window or "no single window" }}</td>{% endif %}{% if r.ranking|selectattr("caution")|list %}<td>{{ x.caution or "" }}</td>{% endif %}</tr>{% endfor %}
+</tbody></table>{% endif %}{% endmacro %}
 <h2 id="summary">The short version</h2>
+{% if spec %}<p class="scope"><strong>Scope.</strong> {{ r.scope }}</p>
+<p class="scope"><strong>Confidence note.</strong> {{ r.confidence_note }}</p>{% endif %}
 <p class="headline">{{ r.summary.headline }}</p>
 {% if r.spine %}<p class="spine">{{ r.spine }}</p>{% endif %}
 <ul class="keypoints">
@@ -33,6 +39,7 @@
 {% endfor %}
 </ul>
 
+{% if spec and r.report_type == "kundli" %}{{ ranking() }}{% endif %}
 {% if r.report_type != "compact" or r.how_to_read %}<h3>How to read this report</h3>
 <p>{{ r.how_to_read or default_how_to_read }}</p>{% endif %}
 {% if r.report_type in ("compact", "outlook") %}<p class="tl-legend">Key: <span class="grade Strong">Strong</span> <span class="grade Moderate">Moderate</span> <span class="grade Weak">Weak</span> <span class="grade Contradictory">Contradictory</span> <span class="grade Unknown">Unknown</span> say how much of the chart agrees, not a probability. Birth-time marks, where shown: stable, may shift, depends on exact time.</p>
@@ -43,6 +50,8 @@
 
 {% for s in r.sections %}
 <h2 id="{{ s.id }}">{{ s.title }}</h2>
+{% if spec and s.id == "partner" %}<div class="callout"><p>{{ partner_caveat }}</p></div>{% endif %}
+{% if spec and s.id == "health" %}<div class="callout"><p>{{ health_caveat }}</p></div>{% endif %}
 {% if s.intro %}<p>{{ s.intro }}</p>{% endif %}
 {% if s.text %}{% for para in s.text.split("\n\n") %}<p>{{ para }}</p>{% endfor %}{% endif %}
 {% for u in s.units or [] %}
@@ -64,7 +73,7 @@
     {% if u.counter %}<dt>Against it</dt><dd class="counter">{{ u.counter }}</dd>{% endif %}
     {% if u.watch %}<dt>What to watch</dt><dd>{{ u.watch }}</dd>{% endif %}
   </dl>
-  {% if u.confidence %}<div class="conf">{% for k in ["event", "timing", "manifestation"] %}{% if u.confidence[k] %}<span>{{ {"event": "That it happens", "timing": "When", "manifestation": "In what form"}[k] }}: <span class="grade {{ u.confidence[k] }}">{{ u.confidence[k] }}</span></span>{% endif %}{% endfor %}</div>{% endif %}
+  {% if u.confidence %}<div class="conf">{% for k in ["event", "timing", "manifestation"] %}{% if u.confidence[k] %}<span>{{ {"event": ("That it happens" if u.claim_type == "prediction" else "How sure"), "timing": "When", "manifestation": "In what form"}[k] }}: <span class="grade {{ u.confidence[k] }}">{{ u.confidence[k] }}</span></span>{% endif %}{% endfor %}</div>{% endif %}
 </div>
 {% endfor %}
 {% endfor %}
@@ -77,16 +86,17 @@
   <div class="tl-row"><div class="tl-name">{{ b.label }}</div><div class="tl-track"><div class="tl-bar {{ b.kind }} {{ b.cut }}{% if b.sens %} sens-{{ b.sens }}{% endif %}" style="left: {{ b.x }}%; width: {{ b.w }}%"></div></div></div>
   {% endfor %}
 </div>
-<p class="tl-legend">Key:<span class="tl-bar chapter tl-key"></span>calculated period<span class="tl-bar window tl-key"></span>interpretive window<span class="tl-bar pressure tl-key"></span>pressure period<span class="tl-bar watch tl-key"></span>something to watch<span class="tl-bar window tl-key sens-may_shift"></span>dotted ends: may shift with birth time<span class="tl-bar window tl-key sens-depends"></span>faded ends: depends on exact birth time. Edges are approximate; a dashed end means the period continues beyond the chart.</p>
-{% set tl_sens = r.timeline | selectattr("sensitivity") | list %}
-<table><thead><tr><th>When</th><th>What</th><th>Why this period</th>{% if tl_sens %}<th>Birth time</th>{% endif %}</tr></thead><tbody>
-{% for t in r.timeline %}<tr><td>{{ t.start }} – {{ t.end }}</td><td>{{ t.label }}</td><td>{{ t.basis or "" }}</td>{% if tl_sens %}<td>{{ sens_labels[t.sensitivity].replace("Birth time: ", "") if t.sensitivity else "" }}</td>{% endif %}</tr>{% endfor %}
+<p class="tl-legend">Key:{% for k, d in [("chapter", "calculated period"), ("window", "interpretive window"), ("pressure", "pressure period"), ("watch", "something to watch")] %}{% if k in used.line %}<span class="tl-bar {{ k }} tl-key"></span>{{ d }}{% endif %}{% endfor %}{% if "may_shift" in used.sens %}<span class="tl-bar window tl-key sens-may_shift"></span>dotted ends: may shift with birth time{% endif %}{% if "depends" in used.sens %}<span class="tl-bar window tl-key sens-depends"></span>faded ends: depends on exact birth time{% endif %}. Edges are approximate; a dashed end means the period continues beyond the chart.</p>
+{% set tl_sens = r.timeline | selectattr("sensitivity") | list %}{% set tl_conf = r.timeline | selectattr("confidence") | list %}
+<table><thead><tr><th>When</th><th>What</th><th>Why this period</th>{% if tl_conf %}<th>Confidence</th>{% endif %}{% if tl_sens %}<th>Birth time</th>{% endif %}</tr></thead><tbody>
+{% for t in r.timeline %}<tr><td>{{ t.start|mon }}{% if t.end != t.start %} – {{ t.end|mon }}{% endif %}</td><td>{{ t.label }}</td><td>{{ t.basis or "" }}</td>{% if tl_conf %}<td>{% if t.confidence %}<span class="grade {{ t.confidence }}">{{ t.confidence }}</span>{% endif %}</td>{% endif %}{% if tl_sens %}<td>{{ sens_labels[t.sensitivity].replace("Birth time: ", "") if t.sensitivity else "" }}</td>{% endif %}</tr>{% endfor %}
 </tbody></table>
 {% endif %}
 
+{% if spec and r.report_type != "kundli" %}{{ ranking() }}{% endif %}
 {% if r.watch_list %}
 <h2 id="watch">What to watch for</h2>
-<table><thead><tr><th>When</th><th>Sign</th><th>What it would mean</th></tr></thead><tbody>
+<table><thead><tr><th>When</th><th>What you may notice</th><th>What it would mean</th></tr></thead><tbody>
 {% for w in r.watch_list %}<tr><td>{{ w.when or "" }}</td><td>{{ w.sign }}</td><td>{{ w.meaning }}</td></tr>{% endfor %}
 </tbody></table>
 {% endif %}
@@ -99,11 +109,21 @@
 {% if u.contradictions %}<p><strong>Where the chart argues both ways.</strong></p><ul>{% for c in u.contradictions %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
 {% if u.engine_differences %}<p><strong>Calculation differences.</strong></p><ul>{% for c in u.engine_differences %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
 {% if u.not_assessed %}<p><strong>Not assessed.</strong></p><ul>{% for c in u.not_assessed %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
-{% if not (u.birth_time or moving or u.contradictions or u.engine_differences or u.not_assessed) %}<p>No specific uncertainties were recorded beyond the general limits stated on the cover.</p>{% endif %}
+{% if r.dropped %}<p><strong>Left out of this report.</strong></p><ul>{% for d in r.dropped %}<li>{{ d.item }}: {{ d.reason }}</li>{% endfor %}</ul>{% endif %}
+{% if not (u.birth_time or moving or u.contradictions or u.engine_differences or u.not_assessed or r.dropped) %}<p>No specific uncertainties were recorded beyond the general limits stated on the cover.</p>{% endif %}
 
 {% if r.practical_summary %}
 <h2 id="practical">In practice</h2>
 <div class="callout"><ul>{% for p in r.practical_summary %}<li>{{ p }}</li>{% endfor %}</ul></div>
+{% endif %}
+{% if spec %}
+<h2 id="ledger">Evidence ledger</h2>
+<dl class="ledger">{% for k, help in [("Confirmed", "calculated by the engine"), ("Inferred", "a reading of calculated facts or a cited rule"), ("Hypothesis", "a timing or outcome claim, never a certainty")] %}
+<dt>{{ k }} <span class="note">({{ help }})</span></dt><dd>{{ ledger[k]|join("; ") if ledger[k] else "none in this report" }}</dd>{% endfor %}</dl>
+<h2 id="next">Next step</h2>
+<p>Only you can tell us these; the answers sharpen the reading.</p>
+<ul>{% for q in r.next_step.questions %}<li>{{ q }}</li>{% endfor %}</ul>
+{% if r.next_step.follow_ups %}<p><strong>Possible follow-ups.</strong></p><ul>{% for f in r.next_step.follow_ups %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
 {% endif %}
 
 

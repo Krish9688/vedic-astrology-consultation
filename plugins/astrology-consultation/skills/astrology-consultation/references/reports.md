@@ -35,9 +35,13 @@ the project's research notes (not part of this package). All structure here is *
 ## 2. Report types
 
 Sections are defaults — drop what the chart or the request does not support, add what the person asked for.
+`kundli`, `relationship` and `career` have section specs ([report-specs/](report-specs/README.md)): a model with
+`depth` follows its spec (the owner's frame: scope, confidence note, ranking, evidence ledger, next step) and is
+checked by `render_report.spec_checks`; a section left out goes in `dropped` with its reason.
 
 | Type (`report_type`) | Default sections, in order | Timing depth |
 |---|---|---|
+| `kundli` — birth chart by life area | chart foundation · main windows · self · strengths and yogas · current period; depth `full` follows the 21-section master ([report-specs/kundli.md](report-specs/kundli.md)) | one windows section; the timeline after the body |
 | `compact` — consultation summary | the questions asked, answered (one unit each) · current chapter · what to watch. When the person asks for "one page", keep the client text to about 450 words and leave out the timeline and appendix (two to three printed pages; a true single page needs about 250 words) | windows named in units |
 | `outlook` — personal monthly/quarterly outlook | running dasha · event-level factors in the window, or the plain statement that no event-level timing is indicated · texture last, low weight (timing.md §3a; `--outlook-draft`, `--outlook`). 28-92 days, two pages at most; daily and sun-sign feeds are refused | every unit names its outlook factor ids |
 | `career` | working pattern · current chapter · next 2–3 years · money · decisions and choices | chapter + one or two windows |

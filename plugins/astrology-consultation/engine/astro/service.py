@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from . import config, places, routing as ROUTING
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
-VERSION = "3.8.0"
+VERSION = "3.9.0"
 SOURCE_URL = "https://github.com/Krish9688/vedic-astrology-consultation"
 SOURCE_NOTICE = ("This service is free software under the GNU Affero General Public License v3 or later, with NO "
                  "WARRANTY. The Corresponding Source of the version running here is available at the 'source' URL. "
@@ -865,22 +865,34 @@ def time_varying_facts(b: "BirthInput", o: "Options") -> set:
 
 def unknown_time_problems(model: dict, b: Optional["BirthInput"] = None, varying: Optional[set] = None,
                           windows: Optional[list] = None) -> list:
-    """ASTRO-REPORT-SPEC item 26 enforced in the engine, not only in SKILL.md (#48): with an unknown birth time only a
-    compact report is allowed, with no time-dependent facts (fact_refs), no event_refs and no dated windows anywhere."""
+    """ASTRO-REPORT-SPEC item 26 enforced in the engine, not only in SKILL.md (#48). With an unknown birth time any report
+    type may run (owner decision 2026-11-14), with no time-dependent facts (fact_refs), no event_refs and no dated
+    windows: the timeline holds only labelled monthly transit markers (render_report.is_marker, same test)."""
     if not time_unknown(model, b):
         return []
     errs = []
-    if model.get("report_type") != "compact":
-        errs.append(f"birth time unknown: only a compact report is allowed (got {model.get('report_type')!r})")
     cited = {x for s in model.get("sections", []) for u in s.get("units", []) for x in u.get("fact_refs", [])}
     refs = sorted(x for x in cited if TIME_BOUND_REF.search(x) or (varying is not None and x in varying))
     if refs:
         errs.append(f"birth time unknown: facts that depend on the birth time cannot be cited: {', '.join(refs[:8])}")
     kps = (model.get("summary") or {}).get("key_points", [])
-    if model.get("timeline") or any(k.get("window") or k.get("event_refs") for k in kps) or windows:
+    markers = all(is_marker(x) for x in model.get("timeline") or [])
+    if not markers or any(k.get("window") or k.get("event_refs") for k in kps) or windows:
         errs.append("birth time unknown: no dated windows, event_refs or dasha timeline (dasha dates depend on the "
                     "birth time)")
     return errs
+
+
+def _moon_star_moves(b: "BirthInput", o: "Options") -> bool:
+    """Whether the Moon's nakshatra differs across the birth day (the derived facts carry its sign, not its star)."""
+    return len({_compute(b.model_copy(update={"time": t}), o, extras=False)["bodies"]["Mo"]["nakshatra"]
+                for t in DAY_SAMPLES}) > 1
+
+
+def is_marker(x: dict) -> bool:
+    """A labelled monthly transit marker: a one-month 'watch' row whose label says 'marker' (= render_report.is_marker)."""
+    return (x.get("kind") == "watch" and len(str(x.get("start", ""))) == 7 and x.get("start") == x.get("end")
+            and "marker" in str(x.get("label", "")).lower())
 
 
 @_calc   # audit F-04: the grounding recompute runs under the requested ayanamsa and the process lock
@@ -897,11 +909,18 @@ def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = N
     spec.loader.exec_module(rr)
     schema = json.load(open(os.path.join(s.skill_dir, "assets", "report", "report.schema.json")))
     if time_unknown(model, b):          # #48: refused before anything is rendered; dated windows anywhere count (RC-04)
-        try:
-            wins = rr._windows(model) if model.get("summary") else []
-        except Exception:               # a malformed model is report_checks' job; the rule must still hold
-            wins = []
-        if problems := unknown_time_problems(model, b, time_varying_facts(b, o) if b else None, wins):
+        try:                            # text and key-point windows; timeline rows are judged as markers
+            wins = rr._windows(dict(model, timeline=[])) if model.get("summary") else []
+            varying = time_varying_facts(b, o) if b else None
+            problems = unknown_time_problems(model, b, varying, wins) + rr.unknown_time_errors(model)
+            if (model.get("birth") or {}).get("moon_stable") and (varying is None or "F.Mo.sign" in varying
+                                                                   or _moon_star_moves(b, o)):
+                problems.append("birth time unknown: the Moon's sign or nakshatra changes during the birth day (or it "
+                                "cannot be checked without the birth date), so it cannot be marked stable")
+        except Exception as e:          # fail closed: an unknown-time report is never rendered unchecked
+            problems = [f"birth time unknown: the time-dependence check could not run ({type(e).__name__}); "
+                        "the report was not rendered"]
+        if problems:
             return {"ok": False, "errors": problems}
     if b is None:
         if model.get("timeline") or any(k.get("window") or k.get("event_refs")             # RC-09

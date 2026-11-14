@@ -229,8 +229,8 @@ first, then the annual chart, and combine** [HPA p128–131]. He himself calls t
 
 **Calculated Tajika year** (`get_tajika` / `astro tajika`, PVR ch. 27–28, 31; reproduces PVR Examples 118 and 122):
 return moment at the birthplace, day or night year, muntha, harsha bala, the five year-lord candidates with their
-Tajika aspect on the annual lagna, sahams and Mudda dasha. The year lord is printed only when the aspect tiers settle it
-(pancha vargeeya bala is not computed); otherwise say "year lord undetermined" and list the shortlist. PVR notes that
+Tajika aspect on the annual lagna, sahams, pancha vargeeya bala and the Mudda and Patyayini dashas. The year lord is printed only when the candidates
+strong by pancha vargeeya bala (>= 10) and the aspect tiers settle it [PVR p388-393]; otherwise say "year lord undetermined" and list the shortlist. PVR notes that
 Tajika has no basis in Parasara or Jaimini and gates it by the natal promise [PVR p377–378]: it confirms a window the
 natal dasha and transits already show, counted once (§0 step 6), never creates one. Mudda dates follow PVR's stated
 definition (a solar day = the Sun moving 1°); his own Example 122 fits a clock day about two days earlier, so quote a

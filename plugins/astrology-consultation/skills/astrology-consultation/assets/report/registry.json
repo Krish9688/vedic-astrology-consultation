@@ -1,0 +1,474 @@
+{
+ "about": "One registry of report types. The skill, the astro-report flow and the /report command read this file; the list shown to the user comes from here. status: built (renders and is tested), planned (listed, not built yet). Owner-approved list 2026-11-14 (T10 Job C, R1). The nine renderer types that existed before T10 are built (they render and have tests); report ids equal the renderer report_type keys.",
+ "fields": {
+  "id": "key used by /report and report_type in the model",
+  "name": "display name",
+  "aliases": "exact, case-insensitive alternatives",
+  "charts": "1 = one person, 2 = two people",
+  "inputs": "what must be asked before computing",
+  "engine_tools": "MCP / service tools that supply the computed fields",
+  "spec": "section spec (sections in order, fields, conventions, caveats, what to drop)",
+  "template": "Jinja template under assets/report/",
+  "depth": "depth options",
+  "status": "built | planned",
+  "one_line": "the line shown in the menu"
+ },
+ "reports": [
+  {
+   "id": "kundli",
+   "name": "Kundli (birth chart)",
+   "aliases": [
+    "birth-chart",
+    "janam-kundli",
+    "horoscope"
+   ],
+   "charts": 1,
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_ashtakavarga",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_divisional_chart",
+    "get_jaimini_factors",
+    "get_outlook",
+    "get_shadbala",
+    "get_transits",
+    "get_yogini_dasha",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/kundli.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard",
+    "full"
+   ],
+   "status": "built",
+   "one_line": "Your birth chart explained: the main pattern, strengths, yogas and the current period. Full depth follows the 21-section master."
+  },
+  {
+   "id": "relationship",
+   "name": "Relationship",
+   "aliases": [
+    "love",
+    "romance",
+    "partner"
+   ],
+   "charts": 1,
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_activation",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_divisional_chart",
+    "get_jaimini_factors",
+    "get_topic_network",
+    "get_transits",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/relationship.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "How you relate, what draws you, the partner as tendencies, and the main windows."
+  },
+  {
+   "id": "career",
+   "name": "Career",
+   "aliases": [
+    "job",
+    "work",
+    "profession"
+   ],
+   "charts": 1,
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_activation",
+    "get_ashtakavarga",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_divisional_chart",
+    "get_jaimini_factors",
+    "get_shadbala",
+    "get_topic_network",
+    "get_transits",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/career.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "Your working pattern, the current chapter, the next two to three years, money and choices."
+  },
+  {
+   "id": "marriage",
+   "name": "Marriage and spouse",
+   "aliases": [
+    "spouse",
+    "shaadi"
+   ],
+   "charts": 1,
+   "status": "built",
+   "one_line": "The promise of marriage, the partner as tendencies, and the commitment window."
+  },
+  {
+   "id": "complete-life",
+   "name": "Complete life",
+   "aliases": [
+    "life",
+    "full-life",
+    "full"
+   ],
+   "charts": 1,
+   "status": "built",
+   "one_line": "Your life as one story: the core pattern, its tension and how it unfolds."
+  },
+  {
+   "id": "dasha",
+   "name": "Dasha and timing",
+   "aliases": [
+    "periods",
+    "timing"
+   ],
+   "charts": 1,
+   "status": "built",
+   "one_line": "Your planetary periods as chapters of life, and the turning points ahead."
+  },
+  {
+   "id": "compact",
+   "name": "Consultation summary",
+   "aliases": [
+    "summary"
+   ],
+   "charts": 1,
+   "status": "built",
+   "one_line": "Short answers to the questions you asked."
+  },
+  {
+   "id": "relocation",
+   "name": "Foreign and relocation",
+   "aliases": [
+    "foreign",
+    "abroad",
+    "travel"
+   ],
+   "charts": 1,
+   "status": "built",
+   "one_line": "Distance and abroad in your chart: what kind, when and where to look."
+  },
+  {
+   "id": "outlook",
+   "name": "Monthly horoscope",
+   "aliases": [
+    "monthly",
+    "month",
+    "quarterly"
+   ],
+   "charts": 1,
+   "status": "built",
+   "one_line": "One month, week by week."
+  },
+  {
+   "id": "12-month",
+   "name": "Yearly horoscope",
+   "aliases": [
+    "yearly",
+    "year",
+    "annual"
+   ],
+   "charts": 1,
+   "status": "built",
+   "one_line": "The year season by season, with the strongest months named."
+  },
+  {
+   "id": "varshaphal",
+   "name": "Varshaphal (annual chart)",
+   "aliases": [
+    "tajika",
+    "solar-return"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "The Tajika annual chart for your year, season by season."
+  },
+  {
+   "id": "jupiter-transit",
+   "name": "Jupiter transit",
+   "aliases": [
+    "guru-gochar"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "What Jupiter's movement through your chart opens up."
+  },
+  {
+   "id": "rahu-ketu",
+   "name": "Rahu-Ketu transit",
+   "aliases": [
+    "nodes",
+    "rahu-ketu-transit"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "The nodes' axis through your chart: where restlessness and release show."
+  },
+  {
+   "id": "sade-sati",
+   "name": "Sade Sati and Saturn",
+   "aliases": [
+    "shani",
+    "saturn"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Saturn's passage over your Moon: phases, pressure areas and what helps."
+  },
+  {
+   "id": "mangal-dosha",
+   "name": "Mangal Dosha",
+   "aliases": [
+    "manglik",
+    "kuja"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Whether Mars forms the dosha under each named rule, and its cancellations."
+  },
+  {
+   "id": "kaal-sarp",
+   "name": "Kaal Sarp",
+   "aliases": [
+    "kala-sarpa"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Whether all planets sit on one side of the nodes, and what that means."
+  },
+  {
+   "id": "match",
+   "name": "Couples match",
+   "aliases": [
+    "milan",
+    "kundli-milan",
+    "compatibility",
+    "couples"
+   ],
+   "charts": 2,
+   "status": "planned",
+   "one_line": "Two charts compared: the computed kootas, blocks, Mangal check and how the charts fit."
+  },
+  {
+   "id": "lal-kitab",
+   "name": "Lal Kitab",
+   "aliases": [
+    "lk"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "The Lal Kitab reading of your chart and its own remedies, kept apart from Parashari."
+  },
+  {
+   "id": "wealth",
+   "name": "Wealth and money",
+   "aliases": [
+    "money",
+    "finance"
+   ],
+   "charts": 1,
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_activation",
+    "get_ashtakavarga",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_topic_network",
+    "get_transits",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/wealth.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "How money comes and goes for you, and its stronger periods."
+  },
+  {
+   "id": "family",
+   "name": "Family and home",
+   "aliases": [
+    "parents",
+    "home",
+    "siblings"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Parents, siblings and home in your chart."
+  },
+  {
+   "id": "children",
+   "name": "Children",
+   "aliases": [
+    "kids"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Children in your chart, as themes; no fertility verdicts."
+  },
+  {
+   "id": "health",
+   "name": "Health and wellbeing",
+   "aliases": [
+    "wellbeing"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Lifestyle and stress periods only; no medical claims."
+  },
+  {
+   "id": "education",
+   "name": "Education",
+   "aliases": [
+    "study",
+    "studies"
+   ],
+   "charts": 1,
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_activation",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_topic_network",
+    "get_transits",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/education.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "How you learn and the periods that favour study."
+  },
+  {
+   "id": "intimacy",
+   "name": "Intimacy",
+   "aliases": [],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Desire, closeness and comfort in your chart, with care."
+  },
+  {
+   "id": "affairs",
+   "name": "Affairs and fidelity (own chart)",
+   "aliases": [
+    "fidelity"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Your own tendencies only; never a verdict on a partner."
+  },
+  {
+   "id": "self",
+   "name": "Self and appearance",
+   "aliases": [
+    "personality",
+    "appearance"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Temperament, manner and broad appearance; appearance is graded Weak."
+  },
+  {
+   "id": "spirituality",
+   "name": "Spirituality",
+   "aliases": [
+    "dharma",
+    "moksha"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Your inner path and the periods that turn you inward."
+  },
+  {
+   "id": "reputation",
+   "name": "Reputation and status",
+   "aliases": [
+    "fame",
+    "status"
+   ],
+   "charts": 1,
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_activation",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_divisional_chart",
+    "get_jaimini_factors",
+    "get_topic_network",
+    "get_transits",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/reputation.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "Standing, recognition and how others see your work."
+  },
+  {
+   "id": "challenges",
+   "name": "Challenges and conflict",
+   "aliases": [
+    "obstacles",
+    "conflict"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "Pressure points and disputes; no legal verdicts."
+  },
+  {
+   "id": "raj-yoga",
+   "name": "Raj Yoga",
+   "aliases": [
+    "raja-yoga"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "The kendra-kona combinations in your chart and when they activate."
+  },
+  {
+   "id": "pitra-dosha",
+   "name": "Pitra Dosha",
+   "aliases": [
+    "pitru",
+    "pitri"
+   ],
+   "charts": 1,
+   "status": "planned",
+   "one_line": "No classical definition in the library; to be decided after the pilot."
+  }
+ ]
+}

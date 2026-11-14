@@ -73,7 +73,9 @@ These are **form** questions: rank candidate routes, don't pick the first house 
 
 1. **P — Nature**: the stronger of Venus, the 7th lord and any 7th-house occupant [PM2 XX.21]; the planet owning the
    7th sign or its navamsa (temperament, age, fortune) [BJ p243]; D9 7th and its lord; planets joined to Venus
-   [PM2 XX.17–18]. Keep a trait only when two indicators agree.
+   [PM2 XX.17–18]. Keep a trait only when two indicators agree. A benefic in the 7th counts for a pleasant
+   partner only if it does not own the 6th, 8th or 12th; a malefic that owns the 7th and sits in it counts as
+   supportive [PD X.6; PDK p112].
 2. **S — Appearance**: the stronger of the 7th lord's dispositor and its navamsa lord [PM2 XX.20], described through
    that planet's body-type [BJ p52–53; PD p42–44]: build, stature and features as **tendencies** (complexion only if asked, never ranked),
    each with its reason from the chart; one or two texts named in total, in passing. No exact measurements; never to
@@ -158,7 +160,8 @@ lagna. A natal description, so no dasha or transit step.
 1. **P — Rising sign**: its stature class (Aries, Taurus, Aquarius, Pisces short; Gemini, Cancer, Sagittarius,
    Capricorn middling; Leo to Scorpio long [LOL p133]) and its sketch of frame and face, which is a modern
    compilation [CRUX p66–67]. If the lagna degree is near a sign boundary, give both signs and say which wins if the
-   time is right.
+   time is right. Check the sign's own verse [PD IX; PDK p105–106]; where it differs from the class (Cancer and
+   Sagittarius are short there), say the texts differ (CR-X19) and let step 2 decide.
 2. **P — The planet the person "resembles"**: the lord of the rising navamsa or the strongest planet, whichever is
    stronger [BJ p88–89; HJH1 p159; SAR1 p158]; other statements of the same rule take a strong planet *in* the lagna
    [JP2 XI.15; LOL p140–141] or add the lagna lord [BPHS ch. 3, translator's note, PDF p44]. List this chart's
@@ -166,9 +169,13 @@ lagna. A natal description, so no dasha or transit step.
    Shadbala, and say which one you chose and why. Read its body-type [BJ p52–53; PD p42–44; SAR1 p53–56; BPHS ch. 3
    sl. 23–30, PDF p43–45]; the texts differ on details (the Moon's build, Saturn's height), so keep a feature two
    texts share or name the one text. The rising navamsa changes about every 13 minutes: without a stable time, drop
-   it and rank the other candidates.
+   it and rank the other candidates. The rising-sign sketch is also read from the Moon's sign [PD IX.13; PDK p107]:
+   with an unstable birth time, give the Moon-sign sketch as the fallback.
 3. **S — Modifiers**: planets in or aspecting the lagna — a benefic in the lagna adds to looks, a malefic takes from
-   them [BPHS ch. 12 sl. 3–4, PDF p139]; the lagna lord's sign, dignity and companions, and the Sun as karaka of the
+   them [BPHS ch. 12 sl. 3–4, PDF p139]. Name the planet, each only after its dignity and lordship: Venus or Jupiter
+   in the lagna adds to looks [PD VIII.14–19; PDK p96–98; SARH XXX.50, XXX.62]; the Sun there a tall, lean frame and
+   thin hair [PD VIII.1; PDK p92]; Mars marks or scars [PD VIII.8; PDK p94]; Saturn a worn look unless in its own or
+   exaltation sign [PD VIII.20; PDK p99]; the lagna lord's sign, dignity and companions, and the Sun as karaka of the
    body [HJH1 p62–90].
 4. **S — Complexion** (only if the person asks about it): the lord of the navamsa the Moon occupies [BJ p88–89;
    HJH1 p159; JP2 XI.15] with the planet's colour [BJ p51]. Say it at most once, neutrally, as the text's tendency

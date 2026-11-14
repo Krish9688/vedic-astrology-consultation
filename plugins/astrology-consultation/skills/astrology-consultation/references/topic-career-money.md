@@ -58,7 +58,9 @@ periods break raja yogas [HJH2 p364]. Lal Kitab's "deceitful 10th" says the same
   also the lagna, 9th and 10th, from both lagna and Moon [HJH2 p399].
 - **Retention** = 2nd house and lord; weak/debilitated 2nd lord aspected by malefics → financial strain [HPA p51].
 - **Dhana signatures**: lords of 1, 2, 5, 9, 11 linked in kendras/konas; 2nd–11th exchange; lagna lord in 2nd with 2nd
-  lord in 11th [HJH2 p373–374; HPA p60]. Sarvashtakavarga: 11th > 10th, 12th < 11th, lagna > 12th [PD XXIV.38; HPA p103].
+  lord in 11th [HJH2 p373–374; HPA p60]; two or more of the 2nd, 5th, 9th and 11th lords tied by conjunction, aspect
+  or exchange and strong, undone when a 6th, 8th or 12th lord ties to the same group, with results in those lords'
+  periods [UKAL IV.28 p94]. Sarvashtakavarga: 11th > 10th, 12th < 11th, lagna > 12th [PD XXIV.38; HPA p103].
 - **Outflow and debt**: 12th (expense, fines), 6th (loans, disputes), 8th (sudden loss, shared money; gains → §5a); losses come in
   periods of the 11th lord joined with the 12th lord, and of lagna/4th/9th lords in the 8th [HJH2 p393].
 - Benefic in the 11th → honest gains; malefic → unscrupulous gains [HJH2 p372]. Say "more questionable sources" only
@@ -68,7 +70,8 @@ periods break raja yogas [HJH2 p364]. Lal Kitab's "deceitful 10th" says the same
 ## 5a. Unearned and sudden gains
 
 Legacy, gifts, insurance, prize or lottery money, a one-off windfall. Four houses carry it, each for a different kind:
-the 8th legacies, gifts and unearned wealth [HJH2 p78; LOL p176–177; PVR p80]; the 5th speculation and games of
+the 8th legacies, gifts and unearned wealth, including insurance, pension and gratuity payouts and wills [HJH2 p78;
+LOL p176–177; PVR p80; BHRIGU p34]; the 5th speculation and games of
 chance [HJH1 p98, p211]; the 11th easy money [LOL p177]; the 9th sudden gain as luck [HJH2 p266]. Fix which kind the
 person means, then:
 1. **Base first** (§5): a windfall signature on a weak 2nd and 11th passes through the hands. Raman's own
@@ -79,9 +82,11 @@ person means, then:
      [HJH1 p91]; 2nd lord well placed in the 9th with the 9th lord in the lagna [HJH1 p93–94]; 2nd and 4th lords
      together in the 4th — from the mother's side, also unexpected sources [HJH1 p104].
    - Prize or speculation: 2nd lord well fortified in the 5th [HJH1 p92–93]; 11th lord in the 5th, but a gambler's
-     losses if afflicted [HJH2 p370]; Ketu in the 11th [HJH2 p375].
+     losses if afflicted [HJH2 p370]; Ketu in the 11th [HJH2 p375; PD VIII.28–33; PDK p103].
    - One-off windfall: the lagna lord exalted in the 8th beside an exalted 2nd lord, one case [HJH2 p400]; lagna lord
      in the 2nd, 2nd lord in the 11th, 11th lord in the lagna [HPA p51].
+   - 8th lord by house, one modern author, Weak: lagna an unexpected payment, 5th or 6th wealth, 11th gains from
+     undisclosed sources [BEHARI2A p98].
 3. **Rank the scenarios** — legacy or gift; prize or speculation; a lump sum through work (bonus, sale, settlement,
    read from the 11th and 10th); none, gains come by earning — and give the best two with their signatures.
 4. **Counter-factors**: the same 8th is sudden loss (§5); an afflicted 5th or 11th lord turns speculation to loss
