@@ -28,7 +28,8 @@ TYPE_NAMES = {"kundli": "Kundli report", "complete-life": "Complete life report"
               "marriage": "Marriage report", "dasha": "Dasha report", "12-month": "Twelve-month forecast",
               "relocation": "Relocation and foreign travel report", "compact": "Consultation summary",
               "outlook": "Personal outlook", "wealth": "Wealth report", "education": "Education report",
-              "reputation": "Reputation report"}
+              "reputation": "Reputation report", "spirituality": "Spirituality report", "self": "Self report",
+              "family": "Family report", "challenges": "Challenges report"}
 HOW_TO_READ = ("Each section starts from what a theme means in your life, then how it is likely to show, when, what "
                "argues against it and what to watch for. Confidence words — Strong, Moderate, Weak, Contradictory, "
                "Unknown — describe how much of the chart agrees, not a probability. Dates are periods, never exact days. "
@@ -62,6 +63,10 @@ ANSWERS = {
     "wealth": "How does money come and stay in this chart, when are the stronger and the tighter stretches, and what are the sudden-gain tendencies?",
     "education": "How do I learn, which fields suit the chart, and which periods favour study?",
     "reputation": "How do others see me, what does my standing rest on, and when is recognition or a setback more likely?",
+    "spirituality": "What does the chart lean to in my inner life, what practice fits, and which periods turn me inward?",
+    "self": "Who am I in this chart: my core, my temperament, my broad appearance and where I grow?",
+    "family": "How do I relate to my home, my mother and my father, and when are home and property matters more likely to move?",
+    "challenges": "Where does the chart show pressure, how do disputes tend to show up, and how can I respond?",
 }
 SENS_LABELS = {"stable": "Birth time: stable", "may_shift": "Birth time: may shift",
                "depends": "Birth time: depends on exact time"}
@@ -282,6 +287,10 @@ SPEC_SECTIONS = {
     "wealth": {"standard": ["windows", "pattern", "retention", "sudden", "choices"]},
     "education": {"standard": ["windows", "learning", "fields", "next"]},
     "reputation": {"standard": ["windows", "standing", "image", "setbacks", "choices"]},
+    "spirituality": {"standard": ["windows", "path", "practice", "inner"]},
+    "self": {"standard": ["core", "temperament", "appearance", "growth"]},
+    "family": {"standard": ["windows", "home", "mother", "father", "siblings"]},
+    "challenges": {"standard": ["windows", "pressure", "disputes", "response"]},
 }
 LEDGER = {"fact": "Confirmed", "rule": "Inferred", "interpretation": "Inferred", "prediction": "Hypothesis",
           "speculation": "Hypothesis"}
@@ -290,6 +299,8 @@ PARTNER_CAVEAT = ("This is an archetype derived from the chart. It is not a desc
 # copied exactly from astro/service.py (the skill runs without the engine); tests/test_report_specs.py keeps them equal
 UNKNOWN_TIME = re.compile(r"^\s*(unknown|not known|n/?a|none|no (birth )?time)\s*($|[;,(:.-])"
                           r"|\b(birth )?time\s+(is\s+)?(unknown|not known)\b|\bno birth time\b", re.I)
+SELF_APPEARANCE_CAVEAT = ("This is the tradition's description, untested and graded Weak: family and region decide "
+                          "more, and it is not a measurement.")
 HEALTH_CAVEAT = ("This describes tendencies and stress periods. It is not medical advice or a diagnosis; see a "
                  "clinician for any symptom.")
 PERCENT = re.compile(r"\d\s?%|\bper ?cent\b|\bpercentage\b", re.I)
@@ -301,8 +312,19 @@ HOUSE = re.compile(r"\b(?:\d{1,2}(?:st|nd|rd|th)|first|second|third|fourth|fifth
                    r"eleventh|twelfth) (?:house|lord)\b|\bhouses?\b|\blagna\b|\bascendant\b|\bD-?(?:9|10)\b|\bnavamsa\b|"
                    r"\bdasamsa\b|\bdasha\b|\bmajor period\b|\bsub-period\b", re.I)
 TIME_DEP = re.compile(r"\b(?:house|lord|lagna|ascendant|D-?\d+|navamsa|dasamsa|dasha|period)\b", re.I)
-LOOKS = re.compile(r"\b(?:height|tall|complexion|appearance|good-looking|handsome|beautiful|physique|stature|hair|age gap|"
+LOOKS = re.compile(r"\b(?:height|(?<!stand )(?<!stands )(?<!standing )tall|complexion|appearance(?! of)|good-looking|handsome|beautiful|physique|stature|hair|age gap|"
                    r"(?:slim|slender|stocky|athletic|sturdy|heavy|medium|lean) build)\b", re.I)
+LOOKS_TOPIC = re.compile(LOOKS.pattern.replace("appearance(?! of)|", ""), re.I)   # outside units the bare topic word "appearance" is fine
+# self only: further looks words, refused in every section but 'appearance' (idioms such as "short-term" are left alone)
+SELF_LOOKS = re.compile(r"\b(?:short(?![- ](?:term|lived|stretch|period|time|run|list|notice))|thin|heavy(?!\s+(?:work\w*|load\w*|responsibilit\w*|dut\w*))|plump|attractive|pretty|ugly|petite|tiny|small-framed|big-boned|"
+                        r"wheatish|looks(?! like)|dark(?![- ](?:times|days|phase|period|moods?|thoughts|humou?r))|"
+                        r"fair(?!-minded| in\b| to\b| with\b| (?:share|chance|deal|way|view|amount|enough))|good[- ]looking|lovely|gorgeous|"
+                        r"your (?:\w+ )?face(?!\s+(?:lights|up\b|shows)))\b", re.I)
+# family: dated wording about a parent or sibling is refused anywhere (only home and property may be dated)
+PARSIB = re.compile(r"\b(?:mothers?|fathers?|parents?|mom|mum|dad|brothers?|sisters?|siblings?|grand\w+)\b", re.I)
+DATEISH = re.compile(r"\b(?:19|20)\d{2}\b|\b(?:January|February|March|April|June|July|August|September|October|November|December|"
+                     r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\b|\bMay \d")
+KUNDLI_GATES = {"family": "family", "challenges": "challenges", "inner": "spirituality", "self": "self"}   # full kundli section id -> gate set
 AGE = re.compile(r"\b(?:older|younger)\b", re.I)            # an age claim only in a sentence about a partner
 PARTNER = re.compile(r"\b(?:partner|spouse|husband|wife)\b", re.I)
 AFFAIR = re.compile(r"\b(?:affairs?|cheat\w*|unfaithful\w*|infidelit\w*|fidelity|extramarital)\b", re.I)
@@ -313,9 +335,39 @@ OTHER = re.compile(r"\b(?:partner|spouse|husband|wife|boyfriend|girlfriend|he|sh
 # type gates (batch 1): refused wording per report type, run on the client text of a spec report. A negated clause is
 # excused (the spec caveats: "This is not investment advice"), as life_lint does for its certainty probes.
 _S = r"[^.!?;]*"
-_NEG = re.compile(r"\b(?:not|cannot|can't|won't|don't|never|no|nor|neither|none|nothing|without)\b", re.I)
-_CLAUSE = re.compile(r"[;:—–]|,\s+(?:so|but|yet|and so)\b")   # a negation in one clause never excuses the next
+_NEG_WORDS = {"not", "cannot", "can't", "won't", "don't", "never", "no", "nor", "neither", "none", "nothing", "without"}
+_NEG_VERB = re.compile(r"\b(?:never|not|no)\s+(?:be\s+)?(?:predict\w*|read|said|stated|given|made|claimed|promised|shown|implied|inferred)\b", re.I)
+# emphatic idioms never excuse a match ("Without doubt you will win" is a claim, not a caveat)
+_EMPH = re.compile(r"\b(?:no|without(?: a)?) (?:doubt|question|worry)\b|\bnot a worry\b|\bno cause for (?:alarm|worry)\b|\bnothing to fear\b|\bwithout fail\b", re.I)
+# a referral ("ask a doctor", "see a lawyer") excuses its own clause
+_DEFER = re.compile(r"\b(?:ask|see|consult|speak to|talk to)\s+(?:a|your|the)\s+(?:doctor|clinician|physician|lawyer|solicitor|attorney|"
+                    r"(?:medical|legal) professional|professional)\b", re.I)
+_CLAUSE = re.compile(r"[;:—–]|[.!?]\s+(?=[A-Z])|,\s+(?:so|but|yet|and so)\b")   # a match never spans a break
+_NUMW = (r"(?:(?:twenty|thirty|forty|fifty|sixty|seventy)(?:[-\s](?:one|two|three|four|five|six|seven|eight|nine))?|"
+         r"eighteen|nineteen)")
 _BUY = r"(?:now|stocks?|shares|gold|property|land|tickets?|crypto\w*|futures|options)"
+_PAR = (r"mothers?|fathers?|parents?|grand\w*|brothers?|sisters?|siblings?|relatives?|family|mom|mum|dad|maternal|paternal|"
+        r"stepmother|stepfather|mother-in-law|father-in-law")
+_HARM = (r"ill|illness\w*|sick\w*|diseas\w*|death|deaths|dies|die|dying|dead|deceased|pass\w* away|passing|"
+         r"passes(?!\s+(?:on|down|by|through))|leaves? this world|lifespans?|life spans?|longevity|"
+         r"(?:long|short)(?:-| )?(?:life|lives|lived)|live (?:long|short)|health|ailment\w*|cancer|surger\w*|operation|hospital\w*|"
+         r"bereave\w*|mourn\w*|griev\w*|grief|funeral|widow\w*|fatal\w*|accidents?|frail\w*|bedridden|well-?being|"
+         r"bod(?:y|ily)|unwell|recover\w*|years left|bury|buried|crisis|decline[sd]?|surviv\w+|numbered|much longer|fad(?:es|ed|ing)|time on earth|old age|taken from|final (?:years|days|illness)|"
+         r"last (?:days|years|breath)|nursing|care home|heart (?:may |could |will |might )?(?:weak\w*|attack|trouble|problem\w*|"
+         r"condition|failure)|weak(?:en|ens|ened|ening)|misfortune|danger|harm")
+# shortcut: the subject test is regex only. A relative word counts as the subject of a forecast when it is followed (same
+# clause, no "you"/"your" in between) by a modal or a change/ending verb, or when its possessed state noun (days,
+# strength, life, years ...) is. "Your father's advice may help you" passes (advice is not a state noun) and a modal
+# followed by a helping verb passes ("may help"). Upgrade to a parser if over- or under-blocking shows up.
+_REL = r"(?:mothers?|fathers?|parents?|dad|mom|mum|brothers?|sisters?|siblings?|grand\w+|relatives?)"
+_MODAL = r"(?:will|may|might|could|would|shall|is likely to|is set to|is going to|is due to|has (?:only )?(?:a few |\w+ )?(?:years?|months?) left|faces?)"
+_HELP = r"(?:help|support|guide|advise|encourage|back|assist|listen|teach|show|give|offer|share|inspire|cheer|welcome|understand|love|like|want|enjoy|be (?:proud|glad|happy|pleased))"
+_CHG = r"(?:fad(?:e|es|ed|ing)|declin\w*|weaken\w*|leav(?:e|es|ing)|goes|go|pass(?:es|ed|ing)?|worsen\w*|end(?:s|ing)?|numbered|surviv\w+|longer)"
+_STATE = r"(?:days|strength|life|lives|years|time|health|energy|condition|situation|fortunes?|journey|presence|stay|stamina|vitality|body|age)"
+_NOYOU = r"(?:(?!\byou\b|\byour\b)[^.!?;])*?"
+_LEGAL = r"court(?! of public opinion)|judge|case|lawsuit|legal|justice|trial|tribunal|ruling|claim|petition|oppos\w+|bench|opponents?|rivals?|enem\w*|foes?|adversar\w*|other side|opposing party"
+_OUTCOME = (r"win|wins|won|winning|lose|loses|lost|losing|favou?r\w*|your side|sides? with|resolv\w*|crush\w*|defeat\w*|beat|beats|"
+            r"prevail\w*|triumph\w*|humbl\w*|victor\w*|verdict|judg(?:e)?ment|ruling|award\w*|upheld|uphold\w*|granted|allowed|dismissed|rejected|silenc\w*|in your pocket|everything you asked for|pay|pays|paid|settle\w*")
 TYPE_GATES = {
     "wealth": [(re.compile(r"[₹$€£]|\bRs\.?\s?\d|\b(?:lakhs?|crores?|rupees?|dollars?|USD|INR)\b", re.I), "money amounts"),
                (re.compile(rf"\b(?:invest\w*|stocks?|bets?|betting|gambl\w*|lotter(?:y|ies)|tickets?|crypto\w*|mutual funds?|"
@@ -338,19 +390,107 @@ TYPE_GATES = {
                     "fame, election or scandal wording"),
                    (re.compile(r"\b(?:courts?\b(?!-)|lawsuits?|sue[ds]?|convict\w*|acquit\w*|verdicts?|jail|prison|arrest\w*|litigation)\b", re.I),
                     "legal outcomes")],
+    "spirituality": [(re.compile(r"\b(?:enlighten\w*|(?:old|young|advanced|evolved|elevated|high(?:er)?) souls?|"
+                                 r"spiritually (?:advanced|evolved|superior|elevated|gifted)|highly (?:spiritual|evolved)|"
+                                 r"spiritual (?:rank|level|grade|attainment|superiority)|more spiritual than|"
+                                 r"realis(?:ed|ation)\s+(?:being|soul|master|yogi|person|one)|self-?realis\w*|self-?realiz\w*|"
+                                 r"siddhis?|psychic\w*|attainment of|born an? (?:sage|saint|yogi|master)|reborn (?:master|sage|saint|yogi)|awakening complete\w*|(?:final|full|complete|ultimate) (?:liberation|awakening|realisation|moksha|enlightenment)|"
+                                 r"awaken\w*\s+fully|"
+                                 r"(?:attain|reach|achieve|gain)\w*\s+(?:moksha|liberation|enlightenment|nirvana|samadhi)|"
+                                 r"(?:moksha|liberation|nirvana|samadhi)\b[^.!?;]*\b(?:in|by|before|during|around)\s+"
+                                 r"(?:this life|(?:\w+\s+)?\d{4}))\b", re.I),
+                      "spiritual rank or level claims"),
+                     (re.compile(r"\b(?:(?:past|previous|former|prior|last)[\s-]+(?:life|lives|lifetimes?|births?|incarnations?)|"
+                                 r"final (?:birth|incarnation)|earlier (?:births?|lifetimes?|incarnations?)|before this life|before (?:this )?birth|from before\b|walked this path|"
+                                 r"many (?:lives|lifetimes|times before)|reincarnat\w*|karma from before|karmic debts?)\b", re.I),
+                      "past-life claims"),
+                     (re.compile(r"\b(?:curses?[ds]?|shaap|shrapa|hexed?|black magic|evil eye|nazar|witchcraft|jinx\w*|"
+                                 r"negative energy\b[^.!?;]*\b(?:sent|from others)|pitr[ai]?\s?dosh\w*|pitr[ai]? rin|cast\w*\s+(?:a |the )?spell|(?:under|put) a spell|spells? on you)\b", re.I), "curse claims"),
+                     (re.compile(r"\b(?:should|must|ought to|need to|have to)\s+(?:renounce|abandon|leave (?:your )?(?:family|home|job)|"
+                                 r"become an? (?:monk|nun|sannyasi\w*|renunciate|sadhu))\b", re.I), "advice to renounce")],
+    "self": [(re.compile(rf"\b(?:at|by|before|after|around|until|till|from) (?:the )?ages? (?:of )?(?:\d|{_NUMW})|\bages? \d{{1,2}}\b|"
+                         rf"\b(?:at|after|before|by|around|until|till|from) (?:\d{{2}}\b|{_NUMW}\b(?!\s+(?:minutes?|hours?|days?|weeks?|months?)))|"
+                         rf"\b(?:in )?(?:your|the) (?:early |mid |mid-|late )?(?:teens|twenties|thirties|forties|fifties|sixties)\b|"
+                         rf"\b(?:when|once) you (?:are|turn|reach) (?:\d{{2}}|{_NUMW})\b|\b(?:hit|turn|reach)\w*\s+(?:\d{{2}}|{_NUMW})\b|\b\d{{2}}(?:st|nd|rd|th) (?:year|birthday)\b", re.I),
+              "fixed-age claims"),
+             (re.compile(r"\b(?:hair|skin\w*|teeth|nose|lips|neck|chest|shoulders?|legs?|knees?|forehead|scars?|moles?|birthmarks?|"
+                         r"spine|bones?|throat|joints?|limbs|eye colou?r|eyes? (?:are|is|of)\b)", re.I),
+              "body-part claims"),
+             (re.compile(r"\b(?:weight(?!\s+of)|overweight|underweight|obese|obesity|fat|diet|plump|heavy-?set|bulky|kilos?|kgs?|pounds)\b", re.I),
+              "weight claims")],
+    "family": [(re.compile(rf"\b{_REL}\b(?:\s+(?:\w+ly|also|then|soon|still|not|never|yet|now))*\s+"
+                           rf"(?:{_MODAL}\b(?!\s+(?:not\s+)?{_HELP}\b)|{_CHG}\b)", re.I),
+                "a forecast about a parent or sibling"),
+               (re.compile(rf"\b{_REL}(?:['’]s|s['’])\s+(?:(?!\byou\b|\byour\b)\w+\s+)?{_STATE}\b{_NOYOU}\b(?:{_MODAL}|{_CHG})\b", re.I),
+                "a forecast about a parent or sibling"),
+               (re.compile(rf"\b(?:{_PAR})\b{_S}\b(?:{_HARM})\b|\b(?:{_HARM})\b{_S}\b(?:{_PAR})\b", re.I),
+                "a parent's or sibling's illness, health, life span or death"),
+               (re.compile(rf"\b(?:los(?:e|es|ing|t)|loss of)\s+(?:a |an |your |the |one of your )?(?:{_PAR})\b", re.I),
+                "a parent's or sibling's illness, health, life span or death")],
+    "challenges": [(re.compile(
+        r"\b(?:(?:(?:never|won't|will not|cannot|can't)\s+)?(?:win|won|winning|lose|lost|losing)\s+(?:out\s+)?"
+        r"(?:the |your |a |this |that |any )?(?:\w+\s+)?"
+        r"(?:cases?|suits?|lawsuits?|trials?|disputes?|litigation|appeals?|hearings?)|never\s+(?:lose|fail|be defeated)|"
+        r"verdicts?|acquit\w*|convict\w*|sentenc(?:ed|ing)|jail\w*|prison\w*|imprison\w*|arrest\w*|"
+        r"(?:courts?(?!-)|judges?|tribunals?|magistrates?)\b[^.!?;]*\b(?:rul(?:e|es|ed|ing)|decid\w*|favou?r\w*|sides?|"
+        r"finds?|award\w*|order\w*|grant\w*|dismiss\w*)|"
+        r"(?:case|suit|lawsuit|trial|appeal|claim|dispute|hearing|litigation)\b[^.!?;]*\b(?:your way|in your favou?r|against you|"
+        r"for you|(?:is|are|will be|gets?|was) (?:won|lost|decided|settled|dismissed)|(?:will|shall) (?:end|go|succeed|fail|be (?:won|lost|decided)))|"
+        r"(?:succeed|prevail|triumph)\w*\s+(?:in|over)\s+(?:court|the case|the dispute)|"
+        r"(?:victory|victorious|defeat\w*|destroy\w*|vanquish\w*|crush\w*)\b[^.!?;]*\b(?:enem\w*|opponents?|rivals?|foes?)|"
+        r"(?:enem\w*|opponents?|rivals?|foes?)\b[^.!?;]*\b(?:defeat\w*|destroy\w*|vanquish\w*|crush\w*|ruined)|"
+        r"come out on top|(?:favou?rable|adverse|unfavou?rable) (?:judg(?:e)?ments?|rulings?|orders?|decisions?)|"
+        r"compensation\b[^.!?;]*\b(?:paid|granted|awarded)|(?:pays?|paid) you|backs? down|"
+        r"(?:triumph|prevail|victory)\w*\s+over\s+(?:them|him|her)\b|you win\b(?!\s+(?:people|friends|trust|hearts?|respect|support|over))|"
+        r"file\s+(?:the |a |your )?(?:case|suit|lawsuit|claim|complaint|petition)|su(?:e|es|ed|ing)\s+(?:him|her|them|your|the)|"
+        r"(?:get|gain|keep|receive|obtain)\w*\b[^.!?;]*\b(?:in|from|through) the (?:legal|court)|"
+        r"guarantee\w*\s+(?:a |the |your )?(?:settlement|outcome|compensation|win)|"
+        r"(?:settlement|outcome)\s+(?:is|will be)\s+guaranteed|"
+        r"(?:court|hearing|trial|judg(?:e)?ment|verdict)\s+dates?|"
+        r"date of (?:the |your )?(?:hearing|trial|judg(?:e)?ment|verdict))\b", re.I),
+        "legal outcomes or court timing"),
+        (re.compile(rf"\b(?:{_LEGAL})\b{_S}\b(?:{_OUTCOME})\b|\b(?:{_OUTCOME})\b{_S}\b(?:{_LEGAL})\b", re.I),
+         "a legal or opponent word with an outcome word")],
 }
 
 
+def _clauses(s):
+    """Pieces of s split at clause breaks; a gate match never spans a break."""
+    pos = 0
+    for m in _CLAUSE.finditer(s):
+        yield s[pos:m.start()]
+        pos = m.end()
+    yield s[pos:]
+
+
+def _excused(before, hit):
+    """A negation excuses a match only when it sits just before it (within about six words, eight across an
+    'or'/'and' list) and is not an emphatic idiom ('without doubt', 'no worry'). 'never predicted' inside a match
+    ('A legacy is never predicted from a death') also counts."""
+    if _NEG_VERB.search(hit):
+        return True
+    words = re.findall(r"[\w'’-]+", _EMPH.sub(" ", before))
+    pos, n = len(words), 6
+    while True:
+        win = words[max(0, pos - n):pos]
+        if any(w.lower() in _NEG_WORDS or w.lower().endswith("n't") for w in win):
+            return True
+        conj = [i for i, w in enumerate(win) if w.lower() in ("or", "and", "nor")]
+        if not conj:
+            return False
+        pos, n = pos - len(win) + conj[-1], 8
+
+
 def gate_hits(t, strings):
-    """(what, word) for each gate match that no negation in the same clause excuses."""
+    """(what, word) for each gate match in a clause that no negation just before it excuses (a referral such as
+    'ask a doctor' excuses its clause)."""
     out = []
     for rx, what in TYPE_GATES.get(t, []):
         for s in strings:
-            for m in rx.finditer(s):
-                cuts = [x.end() for x in _CLAUSE.finditer(s[:m.start()])]
-                nxt = _CLAUSE.search(s, m.end())
-                if not _NEG.search(s[cuts[-1] if cuts else 0:nxt.start() if nxt else len(s)]):
-                    out.append((what, m.group().lower()))
+            for c in _clauses(s):
+                if _DEFER.search(c):
+                    continue
+                out += [(what, m.group().lower()) for m in rx.finditer(c) if not _excused(c[:m.start()], m.group())]
     return out
 
 
@@ -463,12 +603,19 @@ def spec_checks(r):
                 errs.append(f"{name} has no grade word (confidence)")
             if LOOKS.search(text) or any(AGE.search(x) and PARTNER.search(x) for x in re.split(r"(?<=[.!?;])\s+", text)):
                 c = u.get("confidence") or {}
-                if s["id"] != "partner":
-                    errs.append(f"{name} describes looks or age outside the 'partner' section")
+                home = "appearance" if t == "self" else "partner"      # the one section where looks may be described
+                if s["id"] != home:
+                    errs.append(f"{name} describes looks or age outside the '{home}' section")
                 elif c.get("manifestation", c.get("event")) not in ("Weak", "Unknown"):
                     errs.append(f"{name} describes looks or age: its form must be graded Weak or Unknown")
+            if t == "self" and s["id"] == "appearance" and any(c not in ("Weak", "Unknown") for c in (u.get("confidence") or {}).values()):
+                errs.append(f"{name} in 'appearance' must be graded Weak or Unknown on every line")
             if s["id"] == "health" and (m := BODY.search(text)):
                 errs.append(f"{name} names a body part ('{m.group()}'): health is lifestyle and stress periods only")
+    if t == "self":
+        app = next((s for s in r["sections"] if s["id"] == "appearance"), None)
+        if app and SELF_APPEARANCE_CAVEAT not in str(app.get("text", "")):
+            errs.append("self 'appearance' section needs its caveat sentence in the section text (report-specs/self.md §1)")
     if r.get("remedies") or any(u.get("system") == "lal_kitab" for s in r["sections"] for u in s.get("units", [])):
         errs.append("Lal Kitab stays out of these Parashari reports (remedies section included); it has its own report")
     for s in r["sections"]:
@@ -488,10 +635,51 @@ def spec_checks(r):
         errs.append(f"percentages in the report ({', '.join(hits)}): grade words only")
     if hits := sorted({m.group().lower() for s in _strings(r) for m in ORGANS.finditer(s)}):
         errs.append(f"organ words in the report ({', '.join(hits)}): health is lifestyle and stress periods only")
+    # looks wording in every client string outside the one section that may carry it (self: 'appearance'; kundli and
+    # relationship: 'partner'); a ranking row about looks must be Weak or Unknown in self
+    home = "appearance" if t == "self" else "partner"
+    outside = [s for s in r["sections"] if s["id"] != home]
+    loose = [{k: s.get(k) for k in ("title", "intro", "text")} for s in outside]
+    rows = [x for x in r.get("ranking", []) if not (t == "self" and x.get("support") in ("Weak", "Unknown"))]
+    loose_strings = _strings([loose, rows] + [r.get(k) for k in ("title", "subtitle", "scope", "summary", "confidence_note",
+                                                                 "practical_summary", "watch_list", "timeline", "uncertainty")])   # `dropped` names what is withheld
+    unit_strings = _strings([[{k: u.get(k) for k in TEXT_KEYS} for u in s.get("units", [])] for s in outside]) if t == "self" else []
+    for x in loose_strings:
+        for sent in re.split(r"(?<=[.!?;])\s+", x):
+            if LOOKS_TOPIC.search(sent) or (AGE.search(sent) and PARTNER.search(sent)):
+                errs.append(f"looks or age wording outside the '{home}' section: '{sent[:70]}'")
+    for x in loose_strings + unit_strings if t == "self" else []:
+        if SELF_LOOKS.search(x) or LOOKS_TOPIC.search(x):
+            errs.append(f"looks wording outside the 'appearance' section: '{x[:70]}'")
     hits = gate_hits(t, strings)
+    if t == "kundli":       # the same wording is refused in a kundli section as in the report of its own type
+        for sec in r["sections"]:
+            if g := KUNDLI_GATES.get(sec["id"]):
+                hits += gate_hits(g, _strings(sec))
+            if sec["id"] == "self" and any(SELF_LOOKS.search(x) for x in _strings(sec)):
+                errs.append("kundli 'self' describes looks: looks belong in the 'partner' section for another person only")
+        rows = _strings([r.get(k) for k in ("summary", "timeline", "watch_list", "ranking", "practical_summary")])
+        for g in ("family", "challenges", "spirituality"):
+            hits += gate_hits(g, rows)
+    if t == "family":       # only home and property may carry dates: never a parent or sibling
+        for sec in r["sections"]:
+            if sec["id"] in ("mother", "father", "siblings") and (
+                    any(u.get("timing") for u in sec.get("units", [])) or any(DATEISH.search(x) for x in _strings(sec))):
+                errs.append(f"family '{sec['id']}' carries a date or timing: only home and property may be dated")
+    if t in ("family", "kundli"):
+        dated = ([(f"{x['label']} {x.get('basis', '')}", True) for x in r.get("timeline", [])]
+                 + [(" ".join(_strings(x)), bool(DATEISH.search(" ".join(_strings(x))))) for x in r.get("watch_list", [])]
+                 + [(" ".join(_strings(x)), True) for x in r.get("ranking", []) if x.get("window")]
+                 + [(x, bool(DATEISH.search(x))) for x in _strings(r.get("practical_summary", []))]
+                 + [(" ".join(_strings(x)), bool(x.get("window"))) for x in (r.get("summary") or {}).get("key_points", [])])
+        for x, is_dated in dated:
+            if is_dated and PARSIB.search(x):
+                errs.append(f"{t}: a dated row or line names a parent or sibling ('{x[:60]}'): only home and property may be dated")
     for what in sorted({w for w, _ in hits}):
         words = sorted({h for w, h in hits if w == what})
-        errs.append(f"{t} report: {what} are not allowed ({', '.join(words[:4])}; report-specs/{t}.md caveats)")
+        hint = (" -- phrase it from the person's side, for example 'Your father may help you with the move.'"
+                if what == "a forecast about a parent or sibling" else "")
+        errs.append(f"{t} report: {what} are not allowed ({', '.join(words[:4])}; report-specs/{t}.md caveats){hint}")
     for s in strings:
         for sent in re.split(r"(?<=[.!?;])\s+", s):
             if AFFAIR.search(sent) and OTHER.search(sent) and not OWN.search(sent):
