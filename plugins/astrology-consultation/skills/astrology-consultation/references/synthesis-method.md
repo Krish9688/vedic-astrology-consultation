@@ -109,7 +109,7 @@ Use these to decide which factor carries a conclusion. They are source rules, no
   debilitated dispositor under-delivers; a debilitated planet with a debilitated dispositor is the worst case
   [LOL p294–296]. Raman uses the same logic: malefic Mars aspecting Venus in Mars's own sign *strengthens* Venus
   [HJH2 p218].
-- **Nakshatra lord as hidden modifier.** A planet in the star of a node, a maraka or the 6th/8th lord is weakened; in
+- **Nakshatra lord as hidden modifier.** A planet in the star of a node or the 6th, 8th or 12th lord is weakened; in
   the star of a strong planet it is strengthened; a dasha lord gives its star lord's results [HJH2 p134, p352–363].
 - **Dignity scale.** Good results scale exaltation full → moolatrikona ¾ → own ½ → friend ¼ → enemy little →
   debilitation/combust nil; reversed for malefics and bad-house lords [PD IV.7, XX.30; BJ p223–224].
@@ -120,7 +120,7 @@ Use these to decide which factor carries a conclusion. They are source rules, no
 - **Chart tenor.** Where a theme dominates the whole chart (e.g. renunciation), read other combinations in its key:
   a strong 4th lord gives moral development "instead of a Rolls Royce" [LOL p418].
 - **Subjective vs objective.** When natural benefics favour a matter but temporary malefics (lords of bad houses)
-  also touch it, natural indications tend to prevail inwardly and temporary ones outwardly: accidents may occur,
+  also touch it, natural indications tend to prevail inwardly and temporary ones outwardly: setbacks may occur,
   but the person is not disheartened [LOL p304].
 - **A strong malefic has two faces**: great material benefit through its yogas and serious damage elsewhere
   (Monroe's exalted retrograde 8th-lord Saturn) [LOL p380].
@@ -177,7 +177,7 @@ career change in this period, Moderate on timing, Weak for it being a promotion 
 
 Two traditions reaching the same conclusion by different rules raises *interpretive* confidence, and you may say so
 **in conversation**. **In a written report each system keeps its own grade and agreement never lifts a grade**
-(REPORT-STANDARD §7; owner decision D1): a report may add a closing "where the systems agree" paragraph in words,
+(owner decision D1): a report may add a closing "where the systems agree" paragraph in words,
 with no upgraded grade, and a Lal Kitab unit carries its `edition` (`render_report.py` checks both).
 Rules for conversation:
 

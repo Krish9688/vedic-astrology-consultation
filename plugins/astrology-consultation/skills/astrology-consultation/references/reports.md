@@ -35,18 +35,22 @@ the project's research notes (not part of this package). All structure here is *
 ## 2. Report types
 
 Sections are defaults — drop what the chart or the request does not support, add what the person asked for.
+`kundli`, `relationship` and `career` have section specs ([report-specs/](report-specs/README.md)): a model with
+`depth` follows its spec (the owner's frame: scope, confidence note, ranking, evidence ledger, next step) and is
+checked by `render_report.spec_checks`; a section left out goes in `dropped` with its reason.
 
 | Type (`report_type`) | Default sections, in order | Timing depth |
 |---|---|---|
+| `kundli` — birth chart by life area | chart foundation · main windows · self · strengths and yogas · current period; depth `full` follows the 21-section master ([report-specs/kundli.md](report-specs/kundli.md)) | one windows section; the timeline after the body |
 | `compact` — consultation summary | the questions asked, answered (one unit each) · current chapter · what to watch. When the person asks for "one page", keep the client text to about 450 words and leave out the timeline and appendix (two to three printed pages; a true single page needs about 250 words) | windows named in units |
 | `outlook` — personal monthly/quarterly outlook | running dasha · event-level factors in the window, or the plain statement that no event-level timing is indicated · texture last, low weight (timing.md §3a; `--outlook-draft`, `--outlook`). 28-92 days, two pages at most; daily and sun-sign feeds are refused | every unit names its outlook factor ids |
 | `career` | working pattern · current chapter · next 2–3 years · money · decisions and choices | chapter + one or two windows |
 | `relationship` | the answer: the main window and its grade · how you relate · what draws you and to whom · the window ladder (promise → forming → formalising) · what to watch | one main forming window + fallback; formalising only as a later rung |
-| `marriage` | the answer: promise grade and the main commitment window · the partner, as themes and ranges · the window ladder (forming kept apart from formalising) · married life themes | one main commitment window + fallback |
+| `marriage` | the answer: promise grade and the main commitment window · the partner, as tendencies with the text named · the window ladder (forming kept apart from formalising) · married life themes | one main commitment window + fallback |
 | `dasha` | the current major period in life terms · its sub-periods as chapters · the next major period · turning points | all sub-periods of the current major period, graded |
 | `12-month` | the year's theme · season by season (not month by month) · by life area · pressure and opportunity periods | slow transits on the dasha backdrop; fast transits only if decisive |
 | `relocation` | abroad or distance in the chart · what kind (travel, study, work stint, settling) · when · where it helps and costs | windows for moves |
-| `complete-life` | *a story, not a catalogue:* core pattern → main strengths → the central tension → how these show in each life area (each section names which part of the core pattern it expresses) → the current chapter → what is changing → near/mid-term windows → long-term direction. Life areas: career · current chapter · career · money · relationships/marriage · family (parents, siblings, children) · home and property · health and wellbeing themes (non-medical) · travel and foreign links · friends and social life · personal and spiritual development · turning points ahead | chapters for the next 10–15 years; windows only where earned |
+| `complete-life` | *a story, not a catalogue:* core pattern → main strengths → the central tension → how these show in each life area (each section names which part of the core pattern it expresses) → the current chapter → what is changing → near/mid-term windows → long-term direction. Life areas: career · current chapter · career · money · relationships/marriage · family (parents, siblings, children) · home and property · travel and foreign links · friends and social life · personal and spiritual development · turning points ahead | chapters for the next 10–15 years; windows only where earned |
 
 **One timing framework per report.** Reports with more than one window (career, 12-month, dasha, complete-life)
 open the body with a short **Main windows** section: three to five named windows, each with dates, a one-line basis
@@ -173,9 +177,9 @@ When testing, save the original event classes/windows and confidence before comp
 
 Fix the actual analysis date/timezone. Derive the current MD/AD from the supplied authoritative calendar; include deeper levels only when available, relevant and stable. Explain the difference between the major-period backdrop, the current subperiod's channel and any verified transit trigger.
 
-Develop external circumstances and possible internal experience separately. External themes may concern responsibilities, agreements, learning, relationships or resources. Internal language remains conditional: the same circumstances might increase motivation, expose a tension between priorities or encourage reassessment. A chart cannot observe thoughts, establish emotional diagnoses or confirm another person's intentions. When no current experience is reported, say so rather than writing as if the person has confirmed your portrait.
+Develop external circumstances and possible internal experience separately. External themes may concern responsibilities, agreements, learning, relationships or resources. Internal language remains conditional: the same circumstances might increase motivation, expose a tension between priorities or encourage reassessment. A chart cannot observe thoughts, establish emotional states or confirm another person's intentions. When no current experience is reported, say so rather than writing as if the person has confirmed your portrait.
 
-Name what is continuing, changing or unresolved, supported by the actual period comparison. If a boundary is approaching, state the calendar transition and how the incoming lord differs; do not declare that distress, illness or uncertainty ends that day. A supplied schedule provides a date, not a promise of relief. Real decisions retain their own evidence and deadlines.
+Name what is continuing, changing or unresolved, supported by the actual period comparison. If a boundary is approaching, state the calendar transition and how the incoming lord differs; do not declare that distress or uncertainty ends that day. A supplied schedule provides a date, not a promise of relief. Real decisions retain their own evidence and deadlines.
 
 ## Future: develop the existing thread conditionally
 

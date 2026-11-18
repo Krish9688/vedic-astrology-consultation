@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from . import config, places, routing as ROUTING
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
-VERSION = "3.8.0"
+VERSION = "3.10.0"
 SOURCE_URL = "https://github.com/Krish9688/vedic-astrology-consultation"
 SOURCE_NOTICE = ("This service is free software under the GNU Affero General Public License v3 or later, with NO "
                  "WARRANTY. The Corresponding Source of the version running here is available at the 'source' URL. "
@@ -329,13 +329,25 @@ def divisional_chart(b: BirthInput, division: int, o: Options = DEFAULTS) -> dic
 
 
 @_calc
-def dasha(b: BirthInput, o: Options = DEFAULTS) -> dict:
+def dasha(b: BirthInput, o: Options = DEFAULTS, levels: int = 3, from_date=None, to_date=None) -> dict:
+    """levels 1-3 (mahadasha, +antardasha, +pratyantar) and an optional from/to window (periods overlapping it) trim the
+    list for a chat client (F19); `running` is always taken from the full tree. Defaults: everything, as before."""
+    if levels not in (1, 2, 3):
+        raise ValueError("levels must be 1, 2 or 3")
+    lo, hi = (str(x) if x else None for x in (from_date, to_date))
+    if lo and hi and lo > hi:
+        raise ValueError("from_date is after to_date")
     c = _compute(b, o, extras=False)
     on = _args(b, o)[1]["on"]
     running = next(([md["lord"], ad["lord"], pd["lord"]] for md in c["vimshottari"] for ad in md["sub"]
                     for pd in ad["sub"] if pd["start"] <= on < pd["end"]), None)
+    def trim(rows, depth):
+        return [dict(r, **({"sub": trim(r["sub"], depth + 1)} if depth < levels else {})) if depth < levels else
+                {k: v for k, v in r.items() if k != "sub"}
+                for r in rows if (not lo or r["end"] > lo) and (not hi or r["start"] < hi)]
+    periods = c["vimshottari"] if (levels, lo, hi) == (3, None, None) else trim(c["vimshottari"], 1)
     return _with_meta(c, {"system": "Vimshottari", "year_days": engine.YEAR[o.year], "running_on": on,
-                          "running": running, "periods": c["vimshottari"]})
+                          "running": running, "periods": periods})
 
 
 def julian_to_gregorian(d) -> dt.date:
@@ -391,7 +403,7 @@ def gochara(b: BirthInput, o: Options = DEFAULTS) -> dict:
 
 
 @_calc
-def outlook(b: BirthInput, period: str = "month", start=None, o: Options = DEFAULTS) -> dict:
+def outlook(b: BirthInput, period: str = "month", start=None, o: Options = DEFAULTS, layers=None) -> dict:
     """Chart-specific factors for a day, week, month or year from `start` (default today): dashas, gochara, sade sati,
     sign changes, stations, slow-planet contacts and (day/week) the Moon's transit. Facts only; see timing.md §3a."""
     from .calc import transit as TR
@@ -401,7 +413,13 @@ def outlook(b: BirthInput, period: str = "month", start=None, o: Options = DEFAU
     o = Options(on=d, months=o.months, node=o.node, year=o.year, ayanamsa=o.ayanamsa)
     c = _compute(b, o, extras=False)
     y = yogini_dasha(b, o)["periods"]
-    return _with_meta(c, TR.outlook(c, d, period, b.tz, y, o.node))
+    out = _with_meta(c, TR.outlook(c, d, period, b.tz, y, o.node))
+    if layers:                                      # F19: keep only these layers (event, backdrop, texture); ids stay as numbered
+        keep = {x.strip() for x in layers.split(",")}
+        if keep - {"event", "backdrop", "texture"}:
+            raise ValueError("layers must be a comma list of event, backdrop, texture")
+        out = out | {"factors": [f for f in out["factors"] if f["layer"] in keep], "layers": sorted(keep)}
+    return out
 
 
 @_calc
@@ -745,20 +763,56 @@ def _library_gate():
                               "only if you are entitled to share these excerpts)")
 
 
+_HIT = re.compile(r"^(?:- |[A-Za-z0-9_.-]+ p\d)")
+
+
+def _drop_medical(text: str) -> str:
+    """Remove every excerpt block that carries disease, illness, longevity, widowhood or death material. A block is a
+    hit head ("- " or "SRC pN") and every line after it, indented or not, up to the next head, a blank line or a "#"
+    header; one hit line drops the whole block. Any other line that hits is dropped too. Headers and clean lines stay."""
+    out, block = [], []
+
+    def flush():
+        # a wrapped excerpt splits a phrase across lines ("Saturn strong ... muscles,\nthe Sun in bones"): read the joined block too
+        if block and not (any(ROUTING.medical_line(x) for x in block) or ROUTING.medical_line(" ".join(x.strip() for x in block))):
+            out.extend(block)
+        block.clear()
+    for ln in text.splitlines():
+        if _HIT.match(ln):
+            flush()
+            block.append(ln)
+        elif block and ln.strip() and not ln.lstrip().startswith("#"):
+            block.append(ln)
+        else:
+            flush()
+            if not ROUTING.medical_line(ln):
+                out.append(ln)
+    flush()
+    return "\n".join(out)
+
+
 def search_sources(query: str, sources: Optional[str] = None) -> str:
     """Full-text search of the user's own local library (page-cited). Needs a configured knowledge folder."""
     _library_gate()
+    if ROUTING.crisis(query):
+        return ROUTING.CRISIS
+    if ROUTING.refuses(query):
+        return ROUTING.REFUSAL
     if not config.load().knowledge_dir:
         return "No local library configured — add your own books with `astro add-book` (see docs/ADD-A-BOOK.md)."
-    return _run_skill_script("search.py", *(["--src", sources] if sources else []), "--", query[:300])
+    return _drop_medical(_run_skill_script("search.py", *(["--src", sources] if sources else []), "--", query[:300]))
 
 
 def rule_sources(rule: str) -> str:
     """Which books support or dispute a rule (knowledge graph), with pages and tiers."""
     _library_gate()
+    if ROUTING.crisis(rule):
+        return ROUTING.CRISIS
+    if ROUTING.refuses(rule):
+        return ROUTING.REFUSAL
     if not config.load().knowledge_dir:
         return "No knowledge graph configured — retrieval is unavailable; reason from the skill's references."
-    return _run_skill_script("kg.py", "sources", "--", rule[:300])
+    return _drop_medical(_run_skill_script("kg.py", "sources", "--", rule[:300]))
 
 
 def skill_file(rel: str) -> str:
@@ -774,6 +828,11 @@ def skill_file(rel: str) -> str:
 
 def analyze_question(question: str) -> dict:
     q = question.lower()
+    if ROUTING.crisis(question):   # suicide or self-harm, anyone's: the crisis referral (communication.md 5a), no topic
+        return {"question": question, "topics": ["crisis"], "timing_question": False,
+                "load": ["references/communication.md"], "crisis": ROUTING.CRISIS}
+    if ROUTING.refuses(question):   # health, illness, surgery, death: the plain refusal, no topic file
+        return {"question": question, "topics": ["refuse"], "timing_question": False, "load": [], "refusal": ROUTING.REFUSAL}
     topics = [t for t, rx in TOPICS.items() if re.search(rx, q)]
     timing = bool(re.search(ROUTING.TIMING_RX, q))
     return {"question": question, "topics": topics or ["open activation — see question-trees.md §8"],
@@ -783,7 +842,11 @@ def analyze_question(question: str) -> dict:
 @_calc
 def consultation_context(question: str, b: BirthInput, o: Options = DEFAULTS) -> dict:
     """Everything an AI client needs to answer like the skill: the routed method files, the calculated facts with
-    provenance, and the birth-time sensitivity classes. The client does the reasoning."""
+    provenance, and the birth-time sensitivity classes. The client does the reasoning. A refused or crisis question gets
+    only the refusal or the crisis text: no chart is calculated and no facts are returned (owner rule 2026-11-15)."""
+    analysis = analyze_question(question)
+    if analysis.get("refusal") or analysis.get("crisis"):
+        return {"analysis": analysis}
     c = calculate_chart(b, o)
     on = c["meta"]["transit_date"]
     running = next(([md["lord"], ad["lord"], pd["lord"]] for md in c["vimshottari"] for ad in md["sub"]
@@ -799,7 +862,7 @@ def consultation_context(question: str, b: BirthInput, o: Options = DEFAULTS) ->
                                                                              ("arudha_lagna", "upapada", "karakamsa")},
              "sensitivity_classes": c["sensitivity_grid"]["classes"],
              "transit_sign_aspects": c["transit_sign_aspects"], "transit_aspects_note": c["meta"]["transit_aspects"]}
-    return {"analysis": analyze_question(question), "facts": facts, "derived_facts": _derived_facts(c),
+    return {"analysis": analysis, "facts": facts, "derived_facts": _derived_facts(c),
             "derived_fact_ids": _derived_facts(c, ids=True)}
 
 
@@ -847,22 +910,34 @@ def time_varying_facts(b: "BirthInput", o: "Options") -> set:
 
 def unknown_time_problems(model: dict, b: Optional["BirthInput"] = None, varying: Optional[set] = None,
                           windows: Optional[list] = None) -> list:
-    """ASTRO-REPORT-SPEC item 26 enforced in the engine, not only in SKILL.md (#48): with an unknown birth time only a
-    compact report is allowed, with no time-dependent facts (fact_refs), no event_refs and no dated windows anywhere."""
+    """ASTRO-REPORT-SPEC item 26 enforced in the engine, not only in SKILL.md (#48). With an unknown birth time any report
+    type may run (owner decision 2026-11-14), with no time-dependent facts (fact_refs), no event_refs and no dated
+    windows: the timeline holds only labelled monthly transit markers (render_report.is_marker, same test)."""
     if not time_unknown(model, b):
         return []
     errs = []
-    if model.get("report_type") != "compact":
-        errs.append(f"birth time unknown: only a compact report is allowed (got {model.get('report_type')!r})")
     cited = {x for s in model.get("sections", []) for u in s.get("units", []) for x in u.get("fact_refs", [])}
     refs = sorted(x for x in cited if TIME_BOUND_REF.search(x) or (varying is not None and x in varying))
     if refs:
         errs.append(f"birth time unknown: facts that depend on the birth time cannot be cited: {', '.join(refs[:8])}")
     kps = (model.get("summary") or {}).get("key_points", [])
-    if model.get("timeline") or any(k.get("window") or k.get("event_refs") for k in kps) or windows:
+    markers = all(is_marker(x) for x in model.get("timeline") or [])
+    if not markers or any(k.get("window") or k.get("event_refs") for k in kps) or windows:
         errs.append("birth time unknown: no dated windows, event_refs or dasha timeline (dasha dates depend on the "
                     "birth time)")
     return errs
+
+
+def _moon_star_moves(b: "BirthInput", o: "Options") -> bool:
+    """Whether the Moon's nakshatra differs across the birth day (the derived facts carry its sign, not its star)."""
+    return len({_compute(b.model_copy(update={"time": t}), o, extras=False)["bodies"]["Mo"]["nakshatra"]
+                for t in DAY_SAMPLES}) > 1
+
+
+def is_marker(x: dict) -> bool:
+    """A labelled monthly transit marker: a one-month 'watch' row whose label says 'marker' (= render_report.is_marker)."""
+    return (x.get("kind") == "watch" and len(str(x.get("start", ""))) == 7 and x.get("start") == x.get("end")
+            and "marker" in str(x.get("label", "")).lower())
 
 
 @_calc   # audit F-04: the grounding recompute runs under the requested ayanamsa and the process lock
@@ -879,11 +954,18 @@ def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = N
     spec.loader.exec_module(rr)
     schema = json.load(open(os.path.join(s.skill_dir, "assets", "report", "report.schema.json")))
     if time_unknown(model, b):          # #48: refused before anything is rendered; dated windows anywhere count (RC-04)
-        try:
-            wins = rr._windows(model) if model.get("summary") else []
-        except Exception:               # a malformed model is report_checks' job; the rule must still hold
-            wins = []
-        if problems := unknown_time_problems(model, b, time_varying_facts(b, o) if b else None, wins):
+        try:                            # text and key-point windows; timeline rows are judged as markers
+            wins = rr._windows(dict(model, timeline=[])) if model.get("summary") else []
+            varying = time_varying_facts(b, o) if b else None
+            problems = unknown_time_problems(model, b, varying, wins) + rr.unknown_time_errors(model)
+            if (model.get("birth") or {}).get("moon_stable") and (varying is None or "F.Mo.sign" in varying
+                                                                   or _moon_star_moves(b, o)):
+                problems.append("birth time unknown: the Moon's sign or nakshatra changes during the birth day (or it "
+                                "cannot be checked without the birth date), so it cannot be marked stable")
+        except Exception as e:          # fail closed: an unknown-time report is never rendered unchecked
+            problems = [f"birth time unknown: the time-dependence check could not run ({type(e).__name__}); "
+                        "the report was not rendered"]
+        if problems:
             return {"ok": False, "errors": problems}
     if b is None:
         if model.get("timeline") or any(k.get("window") or k.get("event_refs")             # RC-09

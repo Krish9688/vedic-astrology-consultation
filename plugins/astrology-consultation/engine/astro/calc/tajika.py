@@ -15,7 +15,7 @@ from . import engine as E
 from .strength import EXALT, SIGN_LORD
 
 NOT_COMPUTED = ("Varsha Narayana dasha; Karyasiddhi and the sahams "
-                "that need house cusps (Mrityu, Paradesa, Artha, Santapa, Apamrityu, Labha: the cusp system is not "
+                "that need house cusps (Paradesa, Artha, Santapa, Labha: the cusp system is not "
                 "stated)")
 SIDEREAL_YEAR = 365.256363
 PLANETS = ("Su", "Mo", "Ma", "Me", "Ju", "Ve", "Sa")
@@ -33,7 +33,7 @@ SAHAMS = {"Punya": ("Mo", "Su", "Lg", False), "Vidya": ("Su", "Mo", "Lg", False)
           "Asha": ("Sa", "Ma", "Lg", False), "Samartha": ("Ma", "LgLord", "Lg", False),
           "Bhratri": ("Ju", "Sa", "Lg", True), "Gaurava": ("Ju", "Mo", "Su", False), "Pitri": ("Sa", "Su", "Lg", False),
           "Rajya": ("Sa", "Su", "Lg", False), "Matri": ("Mo", "Ve", "Lg", False), "Putra": ("Ju", "Mo", "Lg", False),
-          "Jeeva": ("Sa", "Ju", "Lg", False), "Karma": ("Ma", "Me", "Lg", False), "Roga": ("Lg", "Mo", "Lg", False),
+          "Karma": ("Ma", "Me", "Lg", False),
           "Kali": ("Ju", "Ma", "Lg", False), "Sastra": ("Ju", "Sa", "Me", False), "Bandhu": ("Me", "Mo", "Lg", False),
           "Paradara": ("Ve", "Su", "Lg", False), "Vanik": ("Mo", "Me", "Lg", False), "Vivaha": ("Ve", "Sa", "Lg", False),
           "Sraddha": ("Ve", "Ma", "Lg", False), "Preeti": ("Sastra", "Punya", "Lg", False),

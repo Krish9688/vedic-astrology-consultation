@@ -36,8 +36,8 @@ SOURCES = {"gochara": "PD XXVI.1-2 (p312): from the natal Moon's sign; good hous
            "station_natal": "Convention, not a classical rule: a station of Mercury to Saturn within 3 deg (close) or "
                             "7 deg (wide band) of a natal point, conjunction only; one episode per retrograde loop and "
                             "point, listing both station dates when both fall in the band",
-           "chandrashtama": "CRUX p99-100 (Rath, author): the Moon's transit of the 8th sign from the natal Moon is avoided "
-                            "when choosing a day; texture only, low weight",
+           "chandrashtama": "CRUX p99-100 (Rath, author): Moon in the 8th sign from the natal Moon, a day-choice texture: the "
+                            "day is avoided for starting things; low weight",
            "tara": "Tara order Janma, Sampat, Vipat, Kshema, Pratyak, Sadhana, Naidhana, Mitra, Parama Mitra (JP2 p407 "
                    "translator note; DEVA2 reader note): count from the birth star, mod 9; daily use is a convention, "
                    "texture only, low weight",
@@ -187,7 +187,7 @@ def texture(add, t0, t1, tz, node, moon_sign, natal_moon):
         days[(d + dt.timedelta(hours=tz)).date().isoformat()] = TARAS[(nak - birth) % 27 % 9]
         d += dt.timedelta(days=1)
     hard = [k for k, v in days.items() if v in ("Vipat", "Pratyak", "Naidhana")]
-    add("tara", f"Moon's tara from the birth star: Vipat, Pratyak or Naidhana on {len(hard)} of {len(days)} days",
+    add("tara", f"Moon's tara from the birth star: the obstacle taras (Vipat, Pratyak, Naidhana) on {len(hard)} of {len(days)} days",
         f"{min(days)} to {max(days)}", SOURCES["tara"], days=days)
 
 
@@ -230,8 +230,24 @@ def outlook(c, start, period, tz, yogini_rows=None, node="mean"):
             planet=ch["planet"], house_from_moon=(E.SIGNS.index(ch["to"]) - moon_sign) % 12 + 1,
             house_from_lagna=(E.SIGNS.index(ch["to"]) - asc_sign) % 12 + 1)
         if ch["planet"] == "Sa":
-            new = sade_sati(E.SIGNS.index(ch["to"]), moon_sign)
-            add("sade_sati", f"Sade sati {'now: ' + new if new else 'ends'}", ch["date"], SOURCES["sade_sati"])
+            to, frm = E.SIGNS.index(ch["to"]), E.SIGNS.index(ch["from"])
+            new, old = sade_sati(to, moon_sign), sade_sati(frm, moon_sign)
+            if new or old:                                  # F04: only a move into, within or out of the 12th-1st-2nd
+                # a retrograde loop across a zone edge lasts well under a year; one year of daily steps tells a
+                # first entry from a re-entry, and a final exit from a pause
+                at = dt.datetime.fromisoformat(ch["date"]) + dt.timedelta(hours=12 - tz)
+                in_sign = lambda sg, step, at=at: any(int(E.positions(E.jd_of(at + dt.timedelta(days=step * k)), node)["Sa"]
+                                                   ["lon"] // 30) == sg for k in range(1, 366))
+                if old and new:
+                    text = f"Sade sati now: {new}"
+                elif new:
+                    text = f"Sade sati {'resumes' if in_sign(to, -1) else 'begins'}: {new}"
+                elif in_sign(frm, 1):
+                    text = (f"Sade sati pauses (Saturn {'retrograde ' if (frm - to) % 12 == 1 else ''}"
+                            f"into the {_ord((to - moon_sign) % 12 + 1)} from the Moon; it returns within a year)")
+                else:
+                    text = "Sade sati ends"
+                add("sade_sati", text, ch["date"], SOURCES["sade_sati"])
     lon_of = lambda p, d: E.positions(E.jd_of(dt.datetime.fromisoformat(d) + dt.timedelta(hours=12 - tz)), node)[p]["lon"]
     for st in sky["stations"]:
         sg = int(lon_of(st["planet"], st["date"]) // 30)

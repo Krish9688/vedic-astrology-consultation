@@ -1,5 +1,9 @@
 # Privacy
 
+> **What:** how birth data and personal files are kept out of the repositories, logs and tests. **Read it when:** you handle data or touch the privacy check.
+> **Last checked:** not checked in the 2026-11-12 pass.
+> **Related:** COPYRIGHT.md, REPOSITORY-EDITIONS.md.
+
 Birth data identifies a person and, with a chart, reveals things they may not want shared. This project keeps it on
 the owner's machine unless the owner explicitly decides otherwise.
 

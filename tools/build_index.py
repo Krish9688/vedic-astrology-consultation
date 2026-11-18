@@ -47,4 +47,4 @@ def build():
 if __name__ == "__main__":
     counts = dict(build())
     print(counts)
-    assert all(counts.get(s, 0) > 100 for s in SOURCES), "a source failed to load"
+    assert all(counts.get(b["id"], 0) == b["pages"] for b in _CAT["books"]), "a source failed to load or its page count changed"   # EPUB books have few sections

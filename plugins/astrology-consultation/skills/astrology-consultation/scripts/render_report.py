@@ -9,6 +9,7 @@ Validates against assets/report/report.schema.json (a stdlib subset of JSON Sche
 life-first checks, renders assets/report/template.html.j2 with Jinja2, and writes a PDF with WeasyPrint when it is
 installed (otherwise the HTML prints to PDF from any browser). Needs: jinja2; optional: weasyprint.
 """
+import calendar
 import datetime as dt
 import json
 import os
@@ -20,12 +21,16 @@ ASSETS = os.path.join(HERE, "..", "assets", "report")
 sys.path.insert(0, HERE)
 import chart_svg  # noqa: E402
 import lk_remedies  # noqa: E402  (REP-X7 remedy cards)
+import medical_words  # noqa: E402  (the one medical and death word list)
+import vocab  # noqa: E402  (the project's term list: houses, vargas, dasha names and their spellings)
 from life_lint import BUDGET, FACT, lint, report_text  # noqa: E402
 
-TYPE_NAMES = {"complete-life": "Complete life report", "career": "Career report", "relationship": "Relationship report",
+TYPE_NAMES = {"kundli": "Kundli report", "complete-life": "Complete life report", "career": "Career report", "relationship": "Relationship report",
               "marriage": "Marriage report", "dasha": "Dasha report", "12-month": "Twelve-month forecast",
               "relocation": "Relocation and foreign travel report", "compact": "Consultation summary",
-              "outlook": "Personal outlook"}
+              "outlook": "Personal outlook", "wealth": "Wealth report", "education": "Education report",
+              "reputation": "Reputation report", "spirituality": "Spirituality report", "self": "Self report",
+              "family": "Family report", "challenges": "Challenges report"}
 HOW_TO_READ = ("Each section starts from what a theme means in your life, then how it is likely to show, when, what "
                "argues against it and what to watch for. Confidence words — Strong, Moderate, Weak, Contradictory, "
                "Unknown — describe how much of the chart agrees, not a probability. Dates are periods, never exact days. "
@@ -46,6 +51,7 @@ SYSTEM_LABELS = {"parashari": "Parashari", "jaimini": "Jaimini", "lal_kitab": "L
                  "combined": "Combined (each system separately)"}
 # the question each type answers, what each chip and mark means (one legend)
 ANSWERS = {
+    "kundli": "What does my birth chart show about who I am, where my strengths lie and which period I am in now?",
     "compact": "What did the chart say to the questions I asked, and what should I watch next?",
     "outlook": "What is the running period asking of me in the coming weeks, and is any event actually timed?",
     "career": "What kind of work suits me, which chapter am I in, and when are the next windows for a move or step up?",
@@ -55,6 +61,13 @@ ANSWERS = {
     "12-month": "What is the theme of the coming year, and which stretches bring opportunity or pressure?",
     "relocation": "Does the chart point to living or working far from home, in what form, and when?",
     "complete-life": "What is the core pattern of this chart, and how does it show across life areas now and ahead?",
+    "wealth": "How does money come and stay in this chart, when are the stronger and the tighter stretches, and what are the sudden-gain tendencies?",
+    "education": "How do I learn, which fields suit the chart, and which periods favour study?",
+    "reputation": "How do others see me, what does my standing rest on, and when is recognition or a setback more likely?",
+    "spirituality": "What does the chart lean to in my inner life, what practice fits, and which periods turn me inward?",
+    "self": "Who am I in this chart: my core, my temperament, my broad appearance and where I grow?",
+    "family": "How do I relate to my home, my mother and my father, and when are home and property matters more likely to move?",
+    "challenges": "Where does the chart show pressure, how do disputes tend to show up, and how can I respond?",
 }
 SENS_LABELS = {"stable": "Birth time: stable", "may_shift": "Birth time: may shift",
                "depends": "Birth time: depends on exact time"}
@@ -262,6 +275,625 @@ def checks(r):
     if cites:
         warns.append(f"page/verse references in client text ({', '.join(cites[:4])}) — keep them in appendix.sources")
     return errs, warns
+
+
+# ---- T10 spec reports (references/report-specs/<id>.md): the owner's frame and QC checklist, automated ----------------
+# Body section ids per type and depth, in order. A section may be left out only with a `dropped` entry and its reason.
+SPEC_SECTIONS = {
+    "kundli": {"standard": ["foundation", "windows", "self", "strengths", "current"],
+               "full": ["foundation", "windows", "self", "career", "relationship", "partner", "intimacy", "wealth",
+                        "family", "friends", "education", "home", "travel", "inner", "challenges", "remedies"]},
+    "relationship": {"standard": ["windows", "relate", "partner"]},
+    "career": {"standard": ["windows", "pattern", "chapter", "next", "money", "choices"]},
+    "wealth": {"standard": ["windows", "pattern", "retention", "sudden", "choices"]},
+    "education": {"standard": ["windows", "learning", "fields", "next"]},
+    "reputation": {"standard": ["windows", "standing", "image", "setbacks", "choices"]},
+    "spirituality": {"standard": ["windows", "path", "practice", "inner"]},
+    "self": {"standard": ["core", "temperament", "appearance", "growth"]},
+    "family": {"standard": ["windows", "home", "mother", "father", "siblings"]},
+    "challenges": {"standard": ["windows", "pressure", "disputes", "response"]},
+}
+LEDGER = {"fact": "Confirmed", "rule": "Inferred", "interpretation": "Inferred", "prediction": "Hypothesis",
+          "speculation": "Hypothesis"}
+PARTNER_CAVEAT = ("This is an archetype derived from the chart. It is not a description of a real person. Appearance "
+                  "and age, where given, are the lowest-confidence parts and are graded Weak.")
+# copied exactly from astro/service.py (the skill runs without the engine); tests/test_report_specs.py keeps them equal
+UNKNOWN_TIME = re.compile(r"^\s*(unknown|not known|n/?a|none|no (birth )?time)\s*($|[;,(:.-])"
+                          r"|\b(birth )?time\s+(is\s+)?(unknown|not known)\b|\bno birth time\b", re.I)
+SELF_APPEARANCE_CAVEAT = ("This is the tradition's description, untested and graded Weak: family and region decide "
+                          "more, and it is not a measurement.")
+PERCENT = re.compile(r"\d\s?%|\bper ?cent\b|\bpercentage\b", re.I)
+ORGANS = re.compile(r"\b(?:liver|kidneys?|lungs?|stomach|intestin\w*|bowels?|colon|bladder|uterus|womb|ovar\w*|testic\w*|"
+                    r"prostate|thyroid|pancrea\w*|spleen|gall ?bladder|genital\w*)\b", re.I)
+DAY = re.compile(rf"\b\d{{4}}-\d{{2}}-\d{{2}}\b|\b\d{{1,2}}(?:st|nd|rd|th)? {MON}\.? \d{{4}}\b|\b{MON}\.? \d{{1,2}}(?:st|nd|rd|th)?,? \d{{4}}\b", re.I)
+HOUSE = re.compile(r"\b(?:\d{1,2}(?:st|nd|rd|th)|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|"
+                   r"eleventh|twelfth) (?:house|lord)\b|\bhouses?\b|\blagna\b|\bascendant\b|\bD-?(?:9|10)\b|\bnavamsa\b|"
+                   r"\bdasamsa\b|\bdasha\b|\bmajor period\b|\bsub-period\b", re.I)
+TIME_DEP = re.compile(r"\b(?:house|lord|lagna|ascendant|D-?\d+|navamsa|dasamsa|dasha|period)\b", re.I)
+LOOKS = re.compile(r"\b(?:height|(?<!stand )(?<!stands )(?<!standing )tall|complexion|appearance(?! of)|good-looking|handsome|beautiful|physique|stature|hair|age gap|"
+                   r"(?:slim|slender|stocky|athletic|sturdy|heavy|medium|lean) build)\b", re.I)
+LOOKS_TOPIC = re.compile(LOOKS.pattern.replace("appearance(?! of)|", ""), re.I)   # outside units the bare topic word "appearance" is fine
+# self only: further looks words, refused in every section but 'appearance' (idioms such as "short-term" are left alone)
+SELF_LOOKS = re.compile(r"\b(?:short(?![- ](?:term|lived|stretch|period|time|run|list|notice))|thin|heavy(?!\s+(?:work\w*|load\w*|responsibilit\w*|dut\w*))|plump|attractive|pretty|ugly|petite|tiny|small-framed|big-boned|"
+                        r"wheatish|looks(?! like)|dark(?![- ](?:times|days|phase|period|moods?|thoughts|humou?r))|"
+                        r"fair(?!-minded| in\b| to\b| with\b| (?:share|chance|deal|way|view|amount|enough))|good[- ]looking|lovely|gorgeous|"
+                        r"your (?:\w+ )?face(?!\s+(?:lights|up\b|shows)))\b", re.I)
+# family: a dated row or line that names a parent or sibling is refused only with a harm word (neutral forecasts may be dated)
+PARSIB = re.compile(r"\b(?:mothers?|fathers?|parents?|mom|mum|dad|brothers?|sisters?|siblings?|grand\w+|granny|nana|nani|dada|dadi|"
+                    r"bhai\w*|didi|behen|chacha|chachi|mama|mami|bua|mausi|step(?:dad|mom|mum))\b", re.I)
+DATEISH = re.compile(r"\b(?:19|20)\d{2}\b|\b(?:January|February|March|April|June|July|August|September|October|November|December|"
+                     r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\b|\bMay \d")
+KUNDLI_GATES = {"family": "family", "challenges": "challenges", "inner": "spirituality", "self": "self"}   # full kundli section id -> gate set
+AGE = re.compile(r"\b(?:older|younger)\b", re.I)            # an age claim only in a sentence about a partner
+PARTNER = re.compile(r"\b(?:partner|spouse|husband|wife)\b", re.I)
+AFFAIR = re.compile(r"\b(?:affairs?|cheat\w*|unfaithful\w*|infidelit\w*|fidelity|extramarital)\b", re.I)
+OWN = re.compile(r"\byour own (?:chart|tendenc\w*)\b", re.I)     # the caveat itself ("your own tendencies, never ...")
+OTHER = re.compile(r"\b(?:partner|spouse|husband|wife|boyfriend|girlfriend|he|she|his|her|they|them|their)\b", re.I)
+
+
+# type gates (batch 1): refused wording per report type, run on the client text of a spec report. A negated clause is
+# excused (the spec caveats: "This is not investment advice"), as life_lint does for its certainty probes.
+_S = r"[^.!?;]*"
+_EYE = r"black|brown|dark|light|hazel|green|blue|gr[ae]y|amber|golden|honey|pale|dark brown|light brown"   # eye colour words (allowed in self 'appearance' only)
+_NEG_WORDS = {"not", "cannot", "can't", "won't", "don't", "never", "no", "nor", "neither", "none", "nothing", "without"}
+_NEG_VERB = re.compile(r"\b(?:never|not|no)\s+(?:be\s+)?(?:predict\w*|read|said|stated|given|made|claimed|promised|shown|implied|inferred)\b", re.I)
+# emphatic idioms never excuse a match ("Without doubt you will win" is a claim, not a caveat)
+_EMPH = re.compile(r"\b(?:no|without(?: a)?) (?:doubt|question|worry)\b|\bnot a worry\b|\bno cause for (?:alarm|worry)\b|\bnothing to fear\b|\bwithout fail\b", re.I)
+# a legal referral ("see a lawyer") excuses its own clause; a medical referral never does (owner rule 2026-11-15)
+_DEFER = re.compile(r"\b(?:ask|see|consult|speak to|talk to)\s+(?:a|your|the)\s+(?:lawyer|solicitor|attorney|"
+                    r"legal professional)\b", re.I)
+_CLAUSE = re.compile(r"[;:—–]|[.!?]\s+(?=[A-Z])|,\s+(?:so|but|yet|and so)\b")   # a match never spans a break
+_NUMW = (r"(?:(?:twenty|thirty|forty|fifty|sixty|seventy)(?:[-\s](?:one|two|three|four|five|six|seven|eight|nine))?|"
+         r"eighteen|nineteen)")
+_BUY = r"(?:now|stocks?|shares|gold|property|land|tickets?|crypto\w*|futures|options)"
+# slang, affectionate and Indian-language kin words that name a parent, grandparent or in-law (a relative all the same)
+_SLANG = (r"old man|old lady|old folks|folks|pops|pitaji|papaji|babuji|bauji|amma|ammi|appa|abba|abbu|baba|bapu|maa|maiya|mataji|taiji|tauji|masi|"
+          r"bhabhi|jija|jiju|sasur|saas|(?:dear|dearest) (?:mother|father|mom|dad)|(?:mother|father|mom|dad|mum) dear")
+_PAR = (_SLANG + "|" + r"mothers?|fathers?|parents?|grand\w*|brothers?|sisters?|siblings?|relatives?|family|mom|mum|dad|maternal|paternal|"
+        r"stepmother|stepfather|mother-in-law|father-in-law|aunts?|aunties?|uncles?|cousins?|nieces?|nephews?|in-laws?|family members?|"
+        r"step(?:son|daughter|brother|sister|parents?|dad|mom|mum)|brother-in-law|sister-in-law|ma|pa|"
+        r"granny|nana|nani|dada|dadi|bhai\w*|didi|behen|chacha|chachi|mama|mami|bua|mausi")
+_PERSON = rf"(?:you|he|she|they|persons?|someone|colleagues?|friends?|partners?|spouses?|husbands?|wife|boss|mentor|neighbou?rs?|{_PAR})"
+# the medical and death words, shared by _HARM (relative clauses) and _FORBID (every string) so the two lists cannot drift.
+# Known limits (over-blocks the owner accepts): "operation(s)" in a work sense, "heart" in other idioms, "terminal" in a place.
+_MED = (medical_words.STRONG + "|" + medical_words.REPORT_WORDS + "|"
+        r"{PERSON}\s+(?:[\w'’]+\s+){0,3}?recover\w*|"
+        r"{PERSON}\s+(?:[\w'’]+\s+){0,2}?pass(?:es|ed)? into (?:the )?next (?:phase|life|world|stage)").replace("{PERSON}", _PERSON)
+_HARM = (_MED + r"|ill|illness\w*|sick\w*|diseas\w*|death|deaths|dies|die|dying|dead|deceased|pass\w* away|passing(?!\s+phase)|"
+         r"passes(?!\s+(?:on|down|by|through))|leaves? this world|lifespans?|life spans?|longevity|"
+         r"(?:long|short)(?:-| )?(?:life|lives|lived)|live (?:long|short)|health|ailment\w*|cancer|surger\w*|operation|hospital\w*|"
+         r"bereave\w*|mourn\w*|griev\w*|grief|funeral|widow\w*|fatal\w*|accidents?|frail\w*|bedridden|well-?being|"
+         r"bod(?:y|ily)|unwell|recover\w*|years left|bury|buried|crisis|decline[sd]?|surviv\w+|numbered|much longer|fad(?:es|ed|ing)|time on earth|old age|taken from|final (?:years|days|illness)|"
+         r"last (?:days|years|breath)|nursing|care home|heart (?:may |could |will |might )?(?:weak\w*|attack|trouble|problem\w*|"
+         r"condition|failure)|weak(?:en|ens|ened|ening)|misfortune|danger|harm|"
+         r"leav(?:es|ing) us|injur\w*|hurt|mishap\w*|wound\w*|treatment|(?<!as a )(?<!as an )doctors?|operated on|worsen\w*|laid up|breathe\w* (?:his|her|their) last|"
+         r"not wake|goodbye|in memory of|footing|unkind|blow|final chapter|last chapter|intensive care|(?:be|been|is|are|was|were|get|gets|got) gone|gone by|gone for good|coma|bedside|last rites|carers?|"
+         r"end is near|downhill|faint\w*|falls? from|gives? out|pain|break(?:s|ing)? (?:her|his|their) \w+|bitten|procedure|pneumonia|tumble|disabled|forever|"
+         r"final journey|clinic|stretcher|slip\w* away|use of (?:his|her|their) legs|see the year out|never come back|virus|laid low|"
+         r"time (?:may |will |could |might |has )come|next world|called home|ebb\w*|stroke|tragedy|collapse\w*|drown\w*|wheelchair|fever|miscarr\w*|eyesight|blind\w*|memory loss|dement\w*|paraly\w*|come down with|turn for the worse|"
+         r"pass(?:es|ed)? on|rest in peace|icu|emergency|burn(?:ed|t)|crippl\w*|confined|struck down|lose (?:his|her|their) (?:sight|memory|hearing|mind|life)|vitality|(?:her|his|their) end|[’']s condition|(?:her|his|their) condition|(?:hard|difficult|tough|rough|trying)\s+(?:stretch|years?|times?|periods?|phases?|patch|spell)|trouble\w*|suffer\w*|at risk")
+# A relative may be the subject or possessor of a sentence only in one fixed forecast shape (report-specs/family.md);
+# anything else is written from the person's side ("you ..."). Sentences with "you" as the subject stay free, but the
+# relative + harm layer (_PAR/_HARM) still runs on every sentence.
+# shortcut: closed shapes over-block anything else about a relative; widen the PHRASE list only through review.
+_REL = (r"(?:" + _SLANG + r"|(?:mothers?|fathers?|parents?|dad|mom|mum|ma|pa|brothers?|sisters?|siblings?|aunts?|aunties?|uncles?|cousins?|"
+        r"nieces?|nephews?|grand\w+|relatives?|in-laws?|family members?)(?:-in-law)?|step(?:mother|father|brother|sister|parents?|son|daughter|dad|mom|mum)|"
+        r"granny|nana|nani|dada|dadi|bhai(?:ya)?|didi|behen|chacha|chachi|mama|mami|bua|mausi)")
+_PHRASE = ("visit you|visit your home|come to stay with you|stay with you for a while|move house|move to a new city|move abroad|"
+           "move closer to you|move for work|travel for work|travel with you|go on a holiday|change jobs|start a new job|be promoted|"
+           "retire|plan a family gathering|host a family gathering|plan a trip|help you with the move|help you with your home|"
+           "get married|study abroad|graduate")
+_PLANET = r"(?:Sun|Moon|Mars|Mercury|Jupiter|Venus|Saturn|Rahu|Ketu)"
+_TIME = (rf"(?:in {MON} \d{{4}}|in \d{{4}}|between \d{{4}} and \d{{4}}|from \d{{4}}|later in \d{{4}}|"
+         rf"during the {_PLANET} (?:sub-)?period)")
+_SHAPE = re.compile(rf"(?:your (?:[a-z]+ )?{_REL}(?: and you)?|she|he|they) (?:may|might|could|would|is likely to|are likely to) "
+                    rf"(?:{_PHRASE})(?: {_TIME})?\.?", re.I)
+_VERBISH = r"(?!(?:or|and|nor|tie|figures?|windows?|rows?|sections?|readings?|themes?|role|pattern)\b)\w+"   # any word that is not a topic noun
+_BARE = (r"(?:pops|pitaji|papaji|babuji|bauji|amma|ammi|appa|abba|abbu|baba|bapu|maa|maiya|mataji|mum|mom|mummy|mommy|mama|dad|daddy|papa|ma|pa|grandpa|grandma|granny|nana|nani|nanny|dada|dadi|"
+         r"father|mother|brother|sister|aunt|auntie|uncle|stepdad|stepmom|stepmum|bhai|bhaiya|didi|behen|chacha|chachi|mami|bua|mausi)")
+_AUX = r"(?:will|may|might|could|would|shall|can|should|must|is|are|was|were|has|have|had|does|did)"
+_POSS = r"(?:['’]s?(?:\s+[\w-]+){1,3}?)?"
+# a relative as the subject, anywhere in a piece: "your father may", "In 2029 your father may", "Mum may", "Grandpa slips"
+_HEADS = re.compile(rf"\b(?:(?:your|the|a|an|his|her|their)\s+(?:[\w'’-]+\s+){{0,2}}?{_REL}{_POSS}(?:\s+{_VERBISH}|\s*,\s+{_AUX}\b)"
+                    rf"|{_BARE}{_POSS}\s+{_AUX}\b|(?:she|he|they)\b|(?:her|his|their)\s+[\w-]+(?:\s+[\w-]+)?\s+{_VERBISH})", re.I)
+_BAREHEAD = re.compile(rf"^{_BARE}{_POSS}\s+{_VERBISH}", re.I)       # a bare relative at the start of a piece: "Grandpa slips ..."
+_PIECE = re.compile(r"\s*[;,]\s*(?:and |but )?|\s+(?:although|when|while|after|before|because|if|but)\s+", re.I)
+_ALLOWWHAT = "a relative or pronoun as the subject outside the fixed forecast shapes"
+_ALLOWHINT = " -- a relative may appear only in a fixed forecast shape (see family.md); otherwise write it from your side ('you ...')"
+_LABEL_SPLIT = re.compile(r"\s+-\s+|:")
+_BARELABEL = re.compile(rf"(?:(?:your|the|his|her|their)\s+)?(?:[\w'’-]+['’]s\s+)?(?:(?:elder|younger|older|big|little|eldest|youngest|maternal|paternal)\s+)?(?:{_REL}|{_BARE})", re.I)
+_QUOTED = re.compile(r"(?<![A-Za-z])(['\"“‘„«`])([^'\"“”‘’„«»`]{1,40}?)['\"”’»`](?![A-Za-z])")
+_TRIM = re.compile(r"^[\s\-–—•*·\"'“”‘’()\[\]]+|[\s\"'“”‘’()\[\]]+$")
+
+
+def _has_head(x):
+    return bool(_HEADS.search(x) or _BAREHEAD.match(x))
+
+
+def _shape_hits(strings):
+    """Shape hits for the strings as written, plus the hits found in disguised readings when the text as written names no
+    relative at all: doubled letters squashed ("fatherr"), a kin word split by spaces ("fathe r"), a symbol or dot inside it
+    ("f@ther", "f.ather"), and "your" glued to it ("Yourfather")."""
+    out = _shape_hits_one(strings)
+    for x in strings:
+        if _heads_in(x):
+            continue
+        for y in _disguises(x):
+            if y != x:
+                out += _shape_hits_one([y])
+    return out
+
+
+_KIN_WORDS = {"father", "mother", "brother", "sister", "parent", "parents", "uncle", "aunt", "auntie", "mum", "mom", "dad", "papa", "mama",
+              "mummy", "mommy", "daddy", "grandfather", "grandmother", "grandpa", "grandma", "granny", "sibling", "siblings", "cousin",
+              "niece", "nephew", "stepfather", "stepmother", "stepdad", "stepmom", "stepmum", "nana", "nani", "dada", "dadi", "bhai",
+              "bhaiya", "didi", "behen", "chacha", "chachi", "mami", "bua", "mausi", "pops", "pitaji", "amma", "appa", "baba", "ammi"}
+
+
+def _join_split_kin(text):
+    """Join a kin word split into 2 or 3 pieces by spaces ("fathe r", "mo ther"): only when the join is a kin word and no
+    piece is one itself."""
+    toks = re.split(r"(\s+)", text)
+    words = [i for i, t in enumerate(toks) if t.strip()]
+    out, i = [], 0
+    while i < len(toks):
+        if toks[i].strip():
+            k = words.index(i)
+            done = False
+            for n in (3, 2):
+                piece = [toks[w] for w in words[k:k + n]]
+                core = [re.sub(r"[^A-Za-z]", "", t) for t in piece]
+                if len(piece) == n and "".join(core).lower() in _KIN_WORDS and not any(c.lower() in _KIN_WORDS for c in core) and all(core):
+                    out.append("".join(core))
+                    i = words[k + n - 1] + 1
+                    done = True
+                    break
+            if done:
+                continue
+        out.append(toks[i])
+        i += 1
+    return "".join(out)
+
+
+def _disguises(x):
+    """Readings of a string with the usual disguises undone, each only when it differs from the string."""
+    glued = re.sub(rf"\b(your|his|her|their|the|my)(?=(?:{_REL}|{_BARE})\b)", r"\1 ", x, flags=re.I)
+    dotted = re.sub(r"(?<=[A-Za-z])[.\-_*](?=[A-Za-z])", "", x)
+    leet = [medical_words._leet(x, "i"), medical_words._leet(x, "l")]
+    ji = _KIN_JI.sub(r"\1", x)       # "fatherji", "papaji", "mummyji": a kin word with the -ji respect suffix
+    out = [_SQUASH.sub(r"\1", x), glued, dotted, _join_split_kin(x), ji, _SQUASH.sub(r"\1", ji)] + leet
+    out += [_SQUASH.sub(r"\1", _join_split_kin(medical_words._leet(x, "i"))), glued_join(dotted)]
+    return list(dict.fromkeys(out))
+
+
+def glued_join(x):
+    return re.sub(rf"\b(your|his|her|their|the|my)(?=(?:{_REL}|{_BARE})\b)", r"\1 ", x, flags=re.I)
+
+
+_KIN_JI = re.compile(r"\b(father|mother|papa|mummy|mommy|mom|mum|dad|daddy|brother|sister|uncle|aunt|auntie|bhai|didi|nana|nani|dada|dadi|"
+                    r"chacha|chachi|mama|mami|grandfather|grandmother|grandpa|grandma|parents?)(?:ji|jee)\b", re.I)
+_SQUASH = re.compile(r"([A-Za-z])\1+")
+
+
+def _heads_in(x):
+    return any(_has_head(_TRIM.sub("", b)) for whole in re.split(r"(?<=[.!?])\s+", x) for b in _LABEL_SPLIT.split(whole))
+
+
+def _shape_hits_one(strings):
+    """(what, sentence) for each sentence or label piece in which a relative or he/she/they is the subject of a clause but the
+    whole piece is not one fixed forecast shape. Text is cut at line breaks, ":" and sentence ends, and quotes, brackets and
+    bullets are stripped. A piece that starts with "you" is free unless it also names he/she/they or a later clause with a
+    relative subject; a relative as the object is not read here (the medical and death gate and _HARM cover it)."""
+    out = []
+    for text in strings:
+        text = _QUOTED.sub(r"\2", text)       # "Your 'father' may": a word in quote marks is read as if it stood bare
+        if medical_words.DEVA_KIN_RX.search(text):      # a relative named in Devanagari cannot be shape-checked: write it from your side
+            out.append((_ALLOWWHAT, "a relative in Devanagari"))
+        text = re.sub(r"(?<=\w)\s*\([^()]{0,60}\)", "", text)     # "your father (Ramesh) may": the aside is not part of the shape
+        text = re.sub(rf"\b({_REL}|{_BARE})\s*,\s*[^,.;:!?]{{1,40}},", r"\1", text, flags=re.I)   # "your father, God bless him, may": a comma aside
+        text = re.sub(r"\s*[—–]\s*|\s*\n\s*", " ", text)     # a line break or an inner dash is a space, not a break
+        for whole in re.split(r"(?<=[.!?])\s+", text):
+            bits = _LABEL_SPLIT.split(whole)
+            if len(bits) > 1 and _BARELABEL.fullmatch(_TRIM.sub("", bits[0])):     # "<Relative>: ..." or "<Relative> - ...": out of shape
+                joined = re.sub(r"\s+", " ", _TRIM.sub("", bits[0] + " " + " ".join(bits[1:])))        # unless the text after it completes a shape
+                if not _SHAPE.fullmatch(joined):
+                    out.append((_ALLOWWHAT, bits[0].strip().lower()[:40]))
+                    continue
+        for sent in (b for whole in re.split(r"(?<=[.!?])\s+", text) for b in _LABEL_SPLIT.split(whole)):
+            sent = _TRIM.sub("", sent)
+            if not sent or _SHAPE.fullmatch(sent):
+                continue
+            if re.match(r"you\b", sent, re.I):
+                bad = re.search(r"\b(?:she|he|they)\b", sent, re.I) or any(_has_head(x) for x in _PIECE.split(sent)[1:])
+            else:
+                bad = _has_head(sent)
+            if bad:
+                out.append((_ALLOWWHAT, sent[:40].lower()))
+    return out
+
+
+def _no_ids(x):
+    """x without the "id" keys (section ids are structure, not text)."""
+    if isinstance(x, dict):
+        return {k: _no_ids(v) for k, v in x.items() if k != "id"}
+    return [_no_ids(v) for v in x] if isinstance(x, list) else x
+
+
+# Medical and death wording, refused in every string of every spec report, whoever it is about (owner rule 2026-11-15).
+# shortcut: a word and phrase list, no parser; it is the floor for "you" and object sentences. A synonym that is missing
+# gets through; add it here.
+FORBID_MSG = ("Health and death are not read in this practice. Such predictions can harm the reader and are not good for their "
+              "health. I can help with another area of your life instead.")
+_FORBID = re.compile(
+    r"\b(?:" + _MED + r"|lo(?:se|ses|sing|st) (?:a |an |your |the |one of your )?" + _REL
+    + r"|(?<!\byou )(?:may|might|could|will|would) (?:take|call) (?:your|his|her|their) " + _REL + r")\b|" + ORGANS.pattern, re.I)
+
+
+_LEGAL = r"court(?! of public opinion)|judge|case|lawsuit|legal|justice|trial|tribunal|ruling|claim|petition|oppos\w+|bench|opponents?|rivals?|enem\w*|foes?|adversar\w*|other side|opposing party"
+_OUTCOME = (r"win|wins|won|winning|lose|loses|lost|losing|favou?r\w*|your side|sides? with|resolv\w*|crush\w*|defeat\w*|beat|beats|"
+            r"prevail\w*|triumph\w*|humbl\w*|victor\w*|verdict|judg(?:e)?ment|ruling|award\w*|upheld|uphold\w*|granted|allowed|dismissed|rejected|silenc\w*|in your pocket|everything you asked for|pay|pays|paid|settle\w*")
+TYPE_GATES = {
+    "wealth": [(re.compile(r"[₹$€£]|\bRs\.?\s?\d|\b(?:lakhs?|crores?|rupees?|dollars?|USD|INR)\b", re.I), "money amounts"),
+               (re.compile(rf"\b(?:invest\w*|stocks?|bets?|betting|gambl\w*|lotter(?:y|ies)|tickets?|crypto\w*|mutual funds?|"
+                           rf"(?:stock|share) market|time to (?:buy|sell)|(?:buy|sell)(?:ing)?\s+{_BUY}\b|"
+                           rf"trad(?:e|es|ed|ing)\s+(?:in\s+)?(?:stocks?|shares|futures|options|crypto\w*|the market)|"
+                           rf"shares?\s+(?:in|of)\s+(?:a |the )?(?:company|companies|market)\b)", re.I),
+                "investment, trading, bet or lottery wording"),
+               (re.compile(rf"\b(?:inherit\w*|legac(?:y|ies)){_S}\b(?:dies?|death|dead|passes? away|passing)\b|"
+                           rf"\b(?:dies?|death|dead|passes? away|passing){_S}\b(?:inherit\w*|legac(?:y|ies))", re.I),
+                "an inheritance tied to a relative's death")],
+    "education": [(re.compile(r"\bguarantee\w*|\b(?:will|shall|surely|definitely)\s+(?:(?:surely|definitely)\s+)?(?:"
+                              r"get\s+(?:\w+\s+){0,2}?(?:admission|seat|rank|marks|scholarship|degree)|gain admission|"
+                              r"win\s+(?:\w+\s+)?(?:seat|scholarship|rank|admission)|"
+                              r"(?:clear|pass|crack)\s+(?:the |your )?(?:exams?|tests?|papers?|courses?|entrance)|"
+                              r"top\s+(?:the |your )?(?:class|exams?)|score|be admitted)\b", re.I),
+                   "an admission, pass or result promise"),
+                  (re.compile(rf"\b(?:scores?|scored|marks|rank|percentile|c?gpa){_S}\d|\d{_S}\b(?:marks|scores?|rank|c?gpa)\b", re.I),
+                   "scores, marks or rank figures")],
+    "reputation": [(re.compile(r"\b(?:famous|fame|celebrity|stardom|elections?|elected|public office|scandals?|go(?:es)? viral)\b", re.I),
+                    "fame, election or scandal wording"),
+                   (re.compile(r"\b(?:courts?\b(?!-)|lawsuits?|sue[ds]?|convict\w*|acquit\w*|verdicts?|jail|prison|arrest\w*|litigation)\b", re.I),
+                    "legal outcomes")],
+    "spirituality": [(re.compile(r"\b(?:enlighten\w*|(?:old|young|advanced|evolved|elevated|high(?:er)?) souls?|"
+                                 r"spiritually (?:advanced|evolved|superior|elevated|gifted)|highly (?:spiritual|evolved)|"
+                                 r"spiritual (?:rank|level|grade|attainment|superiority)|more spiritual than|"
+                                 r"realis(?:ed|ation)\s+(?:being|soul|master|yogi|person|one)|self-?realis\w*|self-?realiz\w*|"
+                                 r"siddhis?|psychic\w*|attainment of|born an? (?:sage|saint|yogi|master)|reborn (?:master|sage|saint|yogi)|awakening complete\w*|(?:final|full|complete|ultimate) (?:liberation|awakening|realisation|moksha|enlightenment)|"
+                                 r"awaken\w*\s+fully|"
+                                 r"(?:attain|reach|achieve|gain)\w*\s+(?:moksha|liberation|enlightenment|nirvana|samadhi)|"
+                                 r"(?:moksha|liberation|nirvana|samadhi)\b[^.!?;]*\b(?:in|by|before|during|around)\s+"
+                                 r"(?:this life|(?:\w+\s+)?\d{4}))\b", re.I),
+                      "spiritual rank or level claims"),
+                     (re.compile(r"\b(?:(?:past|previous|former|prior|last)[\s-]+(?:life|lives|lifetimes?|births?|incarnations?)|"
+                                 r"final (?:birth|incarnation)|earlier (?:births?|lifetimes?|incarnations?)|before this life|before (?:this )?birth|from before\b|walked this path|"
+                                 r"many (?:lives|lifetimes|times before)|reincarnat\w*|karma from before|karmic debts?)\b", re.I),
+                      "past-life claims"),
+                     (re.compile(r"\b(?:curses?[ds]?|shaap|shrapa|hexed?|black magic|evil eye|nazar|witchcraft|jinx\w*|"
+                                 r"negative energy\b[^.!?;]*\b(?:sent|from others)|pitr[ai]?\s?dosh\w*|pitr[ai]? rin|cast\w*\s+(?:a |the )?spell|(?:under|put) a spell|spells? on you)\b", re.I), "curse claims"),
+                     (re.compile(r"\b(?:should|must|ought to|need to|have to)\s+(?:renounce|abandon|leave (?:your )?(?:family|home|job)|"
+                                 r"become an? (?:monk|nun|sannyasi\w*|renunciate|sadhu))\b", re.I), "advice to renounce")],
+    "self": [(re.compile(rf"\b(?:at|by|before|after|around|until|till|from) (?:the )?ages? (?:of )?(?:\d|{_NUMW})|\bages? \d{{1,2}}\b|"
+                         rf"\b(?:at|after|before|by|around|until|till|from) (?:\d{{2}}\b|{_NUMW}\b(?!\s+(?:minutes?|hours?|days?|weeks?|months?)))|"
+                         rf"\b(?:in )?(?:your|the) (?:early |mid |mid-|late )?(?:teens|twenties|thirties|forties|fifties|sixties)\b|"
+                         rf"\b(?:when|once) you (?:are|turn|reach) (?:\d{{2}}|{_NUMW})\b|\b(?:hit|turn|reach)\w*\s+(?:\d{{2}}|{_NUMW})\b|\b\d{{2}}(?:st|nd|rd|th) (?:year|birthday)\b", re.I),
+              "fixed-age claims"),
+             (re.compile(r"\b(?:skin\w*|teeth|nose|lips|neck|chest|shoulders?|legs?|knees?|forehead|scars?|moles?|birthmarks?|"
+                         rf"spine|bones?|throat|joints?|limbs|bald\w*|hair (?:loss|fall)|receding|eyes? (?:are|is|of)\b(?!\s+(?:\w+\s+)?(?:{_EYE})\b))", re.I),
+              "body-part claims"),
+             (re.compile(r"\b(?:attractive\w*|pretty(?!\s+(?:sure|much|well|good|soon|clear|likely|quickly))|ugly|good[- ]looking|good looks|"
+                         r"gorgeous|handsome|(?:strikingly |very )?beautiful(?= (?:face|woman|man|looks?|eyes|person))|lovely (?:face|looks?|eyes|smile)|"
+                         r"strikingly (?:beautiful|handsome|good)|stunning|(?:charming|striking|fine|nice|great|stunning|pleasing) (?:looks|appearance|features))\b", re.I),
+              "attractiveness claims"),
+             (re.compile(r"\b(?:weigh(?:s|ed|ing)?\s+(?:little|a lot|much|more|less|too|\d)|weight(?!\s+of)|overweight|underweight|obese|obesity|fat|diet|plump|heavy-?set|bulky|kilos?|kgs?|pounds)\b", re.I),
+              "weight claims")],
+    # self, outside the 'appearance' section: hair and eye colour are refused there (hair is also a LOOKS word)
+    "self_outside": [(re.compile(rf"\bhair\b|\beye[- ]colou?r\b|\beyes? (?:are|is|of)\s+(?:\w+\s+)?(?:{_EYE})\b|\b(?:{_EYE})[- ]eyed\b|\b(?:{_EYE})\s+eyes\b", re.I),
+                      "hair or eye colour")],
+    # family: a section about one relative (mother, father, siblings) names that relative by context, so a harm word alone is refused there
+    "family_sec": [(re.compile(rf"\b(?:{_HARM})\b", re.I), "a parent's or sibling's illness, health, life span or death")],
+    "family": [(re.compile(rf"(?<!\byou )\b(?:may|might|could|will|would) (?:take|call) (?:your|his|her|their) (?:{_REL})\b", re.I),
+                "a parent's or sibling's illness, health, life span or death"),
+               (re.compile(rf"\b(?:{_PAR})\b{_S}\b(?:{_HARM})\b|\b(?:{_HARM})\b{_S}\b(?:{_PAR})\b", re.I),
+                "a parent's or sibling's illness, health, life span or death"),
+               (re.compile(rf"\b(?:los(?:e|es|ing|t)|loss of)\s+(?:a |an |your |the |one of your )?(?:{_PAR})\b", re.I),
+                "a parent's or sibling's illness, health, life span or death")],
+    "challenges": [(re.compile(
+        r"\b(?:(?:(?:never|won't|will not|cannot|can't)\s+)?(?:win|won|winning|lose|lost|losing)\s+(?:out\s+)?"
+        r"(?:the |your |a |this |that |any )?(?:\w+\s+)?"
+        r"(?:cases?|suits?|lawsuits?|trials?|disputes?|litigation|appeals?|hearings?)|never\s+(?:lose|fail|be defeated)|"
+        r"verdicts?|acquit\w*|convict\w*|sentenc(?:ed|ing)|jail\w*|prison\w*|imprison\w*|arrest\w*|"
+        r"(?:courts?(?!-)|judges?|tribunals?|magistrates?)\b[^.!?;]*\b(?:rul(?:e|es|ed|ing)|decid\w*|favou?r\w*|sides?|"
+        r"finds?|award\w*|order\w*|grant\w*|dismiss\w*)|"
+        r"(?:case|suit|lawsuit|trial|appeal|claim|dispute|hearing|litigation)\b[^.!?;]*\b(?:your way|in your favou?r|against you|"
+        r"for you|(?:is|are|will be|gets?|was) (?:won|lost|decided|settled|dismissed)|(?:will|shall) (?:end|go|succeed|fail|be (?:won|lost|decided)))|"
+        r"(?:succeed|prevail|triumph)\w*\s+(?:in|over)\s+(?:court|the case|the dispute)|"
+        r"(?:victory|victorious|defeat\w*|destroy\w*|vanquish\w*|crush\w*)\b[^.!?;]*\b(?:enem\w*|opponents?|rivals?|foes?)|"
+        r"(?:enem\w*|opponents?|rivals?|foes?)\b[^.!?;]*\b(?:defeat\w*|destroy\w*|vanquish\w*|crush\w*|ruined)|"
+        r"come out on top|(?:favou?rable|adverse|unfavou?rable) (?:judg(?:e)?ments?|rulings?|orders?|decisions?)|"
+        r"compensation\b[^.!?;]*\b(?:paid|granted|awarded)|(?:pays?|paid) you|backs? down|"
+        r"(?:triumph|prevail|victory)\w*\s+over\s+(?:them|him|her)\b|you win\b(?!\s+(?:people|friends|trust|hearts?|respect|support|over))|"
+        r"file\s+(?:the |a |your )?(?:case|suit|lawsuit|claim|complaint|petition)|su(?:e|es|ed|ing)\s+(?:him|her|them|your|the)|"
+        r"(?:get|gain|keep|receive|obtain)\w*\b[^.!?;]*\b(?:in|from|through) the (?:legal|court)|"
+        r"guarantee\w*\s+(?:a |the |your )?(?:settlement|outcome|compensation|win)|"
+        r"(?:settlement|outcome)\s+(?:is|will be)\s+guaranteed|"
+        r"(?:court|hearing|trial|judg(?:e)?ment|verdict)\s+dates?|"
+        r"date of (?:the |your )?(?:hearing|trial|judg(?:e)?ment|verdict))\b", re.I),
+        "legal outcomes or court timing"),
+        (re.compile(rf"\b(?:{_LEGAL})\b{_S}\b(?:{_OUTCOME})\b|\b(?:{_OUTCOME})\b{_S}\b(?:{_LEGAL})\b", re.I),
+         "a legal or opponent word with an outcome word")],
+}
+
+
+def _clauses(s):
+    """Pieces of s split at clause breaks; a gate match never spans a break."""
+    pos = 0
+    for m in _CLAUSE.finditer(s):
+        yield s[pos:m.start()]
+        pos = m.end()
+    yield s[pos:]
+
+
+def _excused(before, hit):
+    """A negation excuses a match only when it sits just before it (within about six words, eight across an
+    'or'/'and' list) and is not an emphatic idiom ('without doubt', 'no worry'). 'never predicted' inside a match
+    ('A legacy is never predicted from a death') also counts."""
+    if _NEG_VERB.search(hit):
+        return True
+    words = re.findall(r"[\w'’-]+", _EMPH.sub(" ", before))
+    pos, n = len(words), 6
+    while True:
+        win = words[max(0, pos - n):pos]
+        if any(w.lower() in _NEG_WORDS or w.lower().endswith("n't") for w in win):
+            return True
+        conj = [i for i, w in enumerate(win) if w.lower() in ("or", "and", "nor")]
+        if not conj:
+            return False
+        pos, n = pos - len(win) + conj[-1], 8
+
+
+def gate_hits(t, strings):
+    """(what, word) for each gate match in a clause that no negation just before it excuses (a referral such as
+    'ask a doctor' excuses its clause)."""
+    out = []
+    for rx, what in TYPE_GATES.get(t, []):
+        for s in strings:
+            for c in _clauses(s):
+                if _DEFER.search(c):
+                    continue
+                out += [(what, m.group().lower()) for m in rx.finditer(c) if not _excused(c[:m.start()], m.group())]
+    return out + (_shape_hits(strings) if t == "family" else [])
+
+
+def is_marker(x):
+    """A labelled monthly transit marker: a one-month 'watch' row whose label says 'marker' (= service.is_marker)."""
+    return (x.get("kind") == "watch" and len(str(x.get("start", ""))) == 7 and x.get("start") == x.get("end")
+            and "marker" in str(x.get("label", "")).lower())
+
+
+PLANET_NAMES = "|".join(l for _, l, _, _ in vocab.PLANETS)
+PLANET_ANY = "|".join(p for _, _, lat, _ in vocab.PLANETS for p in lat)     # English and Sanskrit names (vocab.py)
+# Unknown birth time: the refused vocabulary comes from vocab.py (houses and Sanskrit lord names via house_refs; every
+# varga but D1; every dasha system and level; chart-angle techniques), plus the few words vocab has no entity for.
+TIME_BOUND_IDS = {"varga:" + d.lower() for d, _, _ in vocab.VARGAS if d != "D1"} | {
+    "technique:" + vocab._slug(t) for t in ("Vimshottari dasha", "Antardasha (bhukti)", "Pratyantardasha", "Chara dasha",
+                                            "Narayana dasha", "Yogini dasha", "Ashtottari dasha", "Kalachakra dasha",
+                                            "Sookshma dasha", "Bhava chalit / cusps", "Karakamsa", "Arudha",
+                                            "Moon chart (Chandra lagna)")}
+TIME_BOUND_WORDS = re.compile(
+    r"\w*das(?:h)?a\b|\w*ams(?:h)?a\b|\bbhavas?\b|\bkendras?\b|\b(?:tri)?konas?\b|\brising (?:sign|degree)\b|\bcusps?\b|\bD\d{1,2}\b|"
+    rf"\b(?:{PLANET_NAMES}|period|sub|major|minor)(?:'s)?\s+(?:major |sub-|minor )?periods?\b|\b(?:major|sub|minor)-?periods?\b|"
+    r"\bperiod lords?\b|\bantar\b|\byogini\b|\bperiods? of (?:the )?(?:" + PLANET_ANY + r")\b|\bbhukti\b|\bhouses?\b|\blords?\b|\bfrom the (?:Moon|Sun|lagna)\b", re.I)
+MOON_WORDS = re.compile(r"\bMoon(?:'s)?\s+(?:sign|nakshatra|star)\b|\bbirth star\b|\bjanma\b|\bnakshatras?\b|\brash?is?\b"
+                        r"|\bMoon (?:is )?in (?:" + "|".join(l for _, l, _ in vocab.SIGNS) + r")\b", re.I)
+FACT_TIME_BOUND = re.compile(r"^F\.(asc|H\d+)\.|^F\.\w+\.(house|dispositor_house|owns|deg|d\d+\w*)$|^F\.yoga\.|^F\.moon\.elongation")
+
+
+def _time_bound_terms(text):
+    """Terms in text that need the birth time. Hyphens and spaces inside a compound are folded first ("maha-dasha",
+    "antar dasha", "nav amsha") so spelling cannot slip past."""
+    folded = re.sub(r"(?<=[a-z])-(?=(?:dash?a|ams?h?a|bhukti)\b)", "", text, flags=re.I)
+    folded = re.sub(r"\b(maha|antar|pratyantar|nav|das|dash|vims|sapt)\s+(dash?a|ams?h?a)\b", r"\1\2", folded, flags=re.I)
+    hits = {m.group().lower() for m in TIME_BOUND_WORDS.finditer(folded)}
+    hits |= {f"house {n}" for n, _ in vocab.house_refs(folded)}
+    hits |= {e for e in vocab.find_entities(folded) if e in TIME_BOUND_IDS or e.startswith("yoga:")}   # yogas: mostly lagna-based
+    return hits
+
+
+def unknown_time_errors(r):
+    """Unknown birth time (owner decision 2026-11-14, any report type): no house, lagna, varga or dasha claims, no
+    time-dependent fact ids or dasha event ids, the Moon's sign or star only when the writer marked the Moon stable
+    across the day (birth.moon_stable; create_report verifies it), no date ranges, and a timeline of labelled monthly
+    transit markers only. create_report runs it too."""
+    errs = []
+    free = _strings([v for k, v in r.items() if k not in ("appendix", "birth", "engine", "uncertainty", "dropped",
+                                                          "prepared_on", "report_type")])
+    if hits := sorted({h for s in free for h in _time_bound_terms(s)}):
+        errs.append(f"birth time unknown: no house, lagna, varga or dasha claims ({', '.join(hits[:5])}); drop those "
+                    "sections with the reason")
+    units = [u for s in r.get("sections", []) for u in s.get("units", [])]
+    if refs := sorted({x for u in units for x in u.get("fact_refs", []) if FACT_TIME_BOUND.search(x)}):
+        errs.append(f"birth time unknown: time-dependent fact ids cannot be cited ({', '.join(refs[:5])})")
+    if any(k.get("event_refs") for k in (r.get("summary") or {}).get("key_points", [])):
+        errs.append("birth time unknown: event_refs depend on the birth time")
+    moon = any(MOON_WORDS.search(s) or any(e.startswith("nakshatra:") for e in vocab.find_entities(s)) for s in free)
+    if moon and not (r.get("birth") or {}).get("moon_stable"):
+        errs.append("birth time unknown: the Moon's sign or nakshatra is used only when it is the same across the whole "
+                    "birth day (set birth.moon_stable after checking; inputs.md)")
+    errs += [f"birth time unknown: timeline row '{x.get('label')}' must be a one-month 'watch' row labelled as a "
+             "transit marker" for x in r.get("timeline", []) if not is_marker(x)]
+    if any(WIN.search(s) for s in free):
+        errs.append("birth time unknown: no date ranges, only labelled monthly transit markers")
+    return errs
+
+
+def time_class(r):
+    """exact | approximate | unknown, from the model's birth block (the engine gate uses the same unknown test)."""
+    b = r.get("birth") or {}
+    src, rel = str(b.get("time_source") or ""), str(b.get("time_reliability") or "")
+    if UNKNOWN_TIME.search(src) or UNKNOWN_TIME.search(rel):
+        return "unknown"
+    return "exact" if re.search(r"\bexact\b", rel, re.I) and not re.search(r"\b(?:not|approx\w*)\b", rel, re.I) else "approximate"
+
+
+def spec_checks(r):
+    """Errors for a model written to a T10 spec (it carries `depth`); legacy models (no depth) are left alone."""
+    t, depth = r.get("report_type"), r.get("depth")
+    if t not in SPEC_SECTIONS:
+        return ([f"depth is only for spec reports ({', '.join(SPEC_SECTIONS)})"] if depth else []), []
+    if not depth:
+        return ([], ["written before the T10 spec (no depth): spec checks skipped"]) if t != "kundli" else (
+            ["a kundli report needs depth (standard or full)"], [])
+    if depth not in SPEC_SECTIONS[t]:
+        return [f"{t} has no depth '{depth}' (only {', '.join(SPEC_SECTIONS[t])})"], []
+    errs = [f"spec report needs '{k}' (the frame, report-specs/{t}.md)" for k in ("scope", "confidence_note", "next_step")
+            if not r.get(k)]
+    if not (r.get("birth") or {}).get("time_reliability"):
+        errs.append("spec report needs birth.time_reliability (exact, approximate or unknown): it decides what may be dated")
+    ids = [s["id"] for s in r["sections"]]
+    dropped = {d["item"] for d in r.get("dropped", [])}
+    if len(ids) != len(set(ids)):
+        errs.append("section ids repeat: one section per id (one timing framework: a single 'windows')")
+    want = SPEC_SECTIONS[t][depth]
+    errs += [f"section '{x}' is missing: write it or list it in dropped with the reason" for x in want
+             if x not in ids and x not in dropped]
+    order = [x for x in ids if x in want]
+    if order != [x for x in want if x in order]:
+        errs.append(f"spec sections out of order: {order}, spec order {want}")
+    if not r.get("ranking") and "ranking" not in dropped:
+        errs.append("the ranking table is missing: give ranking rows or list 'ranking' in dropped with the reason")
+    if any(x["kind"] in ("window", "pressure") for x in r.get("timeline", [])) and "windows" not in ids:
+        errs.append("timeline windows need the one 'windows' section that the other sections point to")
+    for s in r["sections"]:
+        for u in s.get("units", []):
+            name = f"[{s['id']}] '{u['theme'][:50]}'"
+            text = " ".join(str(u.get(k, "")) for k in TEXT_KEYS)
+            if not u.get("claim_type"):
+                errs.append(f"{name} has no claim_type: its fact or interpretation label cannot be shown")
+            if u.get("claim_type") != "fact" and not any((u.get("confidence") or {}).values()):
+                errs.append(f"{name} has no grade word (confidence)")
+            if LOOKS.search(text) or any(AGE.search(x) and PARTNER.search(x) for x in re.split(r"(?<=[.!?;])\s+", text)):
+                c = u.get("confidence") or {}
+                home = "appearance" if t == "self" else "partner"      # the one section where looks may be described
+                if s["id"] != home:
+                    errs.append(f"{name} describes looks or age outside the '{home}' section")
+                elif c.get("manifestation", c.get("event")) not in ("Weak", "Unknown"):
+                    errs.append(f"{name} describes looks or age: its form must be graded Weak or Unknown")
+            if t == "self" and s["id"] == "appearance" and any(c not in ("Weak", "Unknown") for c in (u.get("confidence") or {}).values()):
+                errs.append(f"{name} in 'appearance' must be graded Weak or Unknown on every line")
+    if t == "self":
+        app = next((s for s in r["sections"] if s["id"] == "appearance"), None)
+        if app and SELF_APPEARANCE_CAVEAT not in str(app.get("text", "")):
+            errs.append("self 'appearance' section needs its caveat sentence in the section text (report-specs/self.md §1)")
+    if r.get("remedies") or any(u.get("system") == "lal_kitab" for s in r["sections"] for u in s.get("units", [])):
+        errs.append("Lal Kitab stays out of these Parashari reports (remedies section included); it has its own report")
+    for s in r["sections"]:
+        if s["id"] == "remedies":
+            errs += [f"[remedies] '{u['theme'][:50]}' has no 'no efficacy established' line (remedy-safety.md)"
+                     for u in s.get("units", []) if "no efficacy" not in " ".join(str(u.get(k, "")) for k in TEXT_KEYS).lower()]
+    if t == "kundli" and r.get("ranking"):     # the snapshot: one row per life-area section present
+        rows = {x["item"].lower() for x in r["ranking"]}
+        errs += [f"snapshot has no row for '{s['title']}' (one row per life area)" for s in r["sections"]
+                 if s["id"] not in ("foundation", "windows", "remedies") and s["title"].lower() not in rows]
+    for x in r.get("timeline", []):
+        if x["kind"] in ("window", "pressure") and not x.get("confidence"):
+            errs.append(f"timeline row '{x['label']}' has no grade word (confidence)")
+    client = [v for k, v in r.items() if k not in ("appendix", "birth", "engine", "prepared_on", "period")]
+    strings = _strings(client)
+    if hits := sorted({m.group() for s in strings for m in PERCENT.finditer(s)}):
+        errs.append(f"percentages in the report ({', '.join(hits)}): grade words only")
+    if hits := sorted({m.group().lower() for s in _strings(r) for m in ORGANS.finditer(s)}):
+        errs.append(f"organ words in the report ({', '.join(hits)}): body parts are not read in this practice")
+    # looks wording in every client string outside the one section that may carry it (self: 'appearance'; kundli and
+    # relationship: 'partner'); a ranking row about looks must be Weak or Unknown in self
+    home = "appearance" if t == "self" else "partner"
+    outside = [s for s in r["sections"] if s["id"] != home]
+    loose = [{k: s.get(k) for k in ("title", "intro", "text")} for s in outside]
+    rows = [x for x in r.get("ranking", []) if not (t == "self" and x.get("support") in ("Weak", "Unknown"))]
+    loose_strings = _strings([loose, rows] + [r.get(k) for k in ("title", "subtitle", "scope", "summary", "confidence_note",
+                                                                 "practical_summary", "watch_list", "timeline", "uncertainty")])   # `dropped` names what is withheld
+    unit_strings = _strings([[{k: u.get(k) for k in TEXT_KEYS} for u in s.get("units", [])] for s in outside]) if t == "self" else []
+    for x in loose_strings:
+        for sent in re.split(r"(?<=[.!?;])\s+", x):
+            if LOOKS_TOPIC.search(sent) or (AGE.search(sent) and PARTNER.search(sent)):
+                errs.append(f"looks or age wording outside the '{home}' section: '{sent[:70]}'")
+    for x in loose_strings + unit_strings if t == "self" else []:
+        if SELF_LOOKS.search(x) or LOOKS_TOPIC.search(x):
+            errs.append(f"looks wording outside the 'appearance' section: '{x[:70]}'")
+    forbid_text = _strings(_no_ids({k: v for k, v in r.items() if k not in ("birth", "engine", "prepared_on", "period")}))
+    if bad := sorted({m.group().lower() for x in forbid_text for m in _FORBID.finditer(x)}
+                     | {w for x in forbid_text for w in medical_words.words_in(x)}):      # list, Devanagari, typos, homoglyphs
+        errs += [FORBID_MSG, f"words found: {', '.join(bad[:8])}"]
+    hits = gate_hits(t, strings)
+    if t == "self":
+        hits += gate_hits("self_outside", loose_strings + unit_strings)
+    if t == "kundli":       # the same wording is refused in a kundli section as in the report of its own type
+        for sec in r["sections"]:
+            if g := KUNDLI_GATES.get(sec["id"]):
+                hits += gate_hits(g, _strings(sec))
+            if sec["id"] == "self":
+                hits += gate_hits("self_outside", _strings(sec))
+            if sec["id"] == "self" and any(SELF_LOOKS.search(x) for x in _strings(sec)):
+                errs.append("kundli 'self' describes looks: looks belong in the 'partner' section for another person only")
+        rows = _strings([r.get(k) for k in ("summary", "timeline", "watch_list", "ranking", "practical_summary")])
+        for g in ("family", "challenges", "spirituality"):
+            hits += gate_hits(g, rows)
+    if t == "family":       # a section about one relative: a harm word is refused there, dated or not
+        for sec in r["sections"]:
+            if sec["id"] in ("mother", "father", "siblings"):
+                hits += gate_hits("family_sec", _strings(sec))
+    if t in ("family", "kundli"):
+        # a dated row or line that names a relative is refused only when it also carries a harm word (or is a pressure row)
+        dated = ([(f"{x['label']} {x.get('basis', '')}", True, x["kind"] == "pressure") for x in r.get("timeline", [])]
+                 + [(" ".join(_strings(x)), bool(DATEISH.search(" ".join(_strings(x)))), False) for x in r.get("watch_list", [])]
+                 + [(" ".join(_strings(x)), True, False) for x in r.get("ranking", []) if x.get("window")]
+                 + [(x, bool(DATEISH.search(x)), False) for x in _strings(r.get("practical_summary", []))]
+                 + [(" ".join(_strings(x)), bool(x.get("window")), False) for x in (r.get("summary") or {}).get("key_points", [])])
+        for x, is_dated, hard in dated:
+            if is_dated and PARSIB.search(x) and (hard or gate_hits("family_sec", [x])):
+                errs.append(f"{t}: a dated row or line names a parent or sibling with a harm word ('{x[:60]}'): "
+                            "neutral dated forecasts are fine, anything about their health, danger, loss or death is not")
+    for what in sorted({w for w, _ in hits}):
+        words = sorted({h for w, h in hits if w == what})
+        errs.append(f"{t} report: {what} are not allowed ({', '.join(words[:4])}; report-specs/{t}.md caveats)"
+                    + (_ALLOWHINT if what == _ALLOWWHAT else ""))
+    for s in strings:
+        for sent in re.split(r"(?<=[.!?;])\s+", s):
+            if AFFAIR.search(sent) and OTHER.search(sent) and not OWN.search(sent):
+                errs.append(f"fidelity is read from the person's own chart only, never about another person: '{sent[:70]}'")
+    tc = time_class(r)
+    if tc != "exact":
+        days = sorted({m.group() for s in strings for m in DAY.finditer(s)})
+        days += [x["start"] for x in r.get("timeline", []) if len(x["start"]) > 7] + [x["end"] for x in r.get("timeline", []) if len(x["end"]) > 7]
+        if days:
+            errs.append(f"birth time is {tc}: no exact days ({', '.join(days[:4])}); months at most")
+    if tc == "approximate":
+        for s in r["sections"]:
+            errs += [f"[{s['id']}] '{u['theme'][:50]}' rests on a time-dependent factor but has no sensitivity "
+                     "(get_birth_time_sensitivity)" for u in s.get("units", [])
+                     if TIME_DEP.search(u.get("basis", "")) and not u.get("sensitivity")]
+    if tc == "unknown":
+        errs += unknown_time_errors(r)
+    srcs = (r.get("appendix") or {}).get("sources") or []
+    if not srcs:
+        errs.append("appendix.sources is empty: name the books (id, author, title, page)")
+    cat = _catalog()
+    for x in srcs:
+        book = (re.match(r"[A-Z][A-Z0-9]+\b", x) or [""])[0]
+        if not book or re.search(r"\.md\b|\bskill\b|\breferences/", x):
+            errs.append(f"source '{x[:60]}' is not a book: start with the catalog id (e.g. 'BPHS ...')")
+        elif cat is not None and book not in cat:
+            errs.append(f"source '{x[:60]}': '{book}' is not a catalog book")
+    return errs, []
+
+
+def ledger(r):
+    """Evidence ledger (frame item 9): unit themes by Confirmed / Inferred / Hypothesis, from each unit's claim_type."""
+    out = {"Confirmed": [], "Inferred": [], "Hypothesis": []}
+    for s in r["sections"]:
+        for u in s.get("units", []):
+            if u.get("claim_type"):
+                out[LEDGER[u["claim_type"]]].append(u["theme"])
+    return out
 
 
 # ---- grounding, citations, fact_refs (P3-3): invented dates and citations are caught before a report goes out ----
@@ -599,12 +1231,28 @@ def outlook_draft(o, prepared_for="(name)", prepared_on=None):
 
 def _strings(x):
     if isinstance(x, str):
-        return [x]
+        return [medical_words.norm(x)]   # NFKC, no zero-width or other format characters: every gate reads clean text
     if isinstance(x, dict):
         return [s for v in x.values() for s in _strings(v)]
     if isinstance(x, list):
         return [s for v in x for s in _strings(v)]
     return []
+
+
+def month_name(s):
+    """'2026-05' -> 'May 2026'; anything else (a day, a word) is left as written."""
+    m = re.fullmatch(r"(\d{4})-(0[1-9]|1[0-2])", str(s))
+    return f"{calendar.month_name[int(m.group(2))]} {m.group(1)}" if m else s
+
+
+def used_marks(r):
+    """Which claim types, grades, birth-time states and bar kinds the report really uses: the legend lists only those."""
+    units = [u for s in r["sections"] for u in s.get("units", [])]
+    kp, tl = r["summary"]["key_points"], r.get("timeline", [])
+    grades = {k.get("confidence") for k in kp} | {x.get("support") for x in r.get("ranking", [])} | {t.get("confidence") for t in tl}
+    grades |= {v for u in units for v in (u.get("confidence") or {}).values()}
+    return dict(claim={u.get("claim_type") for u in units}, grade=grades, sens={sens_state(x) for x in units + kp + tl} - {None},
+                line={t["kind"] for t in tl})
 
 
 def html_of(r):
@@ -614,6 +1262,7 @@ def html_of(r):
         raise RuntimeError("render needs jinja2 (pip install jinja2); the JSON itself was valid")   # not sys.exit: callers are servers (council R3 M4)
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(ASSETS), autoescape=True)
     env.globals.update(TEMPLATE_GLOBALS)
+    env.filters["mon"] = month_name
     bases = [dict(theme=u["theme"], basis=u["basis"]) for s in r["sections"] for u in s.get("units", []) if u.get("basis")]
     style = r.get("chart_style", "north")
     chart = chart_svg.chart((r.get("appendix") or {}).get("positions", []), style)   # P7-1; None without a lagna row
@@ -622,14 +1271,15 @@ def html_of(r):
     extra["remedy_cards"], extra["remedy_sources"] = lk_remedies.cards_html(r)
     moving = [(u["theme"], sens_state(u)) for s in r["sections"] for u in s.get("units", []) if sens_state(u) in ("may_shift", "depends")]
     moving += [(t["label"], sens_state(t)) for t in r.get("timeline", []) if sens_state(t) in ("may_shift", "depends")]
-    caption = f"{style.capitalize()} Indian rasi chart (signs only; degrees in the table below)" + (f"; {calc}" if calc else "")
+    caption = f"{style.capitalize()} Indian rasi chart (numbers are signs, 1 = Aries; degrees in the table below)" + (f"; {calc}" if calc else "")
     return env.get_template("template.html.j2").render(
         r=r, css=open(os.path.join(ASSETS, "report.css")).read(), type_name=TYPE_NAMES[r["report_type"]],
         default_how_to_read=HOW_TO_READ, tl=timeline(r.get("timeline", [])), bases=bases,
         appendix=bool(bases or r.get("appendix") or extra.get("remedy_sources")), section_titles={s["id"]: s["title"] for s in r["sections"]},
-        answers_line=r.get("answers") or ANSWERS[r["report_type"]], moving=moving, sens=sens_state, show_evidence=True,
+        answers_line=r.get("answers") or ANSWERS[r["report_type"]], moving=moving, sens=sens_state, show_evidence=True, used=used_marks(r),
         claim_labels=CLAIM_LABELS, system_labels=SYSTEM_LABELS, basis_labels=BASIS_LABELS,
-        chart=chart, chart_caption=caption, **extra)
+        chart=chart, chart_caption=caption, spec=bool(r.get("depth")), ledger=ledger(r), partner_caveat=PARTNER_CAVEAT,
+        **extra)
 
 
 def render(r, out_dir, base):
@@ -662,7 +1312,7 @@ def report_checks(r, schema, facts=None, fact_ids=None, outlook=None):
         return errs, []
     e2, warns = checks(r)
     errs += e2
-    extra = [citations(r)]
+    extra = [spec_checks(r), citations(r)]
     if facts is not None:
         extra.append(grounding(r, facts))
     else:
@@ -674,6 +1324,14 @@ def report_checks(r, schema, facts=None, fact_ids=None, outlook=None):
         errs += e3
         warns += w3
     return errs, warns
+
+
+def cli_refusals(r):
+    """The script cannot recompute the birth day, so it does not trust birth.moon_stable on an unknown time."""
+    if time_class(r) == "unknown" and (r.get("birth") or {}).get("moon_stable"):
+        return ["birth.moon_stable can only be verified by create_report (the engine recomputes the birth day); "
+                "remove it here or render through create_report"]
+    return []
 
 
 def main():
@@ -692,6 +1350,7 @@ def main():
     o = json.load(open(sys.argv[sys.argv.index("--outlook") + 1], encoding="utf-8")) if "--outlook" in sys.argv else None
     ids = json.load(open(sys.argv[sys.argv.index("--fact-ids") + 1], encoding="utf-8")) if "--fact-ids" in sys.argv else None
     errs, warns = report_checks(r, schema, facts, ids, o)
+    errs += cli_refusals(r)
     for w in warns:
         print("warning:", w)
     if errs:

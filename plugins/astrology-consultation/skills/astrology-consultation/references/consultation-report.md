@@ -16,7 +16,7 @@ to their own questions. The other report types (`/astro-report`, reports.md) rem
   The engine refuses unknown ids, and it refuses any window that does not contain the events it cites (±45 days).
 
 ## Steps
-1. **Intake** (see `tests/fixtures/consultation/P2-intake.json` for the shape):
+1. **Intake** (the fields below):
    - **client:** full name, gender, current city and country, language (English), and relationship, occupation and
      education if given.
    - **birth:** date, time, `time_reliability` (exact, approximate with `time_uncertainty_min`, or unknown with no
@@ -34,7 +34,7 @@ to their own questions. The other report types (`/astro-report`, reports.md) rem
    - The summary.
    - The kundli readings: lagna, Moon, Sun, current period, yogas, strengths, transits.
    - The Lal Kitab readings (LK ids only): overview, debts, varshaphal.
-   - **Eight chapters:** love, career, wealth, foreign, education, family, health, spirituality. Each has indicators,
+   - **Seven chapters:** love, career, wealth, foreign, education, family, spirituality. Each has indicators,
      the current period, windows (or `no_window_reason`) and cautions.
    - **One answer per question:** the answer, evidence, windows, confidence, what to do, and `answerable: false` with
      `limits` when the chart cannot answer.
@@ -55,7 +55,7 @@ to their own questions. The other report types (`/astro-report`, reports.md) rem
   - The report prints each of these with "depends on the exact birth time".
 - **Safety:** the life-first lint runs on every string.
   - Children are never timed, so the family chapter and children questions use `no_window_reason`.
-  - Health is wellness only and never a diagnosis.
+  - Health and death are not read: a health question gets the plain refusal.
   - Kuja and other dosha labels are conventions, never verdicts.
   - Remedies follow remedy-safety.md: Lal Kitab cards carry a safety class and the safe form, with the source
     locator.
@@ -84,4 +84,4 @@ to their own questions. The other report types (`/astro-report`, reports.md) rem
 - **P5:** unknown time.
 - **P6:** approximate time, ±45 minutes.
 
-These are in `tests/fixtures/consultation/`. The owner's own chart is a local-only case.
+These cases are kept with the test suite in the development repository.

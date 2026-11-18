@@ -10,7 +10,7 @@ LK_EXALT = dict(Su=[1], Mo=[2], Ma=[10, 8], Me=[6], Ju=[4], Ve=[12], Sa=[7])    
 LK_DEBIL = dict(Su=[7], Mo=[8], Ma=[4], Me=[12], Ju=[10], Ve=[6], Sa=[1])
 LK_NODE_TABLE = dict(Ra=([3], [9]), Ke=([9, 12], [3, 6]))            # p33-34/60 table set (X3/X4 version A)
 LK_NODE_CHAPTER = dict(Ra=([3, 6], [8, 9, 11]), Ke=([5, 9, 12], [6, 8]))  # p130-138 chapter set (version B)
-# Timing tables (LAL-KITAB-ROADMAP §4; prose in timing.md §8, kept equal by tests/test_lal_kitab.py)
+# Timing tables (docs/ROADMAP.md Lal Kitab section, LK §4; prose in timing.md §8, kept equal by tests/test_lal_kitab.py)
 LK_MATURITY = dict(Ju=16, Su=22, Mo=24, Ve=25, Ma=28, Me=34, Sa=36, Ra=42, Ke=48)
 LK_FORTUNE_RISE = dict(Me=23, Ma=34)                                  # the others rise at their maturity age
 LK_CYCLE35 = dict(Ju=6, Su=2, Mo=1, Ve=3, Ma=6, Me=2, Sa=6, Ra=6, Ke=3)   # in cycle order; start needs a dated event

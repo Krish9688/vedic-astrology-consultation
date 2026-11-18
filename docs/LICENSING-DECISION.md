@@ -1,5 +1,9 @@
 # Licensing decision paper (2026-10-03)
 
+> **What:** the licence decision of record (split licence, 2026-10-03) and the third-party licences. **Read it when:** you add a dependency or change a licence.
+> **Last checked:** 2026-11-12 (one row and one paragraph added from the retired first recommendation; other versions not re-checked).
+> **Related:** COPYRIGHT.md, REPOSITORY-EDITIONS.md.
+
 Engineering analysis, not legal advice. **Decided 2026-10-03: option B (split licence)**, applied in the public
 repository (`LICENSE`, `LICENSES/`, `plugin.json` `license`, engine `pyproject.toml`). Licences below were read from the installed packages' licence files and metadata on 2026-10-03.
 
@@ -29,6 +33,7 @@ repository (`LICENSE`, `LICENSES/`, `plugin.json` `license`, engine `pyproject.t
 | mcp, FastAPI, Pydantic, anyio | MIT | dependencies | compatible with anything |
 | uvicorn, httpx, Starlette, Jinja2, WeasyPrint, networkx | BSD | dependencies | compatible |
 | Hypothesis | MPL-2.0 | tests only | compatible |
+| GeoNames cities15000 gazetteer | CC BY 4.0 | not shipped; downloaded on request by `astro setup --places` | attribution required: "GeoNames, https://www.geonames.org, CC BY 4.0" (shown by `astro doctor` and `/setup`) |
 
 ## 3. Options
 
@@ -64,8 +69,11 @@ repository (`LICENSE`, `LICENSES/`, `plugin.json` `license`, engine `pyproject.t
 
 **Option B**: AGPL-3.0-or-later for `astro/` and the ingestion tools; Apache-2.0 for the skill's scripts and report
 template; CC BY 4.0 for the skill's method text and documentation. It is compliant without buying a licence and
-friendly to the plugin ecosystem the project is aiming at. (This refines the earlier all-AGPL recommendation in
-LICENSING.md, after confirming the skill package never links Swiss Ephemeris.)
+friendly to the plugin ecosystem the project is aiming at. (This refines the earlier all-AGPL recommendation
+(a note retired on 2026-11-12), after confirming the skill package never links Swiss Ephemeris.)
+
+If a permissive or proprietary product is wanted later: buy the Swiss Ephemeris Professional Licence, or make the ephemeris
+backend pluggable and ship a non-AGPL backend (none of comparable accuracy is in the project).
 
 **Owner's decision (2026-10-03): B**, with CC BY 4.0 for the method text and documentation. The Lal Kitab knowledge
 base and all book-derived files stay out of the public repository; see [REPOSITORY-EDITIONS.md](REPOSITORY-EDITIONS.md).

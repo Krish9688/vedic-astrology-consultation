@@ -9,6 +9,8 @@
 # Between `chapters` and `rebuild`, write the source map (sourcemaps/<ID>.md) — see docs/ADD-A-BOOK.md.
 import argparse, datetime, hashlib, json, os, re, statistics, subprocess, sys
 
+import epub_text   # EPUB books are read directly (spine sections as pages), never converted to PDF
+
 WS = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 CAT_PATH = os.path.join(WS, "knowledge", "catalog.json")
 PY = os.path.join(WS, ".venv", "bin", "python")            # PyMuPDF
@@ -53,8 +55,11 @@ def catalog_v2_unknown(a):
                 owner_checks=hint)
 
 
+def is_epub(path):
+    return path.lower().endswith(".epub")
+
+
 def cmd_register(a):
-    import pymupdf
     cat = load_cat()
     path = os.path.join(cat["library_root"], os.path.basename(a.file))
     if not os.path.exists(path):
@@ -71,25 +76,38 @@ def cmd_register(a):
                 b["duplicates"].append(os.path.basename(path))
                 save_cat(cat)
             sys.exit(f"Byte-identical to {b['id']} ({b['file']}); recorded as a duplicate, not added.")
-    d = pymupdf.open(path)
+    if is_epub(path):
+        n = len(epub_text.sections(path))
+    else:
+        import pymupdf
+        n = pymupdf.open(path).page_count
     same_title = [b["id"] for b in cat["books"] if a.title.lower()[:20] in b["title"].lower()]
     if same_title:
         print(f"NOTE: title resembles {same_title}: if this is another edition, keep both and describe the edition.")
     cat["books"].append(dict(id=a.id, title=a.title, author=a.author, translator=a.translator or "", edition=a.edition or "",
                              year=a.year or "", language=a.language, system=a.system, tier=a.tier,
-                             text_file=f"{a.id}.jsonl", text_layer="pending", page_convention="PDF p", pages=d.page_count,
+                             text_file=f"{a.id}.jsonl", text_layer="pending", page_convention="epub section" if is_epub(path) else "PDF p", pages=n,
                              file=os.path.basename(path), sha256=h, added=datetime.date.today().isoformat(),
-                             **catalog_v2_unknown(a)))
+                             **{**catalog_v2_unknown(a), **({"publisher": a.publisher} if a.publisher else {})}))
     save_cat(cat)
-    print(f"registered {a.id}: {d.page_count} pages, sha256 {h[:16]}…  next: text {a.id}")
+    print(f"registered {a.id}: {n} pages, sha256 {h[:16]}…  next: text {a.id}")
 
 
 def cmd_text(a):
-    import pymupdf
     cat = load_cat()
     b = book(cat, a.id)
     pdf = os.path.join(cat["library_root"], b["file"])
     out = os.path.join(WS, "text", b["text_file"])
+    if is_epub(pdf):
+        rows = [{"src": a.id, "page": i + 1, "title": t, "text": x} for i, (t, x) in enumerate(epub_text.sections(pdf))]
+        with open(out, "w", encoding="utf-8") as f:
+            for r in rows:
+                f.write(json.dumps(r, ensure_ascii=False) + "\n")
+        b["text_layer"] = "epub text"
+        save_cat(cat)
+        print(f"{len(rows)} sections → {out} (epub text); next: chapters {a.id}")
+        return
+    import pymupdf
     d = pymupdf.open(pdf)
     rows = [{"src": a.id, "page": i + 1, "text": p.get_text()} for i, p in enumerate(d)]
     chars = statistics.median(len(r["text"].strip()) for r in rows)
@@ -121,16 +139,19 @@ HEAD = re.compile(r"^\s*(?:CHAPTER|Chapter|ADHYAYA|Adhyaya|अध्याय)\s
 
 
 def cmd_chapters(a):
-    import pymupdf
     cat = load_cat()
     b = book(cat, a.id)
-    toc = pymupdf.open(os.path.join(cat["library_root"], b["file"])).get_toc()
+    if is_epub(b["file"]):   # one chapter per titled spine section
+        toc = [(1, t, i + 1) for i, (t, _) in enumerate(epub_text.sections(os.path.join(cat["library_root"], b["file"]))) if t]
+    else:
+        import pymupdf
+        toc = pymupdf.open(os.path.join(cat["library_root"], b["file"])).get_toc()
     junk = sum(bool(re.search(r"\.(jpe?g|png|tiff?)$|_\d{3,}", t, re.I)) for _, t, _ in toc)
     if toc and junk > len(toc) / 2:
         print("PDF outline looks like scan file names — ignored")
         toc = []
     if toc:
-        ch = [{"page": p, "level": lvl, "title": t.strip(), "method": "pdf-outline"} for lvl, t, p in toc if p > 0]
+        ch = [{"page": p, "level": lvl, "title": t.strip(), "method": "epub-spine" if is_epub(b["file"]) else "pdf-outline"} for lvl, t, p in toc if p > 0]
     else:
         ch = []
         for line in open(os.path.join(WS, "text", b["text_file"]), encoding="utf-8"):
@@ -151,7 +172,7 @@ def cmd_relink(a):
     root = cat["library_root"]
     by_hash = {}
     for f in sorted(os.listdir(root)):
-        if f.lower().endswith(".pdf"):
+        if f.lower().endswith((".pdf", ".epub")):
             by_hash.setdefault(sha256(os.path.join(root, f)), []).append(f)
     for b in cat["books"]:
         files = by_hash.pop(b.get("sha256"), [])
@@ -210,7 +231,7 @@ def main():
         r.add_argument("--" + f, required=True)
     r.add_argument("--system", required=True, help="Parashari | Jaimini | Lal Kitab | Tajika | KP | Prashna | …")
     r.add_argument("--tier", required=True, choices=["classical", "traditional", "modern", "experimental"])
-    for f in ("translator", "edition", "year"):
+    for f in ("translator", "edition", "year", "publisher"):
         r.add_argument("--" + f)
     t = sp.add_parser("text")
     t.add_argument("id")

@@ -123,7 +123,7 @@ reaching annual house 1 acts first on its natal house, then its enemies, then it
 ## 5. Disputes and what the author himself warns
 
 Show ⚠️ versions with pages (KB A5 X1–X23; LK1952 differences in
-[contradiction-register.md](contradiction-register.md) §C). LK1952's author says not to announce death timings, to
+[contradiction-register.md](contradiction-register.md) §C). LK1952's author says to
 reassure rather than frighten, not to reveal a predicted daughter, and that his calculations "may be wrong"
 [LK1952 p1182, p1223–1224]. His method also relies on palm/body signs as a second channel; a chart-only reading lacks
 that channel — say so when a rule depends on it.

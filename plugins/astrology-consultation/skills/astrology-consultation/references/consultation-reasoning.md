@@ -145,6 +145,18 @@ each against the chart:
 3. **Choose** the best-supported scenario, keep the runner-up, and say why the others are weaker. If two are close,
    say that the chart does not separate them — that is information too.
 
+**A broad label is a question, not an answer.** When a source or the chart hands you a wide word (unconventional,
+sudden, hidden, foreign, unexpected), first check that the label is true of this chart at all: if its own test is
+not met, say that before anything else and ask where the label came from, instead of finding it a meaning. Then
+run the same three steps on the label: list the life areas it could mean in
+this chart (who the partner is, how the relationship is lived, work, money, where the person lives), test each by
+its own indicators, counting one placement once, then name the best-supported two with their grades and say in a
+clause why the others are weaker. Never hand the label back as the answer. Where a topic file gives the candidate
+meanings and their indicators, use its table instead of inventing one: for "unconventional" in relationships,
+[topic-relationships-marriage.md](topic-relationships-marriage.md) §2, whose last row sends the label to work
+when the factor is not about relationships at all; for "sudden" money, [topic-career-money.md](topic-career-money.md)
+§5a.
+
 Choosing among a combination's meanings uses house, sign, the planets' natures and lordships, other influences and
 the person's environment together — the same Mars–Mercury can make a debater, a liar or a boxer [LOL p308–309].
 
@@ -222,8 +234,9 @@ here") or nothing.
 ## 10. Turning the judgement into the answer
 
 Choose the mode ([communication.md](communication.md) §0) and use its shape — for a focused answer §1: conclusion →
-likeliest form → timing → the main nuance → the few decisive reasons → an early sign to watch → confidence (technical
-basis and page citations only when asked). Translate each workbench finding into its life consequence before writing
+likeliest form → timing → the main nuance → the few decisive reasons → an early sign to watch → what would sharpen
+it. Each claim carries its own grade from §7 in the sentence that makes it; the books behind the deciding rules are
+named there too (technical basis and page citations only when asked). Translate each workbench finding into its life consequence before writing
 it (§1a: the subject of the sentence is the person's life, the chart fact follows). The workbench
 decides what is *true enough to say*; the answer decides what the person *needs to hear*. A focused answer names
 about four chart facts at most; never chain "because X is in Y… because Z aspects W".

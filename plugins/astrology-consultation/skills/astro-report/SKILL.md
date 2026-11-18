@@ -2,7 +2,7 @@
 description: Create a personal astrology report (HTML + PDF) from a birth chart, calculated on this computer. Asks who the chart is for, checks the birth details, then writes the report you choose.
 argument-hint: "[report-type]"
 disable-model-invocation: true
-allowed-tools: AskUserQuestion mcp__plugin_astrology-consultation_astrology__get_engine_info mcp__plugin_astrology-consultation_astrology__find_place mcp__plugin_astrology-consultation_astrology__get_planet_positions mcp__plugin_astrology-consultation_astrology__calculate_birth_chart mcp__plugin_astrology-consultation_astrology__get_birth_time_sensitivity mcp__plugin_astrology-consultation_astrology__get_dasha mcp__plugin_astrology-consultation_astrology__get_transits mcp__plugin_astrology-consultation_astrology__get_outlook mcp__plugin_astrology-consultation_astrology__get_gochara mcp__plugin_astrology-consultation_astrology__get_jaimini_factors mcp__plugin_astrology-consultation_astrology__get_tajika mcp__plugin_astrology-consultation_astrology__prepare_consultation mcp__plugin_astrology-consultation_astrology__create_report
+allowed-tools: AskUserQuestion mcp__plugin_astrology-consultation_astrology__get_engine_info mcp__plugin_astrology-consultation_astrology__find_place mcp__plugin_astrology-consultation_astrology__get_planet_positions mcp__plugin_astrology-consultation_astrology__calculate_birth_chart mcp__plugin_astrology-consultation_astrology__get_birth_time_sensitivity mcp__plugin_astrology-consultation_astrology__get_dasha mcp__plugin_astrology-consultation_astrology__get_transits mcp__plugin_astrology-consultation_astrology__get_outlook mcp__plugin_astrology-consultation_astrology__get_gochara mcp__plugin_astrology-consultation_astrology__get_jaimini_factors mcp__plugin_astrology-consultation_astrology__get_tajika mcp__plugin_astrology-consultation_astrology__prepare_consultation mcp__plugin_astrology-consultation_astrology__create_report mcp__plugin_astrology-consultation_astrology__get_activation mcp__plugin_astrology-consultation_astrology__get_ashtakavarga mcp__plugin_astrology-consultation_astrology__get_divisional_chart mcp__plugin_astrology-consultation_astrology__get_shadbala mcp__plugin_astrology-consultation_astrology__get_topic_network mcp__plugin_astrology-consultation_astrology__get_yogini_dasha
 ---
 # /astro-report
 
@@ -20,22 +20,16 @@ Rules that hold throughout:
 - Never write birth data to a file yourself. You have no Bash and no Write; the only file written is the report, by `create_report`.
 - If the tools are missing or silent: V-ENGINE, stop. Do not calculate or recall anything from memory.
 
-## The nine report types
+## The report types (one registry)
 
-| Key | Display name |
-|---|---|
-| `complete-life` | Complete life report |
-| `career` | Career report |
-| `relationship` | Relationship report |
-| `marriage` | Marriage report |
-| `dasha` | Dasha report |
-| `12-month` | Twelve-month forecast |
-| `relocation` | Relocation and foreign travel report |
-| `compact` | Consultation summary |
-| `outlook` | Personal outlook |
-
-Aliases, matched only when exact and case-insensitive: `life`, `full` = complete-life; `year`, `annual` = 12-month;
-`summary` = compact; `monthly`, `quarterly` = outlook; `travel`, `abroad` = relocation.
+The types, their aliases, status and one-line descriptions are not listed here. They live in one file, read with
+`skill://assets/report/registry.json` (the `/report` command reads the same file). Each entry has `id`, `name`,
+`aliases`, `charts` (1 or 2), `status` (`built` or `planned`) and `one_line`. The key a person types is an `id` or an
+alias, matched only when exact and case-insensitive. Only `built` types can be written; a `planned` type is shown as
+"coming" and never started. `report_type` in the model is the registry `id`. Write the report by following the
+entry's `spec` file (read it as `skill://<spec path>`). If the entry lists `depth`, set `depth` in the model to one
+of them (it switches on the spec checks); with more than one, ask once with `AskUserQuestion`, standard first. Older wording below maps to ids: "Consultation summary" = `compact`, "Personal
+outlook" = `outlook`, "Twelve-month forecast" = `12-month`, "Relocation and foreign travel report" = `relocation`.
 
 **Full consultation report** (`consultation`, alias `consultation report`, `client report`) is a separate flow. It
 covers the intake, methodology, kundli, Lal Kitab, eight life areas, answers to every question, the timeline, remedies
@@ -79,7 +73,7 @@ Use these ids and texts (fill the braces). They are the project's own wording.
 | V-OUTLOOK | window out of range, or daily | "An outlook covers 28 to 92 days. A daily or sun-sign horoscope isn't something I produce. Pick a window in that range?" |
 | V-FOLDER | folder in a repo, plugin or skill | "That folder is inside a code project or the plugin, and reports contain personal details. Please choose another folder." |
 | V-SAFE-GUARANTEE | asks for certainty | "I can't promise an outcome. A chart shows how much of it agrees on a theme and when it's most active, not a certainty. I can give you the strongest window and what would confirm or weaken it." |
-| V-SAFE-MEDICAL | diagnosis, illness, pregnancy, death, legal, investment | "I can't say anything about diagnosis, illness, pregnancy, lifespan, legal outcomes or investments. That needs a doctor or other professional. I can describe the general wellbeing themes of a period if you want." |
+| V-SAFE-MEDICAL | health, illness, diagnosis, pregnancy, death, legal, investment | "Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead. I also can't say anything about pregnancy, legal outcomes or investments; those need a professional." |
 | V-SAFE-CRISIS | self-harm, abuse, danger | See Safety below. |
 | V-ENGINE | tools unavailable | "The astrology engine isn't connected. Run /astrology-consultation:setup, then /reload-plugins, and try again." |
 | V-RENDER | `create_report` returns `ok: false` | "The report didn't pass its checks: {first error, plain}. I'll fix that and try again." |
@@ -90,8 +84,8 @@ Use these ids and texts (fill the braces). They are the project's own wording.
   the local emergency number or a crisis line (for example 988 in the US, Samaritans 116 123 in the UK and Ireland,
   Tele-MANAS 14416 in India; if unsure of the country, say "your local emergency number" or ask where they are). No chart
   link, no timing as comfort, no remedy. Let them lead; do not resume the report on your own.
-- **Guarantee requests:** V-SAFE-GUARANTEE. **Diagnosis, illness, pregnancy, fertility, lifespan, death, legal outcome,
-  investment tips:** V-SAFE-MEDICAL. Neither appears as a claim in the report. Offer general themes only.
+- **Guarantee requests:** V-SAFE-GUARANTEE. **Health, illness, diagnosis, pregnancy, fertility, lifespan, death, legal outcome,
+  investment tips:** V-SAFE-MEDICAL. Neither appears as a claim in the report. Health and death get the plain refusal; offer another area instead.
 - **Remedies:** none unless the person asks. If asked, say they are traditional, optional and never replace medical,
   legal or financial help; ask which tradition; put them only in a separate labelled section, per tradition. Lal Kitab
   remedies use the remedy cards (`remedies_requested: true`) after reading `references/remedy-safety.md`; anything
@@ -105,16 +99,18 @@ Moshier fallback, add that to the caveats. Give one note before asking for any b
 this computer, but what you type here is processed like any message in Claude Code, and the conversation is stored locally."
 
 ### 1. Report type
-- Valid argument (or alias): skip, and echo "Report type: {display name}."
-- Otherwise, or on an unknown argument (V-TYPE), ask in two steps because there are nine types and menus hold four.
-  First: "What kind of report?" with **One life topic**, **Timing and forecasts**, **Whole life**, **Short summary**.
-  Then show the matching types by display name:
-  - One life topic: Career report, Relationship report, Marriage report, Relocation and foreign travel report.
-  - Timing and forecasts: Dasha report, Twelve-month forecast, Personal outlook.
-  - Whole life: Complete life report.
-  - Short summary: Consultation summary.
-- Personal outlook needs a window: ask "From which date, and for about how many days (28 to 92)?" Out of range or a daily
-  or sun-sign feed: V-OUTLOOK. Never guess a type from birth data typed into the argument; use the data, but still run every step.
+Read the registry. Never write the type list from memory.
+- Argument that is an `id` or alias (exact, case-insensitive): if `built`, skip the question and echo "Report type:
+  {name}." If `planned`: "{name} isn't built yet." and offer the `built` types.
+- No argument: print every entry, one line each: `id`, name, and `one_line`; `built` ones are selectable, `planned`
+  ones end with "(coming)". Then ask "Which report?" as free text (a menu holds only four). A `planned` pick is handled
+  as above.
+- Unknown argument (V-TYPE): name the 2 or 3 closest ids, aliases or names, then print the list as above.
+- Personal outlook (`outlook`) needs a window: ask "From which date, and for about how many days (28 to 92)?" Out of
+  range or a daily or sun-sign feed: V-OUTLOOK. Never guess a type from birth data typed into the argument; use the
+  data, but still run every step.
+- `charts` = 2 (for example `match`): run steps 2 to 7 once for each person, one after the other. Each chart is
+  computed on its own and never merged; the type's `spec` says how the two are compared.
 
 ### 2. Whose chart? (identity gate, before any birth detail)
 Ask: **Mine** / **Someone else's (they know and agree, or I'm their parent or guardian)** / **From a report or chart I already have**.

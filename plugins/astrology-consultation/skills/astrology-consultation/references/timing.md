@@ -1,7 +1,7 @@
 # Timing engine: dashas, transits, annual charts, Lal Kitab timing
 
 Contents: [0. The timing ladder (how a window is earned) — read first](#0-the-timing-ladder-how-a-window-is-earned--read-first) · [1. Vimshottari: identify the significators first](#1-vimshottari-identify-the-significators-first) · [2. Reading a dasha–bhukti pair](#2-reading-a-dashabhukti-pair) · [3. Transits (gochara): triggers inside an activated period](#3-transits-gochara-triggers-inside-an-activated-period) · [4. Parashari annual chart (Tajika / varshaphala) — separate from Lal Kitab](#4-parashari-annual-chart-tajika--varshaphala--separate-from-lal-kitab)
-[5. Lal Kitab timing (separate system)](#5-lal-kitab-timing-separate-system) · [6. Building a window (short form of §0, with a worked report shape)](#6-building-a-window-short-form-of-0-with-a-worked-report-shape)
+[5. Lal Kitab timing](#5-lal-kitab-timing) · [6. Building a window (short form of §0, with a worked report shape)](#6-building-a-window-short-form-of-0-with-a-worked-report-shape)
 [7. Temporal modes (carried over from v2.2)](#7-temporal-modes-carried-over-from-v22)
 [8. Lal Kitab timing (separate evidence note)](#8-lal-kitab-timing-separate-evidence-note)
 
@@ -12,7 +12,7 @@ data or a calculation tool (with the privacy disclosure in [inputs.md](inputs.md
 
 ## 0. The timing ladder (how a window is earned) — read first
 
-Research behind this: `docs/ASTROLOGER-CONSULTATION-RESEARCH.md` (R2). Keep **promise** ("the chart can deliver X")
+Research behind this: `docs/CONSULTATION-REASONING.md`, Appendix (R2). Keep **promise** ("the chart can deliver X")
 and **activation** ("X is foregrounded now") as separate statements in every answer.
 
 **Step 0 — precision budget.** Every dasha date moves by about **n × 365.25 × v ÷ 800 days per minute** of birth-time
@@ -28,6 +28,14 @@ for a person in their early twenties (inputs.md).
 | ±15–30 min (remembered, rounded) | MD, AD (edges ± months) | half-year |
 | ±5 min (documented) | + PD (edges ± 1–4 weeks) | a quarter; a month only with full convergence |
 | Checked against 3–5 dated past events | + PD with confidence | a month; a 1–2-week "most concentrated" band only if a station/exact contact, PD and annual chart coincide |
+
+**Transit-only markers on an unknown or loose birth time** (owner decision 2026-11-13). The table above governs
+dasha-based windows. A slow planet's (Jupiter, Saturn, Rahu/Ketu) contact to a point that does not depend on the birth
+time (any natal planet whose sign is the same across the whole birth day, the Moon's included; inputs.md) may be
+given **by month** on any birth time. Label it each time in words like "a background marker, not a dated event", grade it
+Weak, and do not attach an event to it. Never a day, and never an exact contact or ingress date presented as an event
+date. Step 8 still holds: one marker, at most one secondary. Contacts to the ascendant, a house, a house lord or the
+Moon's degree are not time-independent and stay under the table.
 
 Sookshma and deeper levels never give event dates (they are shorter than the date error) and explain everything in
 hindsight [LOL p354; R2-TP1].
@@ -73,6 +81,7 @@ hindsight [LOL p354; R2-TP1].
    separate bullets — the person needs the shape of the period, not the software table.
 9. **Earn granularity**: half-year = MD/AD band + one slow contact; quarter = + one independent confirmation;
    month = + a station/exact contact on a period lord + PD agreement + documented birth time. Never a day.
+   Transit-only markers on a loose or unknown time: the note under the Step 0 table.
 10. **Say it naturally**: "The whole of … is active for this. It concentrates around … because … . After … it fades."
    Then the counter-evidence and what would move the window.
 
@@ -93,6 +102,15 @@ Add topic-specific candidates from the topic file (e.g. marriage: dispositors of
 Venus, the Moon, the 2nd lord's dispositor, 9th/10th lords "if earlier dashas are fruitless" [HJH2 p25–26, p31;
 PM2 XX.65]; children: lagna lord, 5th lord, Jupiter and their navamsa lords [PM2 XIX.83]).
 
+**Primary and secondary roles** (the skill's own heuristic; the library supports the caution, not the split). *Primary*:
+(a) the house lord, (c) planets in the house, (g) the karaka, and the lord's dispositor. They own, occupy or signify the
+house. *Secondary*: (b), (d) and (e), which reach the house or its lord by aspect or association only, (f) the lord counted
+from the Moon, and the conditional extras ("if earlier dashas are fruitless"). Raman's own order of marriage-giving
+dasas starts with the 7th lord's dispositors, then Venus and the Moon, and leaves the 9th and 10th lords for last
+[HJH2 p25–26]. The list is long, so a topic network can hold most of the nine planets (a marriage network held 8 of 9 in one
+test chart); once conditions are added, every planet qualifies and any past event can be explained (paraphrase of PVR p456–457). A
+condition true for most periods carries little weight (consultation-reasoning.md §4, point 5).
+
 **Intensity grades** [HJH2 p21, p258]:
 
 | Dasha lord | Bhukti lord | Result for that house |
@@ -100,6 +118,10 @@ PM2 XX.65]; children: lagna lord, 5th lord, Jupiter and their navamsa lords [PM2
 | significator | significator | "par excellence" — main window |
 | non-significator | significator | limited |
 | significator | non-significator | small |
+
+A main window needs at least one **primary** role in the pair. Both lords in the network only through secondary roles,
+or in a network that most sub-periods meet, does not separate the periods: call such a pair supporting, and choose the
+main window by the strength of the primary roles and the confluence in §2.
 
 **Eliminate by age and plausibility**: drop dashas that fall in childhood or very late unless the chart indicates late
 events; within the chosen dasha drop too-early bhuktis; choose the strongest remaining lord by position, aspect and
@@ -207,17 +229,17 @@ first, then the annual chart, and combine** [HPA p128–131]. He himself calls t
 
 **Calculated Tajika year** (`get_tajika` / `astro tajika`, PVR ch. 27–28, 31; reproduces PVR Examples 118 and 122):
 return moment at the birthplace, day or night year, muntha, harsha bala, the five year-lord candidates with their
-Tajika aspect on the annual lagna, sahams and Mudda dasha. The year lord is printed only when the aspect tiers settle it
-(pancha vargeeya bala is not computed); otherwise say "year lord undetermined" and list the shortlist. PVR notes that
+Tajika aspect on the annual lagna, sahams, pancha vargeeya bala and the Mudda and Patyayini dashas. The year lord is printed only when the candidates
+strong by pancha vargeeya bala (>= 10) and the aspect tiers settle it [PVR p388-393]; otherwise say "year lord undetermined" and list the shortlist. PVR notes that
 Tajika has no basis in Parasara or Jaimini and gates it by the natal promise [PVR p377–378]: it confirms a window the
 natal dasha and transits already show, counted once (§0 step 6), never creates one. Mudda dates follow PVR's stated
 definition (a solar day = the Sun moving 1°); his own Example 122 fits a clock day about two days earlier, so quote a
 Mudda boundary to the week, not the day.
 
-## 5. Lal Kitab timing (separate system)
+## 5. Lal Kitab timing
 
-See the Lal Kitab section appended below (§8) for Varshaphal, planet ages, the 35-year cycle and month rules. Keep its
-conclusions in the Lal Kitab evidence note; compare with the Parashari window only at the convergence step.
+See §8 (Varshaphal, planet ages, the 35-year cycle and month rules). Keep its conclusions in the Lal Kitab evidence
+note; compare with the Parashari window only at the convergence step.
 
 ## 6. Building a window (short form of §0, with a worked report shape)
 
@@ -270,7 +292,7 @@ Sources: KB B7/B17 (Shrimali, validated) and LK1952 (primary; cited `LK1952 pPDF
      natal promise or problem becomes visible.
    - A planet that returns to H10 is that year's "deceiving" (dhokha) planet; a malefic becomes truly harmful on
      reaching H8 [LK1952 p168–170, p186].
-   - Travel from annual Ketu's house; illness symbolism from luminaries reaching 1/6/7/8/10 — symbolism only [KB B17].
+   - Travel from annual Ketu's house [KB B17].
 2. **Planet ages (maturity years)**: Jupiter 16, Sun 22, Moon 24, Venus 25, Mars 28, Mercury 34, Saturn 36, Rahu 42,
    Ketu 48 [KB B7 p51; LK1952 p54, image-checked]. With certain companions the age changes (e.g. Moon with Jupiter,
    Venus or Mercury 12; Sun with Rahu "zero") [LK1952 p56; printed per planet by `chart_facts.py`]. A planet can show its effect at half or a quarter of its period

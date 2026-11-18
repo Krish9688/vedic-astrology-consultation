@@ -16,8 +16,8 @@
    "transits": {"$ref": "#/$defs/item"}}},
   "lal_kitab": {"type": "object", "description": "only LK.* fact ids; required when the pack has a Lal Kitab chart", "properties": {
    "overview": {"$ref": "#/$defs/item"}, "debts": {"$ref": "#/$defs/item"}, "varshaphal": {"$ref": "#/$defs/item"}}},
-  "chapters": {"type": "object", "required": ["love", "career", "wealth", "foreign", "education", "family", "health", "spirituality"],
-   "additionalProperties": false, "patternProperties": {"^(love|career|wealth|foreign|education|family|health|spirituality)$": {"$ref": "#/$defs/chapter"}}},
+  "chapters": {"type": "object", "required": ["love", "career", "wealth", "foreign", "education", "family", "spirituality"],
+   "additionalProperties": false, "patternProperties": {"^(love|career|wealth|foreign|education|family|spirituality)$": {"$ref": "#/$defs/chapter"}}},
   "answers": {"type": "array", "description": "exactly one per intake question", "items": {"type": "object",
    "required": ["question_id", "answer", "confidence", "what_to_do"], "properties": {
     "question_id": {"type": "string", "pattern": "^Q\\d{1,2}$"}, "answer": {"type": "string", "minLength": 40},

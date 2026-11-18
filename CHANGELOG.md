@@ -6,7 +6,29 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 ## [Unreleased]
 
+## [3.10.0] - 2026-11-19
+
 ### Added
+- **Answers for appearance, intimacy, sudden gains and broad labels.** Questions about the person's own appearance or about
+  intimacy had no method and fell to a generic route, so answers were thin. The skill now has a question tree for own
+  appearance, partner description as tendencies with the text named, a section on intimacy, a section on unearned and
+  sudden gains, and a rule that a broad label such as "unconventional" is worked out for the chart instead of repeated.
+  Guards are stated in each section (nothing medical, no caste, community, religion or ethnicity, no orientation reading,
+  no ranking of complexion, nothing about a named third person). Routing sends these questions to the right files and
+  treats plain "when", "within two years" or "in 2027" as timing questions.
+- **How far to trust an answer.** Each claim carries its own grade in the sentence that makes it; the meaning of a grade is
+  said once (agreement inside the tradition, not a probability); a direct "how sure are you" gets a short fixed answer and
+  an offer to log the prediction. No percentage is printed: there are no logged outcomes to calibrate against yet. Books
+  are now named in answers; pages stay available on request.
+- **Five project documents:** `docs/CONTEXT.md` (what a new session needs), `docs/HISTORY.md` (append-only log),
+  `docs/ROADMAP.md` (all future work and the clean-up backlog), `docs/ARCHITECTURE.md` (refreshed from the code) and
+  `docs/IMPACT-MAP.md` (what else to check when a file changes). Eleven older documents were merged into them or retired.
+- **EPUB books and a local Markdown copy of the library.** `tools/kg/add_book.py` reads EPUB files directly, and
+  `tools/kg/books_md.py` writes each book's extracted text as Markdown chapters with page markers for local reading. Book
+  text stays on the owner's machine: three export guards and a test keep it out of every repository.
+  Validated by two blind comparisons against the unedited skill (graders did not know which was which; the second round:
+  338 against 312 of 400 on five shared questions, no question lost; one grader, one synthetic chart, one run each) and
+  by the test suite.
 - **Project map, in every edition.** Nothing described how the code, tests, documents and packages connect, and the public
   repository had no graph at all. `tools/kg/project_graph.py` now maps files, imports, tests, document links, packages and
   the engine's MCP, CLI and REST interfaces. It is deterministic and uses only the standard library. The public export
@@ -20,9 +42,65 @@ problem was observed, what exposed it, what changed, why that solution, and how 
   Validated with `tests/test_project_graph.py` and browser runs at five screen sizes.
 
 ### Fixed
+- **Search no longer mixes systems.** After books from other astrological systems were registered, a full-text search
+  could return their pages to a Vedic question. `search.py` and `kg.py` now return only the project's own traditions by
+  default; another system needs an explicit option or a named source. A plain-language query that finds nothing is retried
+  once as an OR query and says so.
+- **Timing windows.** "Both period lords are in the topic network" was true for most periods when the network was wide.
+  A main window now needs a primary role (house lord, occupant, significator or the lord's dispositor).
 - **Knowledge graph: references between register rows were lost.** Row CR-V21 says it is superseded by CR-X01, but the
   extractor read that as Lal Kitab entry X01, found no such entry and dropped the link. `CR-` references now link to the row
   they name.
+
+### Changed
+- **No medical and no death content, for anyone (owner rule, 2026-11-15).** The skill, the reports and the book search
+  no longer read health or death. A question about either gets one fixed answer: "Health and death are not read in this
+  practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your
+  life instead." A question about self-harm gets the crisis referral instead. One shared word list
+  (`scripts/medical_words.py`: English, Hindi, Hinglish, Devanagari, slang, and a typo net) is used by question routing,
+  the book search filter, consultation intake and the report gate. A refused or crisis question returns no chart facts.
+  The list over-blocks some neutral sentences; that is accepted and listed in the file. Review rounds continue until a
+  review finds zero leaks; the status is "in review".
+- **Report plan.** The health report type is dropped; the next batch is children, intimacy and affairs.
+- **Batch 2 reports (owner choices).** Saturn in the spirituality network is cited from the library; hair and eye colour
+  are allowed only in the self report's appearance section, graded Weak; a sentence about a relative as its subject must
+  use a fixed sentence shape.
+- **Tests run in parts.** `tools/test_parts.py` runs the suite in 7 parts on 5 cores; the full suite is run only for a
+  release. `pytest-xdist` joins the dev group.
+- Topic file `topic-travel-education-health-life.md` is renamed `topic-travel-education-life.md`.
+
+### Removed
+- The kundli health section, health caveats, the Roga and Jeeva sahams, the consultation report's health chapter, the
+  health report type, and Lal Kitab knowledge base sections B10 (Diseases) and B11 (Longevity) with other medical
+  clauses. Contradiction register rows R27, R28, R32 and X23 stay as withdrawn stubs.
+
+## [3.9.0] — 2026-11-14 (version bumped; not yet tagged or packaged) — report library pilot, reviewed Kundli, new book rules, user guide
+
+### Added
+- **Report library pilot (T10).** One registry of 31 report types read by a new `/report` command; section specs for
+  kundli (standard and full depth), relationship and career; QC checks in `render_report.py`.
+- **Report types, batches 1 and 2 (T11).** Wealth, education, reputation, spirituality, self, family and challenges: a
+  spec, renderer sections, schema and registry rows, a synthetic fixture and tests for each, and per-type safety checks
+  (money advice, admission promises, fame and legal outcomes, spiritual rank and past lives, a relative's health or
+  life, court results, looks outside the appearance section). The family report never dates a parent or sibling event,
+  enforced in code; the full Kundli runs the same checks on its matching sections. The checks are word and clause rules,
+  a backstop with known gaps: batch 2 went through four independent re-checks with 258 test sentences.
+- **User guide (T11).** `docs/USER-GUIDE.html`, one offline page-turn guide generated by `tools/kg/user_guide.py` from the
+  real graph counts and the report registry; `--check` fails when it is stale or names a book.
+- **New book rules (T11).** The 12 method proposals of the November book study (appearance, partner, intimacy, sudden
+  gains, wealth) with Phala Deepika (second translation), Bhrigu Sutras, Uttara Kalamrita, Saravali (Hindi) and Behari as
+  sources; a Bhrigu Sutras source map (ch. 7-10). Checked by a blind comparison on a synthetic chart.
+
+### Changed
+- **Report template (T11).** Birth-time source printed once; clearer snapshot header for kundli; "That it happens" only
+  on predictions; raw claim tokens removed; the key lists only the labels a report uses; months printed as words; a
+  "no single window" note; sign-number caption on the chart. Full-depth kundli counts as a request for intimacy and
+  remedies and gains a yoga unit.
+- **Knowledge graph.** Rebuilt with all 51 catalogued books: 32,213 nodes and 289,498 edges (was 18 books, 19,801 nodes).
+- **Catalog.** Second editions of Phala Deepika, Saravali and BPHS share the work id of the first.
+
+### Fixed
+- Every remedies unit must carry the no-efficacy line (checked by `spec_checks`).
 
 ## [3.8.0] — 2026-11-08 — consultation report, report design, accuracy score, ashtakavarga fix
 
@@ -227,7 +305,7 @@ against v3.6) showed parity.
   bala, activation tables, North/South SVG charts, the outlook report, six ayanamsa modes, Julian-calendar input and
   the evidence card.
 
-### Blocked (recorded in [docs/ROADMAP.md](docs/ROADMAP.md))
+### Blocked (recorded in `docs/ROADMAP.md`, development repository)
 - Narayana dasha (competing schools) and 36-point Ashtakoota (the vashya, yoni, gana and varna sources conflict).
 
 ## [3.6.3] — 2026-10-19 — identity check, sky events, report audit tools, content-integrity privacy checks
@@ -238,7 +316,7 @@ method change that needs a v3.7 benchmark). Validated: workspace suite 362 passe
 
 ### Added
 - `astro sky FROM TO`: retrograde stations and sign changes between two dates, with no birth data — for checking
-  generic "year ahead" claims ([docs/TESTING.md](docs/TESTING.md)).
+  generic "year ahead" claims (`docs/TESTING.md`, development repository).
 - Report identity check (`astro.identity`): compares the birth details a report prints with a person's own and
   returns BOUND / PROVISIONAL / UNBOUND / REJECT, naming fields and statuses, never values (skill:
   `references/inputs.md`).

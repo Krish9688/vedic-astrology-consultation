@@ -21,36 +21,43 @@ How to weigh everything below is in [synthesis-method.md](synthesis-method.md).
 Order of work used by the sources: settle the lagna, lagna lord and its dispositor, and the Moon's strength first
 (a weak lagna or lagna lord can stop even a fine raja yoga delivering) [LOL p367]; identify functional benefics and
 malefics for the lagna "as soon as the dasas are determined" [HPA p44]; then judge houses, then yogas, then dasa, then
-transit [HPA p44–134; LOL p367]. Classical texts put longevity first [PD XIII.1; HPA p36]; this skill does **not**
-produce longevity or death judgements (see [communication.md](communication.md)).
+transit [HPA p44–134; LOL p367]. Health and death are not read in this
+practice (see [communication.md](communication.md)).
 
 ## 2. Houses
 
 | House | Working meanings |
 |---|---|
-| 1 | Body, vitality, agency, direction; lagna lord links the person to the house it occupies |
+| 1 | Build, appearance and complexion (question-trees §11), agency, direction; lagna lord links the person to the house it occupies |
 | 2 | Accumulated resources, speech, family, food, early education; retention of wealth |
 | 3 | Initiative, skills, communication, younger siblings, short journeys; courage |
 | 4 | Home, property, vehicles, mother, foundational schooling, inner contentment |
 | 5 | Intelligence, learning, children, creativity, mantra, speculation, past merit |
-| 6 | Work/service, competition, debt, disputes, illness symbolism, maternal relatives |
-| 7 | Partnership, spouse, contracts, business dealings, public, travel away from home |
-| 8 | Disruption, shared/inherited resources, research, hidden matters, longevity doctrine |
+| 6 | Work/service, competition, debt, disputes, maternal relatives |
+| 7 | Partnership, spouse, union with the partner, contracts, business dealings, public, travel away from home |
+| 8 | Sudden change, disruption, shared/inherited resources, legacies and unearned gains (topic-career-money §5a), research, hidden matters |
 | 9 | Fortune, dharma, teachers, father (baseline), higher learning, long journeys |
 | 10 | Work, status, responsibility, visible action, authority |
 | 11 | Gains, income, networks, elder siblings, fulfilment |
-| 12 | Expenditure, loss, separation, foreign residence, retreat, sleep, liberation |
+| 12 | Expenditure, loss, separation, foreign residence, retreat, sleep, bed comforts and intimate life (topic-relationships-marriage §9), liberation |
+
+Sources for the appearance, union and bed-comfort meanings: 1st [BPHS ch. 12, PDF p138–139; JP2 XI.13; PVR p80–81]; 7th
+[JP2 XIV.1; PVR p80–81]; 8th [HJH2 p78; PVR p80]; 12th [HJH2 p418; JP2 XV.73; PVR p80–81].
 
 Kendras 1/4/7/10 manifest; konas 1/5/9 support; 6/8/12 describe difficult processes with constructive uses; upachayas
 3/6/10/11 improve with time and effort — planets in 3 and 6 start impaired and improve, those in 10 and 11 start good
 and get better [LOL p291]. Treat any house as a lagna to read its sub-matters (bhavat bhavam) and read relatives from
 their karaka's sign (father from the Sun, mother from the Moon…) [PD XV.20–24]. Name the reference point and stop after
 one derivation step. Two derived-house rules from Light on Life [LOL p154–156]: a lord placed as far from its own house as
-that house is from the lagna *perpetuates* the house's results (6th lord in the 11th: one ailment after another; 4th
+that house is from the lagna *perpetuates* the house's results (6th lord in the 11th: one dispute or duty after another; 4th
 lord in the 7th: one qualification after another); a lord in a good house from the lagna but 6/8/12 from the house it
 rules first obstructs, then restores, the house's inanimate matters while more lastingly straining its living ones
 (5th lord in the 10th: intelligence prospers, children are a concern) — with stated exceptions when the lord still
 aspects its own house.
+
+A planet-in-house line from a text is one input. State the planet's lordship, dignity, aspects and companions
+first, then the line, then what it adds; a line with no supporting factor is Weak [PDK ch. 8 closing note, p104;
+BHRIGU p165, p185]. A planet close to the lagna's degree gives its house result most fully [PD VIII.34; PDK p103–104].
 
 ## 3. Functional nature (lordship) — the most common source of error
 
@@ -192,5 +199,7 @@ never pool its aspects with graha drishti. [carried over from v2.2 natal.md]
 ## 9. What the classical texts say that this skill will not state as fact
 
 Death timing, longevity spans, widowhood, "certain" disease, child sex, caste/gender judgements and "destruction"
-language appear throughout PD, BJ, HJH2, HPA and PM2 (each source map lists them in its §8). Report them only as "the
+language appear throughout PD, BJ, HJH2, HPA and PM2 (each source map lists them in its §8), and also in PDK, BHRIGU, UKAL, SARH
+and Behari (BEHARI2A). Never stated either: potency, ages given for events, after-death states, and any statement
+about orientation. Report them only as "the
 text says…" when the user asks about doctrine, never as a forecast. See [communication.md](communication.md).

@@ -26,8 +26,8 @@
     <dt>Calculation</dt><dd>Lahiri ayanamsa · whole-sign houses · Swiss Ephemeris, computed on this computer</dd>
   </dl>
   <p class="foot">Astrology is a traditional interpretive system. This report describes tendencies and timing within that
-  tradition; it is guidance, not a guarantee, and it is not a substitute for medical, legal, financial or
-  psychological advice.</p>
+  tradition; it is guidance, not a guarantee, and it is not a substitute for legal, financial or
+  psychological advice. Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead.</p>
 </section>
 
 {# ============================== 1 intake ============================== #}
@@ -218,7 +218,6 @@
 {% for ch in chapters_full %}
 <section class="chapter">
 <h3 id="{{ ch.id }}" class="chapter-title">{{ ch.title }}</h3>
-{% if ch.id == "health" %}<p class="callout small">General wellness themes only. This is not medical advice and never replaces a doctor; nothing here is a diagnosis or a prediction of illness.</p>{% endif %}
 <h4>Key chart indicators</h4>
 <ul>{% for it in ch.indicators %}<li>{{ it.text }}{{ tsmark(it) }}<span class="refs">{{ it.refs_text }}</span></li>{% endfor %}</ul>
 <h4>Current period</h4>

@@ -1,10 +1,12 @@
 # Divisional charts: applications, conflicts and reliability
 
+Contents: [What a varga is](#what-a-varga-is) · [Use table](#use-table) · [D1 and D9](#d1-and-d9) · [Reliability before detail](#reliability-before-detail) · [Conflict procedure](#conflict-procedure) · [Presenting a chart](#presenting-a-chart)
+
 ## What a varga is
 
 A varga reassigns portions of natal zodiacal signs under a specified rule. It is not another observed sky at birth. Do not compute combustion, retrograde motion, physical angular distance or a new Moon phase from its graphic. Carry physical conditions from the actual natal positions and evaluate varga dignity separately.
 
-Phaladeepika III reports differing views on Navamsa's equivalence to rasi/bhava and gives traditional effect fractions. These are not statistical probability weights. The modern topical-varga approach is especially explicit in P.V.R. Narasimha Rao's textbook, chapter 6. This package adopts D1 anchoring and selective confirmation as **DESIGN**, while recognizing schools that give Vargas greater autonomous interpretive importance. [P3, PVR]
+Phaladeepika III reports differing views on Navamsa's equivalence to rasi/bhava and gives traditional effect fractions. These are not statistical probability weights. The modern topical-varga approach is especially explicit in P.V.R. Narasimha Rao's textbook, chapter 6. This package adopts D1 anchoring and selective confirmation as **DESIGN**, while recognizing schools that give Vargas greater autonomous interpretive importance. [PD III, PVR]
 
 ## Use table
 
@@ -29,7 +31,7 @@ Phaladeepika III reports differing views on Navamsa's equivalence to rasi/bhava 
 | D45 Akshavedamsa | Paternal-line inheritance, character/conduct (per BPHS 6–7, EXT) | 9 and Sun; secondary only | 40′ segments; movable signs from Aries, fixed from Leo, dual from Sagittarius [BPHS ch. 6, PDF p93]. Omit unless time is rectified |
 | D60 Shashtyamsa | Broad karmic interpretation in some schools | Secondary philosophical context only here | Normally omit without robust time/method stability; never factual past-life claims |
 
-The main topical correspondences are cross-referenced in [PVR] chapter 6, table 11 and [BP6] chapters 6–7; exact interpretive boundaries above are this package's safeguards.
+The main topical correspondences are cross-referenced in [PVR] chapter 6, table 11 and [BPHS] chapters 6–7; exact interpretive boundaries above are this package's safeguards.
 
 ## D1 and D9
 

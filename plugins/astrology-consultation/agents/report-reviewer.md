@@ -29,7 +29,8 @@ Review a rendered consultation report (HTML/PDF/DOCX from `create_consultation_r
    established."
 5. **Calibrated language:** grades are Strong/Moderate/Weak/Contradictory/Unknown; no percentages, no "destined",
    no fear labels (sade sati, kaal sarpa, dosha) used as explanations.
-6. **Sensitive boundaries:** no death dates, diagnoses, pregnancy/fertility verdicts, divorce/infidelity claims,
+6. **Sensitive boundaries:** no health, medical, illness, death or longevity content for anyone (the answer is the plain refusal),
+   no pregnancy/fertility verdicts, divorce/infidelity claims,
    legal verdicts or investment signals.
 7. **Citations:** at most one or two sources per point; no invented verse or page; source statement vs inference vs
    synthesis kept separate.

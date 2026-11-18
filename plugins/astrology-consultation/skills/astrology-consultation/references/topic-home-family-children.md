@@ -36,8 +36,8 @@ Ashtakavarga are traditional and unreliable — Raman averages lagna and Moon co
 **Children / parenthood.** *Output rule:* the method notes below are for judging the theme, not for forecasting
 births. Never give a window for having or conceiving a child, an age of parenthood, a number of children, "delay",
 "limited progeny" or "childless" statements — even softened. Describe the relationship with children, parenting
-style, mentoring or creative "offspring"; if asked *when*, say the chart cannot time conception or birth and that
-fertility questions belong with a medical professional. `life_lint.py` and the report renderer flag the common phrasings — a backstop only; do not rely on it to catch every form.
+style, mentoring or creative "offspring"; if asked *when*, say the chart cannot time conception or birth and
+give the plain refusal ("Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead."). `life_lint.py` and the report renderer flag the common phrasings — a backstop only; do not rely on it to catch every form.
 - Supportive: Jupiter and the 5th lords from lagna and Moon well placed and the 5th aspected by benefics or good-house
   lords; lagna and 5th lords related [PD XII.1]; 5th lord, Jupiter and lagna lord strong [HPA p52].
 - Obstructive confluence: 5th from lagna, Moon and Jupiter all afflicted with lords in dusthanas [PD XII.2]; "childless
@@ -68,11 +68,10 @@ planets in a combination makes them cooperate [LOL p293].
   in 5 [KB B3 H5]. Author's own practice (Santan Gopal sadhana) is [AUTH], not Lal Kitab [KB B16].
 - **House 3** (siblings): planets in 3 protect against the 8th; Rahu/Ketu here "worrying" [KB B3 H3].
 - **House 2 and 12**: family/in-laws and expenses; the 12th is read as judging the others and the 2nd as judging the 12th [KB A5 notes].
-- Relatives signified by a planet protect the native while alive; after their death keep that planet's objects
-  [KB B13 p199]. The scapegoat chains name relatives (maternal uncle, son, wife) — read as family *themes*, never as
+- Keep the objects of a planet that signifies a relative [KB B13 p199]. The scapegoat chains name relatives (maternal uncle, son, wife) — read as family *themes*, never as
   predictions about a named person [KB B7 p48–50].
 - **House-building and Saturn** [KB B15; R33]: Lal Kitab ties house construction to Saturn's placement; several
-  statements are deterministic (a father's death tied to the native building three houses) — C5, never forecast.
+  statements are deterministic (KB C5) and are never stated.
 - Rin remedies are collective family practices; check [remedy-safety.md](remedy-safety.md) (e.g. feeding 100 dogs is
   allowed as charity; the "fast 40–43" instruction is unsafe as stated).
 
@@ -80,5 +79,5 @@ planets in a combination makes them cooperate [LOL p293].
 
 Property purchase vs long lease vs renovation; living near parents vs caring for them from afar; a child vs adoption vs
 mentoring role; a family business rather than a household event. Never confirm or rule out pregnancy, fertility, a
-child's sex, a parent's death or a sibling's fate. Fertility and health questions go to medical professionals; see
+child's sex, a parent's death or a sibling's fate. Fertility and health questions get the plain refusal; see
 [communication.md](communication.md).

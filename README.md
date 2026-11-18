@@ -28,6 +28,8 @@ git clone https://github.com/Krish9688/vedic-astrology-consultation && cd vedic-
 
 Platforms: macOS and Linux. On Windows, use WSL 2.
 
+Current version: 3.10.0 (skill v3.10; plugin, engine and skill share one number). Last published release: v3.8.0. Changes: [CHANGELOG.md](CHANGELOG.md) and [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md).
+
 ## What it does
 
 | Feature | What you get |
@@ -36,7 +38,7 @@ Platforms: macOS and Linux. On Windows, use WSL 2.
 | **Local engine** | Charts, 16 divisional charts, Vimshottari and Yogini dashas, transits, Shadbala, Ashtakavarga, Jaimini factors. |
 | **Birth-time check** | The chart is recomputed at plus and minus 0.5 to 15 minutes. You see which factors survive the error. |
 | **Separate systems** | Parashari is primary. Jaimini and Lal Kitab are argued separately and compared only at the end. |
-| **Reports** | Career, relationship, dasha and 12-month reports as HTML or PDF. |
+| **Reports** | 30 report types are listed: 17 are built and render as HTML or PDF, 13 are planned (see Report types below). |
 | **Three interfaces** | MCP (`astro mcp`), REST (`astro serve`, `/api/v1`) and the `astro` command. All call the same functions. |
 
 ## Example
@@ -56,6 +58,33 @@ In Claude, ask:
 
 Claude calls `calculate_birth_chart`, then `prepare_consultation` and `get_dasha` as the question needs. `get_transits` covers timing.
 
+## Report types
+
+One registry lists every report type. 17 are built:
+
+- **Life areas:** Kundli (birth chart), Relationship, Marriage and spouse, Career, Wealth and money, Family and home, Education, Foreign and relocation, Self and appearance, Spirituality, Reputation and status, Challenges and conflict.
+- **Timing and summaries:** Complete life, Dasha and timing, Consultation summary, Monthly horoscope, Yearly horoscope.
+
+13 are planned and listed but not built yet: Varshaphal, Jupiter transit, Rahu-Ketu transit, Sade Sati and Saturn, Mangal Dosha, Kaal Sarp, Couples match, Lal Kitab, Children, Intimacy, Affairs and fidelity, Raj Yoga and Pitra Dosha. There is no health report.
+
+## What is not read
+
+Health, illness and death are not read in this practice. If you ask, the skill answers: "Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead." A question about self-harm gets a referral to crisis support instead. Fertility, legal and investment questions are also declined.
+
+## User guide and knowledge graph
+
+Open [docs/USER-GUIDE.html](docs/USER-GUIDE.html) in a browser. It is one offline page you can flip through with the Prev and Next buttons, the arrow keys or a swipe. It covers install, asking questions, the report types, how to read a report, what the skill does well, its known limits, what you can learn from it, the safety rules and a glossary.
+
+One page explains the knowledge graph. The graph is built by Graphify from page-cited rule maps of the astrology books, with no language model in the build:
+
+- **Nodes** are books, pages, rules and the chart concepts the rules talk about: planets, houses, signs, yogas, nakshatras, divisional charts and techniques.
+- **Edges** say how they connect. A rule comes from a page of a book (`RULE_FROM`, `PART_OF`), applies to or mentions concepts (`APPLIES_TO`, `MENTIONS`), and may disagree with another rule (`CONTRADICTS`).
+- Rules are never merged. Disagreements between books stay visible as Contradiction nodes, with both sides cited.
+
+The guide prints the real counts of each node and edge type. They are regenerated with `python3 tools/kg/user_guide.py`, and `--check` fails if they go stale.
+
+The public edition ships the tools that build such a graph from your own books (`astro add-book`) and the offline viewer that draws it (`tools/kg/viewer.html`, the same design as the guide), not the owner's library graph. It shows the project map only: a map of this repository's own files, folders, imports and document links. Make it yourself with `python3 tools/kg/project_graph.py --out <folder>`, which writes `project.json` and `project.html`; `--check` tells you if a stored map is stale.
+
 ## Project structure
 
 ```text
@@ -65,9 +94,9 @@ plugins/astrology-consultation/
   skills/                    consultation, report and source-lookup skills
   agents/  commands/         report reviewer; /setup and /doctor commands
   scripts/astro              launcher that builds the engine on first run
-docs/                        guides (see below)
-tests/                       engine, interface, security and property tests
-tools/                       link, version, privacy and package checks
+docs/                        guides (see below) and the accuracy rubric and score reports
+tools/                       book ingestion for `astro add-book`, privacy check, install smoke test (mcp_smoke.py)
+schemas/  knowledge/         JSON schemas of the engine's facts; book catalogue (metadata only)
 LICENSES/                    full licence texts
 ```
 
@@ -87,22 +116,23 @@ Optional install extras: `mcp`, `api`, `report`, `all`. Servers bind to 127.0.0.
 
 | Page | Covers |
 |---|---|
+| [USER-GUIDE](docs/USER-GUIDE.html) | Page-by-page guide: use, reports, the knowledge graph, strengths and limits |
 | [MARKETPLACE](docs/MARKETPLACE.md) | Install, update, roll back, uninstall, troubleshooting |
 | [CLIENT-INTEGRATIONS](docs/CLIENT-INTEGRATIONS.md) | Claude Desktop, ChatGPT, Cursor, Open WebUI; what was tested |
 | [ARCHITECTURE](docs/ARCHITECTURE.md) | How the engine, skill and interfaces fit together |
 | [CALCULATION-ENGINES](docs/CALCULATION-ENGINES.md) | Conventions, ayanamsa and cross-checks |
 | [PRIVACY](docs/PRIVACY.md) | What stays local and how remote mode works |
-| [TESTING](docs/TESTING.md) | Test method and results |
+| [ACCURACY-RUBRIC](docs/ACCURACY-RUBRIC.md) | How accuracy is scored; reports in `docs/accuracy/` |
 | [ADD-A-BOOK](docs/ADD-A-BOOK.md), [COPYRIGHT](docs/COPYRIGHT.md) | Using your own books; what is not distributed |
 | [VERSION-HISTORY](docs/VERSION-HISTORY.md), [CHANGELOG](CHANGELOG.md) | Release history |
 
 ## Privacy and limits
 
-Calculation is local and nothing is sent to an outside service. This repository holds no personal data and no book text. Ascendant and divisional-chart claims depend on the birth time (see [TESTING](docs/TESTING.md)). There is no time-zone lookup from a birth place without the optional gazetteer, so give the UTC offset at birth if you use coordinates.
+Calculation is local and nothing is sent to an outside service. This repository holds no personal data and no book text. Ascendant and divisional-chart claims depend on the birth time: a few minutes can change them, so `get_birth_time_sensitivity` reports how stable each one is and the skill treats "high" sensitivity as uncertain (see the sensitivity grid in [CALCULATION-ENGINES](docs/CALCULATION-ENGINES.md)). There is no time-zone lookup from a birth place without the optional gazetteer, so give the UTC offset at birth if you use coordinates.
 
 ## Contributing
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) first. Use invented charts only. Report security problems as described in [SECURITY.md](SECURITY.md). Before a pull request, run `uvx ruff check .`, `python3 tools/privacy_check.py`, `python3 tools/check_versions.py` and `python3 tools/check_links.py`.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) first. Use invented charts only. Report security problems as described in [SECURITY.md](SECURITY.md). Before a pull request, run `uvx ruff check .` and `python3 tools/privacy_check.py`.
 
 ## License
 

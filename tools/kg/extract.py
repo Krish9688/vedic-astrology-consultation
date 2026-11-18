@@ -2,7 +2,7 @@
 # No LLM, no network. Reads: knowledge/catalog.json, text/*.jsonl, sourcemaps/*.md, the skill's contradiction
 # register and (private edition only) the Lal Kitab KB v2.2. Writes: knowledge/extraction.json + validation/*.md reports.
 # Rule ids: reads and rewrites knowledge/curation/rule_ids.json; the owner's page checks: knowledge/curation/page_checks.json
-# (both explained in docs/KNOWLEDGE-PIPELINE.md).
+# (both explained in docs/KNOWLEDGE-SYSTEM.md section 13).
 # usage: .venv-graphify/bin/python tools/kg/extract.py
 import datetime, hashlib, json, os, re, sys
 from collections import Counter, defaultdict
