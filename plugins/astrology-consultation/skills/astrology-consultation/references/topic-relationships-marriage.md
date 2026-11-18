@@ -112,7 +112,7 @@ Raman: consult the navamsa only after the rasi is satisfactory — if D1 itself 
 [PM2 p26]. A stable birth time is needed for the navamsa lagna.
 
 **Number of marriages / remarriage** rules [HJH2 p15–16; PM2 XX.37–46] are classical and gendered. Modern reading
-(Raman): remarriage after divorce or death, or a significant second relationship [PM2 p27, p64–65]. Only mention when
+(Raman): remarriage after the end of a marriage, or a significant second relationship [PM2 p27, p64–65]. Only mention when
 asked and when several signatures repeat.
 
 **Kuja dosha**: disputed; three conventions, never merged — BPHS 80.47–49 (12/4/7/8 from the lagna, benefic aspect cancels), popular LOL form (1/2/4/7/8/12 from lagna, Moon, Venus; "non-authoritative"), PD XI.3 (Mars in the 7th); see CR-N04, CR-V16 and yoga-definitions.md. Very common, many cancellations (both partners have it; Mars own/
@@ -258,12 +258,11 @@ Read in this order, and say what each step shows in this chart:
    navamsa is read as in §2.
 
 **Say why, not only whether.** When the comfort is limited, Raman lists the possible causes: circumstance, means,
-health, the body, or restraint chosen for spiritual reasons [HJH2 p422–423]. Never choose a health cause for the
-person. Rank the others for this chart and give the best two with their support: living apart, travel or work away
+or restraint chosen for spiritual reasons [HJH2 p422–423]. Rank the others for this chart and give the best two with their support: living apart, travel or work away
 (12th factors in movable signs or tied to Saturn [JP2 XV.73]; foreign-residence links); too little rest or privacy
 (the 12th is also sleep; a strained 4th); restraint by choice (modern and list support only, Weak: the Sun in the 12th
 [BEHARI2A p157–158]; malefics in the 7th [BEHARI2A p86]; 'giving up the bed' among the 12th's meanings [UKAL V p121];
-plus Ketu, Jupiter or Saturn on the 12th in a chart that leans to renunciation, the skill's inference); indulgence and its cost (Venus or Rahu in the 12th); the relationship itself
+plus Ketu, Jupiter or Saturn on the 12th in a chart that leans to renunciation: Saturn is the karaka of renunciation and emancipation [HJH2 p432]; Ketu is the 12th's final emancipation [BPHS p337]; Jupiter there stays the skill's inference); indulgence and its cost (Venus or Rahu in the 12th); the relationship itself
 (7th and Venus strained, §2). Mixed results are normal: "desire strong, opportunity limited" is a valid reading.
 
 **Phases, not a verdict.** In Raman's worked case the comfort was normal for about fifteen years and then absent,

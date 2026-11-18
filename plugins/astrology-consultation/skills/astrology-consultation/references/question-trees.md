@@ -1,6 +1,6 @@
 # Question trees: which techniques a question actually needs
 
-Contents: [1. Relationship (romance, dating, a serious relationship)](#1-relationship-romance-dating-a-serious-relationship) · [2. Marriage (promise, timing, relationship vs marriage)](#2-marriage-promise-timing-relationship-vs-marriage) · [3. How will I meet them / who initiates (description of form)](#3-how-will-i-meet-them--who-initiates-description-of-form) · [4. Future spouse: nature and appearance](#4-future-spouse-nature-and-appearance) · [5. Career (change, direction, promotion, job vs business)](#5-career-change-direction-promotion-job-vs-business) · [6. Money](#6-money) · [7. Travel, study abroad and relocation](#7-travel-study-abroad-and-relocation) · [8. Open activation: "what is active now", "next 30 days", "the theme of my period", "what am I overlooking"](#8-open-activation-what-is-active-now-next-30-days-the-theme-of-my-period-what-am-i-overlooking) · [9. Explaining a past period ("why was X hard?")](#9-explaining-a-past-period-why-was-x-hard) · [10. Children, property, education, health symbolism](#10-children-property-education-health-symbolism) · [11. Own appearance and constitution](#11-own-appearance-and-constitution)
+Contents: [1. Relationship (romance, dating, a serious relationship)](#1-relationship-romance-dating-a-serious-relationship) · [2. Marriage (promise, timing, relationship vs marriage)](#2-marriage-promise-timing-relationship-vs-marriage) · [3. How will I meet them / who initiates (description of form)](#3-how-will-i-meet-them--who-initiates-description-of-form) · [4. Future spouse: nature and appearance](#4-future-spouse-nature-and-appearance) · [5. Career (change, direction, promotion, job vs business)](#5-career-change-direction-promotion-job-vs-business) · [6. Money](#6-money) · [7. Travel, study abroad and relocation](#7-travel-study-abroad-and-relocation) · [8. Open activation: "what is active now", "next 30 days", "the theme of my period", "what am I overlooking"](#8-open-activation-what-is-active-now-next-30-days-the-theme-of-my-period-what-am-i-overlooking) · [9. Explaining a past period ("why was X hard?")](#9-explaining-a-past-period-why-was-x-hard) · [10. Children, property, education](#10-children-property-education) · [11. Own appearance](#11-own-appearance)
 
 Each tree is the **order of judgement** for one family of questions, with a stop rule at each step. Walk only the
 branches the question needs; the rules themselves live in the topic files, [timing.md](timing.md) and
@@ -133,8 +133,8 @@ Do **not** tour the planets. Build an activation list, rank it, answer from the 
    Don't show the scores.
 6. **"Unexpected"**: the top domain surfacing through Rahu/Ketu, the 8th, a station or an eclipse contact *if
    present*; otherwise say the month looks like development in the top domains rather than a shock.
-7. **"What am I overlooking?"**: a strongly activated domain the person did not ask about (top two only; never health
-   scares) — one line, as a suggestion [R3-DP4].
+7. **"What am I overlooking?"**: a strongly activated domain the person did not ask about (top two only; never a
+   health or death theme) — one line, as a suggestion [R3-DP4].
 8. Every theme gets a domain, a direction (build / strain / release / change), a window and **one observable early
    sign** so it can be checked [R3-DP6].
 
@@ -147,13 +147,13 @@ Do **not** tour the planets. Build an activation list, rank it, answer from the 
 4. Frame as *consistent with the chart*, not proof; ask what actually happened if the answer depends on it — and use
    the answer as calibration (consultation-reasoning §8), not to retune the method.
 
-## 10. Children, property, education, health symbolism
+## 10. Children, property, education
 
 Use the topic files' networks with the same skeleton — promise (house/lord/karaka, Moon), relevant varga with a stable
-time (D7, D4, D24; health only as symbolism), activation, trigger, scenarios, confidence — and their safety limits
-(no fertility, pregnancy, diagnosis or legal verdicts).
+time (D7, D4, D24), activation, trigger, scenarios, confidence — and their safety limits
+(no fertility, pregnancy, health or legal verdicts).
 
-## 11. Own appearance and constitution
+## 11. Own appearance
 
 "What do I look like", build, height, complexion, features, physique. Answer it: the texts describe the body from the
 lagna. A natal description, so no dasha or transit step.
@@ -181,14 +181,11 @@ lagna. A natal description, so no dasha or transit step.
    HJH1 p159; JP2 XI.15] with the planet's colour [BJ p51]. Say it at most once, neutrally, as the text's tendency
    within the person's own family and region, because the texts themselves say country must be allowed for [BJ p88;
    SAR1 p158]. Never rank or value a complexion, never treat one tone as better, never compare with other people.
-5. **S — Constitution** (only if the person asks about stamina or vigour): the lagna lord in a kendra or trikona and
-   benefics on the lagna = robust; the lagna lord in 6/8/12, debilitated, combust or with malefics = stamina needs
-   more looking after [BPHS ch. 12 sl. 1–4, PDF p138–139]. Symbolism only; nothing medical, no diagnosis.
-6. **Counter-check**: do steps 1 and 2 point the same way (a long sign and a tall planet; a stocky sign and a heavy
+5. **Counter-check**: do steps 1 and 2 point the same way (a long sign and a tall planet; a stocky sign and a heavy
    planet)? Agreement → say it plainly. Disagreement, or two planets of near-equal strength → say "mixed", which is
    what the text predicts [SAR1 p158], and give the stronger factor first. Check every position you mention against
    the engine facts (a planet is "on the lagna" only if it is in the lagna sign).
-7. **Synthesis — a short portrait in prose, not an inventory** (portrait 120–150 words; the whole answer, with any
+6. **Synthesis — a short portrait in prose, not an inventory** (portrait 120–150 words; the whole answer, with any
    birth-time caveat and the grade, at most about 200): the overall impression first (frame, stature, bearing); then
    two or three distinctive features, each with its reason from this chart; name one or two texts in total, in
    passing, not one per feature, and do not explain the method; one clause where the texts or the two factors disagree; then the grade — Moderate only where sign and

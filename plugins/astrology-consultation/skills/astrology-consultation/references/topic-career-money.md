@@ -16,7 +16,7 @@ work [HJH2 p288]; more yogas mean more distinction; judge rank separately from t
 
 ## 2. Capacities first
 
-Before vocation, gauge mental, intellectual and physical capacity from the Sun, Moon/Mercury and lagna; heavy Saturn/
+Before vocation, gauge mental and intellectual capacity from the Sun, Moon/Mercury and lagna; heavy Saturn/
 Rahu affliction to the Moon or Mercury suits less high-pressure responsibility [HJH2 p249]. Mercury matters as much as
 the Moon for career judgement in Raman's experience [HJH2 p249].
 
@@ -91,7 +91,7 @@ person means, then:
    read from the 11th and 10th); none, gains come by earning — and give the best two with their signatures.
 4. **Counter-factors**: the same 8th is sudden loss (§5); an afflicted 5th or 11th lord turns speculation to loss
    [HJH2 p370]; a weak lagna lord (vedic-natal §1); gains formed by dusthana lords tend to come through a mishap
-   [LOL p327]. An 8th-house gain usually follows an ending; never predict a relative's death to explain it.
+   [LOL p327]. An 8th-house gain usually follows an ending or a handover.
 5. **Activation**: only the periods of the planets forming the signature (§6). No such period at a usable age =
    "present in the chart, not active".
 6. **Grade**: Raman calls house-by-house results very general, not to be applied directly [HJH2 p372]. One placement

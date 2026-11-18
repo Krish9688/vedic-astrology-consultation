@@ -6,6 +6,8 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 ## [Unreleased]
 
+## [3.10.0] - 2026-11-19
+
 ### Added
 - **Answers for appearance, intimacy, sudden gains and broad labels.** Questions about the person's own appearance or about
   intimacy had no method and fell to a generic route, so answers were thin. The skill now has a question tree for own
@@ -49,6 +51,28 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 - **Knowledge graph: references between register rows were lost.** Row CR-V21 says it is superseded by CR-X01, but the
   extractor read that as Lal Kitab entry X01, found no such entry and dropped the link. `CR-` references now link to the row
   they name.
+
+### Changed
+- **No medical and no death content, for anyone (owner rule, 2026-11-15).** The skill, the reports and the book search
+  no longer read health or death. A question about either gets one fixed answer: "Health and death are not read in this
+  practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your
+  life instead." A question about self-harm gets the crisis referral instead. One shared word list
+  (`scripts/medical_words.py`: English, Hindi, Hinglish, Devanagari, slang, and a typo net) is used by question routing,
+  the book search filter, consultation intake and the report gate. A refused or crisis question returns no chart facts.
+  The list over-blocks some neutral sentences; that is accepted and listed in the file. Review rounds continue until a
+  review finds zero leaks; the status is "in review".
+- **Report plan.** The health report type is dropped; the next batch is children, intimacy and affairs.
+- **Batch 2 reports (owner choices).** Saturn in the spirituality network is cited from the library; hair and eye colour
+  are allowed only in the self report's appearance section, graded Weak; a sentence about a relative as its subject must
+  use a fixed sentence shape.
+- **Tests run in parts.** `tools/test_parts.py` runs the suite in 7 parts on 5 cores; the full suite is run only for a
+  release. `pytest-xdist` joins the dev group.
+- Topic file `topic-travel-education-health-life.md` is renamed `topic-travel-education-life.md`.
+
+### Removed
+- The kundli health section, health caveats, the Roga and Jeeva sahams, the consultation report's health chapter, the
+  health report type, and Lal Kitab knowledge base sections B10 (Diseases) and B11 (Longevity) with other medical
+  clauses. Contradiction register rows R27, R28, R32 and X23 stay as withdrawn stubs.
 
 ## [3.9.0] — 2026-11-14 (version bumped; not yet tagged or packaged) — report library pilot, reviewed Kundli, new book rules, user guide
 

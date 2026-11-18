@@ -74,7 +74,6 @@ checker are the main safety for unknown-time reports.
 | ranking table and timeline present | `ranking` (or dropped); a timeline window needs the `windows` section |
 | a grade word beside each claim | units (except facts), timeline window and pressure rows |
 | no percentages | no `%`, "percent" or "percentage" in client text |
-| health non-diagnostic | no organ words anywhere; no body-part words in the `health` section; life_lint SAFETY |
 | partner and appearance caveat | looks or age words only in the `partner` section, graded Weak or Unknown; caveat printed there |
 | affairs: own tendencies only | a fidelity sentence may not be about another person |
 | no exact day when the time is not exact | no `YYYY-MM-DD` or day-month dates; timeline months only |

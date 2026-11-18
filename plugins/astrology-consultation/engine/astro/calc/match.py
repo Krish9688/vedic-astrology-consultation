@@ -21,12 +21,12 @@ SIGN_RULES = [  # (verse, applies(r, girl_sign), reading); r = boy's sign counte
     ("XXI.5", lambda r, g: r in (6, 8) and g % 2 == 0, "odd-sign girl: the 6th or 8th is optional"),
     ("XXI.5", lambda r, g: r in (6, 8) and g % 2 == 1, "even-sign girl: reject the 6th, accept the 8th"),
     ("XXI.6 (Madhavacharya)", lambda r, g: 2 <= r <= 6,
-     "2nd loss of money, 3rd sorrow, 4th quarrels, 5th loss of children, 6th disease, danger, separation"),
+     "2nd loss of money, 3rd sorrow, 4th quarrels, 5th loss of children, 6th separation, friction"),
     ("XXI.7-8 (Brihaspati)", lambda r, g: r in (6, 8),
      "ruin unless both signs share a lord or the lords are friends; vasya without vedha makes 6/8 acceptable"),
     ("XXI.9-10", lambda r, g: r in (2, 5), "incompatible"),
     ("XXI.9-10", lambda r, g: r == 7, "very good even if the lords are enemies"),
-    ("XXI.9-10", lambda r, g: r in (6, 8), "separation, quarrel or death; enemy lords or vedha aggravate, "
+    ("XXI.9-10", lambda r, g: r in (6, 8), "separation or quarrel; enemy lords or vedha aggravate, "
                                             "the same lord with vasya cancels"),
     ("XXI.9-10", lambda r, g: r in (2, 12), "poverty"),
     ("XXI.14 (Muhurtha Sangraha)", lambda r, g: 7 <= r <= 12, "acceptable"),
@@ -70,13 +70,13 @@ def facts(girl, boy):
     if s == 1:
         star.append(("XXI.15", f"same star: permissible except {', '.join(sorted(SAME_STAR_BARRED))}"
                      + (" - this star is one of them" if E.NAKS[gn] in SAME_STAR_BARRED else "")))
-        star.append(("XXI.16", "same star: 'fear from poison'"))
+        star.append(("XXI.16", "same star: a caution about hidden harm in the match"))
     elif r == 1:
         star.append(("XXI.16", "same sign, different star: good"))
     if s in (3, 5, 6, 7):
         star.append(("XXI.21-22 (dina)", "avoid a boy in the 3rd, 6th or 7th star from the girl's; the 5th is worse"))
     if s in (4, 7, 10):
-        star.append(("XXI.24", "4th, 7th or 10th star: well-being"))
+        star.append(("XXI.24", "4th, 7th or 10th star: steady fortune"))
     if sb == 4:
         star.append(("XXI.25", "girl 4th from the boy: mahendra (wealth)"))
     if sb == 7:
@@ -247,7 +247,7 @@ def kootas(girl, boy):
              "readings": ["MC 6.35 (6.37 in MCJ): removes nadi and gana dosha"]},
             {"condition": "same star, different padas", "holds": n["girl"] == n["boy"] and pada["girl"] != pada["boy"],
              "readings": ["MC 6.35 (6.37 in MCJ): auspicious",
-                          "PM2 XXI.15-16: same star barred for twelve stars; 'fear from poison' (star_readings)"]}]
+                          "PM2 XXI.15-16: same star barred for twelve stars; a caution about hidden harm (star_readings)"]}]
         nd["exceptions_not_evaluated"] = [
             "exempt-star lists of Narada Samhita and Piyushadhara (via onlinejyotish, secondary; they differ)",
             "Muhurta Ganapati: friendly lords cancel (via onlinejyotish, secondary)",

@@ -21,7 +21,7 @@
     {% if r.engine and r.engine.calculation %}<dt>Calculated with</dt><dd>{{ r.engine.calculation }}{% if r.engine.cross_check and not r.engine.cross_check.strip().lower().startswith(('none', 'no ', 'not')) %}; checked against {{ r.engine.cross_check }}{% endif %}</dd>{% endif %}
   </dl>
   <p class="foot">A traditional Vedic astrological interpretation using documented methods. It describes tendencies and
-  timing within that tradition; it is not a guarantee, and it is not medical, legal or financial advice.</p>
+  timing within that tradition; it is not a guarantee, and it is not legal or financial advice. Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead.</p>
 </section>
 
 {% macro ranking() %}{% if r.ranking %}<h2 id="ranking">{{ r.ranking_title or ("Snapshot by life area" if r.report_type == "kundli" else "Ranked by support") }}</h2>
@@ -51,7 +51,6 @@
 {% for s in r.sections %}
 <h2 id="{{ s.id }}">{{ s.title }}</h2>
 {% if spec and s.id == "partner" %}<div class="callout"><p>{{ partner_caveat }}</p></div>{% endif %}
-{% if spec and s.id == "health" %}<div class="callout"><p>{{ health_caveat }}</p></div>{% endif %}
 {% if s.intro %}<p>{{ s.intro }}</p>{% endif %}
 {% if s.text %}{% for para in s.text.split("\n\n") %}<p>{{ para }}</p>{% endfor %}{% endif %}
 {% for u in s.units or [] %}

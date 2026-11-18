@@ -258,7 +258,8 @@ def get_birth_time_sensitivity(date: dt.date, time: str, lat: float, lon: float,
 
 
 # --- knowledge --------------------------------------------------------------------------------------------------
-@tool("Page-cited full-text search of the user's own local astrology library (if configured).")
+@tool("Page-cited full-text search of the user's own local astrology library (if configured). Disease, illness, longevity "
+      "and death hits are never returned.")
 def search_astrology_sources(query: str, sources: Optional[str] = None) -> str:
     return S.search_sources(query, sources)
 
@@ -269,7 +270,9 @@ def get_rule_sources(rule: str) -> str:
 
 
 # --- reasoning support (the client reasons) ---------------------------------------------------------------------
-@tool("Classify a question and list the skill files to read for it (no chart needed).")
+@tool("Classify a question and list the skill files to read for it (no chart needed). Health, illness, surgery and death "
+      "questions return topics [\"refuse\"] and a plain refusal; suicide and self-harm return topics [\"crisis\"] and the crisis "
+      "referral: do not answer either.")
 def analyze_question(question: str) -> dict:
     return S.analyze_question(question)
 
@@ -318,6 +321,10 @@ def skill_document(path: str) -> str:
 
 @mcp.prompt(description="Start a consultation with the skill's method.")
 def astrology_consultation(question: str) -> str:
+    if S.ROUTING.crisis(question):
+        return S.ROUTING.CRISIS
+    if S.ROUTING.refuses(question):
+        return S.ROUTING.REFUSAL
     return (f"Answer this astrology question as a careful senior consultant: {question}\n\n"
             "1. Call prepare_consultation with the birth details. 2. Read skill://SKILL.md and the files it lists. "
             "3. Answer life-first; grade evidence; name the main counter-factor and one sign to watch; say which "

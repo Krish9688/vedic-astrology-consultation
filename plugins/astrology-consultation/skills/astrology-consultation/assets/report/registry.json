@@ -349,16 +349,6 @@
    "one_line": "Children in your chart, as themes; no fertility verdicts."
   },
   {
-   "id": "health",
-   "name": "Health and wellbeing",
-   "aliases": [
-    "wellbeing"
-   ],
-   "charts": 1,
-   "status": "planned",
-   "one_line": "Lifestyle and stress periods only; no medical claims."
-  },
-  {
    "id": "education",
    "name": "Education",
    "aliases": [

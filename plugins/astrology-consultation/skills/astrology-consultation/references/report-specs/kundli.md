@@ -8,7 +8,7 @@ QC checks and tone: [README.md](README.md).
 **Order (standard):** `foundation` → `windows` → `self` → `strengths` → `current`
 
 **Order (full):** `foundation` → `windows` → `self` → `career` → `relationship` → `partner` → `intimacy` → `wealth` →
-`health` → `family` → `friends` → `education` → `home` → `travel` → `inner` → `challenges` → `remedies`
+`family` → `friends` → `education` → `home` → `travel` → `inner` → `challenges` → `remedies`
 
 Inputs: `birth` (date, time, place, `time_reliability`). Model: `report_type: "kundli"`, `depth`, the frame fields,
 `ranking` as the snapshot by life area (master section 2).
@@ -43,7 +43,6 @@ Every number comes from the tool named; the writer interprets it. "F.*" ids are 
 | `partner` | partner as tendencies (T3, trimmed): nature, background, how you meet; appearance and age graded Weak | Darakaraka, Upapada → `get_jaimini_factors`; 7th lord, D9 7th → as above |
 | `intimacy` | T18b, tendency-level only | Mars, Venus, 8th house → `calculate_birth_chart` |
 | `wealth` | T4: income model, saving pattern, risk | 2nd, 11th, 5th, 9th, 8th → `calculate_birth_chart`; SAV for those houses → `get_ashtakavarga` |
-| `health` | T5: constitution, stress windows, lifestyle fit; no organs; the T5 caveat is printed at the top | lagna lord, 6th, Moon → `calculate_birth_chart`; stress periods → `get_dasha`, `get_transits` |
 | `family` | T6 | 4th, 3rd, 2nd, Sun, Moon → `calculate_birth_chart` |
 | `friends` | T7 (+ hobbies, T13) | 11th, 3rd, 5th → `calculate_birth_chart` |
 | `education` | T8 | 4th, 5th, 9th, Mercury, Jupiter → `calculate_birth_chart`; D24 → `get_divisional_chart` (24) |
@@ -69,7 +68,6 @@ Birth-time sensitivity for every unit and window: `get_birth_time_sensitivity`.
 | Yogas raise the degree of success; they do not show the type of work | HJH2 p288 |
 | Ashtakavarga bindus weigh a transit | HPA p134; PVR p343 |
 | One timing framework; windows named once; snapshot under the short version | the skill's own rule (reports.md §2, owner) |
-| Health as lifestyle and stress periods only, no organs | the skill's own rule (owner) |
 
 Cite them in `appendix.sources` as "BPHS: Parasara, tr. R. Santhanam, *Brihat Parasara Hora Sastra*, p104", and in
 unit `rule_refs` as "BPHS p104".
@@ -93,7 +91,7 @@ is shorthand for its parts, not more evidence.
 | Data | Drop |
 |---|---|
 | approximate time | sections whose key factor `get_birth_time_sensitivity` classes `high` or `very high` (often `partner`, `career` D10, `education` D24, `inner` D20); D4, D20, D24 are dropped by default unless the class is robust |
-| unknown time | `foundation` keeps planets by sign only, and the Moon's sign and nakshatra only when they are the same across the whole birth day (else dropped with that reason); `windows` becomes labelled monthly markers of slow planets to time-independent natal planets; drop `career`, `relationship`, `partner`, `wealth`, `home`, `education`, `inner`, `challenges`, `current` (all house- or dasha-based); keep `self` and `health` from planets by sign (the Moon only under the same rule) |
+| unknown time | `foundation` keeps planets by sign only, and the Moon's sign and nakshatra only when they are the same across the whole birth day (else dropped with that reason); `windows` becomes labelled monthly markers of slow planets to time-independent natal planets; drop `career`, `relationship`, `partner`, `wealth`, `home`, `education`, `inner`, `challenges`, `current` (all house- or dasha-based); keep `self` from planets by sign (the Moon only under the same rule) |
 | any time | intimacy and remedies unless asked (full depth counts as asked); any field with no engine tool (below) |
 
 Not calculated, so dropped and named: the partner's height range, build and age gap (no computation exists; the

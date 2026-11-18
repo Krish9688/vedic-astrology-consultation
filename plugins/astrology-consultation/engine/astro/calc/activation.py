@@ -61,15 +61,15 @@ PRESETS = {
                        ("planet in the 12th", ("occupants", 12), "HJH2 p225 (pr 218); " + NOT_CHECKED,
                         "the source says 'the 12th house'; read here as its lord and occupants"),
                        ("4th lord (a residence change touches the 4th)", ("lord", 4),
-                        "HJH2 p225 via topic-travel-education-health-life.md §1; " + NOT_CHECKED, None),
+                        "HJH2 p225 via topic-travel-education-life.md §1; " + NOT_CHECKED, None),
                        ("Rahu", ("planet", "Ra"), "question-trees.md §7 (" + SKILL_ONLY + ")", None)]},
     "education": {"house": 4, "page": "p20-21 (pr 13-14) applied to the 4th",
-                  "karaka": [("Me", "topic-travel-education-health-life.md §2 (" + SKILL_ONLY + ")", None),
-                             ("Ju", "topic-travel-education-health-life.md §2 (" + SKILL_ONLY + ")", None)],
+                  "karaka": [("Me", "topic-travel-education-life.md §2 (" + SKILL_ONLY + ")", None),
+                             ("Ju", "topic-travel-education-life.md §2 (" + SKILL_ONLY + ")", None)],
                   "extras": [
-                      ("5th lord", ("lord", 5), "PD XVI.15 via topic-travel-education-health-life.md §2; "
+                      ("5th lord", ("lord", 5), "PD XVI.15 via topic-travel-education-life.md §2; "
                        + NOT_CHECKED, "the topic file names houses 4, 5 and 9; the (a)-(g) list runs on the 4th"),
-                      ("9th lord (higher study)", ("lord", 9), "topic-travel-education-health-life.md §2 ("
+                      ("9th lord (higher study)", ("lord", 9), "topic-travel-education-life.md §2 ("
                        + SKILL_ONLY + ")", "the topic file names houses 4, 5 and 9; the (a)-(g) list runs on the 4th")]},
     "children": {"house": 5, "page": "p20-21 (pr 13-14) applied to the 5th",
                  "karaka": [("Ju", "PM2 p84 (XIX.83); topic-home-family-children.md §1; " + NOT_CHECKED, None)],

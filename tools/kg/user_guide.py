@@ -88,8 +88,8 @@ def pages(s, built, planned):
     P = [("What this skill is", """<p>A Vedic astrology consultation for Claude. It has three parts: a <b>local calculation engine</b>
 (positions, dashas, transits, strengths), <b>method files</b> that say how to reason from those facts, and a
 <b>cited book library</b> behind the rules.</p><p>Facts are computed. Interpretation follows documented methods.
-Nothing is sent to an outside service. This is not medical, legal or financial advice, and astrology's predictive
-validity is not scientifically established.</p>"""),
+Nothing is sent to an outside service. This is not legal or financial advice, and astrology's predictive
+validity is not scientifically established. Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead.</p>"""),
          ("Install and first use", f"""<p>In Claude Code:</p><pre>{E(qs[0].strip())}</pre>
 <p>Then run <code>/astrology-consultation:setup</code> in a session and <code>/reload-plugins</code>. Setup builds a private
 Python environment and downloads the ephemeris files. It needs Python 3.11+ or uv, and internet once.</p>
@@ -135,7 +135,7 @@ so you can read reports with them in mind.</p><ul>
 <li>Reading timing as <b>phases, not verdicts</b>.</li>
 <li>Why <b>counter-factors</b> matter: every claim should say what pulls the other way.</li>
 <li>How to <b>check a claim's source</b> in the appendix, and judge whether it supports the claim.</li></ul>"""),
-         ("Safety and privacy", """<ul><li>Health: no diagnosis and no body claims.</li>
+         ("Safety and privacy", """<ul><li>Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead.</li>
 <li>Remedies are Parashari only: no gems, no costly rituals, and every remedy carries a line saying no efficacy is claimed.</li>
 <li>No verdicts on other people.</li><li>Your data stays on your computer.</li></ul>"""),
          ("Glossary", """<dl><dt>Lagna</dt><dd>The rising sign at birth; it sets the houses.</dd>

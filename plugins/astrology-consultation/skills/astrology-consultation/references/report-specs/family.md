@@ -15,7 +15,7 @@ the frame fields. `siblings` is read only when the person asked: otherwise it is
 
 | Section | Content | Computed fields → engine tool |
 |---|---|---|
-| `windows` | two to four named windows for **home and property only** (settling, buying, renovating, moving, selling are separate events); each with dates, a one-line basis and what it activates. No window for a parent or a sibling | home network (below) → `get_topic_network`; activation → `get_activation`; MD/AD → `get_dasha`; Jupiter and Saturn on the 4th, its lord, Mars or Venus → `get_transits` |
+| `windows` | two to four named windows for **home and property only** (settling, buying, renovating, moving, selling are separate events); each with dates, a one-line basis and what it activates. A window or timeline row may name a parent or sibling for neutral events only (a visit, a move, a plan, work), never for health, harm, loss or a pressure stretch | home network (below) → `get_topic_network`; activation → `get_activation`; MD/AD → `get_dasha`; Jupiter and Saturn on the 4th, its lord, Mars or Venus → `get_transits` |
 | `home` | comfort and contentment at home, land and vehicles, the 4th lord with the lagna lord, Venus (comfort), Mars (land), the Moon; strain such as an enemy planet with the 4th lord or Rahu or Saturn on the 4th; the 12th for moving; D4 only as a labelled conditional reading | 4th, its lord, occupants, aspects → `calculate_birth_chart`, `prepare_consultation` (derived facts, chart_facts `aspected_by`); D4 → `get_divisional_chart` (4) |
 | `mother` | the person's experience of the mother or mother figure: closeness, distance, support, responsibility; the 4th, its lord and the Moon, with the Moon's sign as a second lagna | houses, lords, Moon → `calculate_birth_chart`, `prepare_consultation`; D12 → `get_divisional_chart` (12) only on a robust time (see 2) |
 | `father` | the same for the father or father figure: the 9th, its lord and the Sun, with the Sun's sign as a second lagna | houses, lords, Sun → `calculate_birth_chart`, `prepare_consultation`; D12 as above |
@@ -67,15 +67,45 @@ and listed. Siblings are discussed only when asked and never inferred.
 ## 4. Caveats
 
 - The report describes the person's experience of a parent or sibling: closeness, distance, responsibility and
-  support. It states: "No parent's health or lifespan is read here."
-- Never a parent's illness, health, accident, life span or death, and never a timing of any parent or sibling event.
-  A window is for home and property only.
+  support. It states: "No parent or sibling is forecast beyond visits, moves, plans and work."
+- Never a parent's or sibling's illness, health, accident, danger, misfortune, frailty, care needs, life span, old age,
+  mourning or death, and never the loss of a relative: refused dated or not. A forecast about a relative, with or
+  without a date, is allowed only in the fixed shapes below ("Your brother may change jobs in 2028."). A window or
+  timeline row may name a parent or sibling for those neutral events only, never for health, harm or loss.
 - Never confirm or rule out that a sibling exists, nor read a sibling's fate.
 - Never read a parent's character as a fact about that person: it is the native's experience and the chart's themes.
 - No pregnancy, fertility or children timing here; children belong to their own report.
 - Property: no legal title, no address, no price and no advice to buy or sell; a window says what the period activates.
-- The checker refuses any dated row, watch line, ranking window or unit timing that names a mother, father, parent, sibling or
-  grandparent; only home and property rows may carry dates.
+- Fixed forecast shapes. A relative is a mother, father, parent, mom, mum, dad, ma, pa, brother, sister, sibling, aunt,
+  uncle, cousin, niece, nephew, grandparent or other grand-relative, in-law, step-relative, relative or family member.
+  A sentence whose subject or possessor is a relative, or he, she, they, his, her or their, passes only if the whole
+  sentence is exactly:
+  `<Relative> <MODAL> <PHRASE>[ <TIME>].`
+  - `<Relative>`: "Your <relative>", "Your <relative> and you", or he, she, they.
+  - `<MODAL>`: may, might, could, would, is likely to, are likely to.
+  - `<PHRASE>`: visit you; visit your home; come to stay with you; stay with you for a while; move house; move to a new
+    city; move abroad; move closer to you; move for work; travel for work; travel with you; go on a holiday; change
+    jobs; start a new job; be promoted; retire; plan a family gathering; host a family gathering; plan a trip; help you
+    with the move; help you with your home; get married; study abroad; graduate.
+  - `<TIME>` (optional): in <Month> <YYYY>; in <YYYY>; between <YYYY> and <YYYY>; from <YYYY>; later in <YYYY>; during
+    the <Planet> sub-period; during the <Planet> period.
+  No other clause and no extra word. Anything else about a relative, present or past tense included, is written from
+  the person's side ("you ..."): "a relative may appear only in a fixed forecast shape (see family.md); otherwise write
+  it from your side ('you ...')". A sentence with "you" as its main subject that mentions a relative is allowed ("You may
+  see more of your mother in 2028.", "You learned your love of home from your mother."), unless it also has a clause
+  with he, she, they or a relative as its subject. The shape rule reads every sentence and label piece (text is cut at line breaks and colons; quotes, brackets and bullets
+  are stripped) that has a relative as its subject anywhere in it ("In 2029 your father may ..."), a bare relative (Mum,
+  Dad, Grandpa, Nana ...) or he, she, they; a relative as the object, and a sentence with "you" as the subject, are not
+  shape-read and rely on the medical and death gate below. Known limit: the shapes over-block anything else about a relative; widen the PHRASE list only through review.
+- Harm layer, kept as the second rule: a sentence where a relative word and a harm word sit in one clause (the list is
+  `_HARM` in `render_report.py`) is refused, "you" sentences included ("You may see your mother in hospital."). It refuses a dated row, watch line, ranking window or unit timing that names a relative only when
+  it also carries a harm word (a pressure row naming a relative counts), and any harm word in the mother, father or
+  siblings section. A harm word missing from the list gets through (a known limit, noted in the code).
+- Medical and death gate (every spec report, every string, whoever it is about): the checker refuses health, illness, doctors,
+  hospitals, treatment, injury, accident, death, dying, funeral, lifespan, longevity, body-part and similar wording. Error:
+  "health and death are not read in this practice; such predictions can harm the reader and are not good for their health".
+  It is a word and phrase list (`_FORBID` in `render_report.py`), the floor for "you" and object sentences; a missing synonym
+  gets through.
 - Parashari only: no Lal Kitab readings, scapegoat chains or rin remedies ([README.md](README.md) §5).
 
 ## 5. What to drop

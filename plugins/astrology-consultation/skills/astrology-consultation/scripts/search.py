@@ -36,6 +36,8 @@ if not a.query:
     sys.exit()
 
 sql = "select src, page, printed, snippet(pages, 3, '[', ']', ' … ', 40) from pages where pages match ?"
+if '"' not in a.query:     # FTS5 reads a hyphen as a column filter ("short-lived" -> no such column): make it a phrase
+    a.query = re.sub(r"\b(\w+)-(\w+)\b", lambda m: '"' + m.group(1) + " " + m.group(2) + '"', a.query)
 args = [a.query]
 terms = []
 if re.fullmatch(r"[A-Za-z\s]+", a.query):   # plain words: add transliteration variants (vimshottari ~ vimsottari)

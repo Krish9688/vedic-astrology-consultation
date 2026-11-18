@@ -21,6 +21,7 @@ ASSETS = os.path.join(HERE, "..", "assets", "report")
 sys.path.insert(0, HERE)
 import chart_svg  # noqa: E402
 import lk_remedies  # noqa: E402  (REP-X7 remedy cards)
+import medical_words  # noqa: E402  (the one medical and death word list)
 import vocab  # noqa: E402  (the project's term list: houses, vargas, dasha names and their spellings)
 from life_lint import BUDGET, FACT, lint, report_text  # noqa: E402
 
@@ -281,7 +282,7 @@ def checks(r):
 SPEC_SECTIONS = {
     "kundli": {"standard": ["foundation", "windows", "self", "strengths", "current"],
                "full": ["foundation", "windows", "self", "career", "relationship", "partner", "intimacy", "wealth",
-                        "health", "family", "friends", "education", "home", "travel", "inner", "challenges", "remedies"]},
+                        "family", "friends", "education", "home", "travel", "inner", "challenges", "remedies"]},
     "relationship": {"standard": ["windows", "relate", "partner"]},
     "career": {"standard": ["windows", "pattern", "chapter", "next", "money", "choices"]},
     "wealth": {"standard": ["windows", "pattern", "retention", "sudden", "choices"]},
@@ -301,12 +302,9 @@ UNKNOWN_TIME = re.compile(r"^\s*(unknown|not known|n/?a|none|no (birth )?time)\s
                           r"|\b(birth )?time\s+(is\s+)?(unknown|not known)\b|\bno birth time\b", re.I)
 SELF_APPEARANCE_CAVEAT = ("This is the tradition's description, untested and graded Weak: family and region decide "
                           "more, and it is not a measurement.")
-HEALTH_CAVEAT = ("This describes tendencies and stress periods. It is not medical advice or a diagnosis; see a "
-                 "clinician for any symptom.")
 PERCENT = re.compile(r"\d\s?%|\bper ?cent\b|\bpercentage\b", re.I)
 ORGANS = re.compile(r"\b(?:liver|kidneys?|lungs?|stomach|intestin\w*|bowels?|colon|bladder|uterus|womb|ovar\w*|testic\w*|"
                     r"prostate|thyroid|pancrea\w*|spleen|gall ?bladder|genital\w*)\b", re.I)
-BODY = re.compile(r"\b(?:heart|brain|spine|spinal|bones?|blood|eyes?|skin|teeth|throat|nerves?|joints?)\b", re.I)  # health section
 DAY = re.compile(rf"\b\d{{4}}-\d{{2}}-\d{{2}}\b|\b\d{{1,2}}(?:st|nd|rd|th)? {MON}\.? \d{{4}}\b|\b{MON}\.? \d{{1,2}}(?:st|nd|rd|th)?,? \d{{4}}\b", re.I)
 HOUSE = re.compile(r"\b(?:\d{1,2}(?:st|nd|rd|th)|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|"
                    r"eleventh|twelfth) (?:house|lord)\b|\bhouses?\b|\blagna\b|\bascendant\b|\bD-?(?:9|10)\b|\bnavamsa\b|"
@@ -320,8 +318,9 @@ SELF_LOOKS = re.compile(r"\b(?:short(?![- ](?:term|lived|stretch|period|time|run
                         r"wheatish|looks(?! like)|dark(?![- ](?:times|days|phase|period|moods?|thoughts|humou?r))|"
                         r"fair(?!-minded| in\b| to\b| with\b| (?:share|chance|deal|way|view|amount|enough))|good[- ]looking|lovely|gorgeous|"
                         r"your (?:\w+ )?face(?!\s+(?:lights|up\b|shows)))\b", re.I)
-# family: dated wording about a parent or sibling is refused anywhere (only home and property may be dated)
-PARSIB = re.compile(r"\b(?:mothers?|fathers?|parents?|mom|mum|dad|brothers?|sisters?|siblings?|grand\w+)\b", re.I)
+# family: a dated row or line that names a parent or sibling is refused only with a harm word (neutral forecasts may be dated)
+PARSIB = re.compile(r"\b(?:mothers?|fathers?|parents?|mom|mum|dad|brothers?|sisters?|siblings?|grand\w+|granny|nana|nani|dada|dadi|"
+                    r"bhai\w*|didi|behen|chacha|chachi|mama|mami|bua|mausi|step(?:dad|mom|mum))\b", re.I)
 DATEISH = re.compile(r"\b(?:19|20)\d{2}\b|\b(?:January|February|March|April|June|July|August|September|October|November|December|"
                      r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\b|\bMay \d")
 KUNDLI_GATES = {"family": "family", "challenges": "challenges", "inner": "spirituality", "self": "self"}   # full kundli section id -> gate set
@@ -335,36 +334,201 @@ OTHER = re.compile(r"\b(?:partner|spouse|husband|wife|boyfriend|girlfriend|he|sh
 # type gates (batch 1): refused wording per report type, run on the client text of a spec report. A negated clause is
 # excused (the spec caveats: "This is not investment advice"), as life_lint does for its certainty probes.
 _S = r"[^.!?;]*"
+_EYE = r"black|brown|dark|light|hazel|green|blue|gr[ae]y|amber|golden|honey|pale|dark brown|light brown"   # eye colour words (allowed in self 'appearance' only)
 _NEG_WORDS = {"not", "cannot", "can't", "won't", "don't", "never", "no", "nor", "neither", "none", "nothing", "without"}
 _NEG_VERB = re.compile(r"\b(?:never|not|no)\s+(?:be\s+)?(?:predict\w*|read|said|stated|given|made|claimed|promised|shown|implied|inferred)\b", re.I)
 # emphatic idioms never excuse a match ("Without doubt you will win" is a claim, not a caveat)
 _EMPH = re.compile(r"\b(?:no|without(?: a)?) (?:doubt|question|worry)\b|\bnot a worry\b|\bno cause for (?:alarm|worry)\b|\bnothing to fear\b|\bwithout fail\b", re.I)
-# a referral ("ask a doctor", "see a lawyer") excuses its own clause
-_DEFER = re.compile(r"\b(?:ask|see|consult|speak to|talk to)\s+(?:a|your|the)\s+(?:doctor|clinician|physician|lawyer|solicitor|attorney|"
-                    r"(?:medical|legal) professional|professional)\b", re.I)
+# a legal referral ("see a lawyer") excuses its own clause; a medical referral never does (owner rule 2026-11-15)
+_DEFER = re.compile(r"\b(?:ask|see|consult|speak to|talk to)\s+(?:a|your|the)\s+(?:lawyer|solicitor|attorney|"
+                    r"legal professional)\b", re.I)
 _CLAUSE = re.compile(r"[;:—–]|[.!?]\s+(?=[A-Z])|,\s+(?:so|but|yet|and so)\b")   # a match never spans a break
 _NUMW = (r"(?:(?:twenty|thirty|forty|fifty|sixty|seventy)(?:[-\s](?:one|two|three|four|five|six|seven|eight|nine))?|"
          r"eighteen|nineteen)")
 _BUY = r"(?:now|stocks?|shares|gold|property|land|tickets?|crypto\w*|futures|options)"
-_PAR = (r"mothers?|fathers?|parents?|grand\w*|brothers?|sisters?|siblings?|relatives?|family|mom|mum|dad|maternal|paternal|"
-        r"stepmother|stepfather|mother-in-law|father-in-law")
-_HARM = (r"ill|illness\w*|sick\w*|diseas\w*|death|deaths|dies|die|dying|dead|deceased|pass\w* away|passing|"
+# slang, affectionate and Indian-language kin words that name a parent, grandparent or in-law (a relative all the same)
+_SLANG = (r"old man|old lady|old folks|folks|pops|pitaji|papaji|babuji|bauji|amma|ammi|appa|abba|abbu|baba|bapu|maa|maiya|mataji|taiji|tauji|masi|"
+          r"bhabhi|jija|jiju|sasur|saas|(?:dear|dearest) (?:mother|father|mom|dad)|(?:mother|father|mom|dad|mum) dear")
+_PAR = (_SLANG + "|" + r"mothers?|fathers?|parents?|grand\w*|brothers?|sisters?|siblings?|relatives?|family|mom|mum|dad|maternal|paternal|"
+        r"stepmother|stepfather|mother-in-law|father-in-law|aunts?|aunties?|uncles?|cousins?|nieces?|nephews?|in-laws?|family members?|"
+        r"step(?:son|daughter|brother|sister|parents?|dad|mom|mum)|brother-in-law|sister-in-law|ma|pa|"
+        r"granny|nana|nani|dada|dadi|bhai\w*|didi|behen|chacha|chachi|mama|mami|bua|mausi")
+_PERSON = rf"(?:you|he|she|they|persons?|someone|colleagues?|friends?|partners?|spouses?|husbands?|wife|boss|mentor|neighbou?rs?|{_PAR})"
+# the medical and death words, shared by _HARM (relative clauses) and _FORBID (every string) so the two lists cannot drift.
+# Known limits (over-blocks the owner accepts): "operation(s)" in a work sense, "heart" in other idioms, "terminal" in a place.
+_MED = (medical_words.STRONG + "|" + medical_words.REPORT_WORDS + "|"
+        r"{PERSON}\s+(?:[\w'’]+\s+){0,3}?recover\w*|"
+        r"{PERSON}\s+(?:[\w'’]+\s+){0,2}?pass(?:es|ed)? into (?:the )?next (?:phase|life|world|stage)").replace("{PERSON}", _PERSON)
+_HARM = (_MED + r"|ill|illness\w*|sick\w*|diseas\w*|death|deaths|dies|die|dying|dead|deceased|pass\w* away|passing(?!\s+phase)|"
          r"passes(?!\s+(?:on|down|by|through))|leaves? this world|lifespans?|life spans?|longevity|"
          r"(?:long|short)(?:-| )?(?:life|lives|lived)|live (?:long|short)|health|ailment\w*|cancer|surger\w*|operation|hospital\w*|"
          r"bereave\w*|mourn\w*|griev\w*|grief|funeral|widow\w*|fatal\w*|accidents?|frail\w*|bedridden|well-?being|"
          r"bod(?:y|ily)|unwell|recover\w*|years left|bury|buried|crisis|decline[sd]?|surviv\w+|numbered|much longer|fad(?:es|ed|ing)|time on earth|old age|taken from|final (?:years|days|illness)|"
          r"last (?:days|years|breath)|nursing|care home|heart (?:may |could |will |might )?(?:weak\w*|attack|trouble|problem\w*|"
-         r"condition|failure)|weak(?:en|ens|ened|ening)|misfortune|danger|harm")
-# shortcut: the subject test is regex only. A relative word counts as the subject of a forecast when it is followed (same
-# clause, no "you"/"your" in between) by a modal or a change/ending verb, or when its possessed state noun (days,
-# strength, life, years ...) is. "Your father's advice may help you" passes (advice is not a state noun) and a modal
-# followed by a helping verb passes ("may help"). Upgrade to a parser if over- or under-blocking shows up.
-_REL = r"(?:mothers?|fathers?|parents?|dad|mom|mum|brothers?|sisters?|siblings?|grand\w+|relatives?)"
-_MODAL = r"(?:will|may|might|could|would|shall|is likely to|is set to|is going to|is due to|has (?:only )?(?:a few |\w+ )?(?:years?|months?) left|faces?)"
-_HELP = r"(?:help|support|guide|advise|encourage|back|assist|listen|teach|show|give|offer|share|inspire|cheer|welcome|understand|love|like|want|enjoy|be (?:proud|glad|happy|pleased))"
-_CHG = r"(?:fad(?:e|es|ed|ing)|declin\w*|weaken\w*|leav(?:e|es|ing)|goes|go|pass(?:es|ed|ing)?|worsen\w*|end(?:s|ing)?|numbered|surviv\w+|longer)"
-_STATE = r"(?:days|strength|life|lives|years|time|health|energy|condition|situation|fortunes?|journey|presence|stay|stamina|vitality|body|age)"
-_NOYOU = r"(?:(?!\byou\b|\byour\b)[^.!?;])*?"
+         r"condition|failure)|weak(?:en|ens|ened|ening)|misfortune|danger|harm|"
+         r"leav(?:es|ing) us|injur\w*|hurt|mishap\w*|wound\w*|treatment|(?<!as a )(?<!as an )doctors?|operated on|worsen\w*|laid up|breathe\w* (?:his|her|their) last|"
+         r"not wake|goodbye|in memory of|footing|unkind|blow|final chapter|last chapter|intensive care|(?:be|been|is|are|was|were|get|gets|got) gone|gone by|gone for good|coma|bedside|last rites|carers?|"
+         r"end is near|downhill|faint\w*|falls? from|gives? out|pain|break(?:s|ing)? (?:her|his|their) \w+|bitten|procedure|pneumonia|tumble|disabled|forever|"
+         r"final journey|clinic|stretcher|slip\w* away|use of (?:his|her|their) legs|see the year out|never come back|virus|laid low|"
+         r"time (?:may |will |could |might |has )come|next world|called home|ebb\w*|stroke|tragedy|collapse\w*|drown\w*|wheelchair|fever|miscarr\w*|eyesight|blind\w*|memory loss|dement\w*|paraly\w*|come down with|turn for the worse|"
+         r"pass(?:es|ed)? on|rest in peace|icu|emergency|burn(?:ed|t)|crippl\w*|confined|struck down|lose (?:his|her|their) (?:sight|memory|hearing|mind|life)|vitality|(?:her|his|their) end|[’']s condition|(?:her|his|their) condition|(?:hard|difficult|tough|rough|trying)\s+(?:stretch|years?|times?|periods?|phases?|patch|spell)|trouble\w*|suffer\w*|at risk")
+# A relative may be the subject or possessor of a sentence only in one fixed forecast shape (report-specs/family.md);
+# anything else is written from the person's side ("you ..."). Sentences with "you" as the subject stay free, but the
+# relative + harm layer (_PAR/_HARM) still runs on every sentence.
+# shortcut: closed shapes over-block anything else about a relative; widen the PHRASE list only through review.
+_REL = (r"(?:" + _SLANG + r"|(?:mothers?|fathers?|parents?|dad|mom|mum|ma|pa|brothers?|sisters?|siblings?|aunts?|aunties?|uncles?|cousins?|"
+        r"nieces?|nephews?|grand\w+|relatives?|in-laws?|family members?)(?:-in-law)?|step(?:mother|father|brother|sister|parents?|son|daughter|dad|mom|mum)|"
+        r"granny|nana|nani|dada|dadi|bhai(?:ya)?|didi|behen|chacha|chachi|mama|mami|bua|mausi)")
+_PHRASE = ("visit you|visit your home|come to stay with you|stay with you for a while|move house|move to a new city|move abroad|"
+           "move closer to you|move for work|travel for work|travel with you|go on a holiday|change jobs|start a new job|be promoted|"
+           "retire|plan a family gathering|host a family gathering|plan a trip|help you with the move|help you with your home|"
+           "get married|study abroad|graduate")
+_PLANET = r"(?:Sun|Moon|Mars|Mercury|Jupiter|Venus|Saturn|Rahu|Ketu)"
+_TIME = (rf"(?:in {MON} \d{{4}}|in \d{{4}}|between \d{{4}} and \d{{4}}|from \d{{4}}|later in \d{{4}}|"
+         rf"during the {_PLANET} (?:sub-)?period)")
+_SHAPE = re.compile(rf"(?:your (?:[a-z]+ )?{_REL}(?: and you)?|she|he|they) (?:may|might|could|would|is likely to|are likely to) "
+                    rf"(?:{_PHRASE})(?: {_TIME})?\.?", re.I)
+_VERBISH = r"(?!(?:or|and|nor|tie|figures?|windows?|rows?|sections?|readings?|themes?|role|pattern)\b)\w+"   # any word that is not a topic noun
+_BARE = (r"(?:pops|pitaji|papaji|babuji|bauji|amma|ammi|appa|abba|abbu|baba|bapu|maa|maiya|mataji|mum|mom|mummy|mommy|mama|dad|daddy|papa|ma|pa|grandpa|grandma|granny|nana|nani|nanny|dada|dadi|"
+         r"father|mother|brother|sister|aunt|auntie|uncle|stepdad|stepmom|stepmum|bhai|bhaiya|didi|behen|chacha|chachi|mami|bua|mausi)")
+_AUX = r"(?:will|may|might|could|would|shall|can|should|must|is|are|was|were|has|have|had|does|did)"
+_POSS = r"(?:['’]s?(?:\s+[\w-]+){1,3}?)?"
+# a relative as the subject, anywhere in a piece: "your father may", "In 2029 your father may", "Mum may", "Grandpa slips"
+_HEADS = re.compile(rf"\b(?:(?:your|the|a|an|his|her|their)\s+(?:[\w'’-]+\s+){{0,2}}?{_REL}{_POSS}(?:\s+{_VERBISH}|\s*,\s+{_AUX}\b)"
+                    rf"|{_BARE}{_POSS}\s+{_AUX}\b|(?:she|he|they)\b|(?:her|his|their)\s+[\w-]+(?:\s+[\w-]+)?\s+{_VERBISH})", re.I)
+_BAREHEAD = re.compile(rf"^{_BARE}{_POSS}\s+{_VERBISH}", re.I)       # a bare relative at the start of a piece: "Grandpa slips ..."
+_PIECE = re.compile(r"\s*[;,]\s*(?:and |but )?|\s+(?:although|when|while|after|before|because|if|but)\s+", re.I)
+_ALLOWWHAT = "a relative or pronoun as the subject outside the fixed forecast shapes"
+_ALLOWHINT = " -- a relative may appear only in a fixed forecast shape (see family.md); otherwise write it from your side ('you ...')"
+_LABEL_SPLIT = re.compile(r"\s+-\s+|:")
+_BARELABEL = re.compile(rf"(?:(?:your|the|his|her|their)\s+)?(?:[\w'’-]+['’]s\s+)?(?:(?:elder|younger|older|big|little|eldest|youngest|maternal|paternal)\s+)?(?:{_REL}|{_BARE})", re.I)
+_QUOTED = re.compile(r"(?<![A-Za-z])(['\"“‘„«`])([^'\"“”‘’„«»`]{1,40}?)['\"”’»`](?![A-Za-z])")
+_TRIM = re.compile(r"^[\s\-–—•*·\"'“”‘’()\[\]]+|[\s\"'“”‘’()\[\]]+$")
+
+
+def _has_head(x):
+    return bool(_HEADS.search(x) or _BAREHEAD.match(x))
+
+
+def _shape_hits(strings):
+    """Shape hits for the strings as written, plus the hits found in disguised readings when the text as written names no
+    relative at all: doubled letters squashed ("fatherr"), a kin word split by spaces ("fathe r"), a symbol or dot inside it
+    ("f@ther", "f.ather"), and "your" glued to it ("Yourfather")."""
+    out = _shape_hits_one(strings)
+    for x in strings:
+        if _heads_in(x):
+            continue
+        for y in _disguises(x):
+            if y != x:
+                out += _shape_hits_one([y])
+    return out
+
+
+_KIN_WORDS = {"father", "mother", "brother", "sister", "parent", "parents", "uncle", "aunt", "auntie", "mum", "mom", "dad", "papa", "mama",
+              "mummy", "mommy", "daddy", "grandfather", "grandmother", "grandpa", "grandma", "granny", "sibling", "siblings", "cousin",
+              "niece", "nephew", "stepfather", "stepmother", "stepdad", "stepmom", "stepmum", "nana", "nani", "dada", "dadi", "bhai",
+              "bhaiya", "didi", "behen", "chacha", "chachi", "mami", "bua", "mausi", "pops", "pitaji", "amma", "appa", "baba", "ammi"}
+
+
+def _join_split_kin(text):
+    """Join a kin word split into 2 or 3 pieces by spaces ("fathe r", "mo ther"): only when the join is a kin word and no
+    piece is one itself."""
+    toks = re.split(r"(\s+)", text)
+    words = [i for i, t in enumerate(toks) if t.strip()]
+    out, i = [], 0
+    while i < len(toks):
+        if toks[i].strip():
+            k = words.index(i)
+            done = False
+            for n in (3, 2):
+                piece = [toks[w] for w in words[k:k + n]]
+                core = [re.sub(r"[^A-Za-z]", "", t) for t in piece]
+                if len(piece) == n and "".join(core).lower() in _KIN_WORDS and not any(c.lower() in _KIN_WORDS for c in core) and all(core):
+                    out.append("".join(core))
+                    i = words[k + n - 1] + 1
+                    done = True
+                    break
+            if done:
+                continue
+        out.append(toks[i])
+        i += 1
+    return "".join(out)
+
+
+def _disguises(x):
+    """Readings of a string with the usual disguises undone, each only when it differs from the string."""
+    glued = re.sub(rf"\b(your|his|her|their|the|my)(?=(?:{_REL}|{_BARE})\b)", r"\1 ", x, flags=re.I)
+    dotted = re.sub(r"(?<=[A-Za-z])[.\-_*](?=[A-Za-z])", "", x)
+    leet = [medical_words._leet(x, "i"), medical_words._leet(x, "l")]
+    ji = _KIN_JI.sub(r"\1", x)       # "fatherji", "papaji", "mummyji": a kin word with the -ji respect suffix
+    out = [_SQUASH.sub(r"\1", x), glued, dotted, _join_split_kin(x), ji, _SQUASH.sub(r"\1", ji)] + leet
+    out += [_SQUASH.sub(r"\1", _join_split_kin(medical_words._leet(x, "i"))), glued_join(dotted)]
+    return list(dict.fromkeys(out))
+
+
+def glued_join(x):
+    return re.sub(rf"\b(your|his|her|their|the|my)(?=(?:{_REL}|{_BARE})\b)", r"\1 ", x, flags=re.I)
+
+
+_KIN_JI = re.compile(r"\b(father|mother|papa|mummy|mommy|mom|mum|dad|daddy|brother|sister|uncle|aunt|auntie|bhai|didi|nana|nani|dada|dadi|"
+                    r"chacha|chachi|mama|mami|grandfather|grandmother|grandpa|grandma|parents?)(?:ji|jee)\b", re.I)
+_SQUASH = re.compile(r"([A-Za-z])\1+")
+
+
+def _heads_in(x):
+    return any(_has_head(_TRIM.sub("", b)) for whole in re.split(r"(?<=[.!?])\s+", x) for b in _LABEL_SPLIT.split(whole))
+
+
+def _shape_hits_one(strings):
+    """(what, sentence) for each sentence or label piece in which a relative or he/she/they is the subject of a clause but the
+    whole piece is not one fixed forecast shape. Text is cut at line breaks, ":" and sentence ends, and quotes, brackets and
+    bullets are stripped. A piece that starts with "you" is free unless it also names he/she/they or a later clause with a
+    relative subject; a relative as the object is not read here (the medical and death gate and _HARM cover it)."""
+    out = []
+    for text in strings:
+        text = _QUOTED.sub(r"\2", text)       # "Your 'father' may": a word in quote marks is read as if it stood bare
+        if medical_words.DEVA_KIN_RX.search(text):      # a relative named in Devanagari cannot be shape-checked: write it from your side
+            out.append((_ALLOWWHAT, "a relative in Devanagari"))
+        text = re.sub(r"(?<=\w)\s*\([^()]{0,60}\)", "", text)     # "your father (Ramesh) may": the aside is not part of the shape
+        text = re.sub(rf"\b({_REL}|{_BARE})\s*,\s*[^,.;:!?]{{1,40}},", r"\1", text, flags=re.I)   # "your father, God bless him, may": a comma aside
+        text = re.sub(r"\s*[—–]\s*|\s*\n\s*", " ", text)     # a line break or an inner dash is a space, not a break
+        for whole in re.split(r"(?<=[.!?])\s+", text):
+            bits = _LABEL_SPLIT.split(whole)
+            if len(bits) > 1 and _BARELABEL.fullmatch(_TRIM.sub("", bits[0])):     # "<Relative>: ..." or "<Relative> - ...": out of shape
+                joined = re.sub(r"\s+", " ", _TRIM.sub("", bits[0] + " " + " ".join(bits[1:])))        # unless the text after it completes a shape
+                if not _SHAPE.fullmatch(joined):
+                    out.append((_ALLOWWHAT, bits[0].strip().lower()[:40]))
+                    continue
+        for sent in (b for whole in re.split(r"(?<=[.!?])\s+", text) for b in _LABEL_SPLIT.split(whole)):
+            sent = _TRIM.sub("", sent)
+            if not sent or _SHAPE.fullmatch(sent):
+                continue
+            if re.match(r"you\b", sent, re.I):
+                bad = re.search(r"\b(?:she|he|they)\b", sent, re.I) or any(_has_head(x) for x in _PIECE.split(sent)[1:])
+            else:
+                bad = _has_head(sent)
+            if bad:
+                out.append((_ALLOWWHAT, sent[:40].lower()))
+    return out
+
+
+def _no_ids(x):
+    """x without the "id" keys (section ids are structure, not text)."""
+    if isinstance(x, dict):
+        return {k: _no_ids(v) for k, v in x.items() if k != "id"}
+    return [_no_ids(v) for v in x] if isinstance(x, list) else x
+
+
+# Medical and death wording, refused in every string of every spec report, whoever it is about (owner rule 2026-11-15).
+# shortcut: a word and phrase list, no parser; it is the floor for "you" and object sentences. A synonym that is missing
+# gets through; add it here.
+FORBID_MSG = ("Health and death are not read in this practice. Such predictions can harm the reader and are not good for their "
+              "health. I can help with another area of your life instead.")
+_FORBID = re.compile(
+    r"\b(?:" + _MED + r"|lo(?:se|ses|sing|st) (?:a |an |your |the |one of your )?" + _REL
+    + r"|(?<!\byou )(?:may|might|could|will|would) (?:take|call) (?:your|his|her|their) " + _REL + r")\b|" + ORGANS.pattern, re.I)
+
+
 _LEGAL = r"court(?! of public opinion)|judge|case|lawsuit|legal|justice|trial|tribunal|ruling|claim|petition|oppos\w+|bench|opponents?|rivals?|enem\w*|foes?|adversar\w*|other side|opposing party"
 _OUTCOME = (r"win|wins|won|winning|lose|loses|lost|losing|favou?r\w*|your side|sides? with|resolv\w*|crush\w*|defeat\w*|beat|beats|"
             r"prevail\w*|triumph\w*|humbl\w*|victor\w*|verdict|judg(?:e)?ment|ruling|award\w*|upheld|uphold\w*|granted|allowed|dismissed|rejected|silenc\w*|in your pocket|everything you asked for|pay|pays|paid|settle\w*")
@@ -413,16 +577,22 @@ TYPE_GATES = {
                          rf"\b(?:in )?(?:your|the) (?:early |mid |mid-|late )?(?:teens|twenties|thirties|forties|fifties|sixties)\b|"
                          rf"\b(?:when|once) you (?:are|turn|reach) (?:\d{{2}}|{_NUMW})\b|\b(?:hit|turn|reach)\w*\s+(?:\d{{2}}|{_NUMW})\b|\b\d{{2}}(?:st|nd|rd|th) (?:year|birthday)\b", re.I),
               "fixed-age claims"),
-             (re.compile(r"\b(?:hair|skin\w*|teeth|nose|lips|neck|chest|shoulders?|legs?|knees?|forehead|scars?|moles?|birthmarks?|"
-                         r"spine|bones?|throat|joints?|limbs|eye colou?r|eyes? (?:are|is|of)\b)", re.I),
+             (re.compile(r"\b(?:skin\w*|teeth|nose|lips|neck|chest|shoulders?|legs?|knees?|forehead|scars?|moles?|birthmarks?|"
+                         rf"spine|bones?|throat|joints?|limbs|bald\w*|hair (?:loss|fall)|receding|eyes? (?:are|is|of)\b(?!\s+(?:\w+\s+)?(?:{_EYE})\b))", re.I),
               "body-part claims"),
-             (re.compile(r"\b(?:weight(?!\s+of)|overweight|underweight|obese|obesity|fat|diet|plump|heavy-?set|bulky|kilos?|kgs?|pounds)\b", re.I),
+             (re.compile(r"\b(?:attractive\w*|pretty(?!\s+(?:sure|much|well|good|soon|clear|likely|quickly))|ugly|good[- ]looking|good looks|"
+                         r"gorgeous|handsome|(?:strikingly |very )?beautiful(?= (?:face|woman|man|looks?|eyes|person))|lovely (?:face|looks?|eyes|smile)|"
+                         r"strikingly (?:beautiful|handsome|good)|stunning|(?:charming|striking|fine|nice|great|stunning|pleasing) (?:looks|appearance|features))\b", re.I),
+              "attractiveness claims"),
+             (re.compile(r"\b(?:weigh(?:s|ed|ing)?\s+(?:little|a lot|much|more|less|too|\d)|weight(?!\s+of)|overweight|underweight|obese|obesity|fat|diet|plump|heavy-?set|bulky|kilos?|kgs?|pounds)\b", re.I),
               "weight claims")],
-    "family": [(re.compile(rf"\b{_REL}\b(?:\s+(?:\w+ly|also|then|soon|still|not|never|yet|now))*\s+"
-                           rf"(?:{_MODAL}\b(?!\s+(?:not\s+)?{_HELP}\b)|{_CHG}\b)", re.I),
-                "a forecast about a parent or sibling"),
-               (re.compile(rf"\b{_REL}(?:['’]s|s['’])\s+(?:(?!\byou\b|\byour\b)\w+\s+)?{_STATE}\b{_NOYOU}\b(?:{_MODAL}|{_CHG})\b", re.I),
-                "a forecast about a parent or sibling"),
+    # self, outside the 'appearance' section: hair and eye colour are refused there (hair is also a LOOKS word)
+    "self_outside": [(re.compile(rf"\bhair\b|\beye[- ]colou?r\b|\beyes? (?:are|is|of)\s+(?:\w+\s+)?(?:{_EYE})\b|\b(?:{_EYE})[- ]eyed\b|\b(?:{_EYE})\s+eyes\b", re.I),
+                      "hair or eye colour")],
+    # family: a section about one relative (mother, father, siblings) names that relative by context, so a harm word alone is refused there
+    "family_sec": [(re.compile(rf"\b(?:{_HARM})\b", re.I), "a parent's or sibling's illness, health, life span or death")],
+    "family": [(re.compile(rf"(?<!\byou )\b(?:may|might|could|will|would) (?:take|call) (?:your|his|her|their) (?:{_REL})\b", re.I),
+                "a parent's or sibling's illness, health, life span or death"),
                (re.compile(rf"\b(?:{_PAR})\b{_S}\b(?:{_HARM})\b|\b(?:{_HARM})\b{_S}\b(?:{_PAR})\b", re.I),
                 "a parent's or sibling's illness, health, life span or death"),
                (re.compile(rf"\b(?:los(?:e|es|ing|t)|loss of)\s+(?:a |an |your |the |one of your )?(?:{_PAR})\b", re.I),
@@ -491,7 +661,7 @@ def gate_hits(t, strings):
                 if _DEFER.search(c):
                     continue
                 out += [(what, m.group().lower()) for m in rx.finditer(c) if not _excused(c[:m.start()], m.group())]
-    return out
+    return out + (_shape_hits(strings) if t == "family" else [])
 
 
 def is_marker(x):
@@ -610,8 +780,6 @@ def spec_checks(r):
                     errs.append(f"{name} describes looks or age: its form must be graded Weak or Unknown")
             if t == "self" and s["id"] == "appearance" and any(c not in ("Weak", "Unknown") for c in (u.get("confidence") or {}).values()):
                 errs.append(f"{name} in 'appearance' must be graded Weak or Unknown on every line")
-            if s["id"] == "health" and (m := BODY.search(text)):
-                errs.append(f"{name} names a body part ('{m.group()}'): health is lifestyle and stress periods only")
     if t == "self":
         app = next((s for s in r["sections"] if s["id"] == "appearance"), None)
         if app and SELF_APPEARANCE_CAVEAT not in str(app.get("text", "")):
@@ -634,7 +802,7 @@ def spec_checks(r):
     if hits := sorted({m.group() for s in strings for m in PERCENT.finditer(s)}):
         errs.append(f"percentages in the report ({', '.join(hits)}): grade words only")
     if hits := sorted({m.group().lower() for s in _strings(r) for m in ORGANS.finditer(s)}):
-        errs.append(f"organ words in the report ({', '.join(hits)}): health is lifestyle and stress periods only")
+        errs.append(f"organ words in the report ({', '.join(hits)}): body parts are not read in this practice")
     # looks wording in every client string outside the one section that may carry it (self: 'appearance'; kundli and
     # relationship: 'partner'); a ranking row about looks must be Weak or Unknown in self
     home = "appearance" if t == "self" else "partner"
@@ -651,35 +819,43 @@ def spec_checks(r):
     for x in loose_strings + unit_strings if t == "self" else []:
         if SELF_LOOKS.search(x) or LOOKS_TOPIC.search(x):
             errs.append(f"looks wording outside the 'appearance' section: '{x[:70]}'")
+    forbid_text = _strings(_no_ids({k: v for k, v in r.items() if k not in ("birth", "engine", "prepared_on", "period")}))
+    if bad := sorted({m.group().lower() for x in forbid_text for m in _FORBID.finditer(x)}
+                     | {w for x in forbid_text for w in medical_words.words_in(x)}):      # list, Devanagari, typos, homoglyphs
+        errs += [FORBID_MSG, f"words found: {', '.join(bad[:8])}"]
     hits = gate_hits(t, strings)
+    if t == "self":
+        hits += gate_hits("self_outside", loose_strings + unit_strings)
     if t == "kundli":       # the same wording is refused in a kundli section as in the report of its own type
         for sec in r["sections"]:
             if g := KUNDLI_GATES.get(sec["id"]):
                 hits += gate_hits(g, _strings(sec))
+            if sec["id"] == "self":
+                hits += gate_hits("self_outside", _strings(sec))
             if sec["id"] == "self" and any(SELF_LOOKS.search(x) for x in _strings(sec)):
                 errs.append("kundli 'self' describes looks: looks belong in the 'partner' section for another person only")
         rows = _strings([r.get(k) for k in ("summary", "timeline", "watch_list", "ranking", "practical_summary")])
         for g in ("family", "challenges", "spirituality"):
             hits += gate_hits(g, rows)
-    if t == "family":       # only home and property may carry dates: never a parent or sibling
+    if t == "family":       # a section about one relative: a harm word is refused there, dated or not
         for sec in r["sections"]:
-            if sec["id"] in ("mother", "father", "siblings") and (
-                    any(u.get("timing") for u in sec.get("units", [])) or any(DATEISH.search(x) for x in _strings(sec))):
-                errs.append(f"family '{sec['id']}' carries a date or timing: only home and property may be dated")
+            if sec["id"] in ("mother", "father", "siblings"):
+                hits += gate_hits("family_sec", _strings(sec))
     if t in ("family", "kundli"):
-        dated = ([(f"{x['label']} {x.get('basis', '')}", True) for x in r.get("timeline", [])]
-                 + [(" ".join(_strings(x)), bool(DATEISH.search(" ".join(_strings(x))))) for x in r.get("watch_list", [])]
-                 + [(" ".join(_strings(x)), True) for x in r.get("ranking", []) if x.get("window")]
-                 + [(x, bool(DATEISH.search(x))) for x in _strings(r.get("practical_summary", []))]
-                 + [(" ".join(_strings(x)), bool(x.get("window"))) for x in (r.get("summary") or {}).get("key_points", [])])
-        for x, is_dated in dated:
-            if is_dated and PARSIB.search(x):
-                errs.append(f"{t}: a dated row or line names a parent or sibling ('{x[:60]}'): only home and property may be dated")
+        # a dated row or line that names a relative is refused only when it also carries a harm word (or is a pressure row)
+        dated = ([(f"{x['label']} {x.get('basis', '')}", True, x["kind"] == "pressure") for x in r.get("timeline", [])]
+                 + [(" ".join(_strings(x)), bool(DATEISH.search(" ".join(_strings(x)))), False) for x in r.get("watch_list", [])]
+                 + [(" ".join(_strings(x)), True, False) for x in r.get("ranking", []) if x.get("window")]
+                 + [(x, bool(DATEISH.search(x)), False) for x in _strings(r.get("practical_summary", []))]
+                 + [(" ".join(_strings(x)), bool(x.get("window")), False) for x in (r.get("summary") or {}).get("key_points", [])])
+        for x, is_dated, hard in dated:
+            if is_dated and PARSIB.search(x) and (hard or gate_hits("family_sec", [x])):
+                errs.append(f"{t}: a dated row or line names a parent or sibling with a harm word ('{x[:60]}'): "
+                            "neutral dated forecasts are fine, anything about their health, danger, loss or death is not")
     for what in sorted({w for w, _ in hits}):
         words = sorted({h for w, h in hits if w == what})
-        hint = (" -- phrase it from the person's side, for example 'Your father may help you with the move.'"
-                if what == "a forecast about a parent or sibling" else "")
-        errs.append(f"{t} report: {what} are not allowed ({', '.join(words[:4])}; report-specs/{t}.md caveats){hint}")
+        errs.append(f"{t} report: {what} are not allowed ({', '.join(words[:4])}; report-specs/{t}.md caveats)"
+                    + (_ALLOWHINT if what == _ALLOWWHAT else ""))
     for s in strings:
         for sent in re.split(r"(?<=[.!?;])\s+", s):
             if AFFAIR.search(sent) and OTHER.search(sent) and not OWN.search(sent):
@@ -1055,7 +1231,7 @@ def outlook_draft(o, prepared_for="(name)", prepared_on=None):
 
 def _strings(x):
     if isinstance(x, str):
-        return [x]
+        return [medical_words.norm(x)]   # NFKC, no zero-width or other format characters: every gate reads clean text
     if isinstance(x, dict):
         return [s for v in x.values() for s in _strings(v)]
     if isinstance(x, list):
@@ -1102,7 +1278,7 @@ def html_of(r):
         appendix=bool(bases or r.get("appendix") or extra.get("remedy_sources")), section_titles={s["id"]: s["title"] for s in r["sections"]},
         answers_line=r.get("answers") or ANSWERS[r["report_type"]], moving=moving, sens=sens_state, show_evidence=True, used=used_marks(r),
         claim_labels=CLAIM_LABELS, system_labels=SYSTEM_LABELS, basis_labels=BASIS_LABELS,
-        chart=chart, chart_caption=caption, spec=bool(r.get("depth")), ledger=ledger(r), partner_caveat=PARTNER_CAVEAT, health_caveat=HEALTH_CAVEAT,
+        chart=chart, chart_caption=caption, spec=bool(r.get("depth")), ledger=ledger(r), partner_caveat=PARTNER_CAVEAT,
         **extra)
 
 

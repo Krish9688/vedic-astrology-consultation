@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from . import config, places, routing as ROUTING
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
-VERSION = "3.9.0"
+VERSION = "3.10.0"
 SOURCE_URL = "https://github.com/Krish9688/vedic-astrology-consultation"
 SOURCE_NOTICE = ("This service is free software under the GNU Affero General Public License v3 or later, with NO "
                  "WARRANTY. The Corresponding Source of the version running here is available at the 'source' URL. "
@@ -763,20 +763,56 @@ def _library_gate():
                               "only if you are entitled to share these excerpts)")
 
 
+_HIT = re.compile(r"^(?:- |[A-Za-z0-9_.-]+ p\d)")
+
+
+def _drop_medical(text: str) -> str:
+    """Remove every excerpt block that carries disease, illness, longevity, widowhood or death material. A block is a
+    hit head ("- " or "SRC pN") and every line after it, indented or not, up to the next head, a blank line or a "#"
+    header; one hit line drops the whole block. Any other line that hits is dropped too. Headers and clean lines stay."""
+    out, block = [], []
+
+    def flush():
+        # a wrapped excerpt splits a phrase across lines ("Saturn strong ... muscles,\nthe Sun in bones"): read the joined block too
+        if block and not (any(ROUTING.medical_line(x) for x in block) or ROUTING.medical_line(" ".join(x.strip() for x in block))):
+            out.extend(block)
+        block.clear()
+    for ln in text.splitlines():
+        if _HIT.match(ln):
+            flush()
+            block.append(ln)
+        elif block and ln.strip() and not ln.lstrip().startswith("#"):
+            block.append(ln)
+        else:
+            flush()
+            if not ROUTING.medical_line(ln):
+                out.append(ln)
+    flush()
+    return "\n".join(out)
+
+
 def search_sources(query: str, sources: Optional[str] = None) -> str:
     """Full-text search of the user's own local library (page-cited). Needs a configured knowledge folder."""
     _library_gate()
+    if ROUTING.crisis(query):
+        return ROUTING.CRISIS
+    if ROUTING.refuses(query):
+        return ROUTING.REFUSAL
     if not config.load().knowledge_dir:
         return "No local library configured — add your own books with `astro add-book` (see docs/ADD-A-BOOK.md)."
-    return _run_skill_script("search.py", *(["--src", sources] if sources else []), "--", query[:300])
+    return _drop_medical(_run_skill_script("search.py", *(["--src", sources] if sources else []), "--", query[:300]))
 
 
 def rule_sources(rule: str) -> str:
     """Which books support or dispute a rule (knowledge graph), with pages and tiers."""
     _library_gate()
+    if ROUTING.crisis(rule):
+        return ROUTING.CRISIS
+    if ROUTING.refuses(rule):
+        return ROUTING.REFUSAL
     if not config.load().knowledge_dir:
         return "No knowledge graph configured — retrieval is unavailable; reason from the skill's references."
-    return _run_skill_script("kg.py", "sources", "--", rule[:300])
+    return _drop_medical(_run_skill_script("kg.py", "sources", "--", rule[:300]))
 
 
 def skill_file(rel: str) -> str:
@@ -792,6 +828,11 @@ def skill_file(rel: str) -> str:
 
 def analyze_question(question: str) -> dict:
     q = question.lower()
+    if ROUTING.crisis(question):   # suicide or self-harm, anyone's: the crisis referral (communication.md 5a), no topic
+        return {"question": question, "topics": ["crisis"], "timing_question": False,
+                "load": ["references/communication.md"], "crisis": ROUTING.CRISIS}
+    if ROUTING.refuses(question):   # health, illness, surgery, death: the plain refusal, no topic file
+        return {"question": question, "topics": ["refuse"], "timing_question": False, "load": [], "refusal": ROUTING.REFUSAL}
     topics = [t for t, rx in TOPICS.items() if re.search(rx, q)]
     timing = bool(re.search(ROUTING.TIMING_RX, q))
     return {"question": question, "topics": topics or ["open activation — see question-trees.md §8"],
@@ -801,7 +842,11 @@ def analyze_question(question: str) -> dict:
 @_calc
 def consultation_context(question: str, b: BirthInput, o: Options = DEFAULTS) -> dict:
     """Everything an AI client needs to answer like the skill: the routed method files, the calculated facts with
-    provenance, and the birth-time sensitivity classes. The client does the reasoning."""
+    provenance, and the birth-time sensitivity classes. The client does the reasoning. A refused or crisis question gets
+    only the refusal or the crisis text: no chart is calculated and no facts are returned (owner rule 2026-11-15)."""
+    analysis = analyze_question(question)
+    if analysis.get("refusal") or analysis.get("crisis"):
+        return {"analysis": analysis}
     c = calculate_chart(b, o)
     on = c["meta"]["transit_date"]
     running = next(([md["lord"], ad["lord"], pd["lord"]] for md in c["vimshottari"] for ad in md["sub"]
@@ -817,7 +862,7 @@ def consultation_context(question: str, b: BirthInput, o: Options = DEFAULTS) ->
                                                                              ("arudha_lagna", "upapada", "karakamsa")},
              "sensitivity_classes": c["sensitivity_grid"]["classes"],
              "transit_sign_aspects": c["transit_sign_aspects"], "transit_aspects_note": c["meta"]["transit_aspects"]}
-    return {"analysis": analyze_question(question), "facts": facts, "derived_facts": _derived_facts(c),
+    return {"analysis": analysis, "facts": facts, "derived_facts": _derived_facts(c),
             "derived_fact_ids": _derived_facts(c, ids=True)}
 
 

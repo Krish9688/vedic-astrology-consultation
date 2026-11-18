@@ -31,6 +31,7 @@ at dates, then pass the unchanged result to `get_activation`. Why: the 6th is co
 disruption and the 12th loss and separation (vedic-natal.md §2); the dasha of a natural malefic keeps a flavour of
 struggle even when it is functionally good (LOL p346). The engine flags every entry of a custom network as unsourced;
 the report says so in `appendix.method`, and a window that rests on the network alone is graded no higher than Moderate.
+The library has no direct rule that puts Mars in a disputes network. BPHS p337 (page re-read) lists Mars as the significator of the 6th; the sloka (34) itself is not yet re-read, so check the BPHS bhava-karaka list for the 6th before citing it.
 
 ## 2. Method rules and their sources
 

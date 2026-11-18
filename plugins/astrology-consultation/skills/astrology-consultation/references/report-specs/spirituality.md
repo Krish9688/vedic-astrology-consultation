@@ -1,7 +1,7 @@
 # Spirituality report spec (`spirituality`)
 
 The person's inner path, what supports practice and the periods that turn them inward. Inside the shared frame
-([README.md](README.md)). Method: [topic-travel-education-health-life.md](../topic-travel-education-health-life.md) §4.
+([README.md](README.md)). Method: [topic-travel-education-life.md](../topic-travel-education-life.md) §3.
 This is a report on tendencies and timing of inner life. It never ranks a person spiritually, never reads past lives
 or curses, and never certifies a level of attainment.
 
@@ -27,25 +27,36 @@ education). Build the network with `get_topic_network` and a `planets` list: the
 from the chart facts, `F.H12.lord`, `F.H9.lord`, `F.H5.lord`) with Jupiter, Ketu and Saturn, duplicates removed. Freeze it
 before looking at dates, then pass the unchanged result to `get_activation`.
 
-Why these: the reference names the 5th, 9th, 12th and 8th with Jupiter and Ketu (topic-travel-education-health-life.md §4).
+Why these: the reference names the 5th, 9th, 12th and 8th with Jupiter and Ketu (topic-travel-education-life.md §3).
 The 8th is a house of inquiry and is read in `path` but is not added to the network (its lord would pull in loss and
-disruption windows that have nothing to do with practice). Saturn is not named in that reference; it is added as the
-skill's own inference, as for the 12th-house retreat note in topic-relationships-marriage.md §9, and it is labelled
-that way. The engine flags every entry of a custom network as unsourced; the report says so in `appendix.method` and
-grades any window that rests on the network alone no higher than Moderate.
+disruption windows that have nothing to do with practice). Saturn is added on three sourced grounds (pages re-read in
+the library): Raman names Saturn the karaka of loss, sorrow, after-life, renunciation and emancipation [HJH2 p432];
+Rao names Saturn the significator of hard work, service and austerity, with renunciation [PVR p184]; and Saturn is
+a planet of the renunciation (pravrajya) yogas [BPHS ch. 79 sl. 2-3, 6-8, p939-941; BJ p193 (ch. 15); SAR1 p248-249].
+Counter view, recorded: the BPHS translator's note gives Saturn the 12th as expenditure and Ketu the 12th as final emancipation [BPHS p337],
+which is why Ketu is in the network too and why Saturn alone is never read as liberation. These sources support Saturn
+as a planet of the theme; none of them is a rule for a topic network, so the engine still flags every entry of a custom
+network as unsourced. The report says so in `appendix.method` and grades any window that rests on the network alone no
+higher than Moderate.
 
 ## 2. Method rules and their sources
 
 | Rule | Source |
 |---|---|
-| Houses: 5th practice and mantra, 9th teachers and dharma, 12th retreat and liberation, 8th inquiry; Jupiter and Ketu | topic-travel-education-health-life.md §4 (the skill's own summary) |
+| Houses: 5th practice and mantra, 9th teachers and dharma, 12th retreat and liberation, 8th inquiry; Jupiter and Ketu | topic-travel-education-life.md §3 (the skill's own summary) |
 | Renunciation yogas colour the whole chart when dominant: read other combinations in that key | LOL p418; BJ XV |
 | A strong 4th lord gives moral development in place of outward show (chart tenor) | LOL p418 |
 | The 12th house: expenditure, separation, retreat, liberation | HJH2 p418 |
 | Karakamsa (the Atmakaraka's navamsa sign used as a lagna) gives a Jaimini reading of the inner bent; state the karaka scheme (seven or eight) and that the reading is Unknown if the karaka changes between them | BPHS ch. 33; jaimini.md §1 |
 | D20 is for spiritual practice; it is not in the sensitivity grid, so it is always Untested: a labelled conditional reading at most, never a confirmation | vargas.md (D20 row and the Untested rule) |
 | A running dasha gives the event; a transit only confirms | timing.md §0 (the skill's own ladder) |
-| No spiritual rank, no past lives, no curses | topic-travel-education-health-life.md §4 |
+| Saturn in the network: karaka of loss, sorrow, after-life, renunciation and emancipation | HJH2 p432 (page re-read) |
+| Saturn: hard work, service, austerity, renunciation | PVR p184 (page re-read) |
+| Saturn as the strongest planet of a group of four or more strong planets in one sign: the naked ascetic (Sanyasin) order | BPHS ch. 79 sl. 2-3 (p939); BJ p193 (ch. 15, sl. 1: Nirgrantha) (pages re-read) |
+| The Moon's sign lord, weak and aspected only by Saturn: the Nirgrantha order (sl. 7). The Moon's sign lord aspecting Saturn: the order of the stronger of the two (sl. 6). The Moon in Saturn's decanate or navamsa and aspected by Saturn: Saturn's order (sl. 8) | BPHS ch. 79 sl. 6-8 (p941) (page re-read; sl. 14 not re-read) |
+| Saturn appears among the planets in the hermit and renunciation conjunctions | SAR1 p248-249 (pages re-read; the chapter number not re-read) |
+| Counter view: Saturn is the 12th's expenditure, Ketu its final emancipation (translator's note, not a sloka) | BPHS p337 (translator's note, page re-read) |
+| No spiritual rank, no past lives, no curses | topic-travel-education-life.md §3 |
 
 ## 3. Conventions
 

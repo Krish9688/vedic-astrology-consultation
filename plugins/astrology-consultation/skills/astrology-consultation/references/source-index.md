@@ -93,7 +93,7 @@ to the chart as calculated.
 - **Books added 2026-11-12**: PDK and PD translate the same verses, so the two count as one authority, not two; where
   the translations differ, name both. BHRIGU names no translator and its attribution is unverified: cite it as "the
   Bhrigu Sutras translation", never as a sage's verse. UKAL's OCR drops list items. Behari gives no sources: modern
-  opinion. House-by-house lines in all of them are blunt (death, illness, moral and caste labels) and pass through
+  opinion. House-by-house lines in all of them are blunt (harsh, moral and caste labels) and pass through
   [vedic-natal.md](vedic-natal.md) §9 before use.
 - **No source here establishes predictive validity.** Textual authority shows what a tradition teaches.
 

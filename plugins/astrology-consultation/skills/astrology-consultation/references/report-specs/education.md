@@ -1,7 +1,7 @@
 # Education report spec (`education`)
 
 How the person learns, which fields the chart leans to and the periods that favour study. Inside the shared frame
-([README.md](README.md)). Method: [topic-travel-education-health-life.md](../topic-travel-education-health-life.md) §2.
+([README.md](README.md)). Method: [topic-travel-education-life.md](../topic-travel-education-life.md) §2.
 
 **Order (standard):** `windows` → `learning` → `fields` → `next`
 
@@ -24,14 +24,14 @@ every unit and window: `get_birth_time_sensitivity`.
 
 | Rule | Source |
 |---|---|
-| Houses: 4 foundational schooling, 5 intelligence and learning, 9 higher study, 2 speech and early learning, 3 skills; karakas Mercury and Jupiter | topic-travel-education-health-life.md §2 (the skill's own summary) |
+| Houses: 4 foundational schooling, 5 intelligence and learning, 9 higher study, 2 speech and early learning, 3 skills; karakas Mercury and Jupiter | topic-travel-education-life.md §2 (the skill's own summary) |
 | The 5th a Mercury sign or with Mercury, or the 5th lord well placed: sharp intellect | PD XVI.15 |
 | Saraswati yoga (Venus, Jupiter, Mercury in kendra, kona or the 2nd, with a strong Jupiter): learning and expression | PD VI.26-27 |
 | Benefics in the 4th with its lord well placed: higher education, its kind by dignity | HPA p50-52 |
 | D24 is a learning varga but is not in the sensitivity grid, so it is always Untested; this report drops it and never uses it to confirm an event or raise a grade | vargas.md (D24 row; stability rules, l.70) |
-| Admission, exam results and degree completion are distinct events with their own windows | topic-travel-education-health-life.md §2 |
+| Admission, exam results and degree completion are distinct events with their own windows | topic-travel-education-life.md §2 |
 | A running dasha of the network gives the event; transits only confirm | timing.md §0 (the skill's own ladder) |
-| No score, admission or degree guarantee | the skill's own rule (topic-travel-education-health-life.md §2; vargas.md) |
+| No score, admission or degree guarantee | the skill's own rule (topic-travel-education-life.md §2; vargas.md) |
 
 ## 3. Conventions
 

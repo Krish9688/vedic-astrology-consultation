@@ -118,7 +118,7 @@ When asked for a specialist rule absent here, locate the source, record edition/
 
 ## Revision 2.1 — temporal delivery and specialist conflicts, checked 2026-09-08
 
-Five user-supplied modern reference digests (vedic, consultation, health, specialty-systems, synastry-and-timing) and a supplied prose report informed original communication principles, not a copied rule corpus. The digests mix traditional, school-specific and modern material with engine-specific assertions. The report informed explanation order only; its visual characteristics and personal content are excluded. Development evidence retains file identities outside this reusable package. No source file or external engine is required at runtime.
+Five user-supplied modern reference digests (vedic, consultation, specialty-systems, synastry-and-timing) and a supplied prose report informed original communication principles, not a copied rule corpus. The digests mix traditional, school-specific and modern material with engine-specific assertions. The report informed explanation order only; its visual characteristics and personal content are excluded. Development evidence retains file identities outside this reusable package. No source file or external engine is required at runtime.
 
 | ID | Inspected source/passage | Decision and limit |
 |---|---|---|

@@ -27,8 +27,8 @@ WORKBENCH = re.compile(r"\b(?:workbench|channels?|tiers?|promise class|network f
 CITE = re.compile(r"\b(?:p\.?\s?\d{1,4}(?:[–-]\d+)?|pp\.\s?\d+|sl\.\s?\d+|verse\s+\d+|ch\.\s?\d+)\b|^sources?:", re.I | re.M)
 SUBSUB = re.compile(r"\b(?:PD|pratyantar\w*|sub-sub)\b.*\d{4}", re.I)
 TECH_HEAD = re.compile(r"^#+\s*(?:why i read it this way|technical|appendix|sources|method)", re.I)
-# Safety (SKILL.md non-negotiable 6): fertility/childbirth forecasts and death/longevity statements. Matches block a
-# report from rendering; in chat drafts they are reported first.
+# Safety (SKILL.md non-negotiable 6): no health, medical or death content, and no fertility/childbirth forecasts. Matches
+# block a report from rendering; in chat drafts they are reported first.
 SAFETY = re.compile(r"\b(?:parenthood (?:in|by|after|before|during) your|(?:fewer|limited|no) children|childless\w*|"
                     r"children (?:after|only after) (?:delay|effort)|conceiv\w*|conception|pregnan\w*|miscarr\w*|"
                     r"infertil\w*|sex of (?:the|a) (?:child|baby)|(?:want|have|having) (?:a )?(?:child|children|baby)\b"
@@ -40,6 +40,9 @@ SAFETY = re.compile(r"\b(?:parenthood (?:in|by|after|before|during) your|(?:fewe
                     r"(?:stop|reduce|skip|change|quit|come off) (?:taking )?(?:your |any |the )?(?:medication|medicine|"
                     r"tablets|pills|treatment|insulin|chemotherapy)|"
                     r"life ?span|longevity|length of (?:your |his |her )?life|santana\w*|putra(?!karaka)\w*|progeny|"
+                    r"(?:ill|poor|good|bad|weak|frail) health|health (?:problems?|issues?|crises|crisis|scares?|concerns?|events?|matters?)|"
+                    r"medical (?:condition|problems?|issues?|emergency|advice)|illness(?:es)?|diseases?|surger(?:y|ies)|accidents?|"
+                    r"injur(?:y|ies|ed)|"
                     r"death of (?:your|his|her|their|a|the) (?:father|mother|parent|spouse|husband|wife|partner|child|"
                     r"son|daughter|brother|sister|sibling|grandparent|friend))\b",
                     re.I)
@@ -50,7 +53,9 @@ CHILD_TIMING = re.compile(
     r"start(?:ing)? a family|addition to the family|sector of children|house of children)\b[^.]{0,160}?\b(?:months?|years?|\d{4}|window|stretch|period|timing|make plans|crosses|transits?)\b"
     r"|\b(?:months?|\d{4}|window|stretch|period)\b[^.]{0,160}?\b(?:sector of children|house of children|parenthood)\b"
     r"|\bchildren (?:later|earlier|sooner) rather than\b", re.I)
-REFERRAL = re.compile(r"\b(?:doctor|GP|midwife|specialist|clinic|medical|obstetrician|gynaecologist|crisis (?:line|service)|"
+# A medical referral no longer excuses a match: health and death are not read at all (owner rule 2026-11-15). Only the plain
+# refusal, the self-harm crisis referral (kept: a safety referral, not a prediction), and legal or financial referrals excuse.
+REFERRAL = re.compile(r"\b(?:not read in this practice|crisis (?:line|service)|"
                       r"helpline|hotline|emergency (?:services|number)|counsel+or|therapist|psychologist|lawyer|solicitor|"
                       r"financial (?:adviser|advisor|counsel+or))\b", re.I)
 # Further verdicts the skill must not give (council 5 R7-2): divorce/separation, infidelity, self-harm, infertility
@@ -92,7 +97,7 @@ LEGAL = re.compile(
 
 def _excused(s, m):
     """A safety match is excused only by a close negation ('I can't time a pregnancy'), an explicit refusal, or a
-    medical referral that carries no date or age — never by 'no doubt' or a doctor mention next to a forecast."""
+    crisis or legal referral that carries no date or age — never by 'no doubt' or a doctor mention next to a forecast."""
     before = re.split(r"[;:—–]", s[:m.start()])[-1]   # the negation must be in the same clause (council R3 M3)
     if (NEGATION.search(before) and not VERDICT_NEG.search(before)
             and not re.search(r"\bno doubt\b|\bnot surprising", before, re.I)):
@@ -157,8 +162,9 @@ def lint(text, mode="chat"):
     main = [(n, s) for n, s, t in S if not t]
     first = [(n, s) for n, s in main if CHART_FIRST.match(s)]
     facts = [(n, s) for n, s in main if FACT.search(s)]
-    issues = [f"SAFETY: '{m.group()}' (line {n}) — no fertility/childbirth forecast, death/longevity, diagnosis or medication "
-              "advice, divorce/infidelity verdict, self-harm content without a crisis referral, or financial-ruin/investment call"
+    issues = [f"SAFETY: '{m.group()}' (line {n}) — health and death are not read in this practice (no health, medical, death or "
+              "longevity content), no fertility/childbirth forecast, divorce/infidelity verdict, self-harm content without a "
+              "crisis referral, or financial-ruin/investment call"
               for n, s, _ in S for m in [SAFETY.search(s) or CHILD_TIMING.search(s) or SAFETY_MORE.search(s)]   # every section
               if m and not _excused(s, m) and not HEADING.match(s)]
     cert = dict(AUDIT)["certainty"]
@@ -238,7 +244,7 @@ def selftest():
               "supportive stretch is March 2029 to September 2030.")
     assert sum(i.startswith("SAFETY") for i in lint(unsafe)["issues"]) == 2, lint(unsafe)["issues"]
     safe = ("You are likely to be a patient, teaching kind of presence for younger people, in or outside a family. "
-            "These describe your relationship with your parents, not their health or lifespan, which a chart cannot tell.")
+            "These describe your relationship with your parents.")
     assert not any(i.startswith("SAFETY") for i in lint(safe)["issues"])
     for leak in ("The supportive months for this area are late June to November 2027, when Jupiter crosses your sector of "
                  "children.", "Likely form: children later rather than early.",
@@ -250,7 +256,10 @@ def selftest():
         assert not any(i.startswith("SAFETY") for i in lint(fine)["issues"]), fine
     referral = ("# When is conception likely?\n\nFor questions about conception or pregnancy, a GP or fertility specialist "
                 "is the right person to ask.")
-    assert not any(i.startswith("SAFETY") for i in lint(referral)["issues"]), lint(referral)["issues"]
+    assert any(i.startswith("SAFETY") for i in lint(referral)["issues"]), lint(referral)["issues"]   # a referral is no excuse now
+    refusal = ("# Will I be ill?\n\nHealth and death are not read in this practice. Such predictions can harm the reader and are "
+               "not good for their health. I can help with another area of your life instead.")
+    assert not any(i.startswith("SAFETY") for i in lint(refusal)["issues"]), lint(refusal)["issues"]
     # adversarial probes (council H-2 plus new ones not used to write the patterns)
     unsafe = ["A child is likely to arrive around 2029.", "Pregnancy is likely in 2028; confirm the details with your doctor.",
               "There is no doubt you will have a baby in 2027.", "Your lifespan is around 72 years.",

@@ -10,8 +10,8 @@ Thank you for helping. A few rules keep the project trustworthy:
    suite in the development repository.
 4. **Method changes need a reason.** Say what was wrong in a real answer and how the change fixes it; the project
    evaluates skill changes with blind comparisons.
-5. **Safety rules are not negotiable:** no death dates, diagnoses, fertility or childbirth forecasts, legal verdicts or
-   investment advice.
+5. **Safety rules are not negotiable:** no health, medical or death content (dates, ages, diagnoses or doctrine), no fertility
+   or childbirth forecasts, legal verdicts or investment advice. If asked about health or death the skill answers: "Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead."
 
 Setup: `./install.sh`, then `.venv/bin/python tools/mcp_smoke.py .venv/bin/astro` (the install smoke test). Before a
 pull request: `uvx ruff check .`, `python3 tools/privacy_check.py`, `claude plugin validate --strict .` and

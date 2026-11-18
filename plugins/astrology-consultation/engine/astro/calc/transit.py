@@ -36,8 +36,8 @@ SOURCES = {"gochara": "PD XXVI.1-2 (p312): from the natal Moon's sign; good hous
            "station_natal": "Convention, not a classical rule: a station of Mercury to Saturn within 3 deg (close) or "
                             "7 deg (wide band) of a natal point, conjunction only; one episode per retrograde loop and "
                             "point, listing both station dates when both fall in the band",
-           "chandrashtama": "CRUX p99-100 (Rath, author): the Moon's transit of the 8th sign from the natal Moon is avoided "
-                            "when choosing a day; texture only, low weight",
+           "chandrashtama": "CRUX p99-100 (Rath, author): Moon in the 8th sign from the natal Moon, a day-choice texture: the "
+                            "day is avoided for starting things; low weight",
            "tara": "Tara order Janma, Sampat, Vipat, Kshema, Pratyak, Sadhana, Naidhana, Mitra, Parama Mitra (JP2 p407 "
                    "translator note; DEVA2 reader note): count from the birth star, mod 9; daily use is a convention, "
                    "texture only, low weight",
@@ -187,7 +187,7 @@ def texture(add, t0, t1, tz, node, moon_sign, natal_moon):
         days[(d + dt.timedelta(hours=tz)).date().isoformat()] = TARAS[(nak - birth) % 27 % 9]
         d += dt.timedelta(days=1)
     hard = [k for k, v in days.items() if v in ("Vipat", "Pratyak", "Naidhana")]
-    add("tara", f"Moon's tara from the birth star: Vipat, Pratyak or Naidhana on {len(hard)} of {len(days)} days",
+    add("tara", f"Moon's tara from the birth star: the obstacle taras (Vipat, Pratyak, Naidhana) on {len(hard)} of {len(days)} days",
         f"{min(days)} to {max(days)}", SOURCES["tara"], days=days)
 
 

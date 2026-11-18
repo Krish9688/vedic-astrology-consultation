@@ -45,7 +45,7 @@ unit and window: `get_birth_time_sensitivity`.
 | Sudden gains: only the periods of the planets that form the signature activate them; Raman calls house-by-house results very general | topic-career-money.md §5a, §6; HJH2 p372 |
 | Dasha-bhukti lords in 3 and 11 or kendras from each other favour rise; 6/8 or 2/12 hinder | HJH2 p260, p364 |
 | Transit Jupiter over the dasha and bhukti lords often starts the good results within a long bhukti | LOL p364-365 |
-| An 8th-house gain usually follows an ending; never predict a relative's death to explain it | topic-career-money.md §5a (the skill's own rule) |
+| An 8th-house gain usually follows an ending or a handover | topic-career-money.md §5a (the skill's own rule) |
 
 Grade for `sudden`: one placement is Weak; Moderate needs two independent signatures, a sound 2nd and 11th and a
 matching period; never higher (topic-career-money.md §5a). A dhana signature on a weak 2nd and 11th passes through the

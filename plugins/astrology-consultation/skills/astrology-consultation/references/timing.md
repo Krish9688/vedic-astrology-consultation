@@ -292,7 +292,7 @@ Sources: KB B7/B17 (Shrimali, validated) and LK1952 (primary; cited `LK1952 pPDF
      natal promise or problem becomes visible.
    - A planet that returns to H10 is that year's "deceiving" (dhokha) planet; a malefic becomes truly harmful on
      reaching H8 [LK1952 p168–170, p186].
-   - Travel from annual Ketu's house; illness symbolism from luminaries reaching 1/6/7/8/10 — symbolism only [KB B17].
+   - Travel from annual Ketu's house [KB B17].
 2. **Planet ages (maturity years)**: Jupiter 16, Sun 22, Moon 24, Venus 25, Mars 28, Mercury 34, Saturn 36, Rahu 42,
    Ketu 48 [KB B7 p51; LK1952 p54, image-checked]. With certain companions the age changes (e.g. Moon with Jupiter,
    Venus or Mercury 12; Sun with Rahu "zero") [LK1952 p56; printed per planet by `chart_facts.py`]. A planet can show its effect at half or a quarter of its period

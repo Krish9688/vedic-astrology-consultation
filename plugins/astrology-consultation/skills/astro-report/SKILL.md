@@ -73,7 +73,7 @@ Use these ids and texts (fill the braces). They are the project's own wording.
 | V-OUTLOOK | window out of range, or daily | "An outlook covers 28 to 92 days. A daily or sun-sign horoscope isn't something I produce. Pick a window in that range?" |
 | V-FOLDER | folder in a repo, plugin or skill | "That folder is inside a code project or the plugin, and reports contain personal details. Please choose another folder." |
 | V-SAFE-GUARANTEE | asks for certainty | "I can't promise an outcome. A chart shows how much of it agrees on a theme and when it's most active, not a certainty. I can give you the strongest window and what would confirm or weaken it." |
-| V-SAFE-MEDICAL | diagnosis, illness, pregnancy, death, legal, investment | "I can't say anything about diagnosis, illness, pregnancy, lifespan, legal outcomes or investments. That needs a doctor or other professional. I can describe the general wellbeing themes of a period if you want." |
+| V-SAFE-MEDICAL | health, illness, diagnosis, pregnancy, death, legal, investment | "Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead. I also can't say anything about pregnancy, legal outcomes or investments; those need a professional." |
 | V-SAFE-CRISIS | self-harm, abuse, danger | See Safety below. |
 | V-ENGINE | tools unavailable | "The astrology engine isn't connected. Run /astrology-consultation:setup, then /reload-plugins, and try again." |
 | V-RENDER | `create_report` returns `ok: false` | "The report didn't pass its checks: {first error, plain}. I'll fix that and try again." |
@@ -84,8 +84,8 @@ Use these ids and texts (fill the braces). They are the project's own wording.
   the local emergency number or a crisis line (for example 988 in the US, Samaritans 116 123 in the UK and Ireland,
   Tele-MANAS 14416 in India; if unsure of the country, say "your local emergency number" or ask where they are). No chart
   link, no timing as comfort, no remedy. Let them lead; do not resume the report on your own.
-- **Guarantee requests:** V-SAFE-GUARANTEE. **Diagnosis, illness, pregnancy, fertility, lifespan, death, legal outcome,
-  investment tips:** V-SAFE-MEDICAL. Neither appears as a claim in the report. Offer general themes only.
+- **Guarantee requests:** V-SAFE-GUARANTEE. **Health, illness, diagnosis, pregnancy, fertility, lifespan, death, legal outcome,
+  investment tips:** V-SAFE-MEDICAL. Neither appears as a claim in the report. Health and death get the plain refusal; offer another area instead.
 - **Remedies:** none unless the person asks. If asked, say they are traditional, optional and never replace medical,
   legal or financial help; ask which tradition; put them only in a separate labelled section, per tradition. Lal Kitab
   remedies use the remedy cards (`remedies_requested: true`) after reading `references/remedy-safety.md`; anything

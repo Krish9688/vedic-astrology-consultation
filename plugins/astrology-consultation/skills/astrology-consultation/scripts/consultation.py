@@ -23,6 +23,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(HERE, "..", "assets", "report")
 sys.path.insert(0, HERE)
+import medical_words  # noqa: E402  (the one medical and death word list)
 
 SIGNS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn",
          "Aquarius", "Pisces"]
@@ -33,18 +34,18 @@ NAME = dict(Su="Sun", Mo="Moon", Ma="Mars", Me="Mercury", Ju="Jupiter", Ve="Venu
 CHAPTERS = [("love", "Love, relationships and marriage"), ("career", "Career and work"),
             ("wealth", "Wealth and finance"), ("foreign", "Foreign travel and settlement"),
             ("education", "Education and skills"), ("family", "Family and children"),
-            ("health", "Health tendencies (general wellness only)"), ("spirituality", "Spirituality and life purpose")]
+            ("spirituality", "Spirituality and life purpose")]
 CHAPTER_IDS = [c for c, _ in CHAPTERS]
 # question category -> the chapter that also shows its answer (general and lal_kitab are answered in section 6 only)
 CATEGORY_CHAPTER = {"love": "love", "marriage": "love", "relationship": "love", "career": "career",
                     "business": "career", "wealth": "wealth", "finance": "wealth", "foreign": "foreign",
                     "travel": "foreign", "relocation": "foreign", "education": "education", "family": "family",
-                    "children": "family", "health": "health", "spirituality": "spirituality", "purpose": "spirituality",
+                    "children": "family", "spirituality": "spirituality", "purpose": "spirituality",
                     "lal_kitab": None, "general": None}
 CATEGORY_LABEL = {"love": "Love", "marriage": "Marriage", "relationship": "Relationships", "career": "Career",
                   "business": "Business", "wealth": "Wealth", "finance": "Finance", "foreign": "Foreign travel",
                   "travel": "Travel", "relocation": "Relocation", "education": "Education", "family": "Family",
-                  "children": "Children", "health": "Health", "spirituality": "Spirituality", "purpose": "Life purpose",
+                  "children": "Children", "spirituality": "Spirituality", "purpose": "Life purpose",
                   "lal_kitab": "Lal Kitab", "general": "General"}
 PRIORITIES = ("high", "medium", "low")
 RELIABILITY = ("exact", "approximate", "unknown")
@@ -97,6 +98,8 @@ def validate_intake(intake):
     if not isinstance(intake, dict):
         return ["intake must be a JSON object"]
     for path, s in _walk(intake):
+        if not re.search(r"questions\[\d+\]\.text$", path) and medical_words.selfharm_hit(s):   # any free text: the same crisis check as routing
+            errs.append(f"{path}: " + medical_words.CRISIS_NOTE)
         if PLACEHOLDER.search(s.strip()):
             errs.append(f"{path}: '{s[:40]}' looks like a placeholder; give the value or leave the field out "
                         f"(it is then printed as '{NOT_PROVIDED}')")
@@ -164,7 +167,13 @@ def validate_intake(intake):
             seen.add(x.get("id"))
             if not (_str(x.get("text")) and len(x["text"].strip()) >= 8):
                 errs.append(f"{p}.text: the question is empty or too short to answer")
-            if x.get("category") not in CATEGORY_CHAPTER:
+            if _str(x.get("text")) and medical_words.selfharm_hit(x["text"]):
+                errs.append(f"{p}.text: " + medical_words.CRISIS_NOTE)       # a crisis, not a refusal (communication.md 5a)
+            elif x.get("category") == "health":
+                errs.append(f"{p}.category: " + HEALTH_REFUSAL)
+            elif _str(x.get("text")) and medical_words.question_hit(x["text"]):
+                errs.append(f"{p}.text: " + HEALTH_REFUSAL)       # the words, whatever the category (owner rule 2026-11-15)
+            elif x.get("category") not in CATEGORY_CHAPTER:
                 errs.append(f"{p}.category: one of {', '.join(CATEGORY_CHAPTER)} (got {x.get('category')!r})")
             if x.get("priority") not in PRIORITIES:
                 errs.append(f"{p}.priority: one of {', '.join(PRIORITIES)}")
@@ -1222,13 +1231,16 @@ GLOSSARY = [
     ("Varshaphal", "The Lal Kitab annual chart for one year of life."),
     ("Upay", "A Lal Kitab remedy: an optional traditional practice; no efficacy is established."),
 ]
+REFUSAL = ("Health and death are not read in this practice. Such predict"
+           "ions can harm the reader and are not good for their health. I can help with another area of your life instead.")
 DISCLAIMER = ("This report is a traditional astrological interpretation based on documented methods (Parashari Jyotish and, "
               "separately, Lal Kitab). It describes tendencies and possible timing within that tradition. It is guidance, "
-              "not a prediction of certain events and not a guarantee of any outcome. It does not predict death, illness "
-              "or accidents, and it is not a substitute for advice from a doctor, psychologist, lawyer, financial adviser "
-              "or other professional. Decisions remain yours. Remedies are optional cultural practices with no "
+              "not a prediction of certain events and not a guarantee of any outcome. It is not a substitute for advice from "
+              "a psychologist, lawyer, financial adviser or other professional. " + REFUSAL + " Decisions remain yours. Remedies are optional cultural practices with no "
               "established efficacy. Calculations were made on the client's own computer and checked against independent "
               "software; interpretations rest on the cited chart factors and may differ between astrologers.")
+HEALTH_REFUSAL = ("Health and death are not read in this practice. Such predict"
+                  "ions can harm the reader and are not good for their health. I can help with another area of your life instead.")
 PRIO = {"high": 0, "medium": 1, "low": 2}
 
 

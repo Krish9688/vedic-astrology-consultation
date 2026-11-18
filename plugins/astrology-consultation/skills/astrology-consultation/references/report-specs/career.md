@@ -49,7 +49,6 @@ functions (analysis, care, building, law, teaching), never a guaranteed title.
 
 - Fields are ranked by support, not predicted.
 - Money: income pattern and timing only; no buy or sell advice, no figures.
-- Health appears only as workload and stress periods, never organs.
 - Parashari only: no Lal Kitab readings or remedies ([README.md](README.md) §5).
 
 ## 5. What to drop

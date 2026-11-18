@@ -2,7 +2,7 @@
 
 Who the person is: core, temperament, broad appearance and the direction of growth. A natal description with no
 event timing. Inside the shared frame ([README.md](README.md)). Method: [vedic-natal.md](../vedic-natal.md) §2 to §5,
-question-trees.md tree 11 for appearance and constitution.
+question-trees.md tree 11 for appearance.
 
 **Order (standard):** `core` → `temperament` → `appearance` → `growth`
 
@@ -40,7 +40,7 @@ sign alone. With an unstable time, give the Moon-sign sketch as the fallback and
 
 | Rule | Source |
 |---|---|
-| The 1st house: body, build, appearance, vitality, agency, direction; the lagna lord links the person to the house it occupies | vedic-natal.md §2 (the skill's own summary); BPHS ch. 12 sl. 1-4 (PDF p138-139) |
+| The 1st house: build, appearance, agency, direction; the lagna lord links the person to the house it occupies | vedic-natal.md §2 (the skill's own summary); BPHS ch. 12 sl. 1-4 (PDF p138-139) |
 | Settle the lagna, its lord, its dispositor and the Moon's strength first: a weak lagna or lagna lord stops even a fine yoga from delivering | LOL p367 |
 | Stature class of the rising sign: Aries, Taurus, Aquarius, Pisces short; Gemini, Cancer, Sagittarius, Capricorn middling; Leo to Scorpio long | LOL p133 |
 | The sign's own verses differ for some signs | PD IX.4, IX.7, IX.9 (p129-131); PDK p105-106; CR-X19 |
@@ -50,7 +50,7 @@ sign alone. With an unstable time, give the Moon-sign sketch as the fallback and
 | Planet-in-house sketches are one input each, to be weighed with lordship, dignity and aspects | PDK p105-106; BEHARI2A p6-9 (Weak, one modern author) |
 | The Moon in a sign, its star and its strength colour temperament and emotional response | vedic-natal.md §7 (nakshatras); consultation-reasoning.md |
 | Where steps disagree, say "mixed" and give the stronger factor first | SAR1 p158 |
-| Complexion only if asked, in `appearance` only: neutral, once, never ranked or valued | question-trees.md tree 11 (BJ p88-89; HJH1 p159) |
+| Complexion, hair colour, hair texture and eye colour only if asked, in `appearance` only: neutral, once, never ranked or valued, always Weak with the caveat sentence | question-trees.md tree 11 (BJ p88-89; HJH1 p159) |
 
 ## 3. Conventions
 
@@ -62,10 +62,11 @@ appearance.
 
 - Appearance is the lowest-confidence part: Weak, with the caveat sentence above, in the `appearance` section only.
 - Tendencies, never measurements: no height in numbers, no weight (refused in `appearance` too), no age claim ("you look older"), no named body part,
-  no scars or marks, and hair and eye colour are never given.
+  no scars or marks. Hair colour, hair texture and eye colour may be named in `appearance` only (Weak, with the caveat
+  sentence); anywhere else they are refused. Weight and attractiveness ('good looking', 'charming looks', 'lovely face') are refused everywhere, `appearance` included.
 - Never name or predict caste, community, religion or ethnicity; the chart is not read for orientation or gender
   identity; never use it to pick or reject a real person.
-- Constitution is symbolism only: nothing medical, no diagnosis, no organ.
+- Appearance is symbolism only: nothing medical, no diagnosis, no organ.
 - No fixed-age claim ("at 32 you will change"): periods are named by months and years, not by the person's age.
 - The Moon-sign reading of temperament is a tendency; the person's account of themselves decides what fits.
 - Parashari only: no Lal Kitab readings or remedies ([README.md](README.md) §5). Remedies are not part of this type.
