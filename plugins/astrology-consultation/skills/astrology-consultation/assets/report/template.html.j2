@@ -20,8 +20,8 @@
     {% if r.birth.time_reliability or r.birth.time_source %}<dt>Birth time</dt><dd>{% set _src = r.birth.time_source or "" %}{% set _rel = r.birth.time_reliability or "" %}{% if _rel and (not _src or _src.lower() in _rel.lower()) %}{{ _rel }}{% else %}{{ _src }}{% if _rel %} ({{ _rel }}){% endif %}{% endif %}</dd>{% endif %}{% endif %}
     {% if r.engine and r.engine.calculation %}<dt>Calculated with</dt><dd>{{ r.engine.calculation }}{% if r.engine.cross_check and not r.engine.cross_check.strip().lower().startswith(('none', 'no ', 'not')) %}; checked against {{ r.engine.cross_check }}{% endif %}</dd>{% endif %}
   </dl>
-  <p class="foot">A traditional Vedic astrological interpretation using documented methods. It describes tendencies and
-  timing within that tradition; it is not a guarantee, and it is not legal or financial advice. Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead.</p>
+  <p class="foot">A traditional Vedic astrological interpretation using documented methods. It describes tendencies{% if r.report_type not in ("children", "affairs") %} and
+  timing{% endif %} within that tradition; it is not a guarantee, and it is not legal or financial advice. Health and death are not read in this practice. Such predictions can harm the reader and are not good for their health. I can help with another area of your life instead.</p>
 </section>
 
 {% macro ranking() %}{% if r.ranking %}<h2 id="ranking">{{ r.ranking_title or ("Snapshot by life area" if r.report_type == "kundli" else "Ranked by support") }}</h2>
@@ -117,7 +117,7 @@
 {% endif %}
 {% if spec %}
 <h2 id="ledger">Evidence ledger</h2>
-<dl class="ledger">{% for k, help in [("Confirmed", "calculated by the engine"), ("Inferred", "a reading of calculated facts or a cited rule"), ("Hypothesis", "a timing or outcome claim, never a certainty")] %}
+<dl class="ledger">{% for k, help in [("Confirmed", "calculated by the engine"), ("Inferred", "a reading of calculated facts or a cited rule"), ("Hypothesis", "a timing or outcome claim, never a certainty")] if not (k == "Hypothesis" and r.report_type in ("children", "affairs")) %}
 <dt>{{ k }} <span class="note">({{ help }})</span></dt><dd>{{ ledger[k]|join("; ") if ledger[k] else "none in this report" }}</dd>{% endfor %}</dl>
 <h2 id="next">Next step</h2>
 <p>Only you can tell us these; the answers sharpen the reading.</p>

@@ -74,19 +74,25 @@ and listed. Siblings are discussed only when asked and never inferred.
   timeline row may name a parent or sibling for those neutral events only, never for health, harm or loss.
 - Never confirm or rule out that a sibling exists, nor read a sibling's fate.
 - Never read a parent's character as a fact about that person: it is the native's experience and the chart's themes.
-- No pregnancy, fertility or children timing here; children belong to their own report.
+- No timing of the person's own children, and no pregnancy complications, fertility or potency wording, here; the person's own
+  children belong to their own report. A relative's baby is a normal question: a neutral dated line in the fixed shape below is
+  allowed ("Your sister may welcome a baby in 2028.", "Your brother may become a father in 2030."). Pregnancy, complications,
+  delivery, IVF, fertility, potency or loss wording about a relative stays refused (medical list and life_lint SAFETY), and so does
+  any other baby wording ("A new baby may join your cousin's family"). `life_lint.RELATIVE_BABY` exempts exactly this shape from
+  the child-timing check; the person's own children stay refused. The same line is allowed in the kundli family section.
 - Property: no legal title, no address, no price and no advice to buy or sell; a window says what the period activates.
 - Fixed forecast shapes. A relative is a mother, father, parent, mom, mum, dad, ma, pa, brother, sister, sibling, aunt,
   uncle, cousin, niece, nephew, grandparent or other grand-relative, in-law, step-relative, relative or family member.
   A sentence whose subject or possessor is a relative, or he, she, they, his, her or their, passes only if the whole
   sentence is exactly:
   `<Relative> <MODAL> <PHRASE>[ <TIME>].`
-  - `<Relative>`: "Your <relative>", "Your <relative> and you", or he, she, they.
+  - `<Relative>`: "Your <relative>", "Your <relative> and you", "Your <relative> and his wife / her husband / his partner / her partner", or he, she, they.
   - `<MODAL>`: may, might, could, would, is likely to, are likely to.
   - `<PHRASE>`: visit you; visit your home; come to stay with you; stay with you for a while; move house; move to a new
     city; move abroad; move closer to you; move for work; travel for work; travel with you; go on a holiday; change
     jobs; start a new job; be promoted; retire; plan a family gathering; host a family gathering; plan a trip; help you
-    with the move; help you with your home; get married; study abroad; graduate.
+    with the move; help you with your home; get married; study abroad; graduate; welcome a baby; have a baby; become a mother;
+    become a father; become a parent; become parents; become grandparents; become a grandparent.
   - `<TIME>` (optional): in <Month> <YYYY>; in <YYYY>; between <YYYY> and <YYYY>; from <YYYY>; later in <YYYY>; during
     the <Planet> sub-period; during the <Planet> period.
   No other clause and no extra word. Anything else about a relative, present or past tense included, is written from

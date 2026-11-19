@@ -13,7 +13,7 @@
 {% if used is not defined or used.sens %}<tr class="grp"><th colspan="2">Birth-time sensitivity (shown only where the calculation gives it)</th></tr>
 {% for k, label in sens_labels.items() if used is not defined or k in used.sens %}<tr><td><span class="chip sens sens-{{ k }}">{{ label }}</span></td><td>{{ legend.sens[k] }}</td></tr>
 {% endfor %}{% endif %}
-<tr class="grp"><th colspan="2">Timeline bars</th></tr>
+{% if used is not defined or used.line %}<tr class="grp"><th colspan="2">Timeline bars</th></tr>
 {% for k, d in legend.line.items() if used is not defined or k in used.line %}<tr><td><span class="tl-bar {{ k }} tl-key"></span></td><td>{{ d }}</td></tr>
-{% endfor %}
+{% endfor %}{% endif %}
 </tbody></table>

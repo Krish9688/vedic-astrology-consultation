@@ -6,6 +6,30 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 ## [Unreleased]
 
+## [3.11.0] - 2026-11-19
+
+### Added
+- **Three report types: children, intimacy and affairs.** Each has a spec, a schema entry, a template and gates with
+  negative tests. Children covers the theme, parenting style and alternatives, a describing-verb allow-list for the
+  wording and no timing windows for the person's own children. Intimacy and affairs are built only for an adult asking
+  about their own life (affairs: own tendencies only, graded Weak or Moderate, nothing about a named third person).
+- **Adult gate by birth date.** Intimacy and affairs refuse when the birth date makes the person under 18.
+- **Relative-baby fixed shapes.** A relative's baby question (for example a sister's) routes with timing and is not
+  blocked; the family report allows neutral fixed-shape lines such as "Your sister may welcome a baby in 2028."
+  (owner decisions of 2026-11-19, `notes/t11/batch3/DECISIONS-DRAFT.md`).
+- The registry now lists 30 types: 20 built, 10 planned.
+
+### Fixed
+- **Children questions were routed as timing.** A children-only question no longer loads `timing.md`; the topic file
+  forbids a window, and routing now agrees with it.
+
+### Known limits
+- Batch 3 shipped with known limits by owner decision (2026-11-19). The reviewer's first review and re-checks 1 and 2
+  were NOT READY. In re-check 2, 48 of 75 new must-refuse sentences passed (children 20 of 25, intimacy 14 of 25,
+  affairs 14 of 25); the family relative-baby lines, routing and all must-pass sentences were correct. Findings R2-1 to
+  R2-6 are in `notes/t11/batch3/REVIEW.md` (Re-check 2).
+- Last test parts: reports 1757 passed, 5 skipped; safety 1205 passed, 20 skipped.
+
 ## [3.10.0] - 2026-11-19
 
 ### Added

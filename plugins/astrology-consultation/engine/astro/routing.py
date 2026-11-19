@@ -67,12 +67,42 @@ TOPICS = {  # topic → word-start regex over the lower-cased question ("remove"
     "career-money": r"\bcareer|\bjob|\bwork|\bbusiness|\bpromotion|\bincome|\bmoney|\bfinanc|\bwealth|\bdebt|"
                     r"\bsalary|\bboss|\bcompany|\binvest|\blotter|\bwindfall|\binherit|\bjackpot|\bsudden (?:gain|money|wealth)",
     "home-family-children": r"\bhome|\b(?:buy|sell|bought|new|my) house|\bhouse (?:purchase|hunt)|\bproperty|\bflat\b|\bapartment|\bmother|\bfather|\bparent|\bsibling|"
-                            r"\bbrother|\bsister|\bchild|\bkids?\b|\bbab(?:y|ies)|\bpregnan|\bconceiv|\bson\b|"
+                            r"\bbrother|\bsister|\bchild|\bkids?\b|\bbab(?:y|ies)|\bpregnan|\bconceiv|\bson\b|\bmom\b|\bmum\b|\bdad\b|"
+                            r"\bprogeny|\boffspring|\blittle ones?\b|\bgrand(?:parent|child|mother|father)|\bstart(?:ing)? a family|"
                             r"\bdaughter|\bfamil|\bfriend",
     "travel-education-life": r"\babroad|\bforeign|\btravel|\brelocat|\bmov(?:e|ing)\b|\bstud(?:y|ies)|"
                              r"\beducation|\bdegree|\buniversity|\bcollege|\bexam|\bschool|\bspiritual|"
                              r"\byear ahead|\bcoming year|\bnext year|\b12 months",
 }
+
+
+# Children are never timed (topic-home-family-children.md output rule): a children-only question is not a timing question, so
+# timing.md is not loaded for it and the plain refusal for "when" applies. Property, parents or any other topic keep their timing.
+_BE_PARENT = r"(?:be|becom\w*|being|get(?:s|ting)? to be) (?:a |an )?(?:mom|mum|dad|mother|father|parent|grandparent|grandmother|grandfather)"
+CHILDREN_RX = (r"\bchild|\bkids?\b|\bbab(?:y|ies)|\bpregnan|\bconceiv|\bson\b|\bdaughter|\bprogeny|\boffspring|\bparenthood|\blittle ones?\b|"
+               r"\bgrandchild|\bfertil|\bgrandparent|\bstart(?:ing)? a family|\bgrow(?:ing)? (?:our|my|the) family|\b" + _BE_PARENT)
+# a relative's or friend's baby is a normal question and keeps its timing (owner 2026-11-19): cousin, in-laws (daughter-in-law ...), niece,
+# nephew, aunt, uncle, grandchild, friend, and "her/his/their baby" (someone else's)
+NOT_CHILDREN_RX = (r"\bhome|\bhouses?\b|\bproperty|\bflat\b|\bapartment|\bmother|\bfather|\bparents?\b|\bsibling|\bbrother|\bsister|"
+                   r"\bcousins?\b|\bnieces?\b|\bnephews?\b|\baunt|\buncle|-in-law|\bin-laws?\b|\bgrand(?:child|children|son|daughter|kids?)|"
+                   r"\bfriends?\b|\bcolleague|\bneighbou?r|\b(?:his|her|their) (?:baby|babies|child|children|kids?|son|daughter|little ones?)\b")
+# the person's own parenthood ("become parents", "be a mother", "get to be a mom") names a parent word without being about a relative
+_OWN_PARENT = _re.compile(r"\b(?:be|becom\w*|being|get(?:s|ting)? to be) (?:a |an )?(?:mom|mum|dad|mother|father|parents?|grandparents?)\b|\b(?:mothers?|fathers?) (?:myself|ourselves)\b")
+_YEAR_WORDS = r"\b(?:year ahead|coming year|next year|12 months)"
+_MARRY_EVENT_RX = r"\bmarr|\bwed|\bengag|\bdivorc|\bdating|\bbreak ?up|\bboyfriend|\bgirlfriend|\bfianc"
+
+
+def is_timing(q):
+    """True when a lower-cased question asks "when" (TIMING_RX), except a children-only question: one with no other topic (a bare
+    "next year" does not count; a spouse word alone, as in "my wife conceive", does not count either) and no home, property or
+    relative word. A relative's baby ("my sister have a baby") keeps its timing, as before."""
+    bare = _re.sub(_YEAR_WORDS, " ", q)
+    other = [t for t, rx in TOPICS.items() if t not in ("home-family-children", "relationships-marriage") and _re.search(rx, bare)]
+    if _re.search(TOPICS["relationships-marriage"], bare) and _re.search(_MARRY_EVENT_RX, bare):
+        other.append("relationships-marriage")
+    mine = q if _re.search(r"\bmy (?:son|daughter|grand\w+)\b", q) else _OWN_PARENT.sub(" ", q)     # "my son becomes a father" is a relative's
+    children_only = _re.search(CHILDREN_RX, q) and not other and not _re.search(NOT_CHILDREN_RX, mine)
+    return bool(_re.search(TIMING_RX, q)) and not children_only
 
 
 FILES = {"appearance": "references/vedic-natal.md"}   # topics that load a method file instead of references/topic-<topic>.md

@@ -3,7 +3,8 @@
 One spec per report type in [`assets/report/registry.json`](../../assets/report/registry.json):
 [kundli](kundli.md), [relationship](relationship.md), [career](career.md), [wealth](wealth.md),
 [education](education.md), [reputation](reputation.md), [spirituality](spirituality.md), [self](self.md),
-[family](family.md), [challenges](challenges.md). Each spec lists the body sections in order,
+[family](family.md), [challenges](challenges.md), [children](children.md), [intimacy](intimacy.md),
+[affairs](affairs.md). Each spec lists the body sections in order,
 every computed field with the engine tool that gives it, the conventions, the caveats and what to drop when data is
 missing. The frame below is the same for all of them. It comes from the owner's report template (shared frame, tone
 guide, QC checklist) and is **DESIGN** (the skill's own rules), not classical doctrine.

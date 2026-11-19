@@ -345,8 +345,23 @@
     "kids"
    ],
    "charts": 1,
-   "status": "planned",
-   "one_line": "Children in your chart, as themes; no fertility verdicts."
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_birth_time_sensitivity",
+    "get_divisional_chart",
+    "get_topic_network",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/children.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "Your bond with children, your parenting style and other ways the care shows; no timing, no counts."
   },
   {
    "id": "education",
@@ -381,8 +396,23 @@
    "name": "Intimacy",
    "aliases": [],
    "charts": 1,
-   "status": "planned",
-   "one_line": "Desire, closeness and comfort in your chart, with care."
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_divisional_chart",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/intimacy.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "Closeness and comfort in your chart, with care; adults only, nothing explicit."
   },
   {
    "id": "affairs",
@@ -391,8 +421,22 @@
     "fidelity"
    ],
    "charts": 1,
-   "status": "planned",
-   "one_line": "Your own tendencies only; never a verdict on a partner."
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_birth_time_sensitivity",
+    "get_divisional_chart",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/affairs.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "Your own tendencies only; never a verdict on you or on a partner."
   },
   {
    "id": "self",
