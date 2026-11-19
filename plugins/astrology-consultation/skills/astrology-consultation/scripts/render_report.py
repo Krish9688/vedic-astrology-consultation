@@ -30,7 +30,8 @@ TYPE_NAMES = {"kundli": "Kundli report", "complete-life": "Complete life report"
               "relocation": "Relocation and foreign travel report", "compact": "Consultation summary",
               "outlook": "Personal outlook", "wealth": "Wealth report", "education": "Education report",
               "reputation": "Reputation report", "spirituality": "Spirituality report", "self": "Self report",
-              "family": "Family report", "challenges": "Challenges report"}
+              "family": "Family report", "challenges": "Challenges report", "children": "Children report",
+              "intimacy": "Intimacy report", "affairs": "Affairs and fidelity report (own chart)"}
 HOW_TO_READ = ("Each section starts from what a theme means in your life, then how it is likely to show, when, what "
                "argues against it and what to watch for. Confidence words — Strong, Moderate, Weak, Contradictory, "
                "Unknown — describe how much of the chart agrees, not a probability. Dates are periods, never exact days. "
@@ -45,6 +46,12 @@ CLAIM_LABELS = {"fact": "Calculated fact", "rule": "Traditional rule (cited)", "
                 "prediction": "Prediction (interpretive)", "speculation": "Speculative"}
 BASIS_LABELS = {"TEXT": "Source text", "COMMENTARY": "Commentary", "DISPUTED": "Disputed between sources",
                 "COMPUTED": "Calculated", "TESTED": "Tested", "SPECULATIVE": "Speculative"}
+HOW_TO_READ_NOTIME = ("Each section starts from what a theme means in your life, then how it is likely to show, what argues "
+                      "against it and what to watch for. Confidence words — Strong, Moderate, Weak, Contradictory, Unknown — "
+                      "describe how much of the chart agrees, not a probability. The chart details behind each conclusion are in "
+                      "the technical appendix. The small label under a heading says what it rests on — a calculated fact, a cited "
+                      "rule or an interpretation; a source's text, an author's commentary, a disputed point or a guess — and which "
+                      "system produced it. 'Source text' means a book says so, not that it has been tested.")
 TEXT_KEYS = ("theme", "meaning", "manifestation", "timing", "nuance", "counter", "watch")   # what the client reads
 PROVEN = re.compile(r"\b(?:tested|proven|proved|proof|validated|statistically|scientifically|confirmed by (?:data|research|stud(?:y|ies)))\b", re.I)
 SYSTEM_LABELS = {"parashari": "Parashari", "jaimini": "Jaimini", "lal_kitab": "Lal Kitab",
@@ -68,6 +75,9 @@ ANSWERS = {
     "self": "Who am I in this chart: my core, my temperament, my broad appearance and where I grow?",
     "family": "How do I relate to my home, my mother and my father, and when are home and property matters more likely to move?",
     "challenges": "Where does the chart show pressure, how do disputes tend to show up, and how can I respond?",
+    "children": "How do I relate to children, what is my parenting style, and where else does the care for the next generation show?",
+    "intimacy": "How does closeness show in my chart: comfort, warmth, what steadies it and what holds it back?",
+    "affairs": "What do my own tendencies toward ties outside a committed relationship look like, and what steadies them?",
 }
 SENS_LABELS = {"stable": "Birth time: stable", "may_shift": "Birth time: may shift",
                "depends": "Birth time: depends on exact time"}
@@ -292,6 +302,9 @@ SPEC_SECTIONS = {
     "self": {"standard": ["core", "temperament", "appearance", "growth"]},
     "family": {"standard": ["windows", "home", "mother", "father", "siblings"]},
     "challenges": {"standard": ["windows", "pressure", "disputes", "response"]},
+    "children": {"standard": ["theme", "parenting", "alternatives"]},
+    "intimacy": {"standard": ["comfort", "venus", "bond", "phases", "steadiers"]},
+    "affairs": {"standard": ["pulls", "pressures", "private", "steadiers"]},
 }
 LEDGER = {"fact": "Confirmed", "rule": "Inferred", "interpretation": "Inferred", "prediction": "Hypothesis",
           "speculation": "Hypothesis"}
@@ -323,7 +336,8 @@ PARSIB = re.compile(r"\b(?:mothers?|fathers?|parents?|mom|mum|dad|brothers?|sist
                     r"bhai\w*|didi|behen|chacha|chachi|mama|mami|bua|mausi|step(?:dad|mom|mum))\b", re.I)
 DATEISH = re.compile(r"\b(?:19|20)\d{2}\b|\b(?:January|February|March|April|June|July|August|September|October|November|December|"
                      r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\b|\bMay \d")
-KUNDLI_GATES = {"family": "family", "challenges": "challenges", "inner": "spirituality", "self": "self"}   # full kundli section id -> gate set
+KUNDLI_GATES = {"family": ("family", "children_kundli"), "challenges": ("challenges",), "inner": ("spirituality",), "self": ("self",),
+                "intimacy": ("intimacy",), "relationship": ("affairs",)}   # full kundli section id -> gate sets
 AGE = re.compile(r"\b(?:older|younger)\b", re.I)            # an age claim only in a sentence about a partner
 PARTNER = re.compile(r"\b(?:partner|spouse|husband|wife)\b", re.I)
 AFFAIR = re.compile(r"\b(?:affairs?|cheat\w*|unfaithful\w*|infidelit\w*|fidelity|extramarital)\b", re.I)
@@ -382,11 +396,12 @@ _REL = (r"(?:" + _SLANG + r"|(?:mothers?|fathers?|parents?|dad|mom|mum|ma|pa|bro
 _PHRASE = ("visit you|visit your home|come to stay with you|stay with you for a while|move house|move to a new city|move abroad|"
            "move closer to you|move for work|travel for work|travel with you|go on a holiday|change jobs|start a new job|be promoted|"
            "retire|plan a family gathering|host a family gathering|plan a trip|help you with the move|help you with your home|"
-           "get married|study abroad|graduate")
+           "get married|study abroad|graduate|welcome a baby|have a baby|become a mother|become a father|become a parent|become parents|"
+           "become grandparents|become a grandparent")    # a relative's baby: a neutral dated line is allowed (owner 2026-11-19)
 _PLANET = r"(?:Sun|Moon|Mars|Mercury|Jupiter|Venus|Saturn|Rahu|Ketu)"
 _TIME = (rf"(?:in {MON} \d{{4}}|in \d{{4}}|between \d{{4}} and \d{{4}}|from \d{{4}}|later in \d{{4}}|"
          rf"during the {_PLANET} (?:sub-)?period)")
-_SHAPE = re.compile(rf"(?:your (?:[a-z]+ )?{_REL}(?: and you)?|she|he|they) (?:may|might|could|would|is likely to|are likely to) "
+_SHAPE = re.compile(rf"(?:your (?:[a-z]+ )?{_REL}(?: and (?:you|his wife|her husband|his partner|her partner))?|she|he|they) (?:may|might|could|would|is likely to|are likely to) "
                     rf"(?:{_PHRASE})(?: {_TIME})?\.?", re.I)
 _VERBISH = r"(?!(?:or|and|nor|tie|figures?|windows?|rows?|sections?|readings?|themes?|role|pattern)\b)\w+"   # any word that is not a topic noun
 _BARE = (r"(?:pops|pitaji|papaji|babuji|bauji|amma|ammi|appa|abba|abbu|baba|bapu|maa|maiya|mataji|mum|mom|mummy|mommy|mama|dad|daddy|papa|ma|pa|grandpa|grandma|granny|nana|nani|nanny|dada|dadi|"
@@ -532,6 +547,355 @@ _FORBID = re.compile(
 _LEGAL = r"court(?! of public opinion)|judge|case|lawsuit|legal|justice|trial|tribunal|ruling|claim|petition|oppos\w+|bench|opponents?|rivals?|enem\w*|foes?|adversar\w*|other side|opposing party"
 _OUTCOME = (r"win|wins|won|winning|lose|loses|lost|losing|favou?r\w*|your side|sides? with|resolv\w*|crush\w*|defeat\w*|beat|beats|"
             r"prevail\w*|triumph\w*|humbl\w*|victor\w*|verdict|judg(?:e)?ment|ruling|award\w*|upheld|uphold\w*|granted|allowed|dismissed|rejected|silenc\w*|in your pocket|everything you asked for|pay|pays|paid|settle\w*")
+# batch 3 (T11.30, fix round 1): children, intimacy, affairs. A gate with a third item True is "hard": a negation does not
+# excuse it, because a claim about the person ("You will not have children") is not a caveat. Fertility, pregnancy, potency
+# and birth-health words are in medical_words.REPORT_WORDS (the one list), not here; these gates read the forms around
+# them. Contractions are folded first ("you'll" -> "you will", see _fold).
+_KID = (r"(?:children|child|kids?|babies|baby|sons?|daughters?|progeny|offspring|heirs?|descendants?|twins?|triplets?|"
+        r"little ones?|cradle|stork)")
+_KIDX = _KID[:-1] + r"|parent(?:hood|ing)|(?:mother|father)hood|lineage|family line|family name)"
+_OBJ = r"(?:(?:a|an|the|any|your|no|one|two|three|four|five|more|another|some|several|many|few|own|first|second|next|new)\s+){0,2}(?:\w+\s+)?"
+_NUM = r"(?:one|two|three|four|five|six|seven|eight|nine|ten|\d+|a couple of|a pair of|several|many|few|multiple|both)"
+_MODAL = (r"(?:will|shall|may|might|could|would|can|won't|cannot|can't|(?:are|is) (?:going|likely|unlikely|bound|destined|able|sure|"
+          r"not able|prone|set|about) to|(?:will|may|might|could) (?:end|wind) up)")
+_MORAL = (r"\b(?:immoral\w*|promiscuous\w*|promiscuity|licentious\w*|lecherous|debauch\w*|depraved|pervert\w*|perversion\w*|sinful|"
+          r"shameful|shameless|adulter\w*|harlot\w*|whor\w*|slut\w*|loose (?:morals|character|woman|man)|bad (?:person|character|morals)|"
+          r"characterless|low morals|wanton\w*|vulgar|unchaste|lewd\w*|indecent\w*|degenerate\w*|dishonou?r\w*|immodest\w*|home-?wreck\w*|"
+          r"cheaters?|flirt\w*|prude\w*|prudish|fallen (?:woman|man)|wicked\w*|disgrac\w*|corrupt\w*|womani[sz]\w*|easy (?:woman|man|virtue)|"
+          r"temptress|seductress|scandalous|trampy|slutty|improper|dirty|teas(?:e|es|ing|er)|unseemly|filthy|sleazy|sordid|obscene|vile|trashy|"
+          r"loose (?:streak|ways|living|habits|nature)|two-?timer\w*|playboy|casanova|gigolo|lothario|rogue|cad|rake|hussy|floozy|strumpet|"
+          r"naughty|raunchy|sinner|sinful|philander\w*|womaniz\w*)\b")
+_CERTAIN = (r"\b(?:guarantee\w*|certainly|definitely|surely|inevitabl\w*|destined|fated|doomed|bound to|sure to|without fail|for certain|"
+            r"no doubt|cannot fail|absolutely|undeniabl\w*|without question|unquestionabl\w*|beyond (?:any )?doubt|undoubted\w*|indisputabl\w*|"
+            r"unmistakabl\w*|for sure|no question|assured\w*|ensured|unavoidabl\w*|inescapabl\w*|unfailing\w*|no mistake|without a doubt|"
+            r"sure thing|beyond question|written (?:in|for)\b|meant to be|a matter of time|sooner or later|cannot be (?:avoided|escaped|helped)|"
+            r"certainty|certain to|for certain|(?:is|are|was|be|seems?|remains?|feels?)\s+(?:absolutely |very |quite |almost |fairly |entirely |"
+            r"completely |totally )?certain)\b")
+_PLN = r"(?:Sun|Moon|Mars|Mercury|Jupiter|Venus|Saturn|Rahu|Ketu|Surya|Chandra|Mangal|Budh|Guru|Shukra|Shani)"
+# periods, windows, seasons and ages, refused in all three types (soft: a negated caveat such as "no window" is fine)
+_TIME_CORE = (
+    rf"windows?|(?:good|best|right|favou?rable|risky|dangerous|louder|peak\w*) (?:time|year|years|months?|stretch)|this (?:year|month|season)|"
+    rf"next (?:year|month|season|spring|summer|autumn|winter)|spring|summer|autumn|winter|monsoon|seasons?|time comes|"
+    rf"(?:around|at|by|before|after|until|till|near)\s+(?:the )?(?:ages? (?:of )?)?(?:\d{{2}}|{_NUMW})\b(?!\s+(?:minutes?|hours?|days?|weeks?|months?|per ?cent))|"
+    rf"ages? \d{{2}}|(?:in|during) your (?:early |mid |late )?(?:teens|twenties|thirties|forties|fifties|sixties)|"
+    rf"(?:early|mid|late) (?:twenties|thirties|forties|fifties|sixties)")
+_TIME_PERIOD = rf"{_PLN}(?:['’]s)?\s+(?:major |sub-|minor )?(?:periods?|time|dasha|phase|years?|turn)|(?:major|sub|minor)[- ]?periods?|running periods? (?:of|under|in)"
+_TIMEWORDS_NP = re.compile(rf"\b(?:{_TIME_CORE})\b", re.I)                       # intimacy: phases are read by chapter, so periods are named
+_TIMEWORDS = re.compile(rf"\b(?:{_TIME_CORE}|{_TIME_PERIOD})\b", re.I)
+_DASHA = re.compile(r"\b(?:dasha|mahadasha|antardasha|bhukti|periods?|sub-periods?|transit\w*)\b", re.I)
+_CHILDREN_FORMS = [
+    (re.compile(rf"\b(?:you|your chart|the chart|your 5th house|the 5th house)\b[^.!?;]*?\b(?:{_MODAL}|shows?|indicates?|promises?|denies|gives)\b[^.!?;]*?"
+                rf"\b(?:have|bear|conceive|welcome|expect|be (?:blessed|given|granted)(?: with)?)\s+{_OBJ}{_KID}\b", re.I),
+     "a forecast of having children", True),
+    (re.compile(rf"\b(?:chart|house|lord|jupiter|venus|moon)\b[^.!?;]*?\b(?:shows?|indicates?|promises?|denies|gives|grants|blesses)\s+(?:you\s+)?{_OBJ}{_KID}\b", re.I),
+     "a promise or denial of children", True),
+    (re.compile(rf"\byou\b[^.!?;]*?\b{_MODAL}\b[^.!?;]*?\bbecom(?:e|ing) (?:a )?(?:parents?|mothers?|fathers?|mums?|moms?|dads?)\b", re.I),
+     "a forecast of becoming a parent", True),
+    (re.compile(rf"\byour (?:(?:first|second|third|next|new|future|unborn|own) )?{_KID}\s+(?:{_MODAL}|is going to)\b", re.I),
+     "a forecast about a future child", True),
+    (re.compile(rf"\b(?:are |be |is |been |am )?(?:blessed|gifted|granted|given) (?:with )?{_OBJ}{_KID}\b|"
+                rf"\b(?:filled|full) (?:with|of) {_OBJ}{_KID}\b", re.I),
+     "a promise of children", True),
+    (re.compile(rf"\b(?:never|cannot|can't|unable to|won't|will not)\s+(?:\w+\s+){{0,3}}?(?:hold|have|bear|raise|get|see|welcome)\b[^.!?;]*?\b{_KID}\b", re.I),
+     "a childless statement", True),
+    (re.compile(rf"\b(?:limited progeny|childless\w*|child-?free|issueless|barren\w*|without (?:any )?{_KID}|no {_KID}|lack of {_KID}|"
+                rf"denial of {_KID}|{_KID} (?:is|are|will be|may be|might be) (?:denied|blocked|refused|absent|missing|lacking)|"
+                rf"empty (?:nest|arms|house)|cradle|stork|(?:lineage|family line)\b[^.!?;]*?\b(?:end|ends|ending|stops?|not continue|may not|will not|cannot|dies|breaks?|grows?|continues?|extends?))\b", re.I),
+     "a childless or limited-progeny statement", True),
+    (re.compile(rf"\b(?:number|count|total) of (?:your )?{_KID}|\b{_NUM}\s+(?:of\s+your\s+)?(?:own\s+)?{_KID}|\b(?:twins?|triplets?)\b|"
+                rf"\b(?:a|one)\s+(?:son|daughter)\s+and\s+(?:a|one)\s+(?:son|daughter)|\bonly child\b|\bhow many {_KID}|"
+                rf"\b{_KID}\s+(?:is|are|will be)\s+(?:few|many|several|numerous|plenty|scarce|rare|two|three|four|five|\d+)\b", re.I),
+     "a number of children"),
+    (re.compile(rf"\b{_KID}\b[^.!?;]*?\b(?:delay\w*|late|later|slow\w*|wait\w*|takes? (?:time|longer)|after (?:some |much )?(?:effort|waiting|time)|"
+                rf"with effort|obstruct\w*|denied|denial)\b|\b(?:delay\w*|late|later|slow\w*|wait\w*|obstruct\w*|denial)\b[^.!?;]*?\b{_KID}\b|"
+                rf"\b(?:postpon\w*|deferred|put off|on hold|pushed back|held back)\b[^.!?;]*?\b{_KIDX}\b|\b{_KIDX}\b[^.!?;]*?\b(?:postpon\w*|deferred|put off|on hold|pushed back|held back)\b", re.I),
+     "a delay or obstruction of children"),
+    (re.compile(rf"\b(?:conceiv\w*|conception|expect(?:ing|s|ed)?\s+{_OBJ}{_KID}|gives? birth|giving birth|birth of (?:a|your|the|any) (?:\w+ )?{_KID}|"
+                rf"(?:first|second|third|next|new) (?:child|baby)|become (?:a )?parents?|become (?:a )?(?:mother|father|mum|mom|dad)|"
+                rf"parenthood (?:in|by|around|before|after|during|at)|becoming (?:a )?(?:parent|mother|father)|(?:start|starting|begin|grow|growing|complete|completing|"
+                rf"expand\w*) (?:a |your |the )?family|family planning|(?:have|having|bear|bearing)\s+{_OBJ}{_KID}|"
+                rf"{_KID}\s+(?:will|may|might|could|would|shall|are going to|are likely to)\s+(?:come|arrive|appear|follow|be born|join|enter|increase)|"
+                rf"when (?:will |would |do |can |might )?you (?:have|become|conceive|welcome|start|get))\b", re.I),
+     "a forecast of conceiving, having or becoming a parent"),
+    (re.compile(rf"\b{_KID}\b[^.!?;]*?\b(?:likel(?:y|ihood)|unlikely|probab\w*|chances?|odds|possib\w*|promised|guarantee\w*)\b|"
+                rf"\b(?:likel(?:y|ihood)|unlikely|probab\w*|chances?|odds|possib\w*|promised|guarantee\w*)\b[^.!?;]*?\b{_KID}\b|"
+                rf"\b(?:little|no|slim|poor|low|small|zero) (?:chance|hope|prospect)s? (?:of|for)\b[^.!?;]*?\b(?:family|{_KID})\b", re.I),
+     "a likelihood of children"),
+    (re.compile(rf"\b{_KIDX}\b[^.!?;]*?\b(?:at|by|before|after|around|until|till)\s+(?:the )?(?:ages? (?:of )?)?(?:\d{{2}}|{_NUMW})\b|"
+                rf"\b(?:at|by|before|after|around|until|till)\s+(?:the )?(?:ages? (?:of )?)?(?:\d{{2}}|{_NUMW})\b[^.!?;]*?\b{_KIDX}\b|"
+                rf"\b{_KIDX}\b[^.!?;]*?\b(?:in|during) your (?:early |mid |late )?(?:twenties|thirties|forties)\b|"
+                rf"\b{_KIDX}\b[^.!?;]*?\b(?:19|20)\d\d\b|\b(?:19|20)\d\d\b[^.!?;]*?\b{_KIDX}\b", re.I),
+     "an age or year of parenthood"),
+]
+_CHILDREN_FORMS.append(
+    (re.compile(r"\b(?:family|household)\b[^.!?;]*?\b(?:grow(?:s|n)?|expand\w*|enlarg\w*|widen\w*|increas\w*|doubles?|swell\w*)\b(?!\s+(?:closer|stronger|"
+                r"together|warmer|tighter|more (?:close|patient|warm)))|\b(?:grow(?:s|n)?|expand\w*)\s+(?:to|by)\s+" + _NUM + r"\b|"
+                r"\barms\b[^.!?;]*?\b(?:empty|full|hold\w*|fill\w*)\b|\b(?:empty|full)\b[^.!?;]*?\barms\b", re.I),
+     "a family that grows, or empty or full arms", True))
+_CHILDREN_FORMS.append(
+    (re.compile(r"\byou\b[^.!?;]*?\b(?:mother|father|parent|mum|mom|dad)\b[^.!?;]*?\b(?:one day|someday|eventually|in time|later in life|down the line|soon)\b|"
+                r"\b(?:one day|someday|eventually|in time|later in life|down the line)\b[^.!?;]*?\byou\b[^.!?;]*?\b(?:mother|father|parent|mum|mom|dad)\b", re.I),
+     "a parent role with a future time", True))
+_CHILDREN_EXTRA = [
+    (_TIMEWORDS, "a window, period, season, age or dated timing"),
+    (_DASHA, "a dasha, period or transit word"),
+    (re.compile(r"\bdelay\w*", re.I), "the word delay"),
+]
+# a kundli family section: the children forms, and a timing word only beside a children word (relatives may keep their fixed forecasts)
+_CHILDREN_KUNDLI = _CHILDREN_FORMS + [
+    (re.compile(rf"\b{_KIDX}\b[^.!?;]*?(?:{_TIMEWORDS.pattern}|{_DASHA.pattern})|(?:{_TIMEWORDS.pattern}|{_DASHA.pattern})[^.!?;]*?\b{_KIDX}\b", re.I),
+     "a window, period or timing word beside children")]
+_INTIMACY_FORMS = [
+    (re.compile(r"\b(?:explicit\w*|erotic\w*|pornograph\w*|porn|orgasm\w*|kink\w*|fetish\w*|bdsm|foreplay|arous\w*|naked|nude|nudity|seduc\w*|"
+                r"sex|sexual\w*|sexy|sensual\w*|lust\w*|libido|sex drive|in bed|bedroom|between the sheets|"
+                r"climax\w*|intercourse|oral|one[- ]night stands?|hook-?ups?|casual sex|virgin\w*|stamina|performance (?:in|at) bed|"
+                r"love-?making|make love|making love|physical union|manhood|womanhood|consummat\w*|coitus|copulat\w*|"
+                r"carnal\w*|making out|make out|touched all over|under the (?:sheets|covers)|physical (?:pleasures?|craving\w*|desire\w*)|"
+                r"bodily (?:pleasures?|desire\w*)|sensual|pleasures? of the (?:flesh|body|bed)|flesh(?:ly)?|kiss\w*|caress\w*|fondl\w*|grop\w*|"
+                r"cuddl\w*|snuggl\w*|moan\w*|thrust\w*|steamy|racy|raunchy|naughty|undress\w*|strip(?:s|ped|ping|tease)|skin[- ]to[- ]skin|"
+                r"genital\w*|breasts?|nipples?|thighs?|lingerie|hot and heavy|heat of the moment|erogenous|touch(?:ed|es|ing)? (?:you )?all over)\b", re.I),
+     "explicit or sexual wording"),
+    (re.compile(r"\b(?:sexual orientation|sexuality|gay|lesbian|bisexual|homosexual\w*|heterosexual\w*|queer|transgender|gender\w*|"
+                r"non-?binary|lgbt\w*|asexual|pansexual|orientation|trans|straight(?! (?:answer|forward|away|line|talk))|"
+                r"same[- ]sex|opposite[- ]sex|(?:drawn|attracted) to (?:men|women|males?|females?|boys|girls)|prefer\w* (?:men|women|males?|females?))\b", re.I),
+     "orientation or gender wording"),
+    # an attraction or preference aimed at a gender or sex, even negated ("not interested in men"): the chart is not read for it
+    (re.compile(r"\b(?:attract\w*|interest\w*|drawn|prefer\w*|fanc(?:y|ies|ied)|desire\w*|into|crush\w*|love[sd]?|dat(?:e|es|ed|ing)|pull\w*|lean\w*)"
+                r"\s+(?:to|in|by|toward|towards|for|on)?\s*(?:\w+\s+){0,3}?(?:men|women|males?|females?|boys|girls|guys|ladies|gentlemen|"
+                r"same sex|both sexes|both genders|(?:your )?own (?:sex|gender)|either (?:sex|gender)|any (?:sex|gender)|man|woman)\b|"
+                r"\bpartners? of (?:your own|the same|both|either|any|the opposite) (?:sex|gender)\b|\bwhich (?:sex|gender)\b", re.I),
+     "an attraction aimed at a gender or sex", True),
+    (re.compile(_MORAL, re.I), "moral labels"),
+]
+# "your <someone>" followed by a desire or conduct word is refused by default (a neighbour, fiancee, coworker, mistress, anyone not
+# in this closed list of the person's own traits and chart words); T11.32.
+_OWN_NOUN = (r"own|chart|horoscope|birth|natal|lagna|style|manner|nature|temperament|mind|heart|body|home|house|warmth|closeness|affection|"
+             r"tenderness|trust|privacy|comfort|rest|routine|habits?|needs?|desires?|feelings?|love|passion|attraction|side|pace|approach|way|"
+             r"energy|moods?|spirit|self|soul|personality|character|sense|capacity|ease|care|kindness|reserve|openness|patience|gentleness|"
+             r"loyalty|ambitions?|dreams?|work|days?|evenings?|life|relationships?|bond|partnership|marriage|intimacy|time|space|words?|voice|"
+             r"touch|attention|presence|reading|report|\d+(?:st|nd|rd|th)|venus|moon|sun|mars|jupiter|saturn|mercury|rahu|ketu|lords?|planets?|"
+             r"placements?|signs?|dasha|periods?|strengths?|tendenc\w*|pull|pulls|restlessness|curiosity|independence|freedom|boundaries|"
+             r"expectations|standards|values|principles|faith|promises?|commitment|first|second|instinct|instincts|reactions?|responses?|"
+             r"inner|private|quiet|deepest|real|true")
+
+
+def _your_other(words):
+    """`your <someone>` + a desire or conduct word within four words, unless <someone> is one of the person's own traits."""
+    return re.compile(rf"\byour\s+(?!(?:{_OWN_NOUN})\b)(?:[a-z-]+\s+)?[a-z-]+(?:['’]s)?\s+(?:[\w'’-]+\s+){{0,3}}?(?:{words})", re.I)
+
+
+_DESIRE = (r"desire\w*|intima\w*|passion\w*|attract\w*|affection\w*|cheat\w*|faithful\w*|unfaithful\w*|lust\w*|wants?|needs?|crav\w*|"
+           r"satisf\w*|conduct\w*|behaviou?r\w*|private|bed\b|fanc(?:y|ies|ied)|long(?:s|ing)|yearn\w*|adore[sd]?|love[sd]?|admir\w*|fond\w*|"
+           r"enamou?r\w*|smitten|infatuat\w*|devot\w*|tempt\w*|drawn|draws?|pulled|miss(?:es)?|hugg?\w*")
+_INTIMACY_EXTRA = [
+    (_your_other(_DESIRE), "a third person's desires or conduct"),
+    (re.compile(r"\b(?:your (?:partner|spouse|husband|wife|boyfriend|girlfriend|lover|ex|date|colleague|boss|friend|crush|neighbou?r|teacher)['’]?s?|"
+                r"(?:he|she|they|him|her|them|his|their|someone|anyone)(?:['’]s)?)\b"
+                rf"[^.!?;]*?\b(?:{_DESIRE})", re.I),
+     "a third person's desires or conduct"),
+    (re.compile(_CERTAIN, re.I), "certainty wording"),
+    (_TIMEWORDS_NP, "a window, season, age or dated timing"),
+]
+_CONDUCT = (r"(?:affairs?|cheat\w*|stray\w*|betray\w*|unfaithful\w*|infidelit\w*|extramarital\w*|fling|liaisons?|sleep(?:s|ing)? around|two-?tim\w*|"
+            r"philander\w*|disloyal\w*|cross the line|(?:be|stay|remain) (?:faithful|loyal)|someone on the side|"
+            r"secret (?:lovers?|relationships?|partners?|romances?)|love triangles?|romance|wander\w*|lovers?|mistress\w*|paramour\w*|"
+            r"keeps? (?:a |another )(?:lover|partner|woman|man|girl|boy)|sees? (?:someone|another)|playing around|fool(?:s|ing)? around|"
+            r"play(?:s|ing)? away|step(?:s|ping)? out|run(?:s|ning)? around|fancy (?:woman|man)|toy ?boy|sugar (?:daddy|mommy))")
+_AFFAIRS_FORMS = [
+    (re.compile(rf"\byou\b[^.!?;]*?\b(?:{_MODAL}|are prone to|tend to|tends to|are inclined to|are apt to|are liable to|are capable of|are willing to|"
+                rf"are the (?:type|sort|kind) to|are ready to|do)\b[^.!?;]*?\b{_CONDUCT}\b|"
+                rf"\byou (?:often |sometimes |always |never |do )?(?:cheat|stray|wander|betray|two-?time|philander|sleep around|play around)\b", re.I),
+     "a forecast or claim of conduct (you will, may, tend to, do ...)", True),
+    (re.compile(rf"\b(?:expect|await\w*|on the cards|in store|lies ahead|is coming|on the way|beckons?)\b[^.!?;]*?\b{_CONDUCT}\b|"
+                rf"\b{_CONDUCT}\b[^.!?;]*?\b(?:awaits?|on the cards|in store|lies ahead|is coming|is on the way|beckons?)\b|"
+                r"\b(?:love triangle|secret romance|secret affair|double life|other (?:woman|man))\b", re.I),
+     "a forecast of conduct (expect, awaits, on the cards ...)", True),
+    (re.compile(_MORAL, re.I), "moral labels"),
+]
+_AFFAIRS_EXTRA = [
+    (_your_other(_CONDUCT + r"|faithful\w*|loyal\w*|lie[sd]?|lying|secret\w*|hid\w*|sleep\w*|flirt\w*|mistress\w*|paramour\w*|keeps?|"
+                 r"text(?:s|ing|ed)?|messag\w*|ghost\w*|" + _DESIRE), "a real partner's or another person's conduct"),
+    (re.compile(rf"\b(?:your (?:partner|spouse|husband|wife|boyfriend|girlfriend|fianc\w*|lover|ex|date|colleague|boss|friend|neighbou?r|crush)['’]?s?|"
+                rf"he|she|they|him|her|them|someone|anyone)\b[^.!?;]*?\b(?:{_CONDUCT}|faithful\w*|loyal\w*|loyalty|lie[sd]?|lying|secret\w*|hid\w*|"
+                rf"(?:sees?|seeing) someone|sleep\w*|has (?:a|another) (?:lover|partner))\b|"
+                rf"\b(?:{_CONDUCT}|faithful\w*|loyal\w*)\b[^.!?;]*?\b(?:of|by|from|with) "
+                rf"(?:your (?:partner|spouse|husband|wife|boyfriend|girlfriend|fianc\w*|lover|ex)|him|her|them)\b", re.I),
+     "a real partner's or another person's conduct"),
+    (re.compile(rf"\b(?:{_CONDUCT})\b[^.!?;]*?\b(?:is|are|will|is (?:coming|likely|unavoidable|certain|shown|promised|indicated))\b[^.!?;]*?\b(?:coming|likely|unavoidable|certain|shown|promised|indicated|happen\w*|occur\w*)\b", re.I),
+     "a forecast that an affair happens"),
+    (re.compile(r"\byou(?: are| were| have been| remain| stay)\s+(?:\w+\s+)?(?:unfaithful|faithful|disloyal|loyal|adulterous|a cheat\w*|a philander\w*|"
+                r"a flirt\w*|a two-?tim\w*)\b", re.I),
+     "a verdict on the person's fidelity", True),
+    (re.compile(_CERTAIN[:-3] + r"|verdicts?|judg(?:e)?ments?)\b", re.I), "certainty or verdict wording"),
+    (_TIMEWORDS, "a window, period, season, age or dated timing"),
+    (_DASHA, "a dasha, period or transit word"),
+]
+_NAME_OK = None
+_NAME_VERB = re.compile(r"^(?:cheats?|lies|sleeps?|hides?|(?:is|was|are) (?:un)?faithful|(?:has|had) (?:a|another) (?:lover|affair))\b|"
+                        r"^(?:desires?|wants?|needs?|craves?|loves?|adores?|longs?)\b.{0,12}\b(?:you|your|him|her|them|us|me)\b", re.I)
+
+
+def _name_ok(w):
+    """True for a capitalised word that is not a person's name: planets, signs, nakshatras, grade words, school names."""
+    global _NAME_OK
+    if _NAME_OK is None:
+        parts = [PLANET_ANY] + [p for _, _, ps in vocab.SIGNS for p in ps] + [p for _, ps in vocab.NAKSHATRAS for p in ps]
+        parts += ["Parashari", "Jaimini", "Lahiri", "Weak", "Moderate", "Strong", "Unknown", "Contradictory", "Raman", "Parashara",
+                  "Lagna", "Navamsa", "Dasha", "Mahadasha", "Vimshottari", "Upapada", "Arudha", "Karakamsa", "Darakaraka", "Confirmed",
+                  "Inferred", "Hypothesis", "Sanskrit", "Hindu", "Indian", "Vedic", "Synthetic", "Jataka", "Parijata"]
+        _NAME_OK = re.compile(r"(?:" + "|".join(parts) + r")$", re.I)
+    return bool(_NAME_OK.match(w))
+
+
+def _name_hits(strings):
+    """A capitalised word that looks like a given name, as subject or possessor, in intimacy and affairs text (owner decision:
+    nothing about a named third person). Mid-sentence capitals count; a sentence-initial word counts only with a possessive or a
+    desire or conduct verb after it. Write text in sentence case."""
+    out = []
+    for s in strings:
+        for sent in re.split(r"(?<=[.!?;:])\s+|\n", s):
+            toks = sent.split()
+            for i, w in enumerate(toks):
+                poss = bool(re.search(r"['’]s?$", w))
+                core = re.sub(r"^[^A-Za-z]+|[^A-Za-z]+$", "", re.sub(r"['’]s?$", "", w))
+                if not re.fullmatch(r"[A-Z][a-z]{2,}", core) or _name_ok(core):
+                    continue
+                if i > 0 or poss or _NAME_VERB.search(" ".join(toks[i + 1:i + 5])):
+                    out.append(("a named third person", core.lower()))
+    return out
+
+
+def _fold(s):
+    """Contractions written out, so a gate that reads 'you will' also reads "you'll"."""
+    s = re.sub(r"(?i)\bcan[’']t\b", "cannot", str(s))
+    return re.sub(r"(?i)\b(\w+)[’']ll\b", r"\1 will", re.sub(r"(?i)\b(\w+)[’']re\b", r"\1 are",
+                  re.sub(r"(?i)\b(\w+)[’']ve\b", r"\1 have", re.sub(r"(?i)\b(you|we|they|he|she|i)[’']d\b", r"\1 would", s))))
+
+
+# --- children allow-list (T11.32, owner decision 2026-11-19) -----------------------------------------------------------------------
+# A clause about the person's child or children may only DESCRIBE: a bond, a parenting style, an alternative. The verbs allowed there
+# are a closed list (_AL_BASE, with their inflections); arrival, giving, having and becoming verbs, modals before any other verb,
+# future forms, counts, ages, decades, pregnancy and newborn phrasings and closed, quiet or empty family metaphors are refused.
+# shortcut: a word list plus two adjacency checks (the word after a child word, the word before it), not a parser. A verb that is
+# in neither list and has no verb-like ending (-s, -ed, -ing) passes, and an over-block (an ordinary clause with "have" or "one"
+# beside a child word) is accepted; widen _AL_BASE only through review.
+_AL_BASE = ("bond connect guide teach mentor nurture encourage support enjoy share play learn listen understand inspire care spend adopt foster raise "
+            "relate relax delight value love like appreciate respect protect comfort motivate reassure nourish reward tend find feel seem look make suit fit "
+            "show reflect suggest mark read set shape help balance notice remember admire trust talk explain build create lead prefer deal cope work "
+            "interact communicate engage parent attend supervise coach tutor entertain amuse charm calm soothe discipline manage handle treat speak joke "
+            "laugh smile sing tell draw paint cook bake garden walk travel host train educate instruct empower uplift defend shelter watch observe serve "
+            "volunteer assist advise counsel correct limit study cherish adore bring_up lookafter getalong geton stay remain keep stand sit grow "
+            "respond react approach regard see consider sound").split()
+_AL_IRREG = {"taught", "spent", "found", "felt", "made", "led", "understood", "built", "learnt", "shown", "told", "kept", "stood", "sat", "saw",
+             "seen", "spoke", "spoken", "drawn", "read", "set", "cared", "loved"}
+
+
+def _al_forms(b):
+    f = {b, b + "s", b + "es", b + "ed", b + "d", b + "ing"}
+    if b.endswith("e"):
+        f.add(b[:-1] + "ing")
+    if b.endswith("y"):
+        f |= {b[:-1] + "ies", b[:-1] + "ied"}
+    if b[-1:] not in "aeiouywx" and len(b) > 2:
+        f |= {b + b[-1] + "ed", b + b[-1] + "ing"}
+    return f
+
+
+_AL_VERBS = set().union(*[_al_forms(b) for b in _AL_BASE]) | _AL_IRREG
+# "show" and its kin describe only when a child word is not their object ("shows through care" yes, "shows you a son" no): they are
+# allowed after a child word and not before it
+_AL_NOSHOW = _AL_VERBS - {"show", "shows", "showing", "shown", "suggest", "suggests", "suggested", "suggesting", "mark", "marks", "marked",
+                          "marking", "reflect", "reflects", "reflected", "reflecting", "sound", "sounds", "sounded", "see", "sees", "seen"}
+_AL_PREP = set(("with for of to about by and or from like among around toward towards between in on at than as that which who whom whose when while "
+                "so but nor yet into onto over under through during across along within without despite near beside upon per this these those "
+                "his its us yours themselves always sometimes perhaps besides thus less unless plus whereas also often really simply quickly "
+                "gradually naturally usually generally still even rarely not very quite too more most much all both each every other another "
+                "their they them you your he she it we i the a an my our me him her").split())
+_AL_COP = {"is", "are", "was", "were", "be", "been", "being", "am", "isn't", "aren't", "'s"}
+_AL_MODAL = r"\b(?:may|might|could|would|can|should|must|cannot|won't|will|shall)\b"
+_AL_ADV = {"not", "also", "often", "sometimes", "easily", "really", "always", "simply", "quickly", "gradually", "naturally", "usually",
+           "generally", "still", "even", "rarely", "just", "only", "never", "well", "mostly", "mainly"}
+_AL_SKIP = set(("a an the your my our his her their its you them him us me own first second third next new another any some no more other little "
+                "baby young small big step grown older younger adult whole all both").split())
+_KIDAL = re.compile(r"\b(?:children|child|kids?|babies|baby|newborns?|infants?|toddlers?|sons?|daughters?|little ones?|little feet|tiny feet|"
+                    r"nursery|brood|quiver|boys?|girls?|footsteps|(?:small|tiny|little|pitter-patter) (?:feet|hands|toes)|heirs?|progeny|offspring|twins?|triplets?|lineage|bloodline|family line|cradle|stork|parenthood|"
+                    r"motherhood|fatherhood|(?:the|your) line)\b")
+_AL_REFUSE = re.compile(
+    r"\b(?:come[sd]?|coming|came|arriv\w*|brings?|bringing|brought|giv(?:e|es|en|ing)|gave|bless\w*|welcom\w*|have|has|having|had|get|gets|getting|"
+    r"got|gift\w*|grant\w*|join\w*|appear\w*|born|birth\w*|bear|bears|bearing|bore|carry|carries|carrying|receiv\w*|conceiv\w*|expect\w*|await\w*|"
+    r"due|becom\w*|with child|trying|tries|try|belly|bump|empty|quiet|closed|shut|silent|barren|hollow|vacant|bare|locked|sealed|written|fated|"
+    r"destined|meant|promis\w*|den(?:y|ies|ied)|will|shall|going to|about to|soon|eventually|someday|one day|ahead|future|later|early|late|next|"
+    r"before|after|until|till|since|once|likely|unlikely|chance\w*|odds|pregnan\w*|\d+|one|two|three|four|five|six|seven|eight|nine|ten|"
+    r"couple|pair|dozen|several|many|few|only|single|both|twice|twenties|thirties|forties|fifties|teens|age|ages|aged|decades?|years?|months?|"
+    r"weeks?|season|winter|summer|spring|autumn|arrows?|grows? to|on (?:its|the|their) way|on the cards|in store|round|shown|indicated|seen|"
+    r"visible|foretold|predicted|present|absent|missing|lacking|footsteps?|patter|(?:in|on) (?:the|your) (?:cards|stars)|"
+    r"not in (?:your|the|this) (?:chart|cards|stars|fate|destiny|horoscope|future)|in your (?:future|destiny|fate)|not for you)\b")
+_AL_CAVEAT_NEG = re.compile(r"\b(?:no|not|never|nothing|none|without|neither|nor)\b")
+_AL_CAVEAT_NOUN = re.compile(r"\b(?:timing|count|counts|number|forecast|forecasts|window|windows|date|dates|prediction|predictions|verdict|"
+                             r"promise|promises|claim|claims)\b")
+_AL_CAVEAT_SAYS = re.compile(r"\b(?:says|said|states?|claims?|reads?|predicts?|forecasts?|promises?|implies|decides?)\b")
+
+
+def _al_caveat(low):
+    """A scope sentence that says what is NOT given ("No timing, count or forecast about children is given", "Nothing here says when or
+    whether children come"): a negation beside a caveat noun, or beside a saying verb in a sentence that is not about "you"."""
+    if not _AL_CAVEAT_NEG.search(low):
+        return False
+    if _AL_CAVEAT_NOUN.search(low):
+        return True
+    return bool(_AL_CAVEAT_SAYS.search(low)) and not re.search(r"\byou(?:r)?\b", low)
+
+
+def _verbish(t):
+    return bool(re.search(r"(?:ed|ing|(?<![sui])s)$", t)) and not re.search(r"(?:ss|us|is|ous|ness)$", t)
+
+
+def _rel_baby(sent):
+    """A neutral line about a relative's baby in the one fixed shape of family.md ("Your sister may welcome a baby in 2028."); it starts
+    with "your" and names a relative, so the person's own children are never exempt."""
+    x = _TRIM.sub("", sent.strip())
+    return x.lower().startswith("your ") and bool(_SHAPE.fullmatch(x)) and bool(re.search(r"\b(?:baby|mother|father|parents?|grandparents?)\b", x, re.I))
+
+
+def _kid_hits(strings):
+    """(what, word) for each clause about a child that is not a plain description (see the allow-list note above)."""
+    out = []
+    what = "wording about children that is not a bond, a parenting style or an alternative (only describing those is allowed)"
+    for s in strings:
+        for sent in re.split(r"(?<=[.!?])\s+|[;:—–]|\n", s):
+            low = sent.lower()
+            if not _KIDAL.search(low):
+                continue
+            if _al_caveat(low):
+                continue
+            for part in re.split(r",|\s(?:which|while|but)\s", low):
+                if not _KIDAL.search(part):
+                    continue
+                part = re.sub(r"\b(?:look|looks|looking|looked) after\b", " lookafter ", part)
+                part = re.sub(r"\b(?:get|gets|getting|got) along\b", " getalong ", part)
+                part = re.sub(r"\b(?:get|gets|getting|got) on\b", " geton ", part)
+                part = re.sub(r"\b(?:bring|brings|bringing|brought) up\b", " bring_up ", part)
+                bad = [m.group() for m in _AL_REFUSE.finditer(part)]
+                for m in re.finditer(_AL_MODAL, part):         # a modal may only stand before a describing verb
+                    nxt = [w for w in re.findall(r"[a-z'’_-]+", part[m.end():]) if w not in _AL_ADV][:1]
+                    if nxt and nxt[0] not in _AL_VERBS:
+                        bad.append(f"{m.group()} {nxt[0]}")
+                for k in _KIDAL.finditer(part):
+                    after = re.findall(r"[a-z'’_-]+", re.sub(r"^['’]s\b", "", part[k.end():]))[:1]
+                    if after and not (after[0] in _AL_VERBS | _AL_PREP | _AL_COP | _AL_ADV or after[0].endswith("ly")
+                                      or re.fullmatch(_AL_MODAL, after[0]) or _KIDAL.fullmatch(after[0])) and _verbish(after[0]):
+                        bad.append(f"{k.group()} {after[0]}")
+                    before = [w for w in re.findall(r"[a-z'’_-]+", part[:k.start()])
+                              if not (w in _AL_SKIP or re.fullmatch(r"\d+(?:st|nd|rd|th)?", w))][-1:]
+                    if before:
+                        w = re.sub(r"['’]s$", "", before[0])
+                        if (not (w in _AL_NOSHOW | _AL_PREP | _AL_COP | _AL_ADV or w.endswith("ly") or re.fullmatch(_AL_MODAL, w))
+                                and _verbish(w) and before[0] == w):
+                            bad.append(f"{w} {k.group()}")
+                out += [(what, b) for b in dict.fromkeys(bad)]
+    return out
+
+
 TYPE_GATES = {
     "wealth": [(re.compile(r"[₹$€£]|\bRs\.?\s?\d|\b(?:lakhs?|crores?|rupees?|dollars?|USD|INR)\b", re.I), "money amounts"),
                (re.compile(rf"\b(?:invest\w*|stocks?|bets?|betting|gambl\w*|lotter(?:y|ies)|tickets?|crypto\w*|mutual funds?|"
@@ -621,6 +985,13 @@ TYPE_GATES = {
         "legal outcomes or court timing"),
         (re.compile(rf"\b(?:{_LEGAL})\b{_S}\b(?:{_OUTCOME})\b|\b(?:{_OUTCOME})\b{_S}\b(?:{_LEGAL})\b", re.I),
          "a legal or opponent word with an outcome word")],
+    "children_forms": _CHILDREN_FORMS,
+    "children_kundli": _CHILDREN_KUNDLI,
+    "children": _CHILDREN_FORMS + _CHILDREN_EXTRA,
+    "intimacy_forms": _INTIMACY_FORMS,
+    "intimacy": _INTIMACY_FORMS + _INTIMACY_EXTRA,
+    "affairs_forms": _AFFAIRS_FORMS,
+    "affairs": _AFFAIRS_FORMS + _AFFAIRS_EXTRA,
 }
 
 
@@ -655,13 +1026,18 @@ def gate_hits(t, strings):
     """(what, word) for each gate match in a clause that no negation just before it excuses (a referral such as
     'ask a doctor' excuses its clause)."""
     out = []
-    for rx, what in TYPE_GATES.get(t, []):
+    if t.split("_")[0] in ("children", "intimacy", "affairs"):
+        strings = [_fold(x) for x in strings]
+    if t in ("children_kundli", "children_forms"):      # a kundli family section keeps a neutral dated line about a relative's baby (fixed shape)
+        strings = [" ".join(x for x in re.split(r"(?<=[.!?])\s+", y) if not _rel_baby(x)) for y in strings]
+    for rx, what, *hard in TYPE_GATES.get(t, []):
         for s in strings:
             for c in _clauses(s):
                 if _DEFER.search(c):
                     continue
-                out += [(what, m.group().lower()) for m in rx.finditer(c) if not _excused(c[:m.start()], m.group())]
-    return out + (_shape_hits(strings) if t == "family" else [])
+                out += [(what, m.group().lower()) for m in rx.finditer(c) if hard or not _excused(c[:m.start()], m.group())]
+    return (out + (_shape_hits(strings) if t == "family" else []) + (_name_hits(strings) if t in ("intimacy", "affairs") else [])
+            + (_kid_hits(strings) if t in ("children", "children_kundli", "children_forms") else []))
 
 
 def is_marker(x):
@@ -735,18 +1111,74 @@ def time_class(r):
     return "exact" if re.search(r"\bexact\b", rel, re.I) and not re.search(r"\b(?:not|approx\w*)\b", rel, re.I) else "approximate"
 
 
+ADULT_TYPES = ("intimacy", "affairs")
+BIRTH_DATE_FORMATS = ("%d %B %Y", "%d %b %Y", "%B %d, %Y", "%b %d, %Y", "%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y")
+
+
+def _date(x):
+    """A date in one of BIRTH_DATE_FORMATS, else None. A numeric day/month date whose two parts are both 12 or less and differ
+    (12/05/2008) is ambiguous between day-first and month-first, so it is not read."""
+    x = str(x or "").strip()
+    m = re.fullmatch(r"(\d{1,2})([/-])(\d{1,2})\2\d{4}", x)
+    if m and int(m[1]) <= 12 and int(m[3]) <= 12 and m[1] != m[3] and int(m[1]) != int(m[3]):
+        return None
+    for f in BIRTH_DATE_FORMATS:
+        try:
+            return dt.datetime.strptime(x, f).date()
+        except ValueError:
+            pass
+    return None
+
+
+def adult_errors(r, birth_date=None):
+    """The adult gate (owner decision 2026-11-19): built only when the birth date shows 18 or over on the report date. It fails
+    closed: an unreadable or ambiguous date counts as not shown, and a report date in the future is refused. `birth_date` is the
+    engine's own birth input (create_report); when given, the model's date must be the same day."""
+    b, on = _date((r.get("birth") or {}).get("date")), _date(r.get("prepared_on"))
+    if not b or not on:
+        return ["adult gate: the birth date or the report date cannot be read (a numeric day/month date with both parts 12 or "
+                "less is ambiguous), so 18 or over is not shown; no report is built"]
+    if birth_date is not None and b != birth_date:
+        return ["adult gate: the model's birth date is not the birth input's date; no report is built"]
+    if on > dt.date.today():
+        return ["adult gate: the report date is in the future; no report is built"]
+    if on.year - b.year - ((on.month, on.day) < (b.month, b.day)) < 18:
+        return ["adult gate: the birth date does not show 18 or over on the report date; no report is built"]
+    return []
+
+
+AFFAIRISH = re.compile(r"\baffairs?\b|extramarital|infidelit|unfaithful|cheat\w*|outside (?:a |the )?(?:committed relationship|marriage)|ties beyond", re.I)
+NODEPTH_TYPES = ("children", "intimacy", "affairs")      # no legacy models: depth is required
+
+
+def needs_adult(r):
+    """Intimacy and affairs, and a kundli with an intimacy section or affairs wording in any section."""
+    t = r.get("report_type")
+    return t in ADULT_TYPES or (t == "kundli" and any(s["id"] == "intimacy" or any(AFFAIRISH.search(x) for x in _strings(s))
+                                                      for s in r.get("sections", [])))
+
+
+def _agrees(text, need):
+    """The Moderate rule of topic-relationships-marriage.md §9 and §10: only when the named factors and the navamsa agree."""
+    return (all(w in text for w in need) and bool(re.search(r"navamsa|\bD-?9\b", text, re.I))
+            and not re.search(r"disagree|differ|conflict|not agree|only one|one factor|contradict|mixed|unclear", text, re.I))
+
+
 def spec_checks(r):
     """Errors for a model written to a T10 spec (it carries `depth`); legacy models (no depth) are left alone."""
     t, depth = r.get("report_type"), r.get("depth")
     if t not in SPEC_SECTIONS:
         return ([f"depth is only for spec reports ({', '.join(SPEC_SECTIONS)})"] if depth else []), []
+    pre = []
+    if not depth and t in NODEPTH_TYPES:       # no legacy models: every gate runs, and the missing depth is an error
+        pre, depth = [f"{t} report needs depth: standard (it has no legacy form, so no gate may be skipped)"], "standard"
     if not depth:
         return ([], ["written before the T10 spec (no depth): spec checks skipped"]) if t != "kundli" else (
             ["a kundli report needs depth (standard or full)"], [])
     if depth not in SPEC_SECTIONS[t]:
         return [f"{t} has no depth '{depth}' (only {', '.join(SPEC_SECTIONS[t])})"], []
-    errs = [f"spec report needs '{k}' (the frame, report-specs/{t}.md)" for k in ("scope", "confidence_note", "next_step")
-            if not r.get(k)]
+    errs = pre + [f"spec report needs '{k}' (the frame, report-specs/{t}.md)" for k in ("scope", "confidence_note", "next_step")
+                  if not r.get(k)]
     if not (r.get("birth") or {}).get("time_reliability"):
         errs.append("spec report needs birth.time_reliability (exact, approximate or unknown): it decides what may be dated")
     ids = [s["id"] for s in r["sections"]]
@@ -784,6 +1216,34 @@ def spec_checks(r):
         app = next((s for s in r["sections"] if s["id"] == "appearance"), None)
         if app and SELF_APPEARANCE_CAVEAT not in str(app.get("text", "")):
             errs.append("self 'appearance' section needs its caveat sentence in the section text (report-specs/self.md §1)")
+    if needs_adult(r):
+        errs += adult_errors(r)
+    if t in ("children", "affairs") and r.get("timeline"):
+        errs.append(f"{t} report: no timeline rows are given (no windows, no periods, no 'when'; report-specs/{t}.md)")
+    if t == "intimacy" and any(x["kind"] != "chapter" for x in r.get("timeline", [])):
+        errs.append("intimacy report: the timeline carries chapter rows only (no windows or pressure rows; report-specs/intimacy.md)")
+    if t == "intimacy" and r.get("timeline") and "phases" not in ids:
+        errs.append("intimacy report: a timeline row is given only when `phases` is asked and written (report-specs/intimacy.md)")
+    if t in ("children", "affairs") and (r.get("appendix") or {}).get("periods"):
+        errs.append(f"{t} report: no periods table in the appendix (no periods are given; report-specs/{t}.md)")
+    if t in ("intimacy", "affairs"):          # grades: never Strong; Moderate only when the named factors and the navamsa agree
+        need = ("12th", "Venus") if t == "intimacy" else ("7th", "Venus")
+        for s in r["sections"]:
+            for u in s.get("units", []):
+                g = set((u.get("confidence") or {}).values())
+                if "Strong" in g or ("Moderate" in g and not _agrees(u.get("basis", ""), need)):
+                    errs.append(f"[{s['id']}] '{u['theme'][:50]}': {t} is graded Weak on one factor and Moderate only when {' and '.join(need)} "
+                                "and the navamsa agree (named in basis); never Strong")
+        for x in r.get("ranking", []):
+            if x.get("support") == "Strong" or (x.get("support") == "Moderate" and not _agrees(x.get("why", ""), need)):
+                errs.append(f"ranking row '{x['item'][:40]}': {t} is Moderate only when {' and '.join(need)} and the navamsa agree (named in why); never Strong")
+        kps = (r.get("summary") or {}).get("key_points", [])
+        if any(k.get("confidence") == "Strong" for k in kps):
+            errs.append(f"{t} report: no key point is graded Strong")
+        grades = ([c for s in r["sections"] for u in s.get("units", []) for c in (u.get("confidence") or {}).values()]
+                  + [x.get("support") for x in r.get("ranking", [])] + [k.get("confidence") for k in kps])
+        if "Unknown" in grades and time_class(r) == "exact":
+            errs.append(f"{t} report: Unknown is for an approximate or unknown birth time only; grade Weak or Moderate")
     if r.get("remedies") or any(u.get("system") == "lal_kitab" for s in r["sections"] for u in s.get("units", [])):
         errs.append("Lal Kitab stays out of these Parashari reports (remedies section included); it has its own report")
     for s in r["sections"]:
@@ -801,6 +1261,11 @@ def spec_checks(r):
     strings = _strings(client)
     if hits := sorted({m.group() for s in strings for m in PERCENT.finditer(s)}):
         errs.append(f"percentages in the report ({', '.join(hits)}): grade words only")
+    nontl = _strings([v for k, v in r.items() if k not in ("appendix", "birth", "engine", "prepared_on", "period", "timeline")])
+    if t == "intimacy" and (hits := sorted({m.group() for s in nontl for m in DATEISH.finditer(s)})):
+        errs.append(f"intimacy report: no years, months or dates in the text ({', '.join(hits[:4])}): no dated windows (chapter rows keep their own dates)")
+    if t in ("children", "affairs") and (hits := sorted({m.group() for s in strings for m in DATEISH.finditer(s)})):
+        errs.append(f"{t} report: no years, months or dates anywhere ({', '.join(hits[:4])}): no windows or periods are given")
     if hits := sorted({m.group().lower() for s in _strings(r) for m in ORGANS.finditer(s)}):
         errs.append(f"organ words in the report ({', '.join(hits)}): body parts are not read in this practice")
     # looks wording in every client string outside the one section that may carry it (self: 'appearance'; kundli and
@@ -823,19 +1288,20 @@ def spec_checks(r):
     if bad := sorted({m.group().lower() for x in forbid_text for m in _FORBID.finditer(x)}
                      | {w for x in forbid_text for w in medical_words.words_in(x)}):      # list, Devanagari, typos, homoglyphs
         errs += [FORBID_MSG, f"words found: {', '.join(bad[:8])}"]
-    hits = gate_hits(t, strings)
+    method = _strings((r.get("appendix") or {}).get("method")) if t in NODEPTH_TYPES else []   # the appendix method is printed
+    hits = gate_hits(t, strings + method)
     if t == "self":
         hits += gate_hits("self_outside", loose_strings + unit_strings)
     if t == "kundli":       # the same wording is refused in a kundli section as in the report of its own type
         for sec in r["sections"]:
-            if g := KUNDLI_GATES.get(sec["id"]):
+            for g in KUNDLI_GATES.get(sec["id"], ()):
                 hits += gate_hits(g, _strings(sec))
             if sec["id"] == "self":
                 hits += gate_hits("self_outside", _strings(sec))
             if sec["id"] == "self" and any(SELF_LOOKS.search(x) for x in _strings(sec)):
                 errs.append("kundli 'self' describes looks: looks belong in the 'partner' section for another person only")
         rows = _strings([r.get(k) for k in ("summary", "timeline", "watch_list", "ranking", "practical_summary")])
-        for g in ("family", "challenges", "spirituality"):
+        for g in ("family", "challenges", "spirituality", "children_forms", "intimacy_forms", "affairs_forms"):
             hits += gate_hits(g, rows)
     if t == "family":       # a section about one relative: a harm word is refused there, dated or not
         for sec in r["sections"]:
@@ -1274,7 +1740,7 @@ def html_of(r):
     caption = f"{style.capitalize()} Indian rasi chart (numbers are signs, 1 = Aries; degrees in the table below)" + (f"; {calc}" if calc else "")
     return env.get_template("template.html.j2").render(
         r=r, css=open(os.path.join(ASSETS, "report.css")).read(), type_name=TYPE_NAMES[r["report_type"]],
-        default_how_to_read=HOW_TO_READ, tl=timeline(r.get("timeline", [])), bases=bases,
+        default_how_to_read=HOW_TO_READ_NOTIME if r['report_type'] in ('children', 'affairs') else HOW_TO_READ, tl=timeline(r.get("timeline", [])), bases=bases,
         appendix=bool(bases or r.get("appendix") or extra.get("remedy_sources")), section_titles={s["id"]: s["title"] for s in r["sections"]},
         answers_line=r.get("answers") or ANSWERS[r["report_type"]], moving=moving, sens=sens_state, show_evidence=True, used=used_marks(r),
         claim_labels=CLAIM_LABELS, system_labels=SYSTEM_LABELS, basis_labels=BASIS_LABELS,

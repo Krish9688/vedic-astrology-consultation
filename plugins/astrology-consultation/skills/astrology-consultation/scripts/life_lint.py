@@ -53,6 +53,15 @@ CHILD_TIMING = re.compile(
     r"start(?:ing)? a family|addition to the family|sector of children|house of children)\b[^.]{0,160}?\b(?:months?|years?|\d{4}|window|stretch|period|timing|make plans|crosses|transits?)\b"
     r"|\b(?:months?|\d{4}|window|stretch|period)\b[^.]{0,160}?\b(?:sector of children|house of children|parenthood)\b"
     r"|\bchildren (?:later|earlier|sooner) rather than\b", re.I)
+# A neutral dated line about a RELATIVE's baby in the fixed shape of report-specs/family.md ("Your sister may welcome a baby in 2028.") is
+# allowed (owner decision 2026-11-19): it is a normal question and says nothing about health. The person's own children stay refused.
+RELATIVE_BABY = re.compile(
+    r"your (?:[a-z]+ )?(?:mother|father|parents?|brothers?|sisters?|siblings?|cousins?|aunts?|aunties?|uncles?|nieces?|nephews?|"
+    r"(?:brother|sister|son|daughter|mother|father)-in-law)(?: and (?:you|his wife|her husband|his partner|her partner))? "
+    r"(?:may|might|could|would|is likely to|are likely to) "
+    r"(?:welcome a baby|have a baby|become (?:a )?(?:mother|father|parent|parents|grandparents?))"
+    r"(?: (?:in (?:(?:January|February|March|April|May|June|July|August|September|October|November|December) )?\d{4}|"
+    r"between \d{4} and \d{4}|from \d{4}|later in \d{4}))?\.?", re.I)
 # A medical referral no longer excuses a match: health and death are not read at all (owner rule 2026-11-15). Only the plain
 # refusal, the self-harm crisis referral (kept: a safety referral, not a prediction), and legal or financial referrals excuse.
 REFERRAL = re.compile(r"\b(?:not read in this practice|crisis (?:line|service)|"
@@ -165,7 +174,7 @@ def lint(text, mode="chat"):
     issues = [f"SAFETY: '{m.group()}' (line {n}) — health and death are not read in this practice (no health, medical, death or "
               "longevity content), no fertility/childbirth forecast, divorce/infidelity verdict, self-harm content without a "
               "crisis referral, or financial-ruin/investment call"
-              for n, s, _ in S for m in [SAFETY.search(s) or CHILD_TIMING.search(s) or SAFETY_MORE.search(s)]   # every section
+              for n, s, _ in S for m in [SAFETY.search(s) or (None if RELATIVE_BABY.fullmatch(s.strip()) else CHILD_TIMING.search(s)) or SAFETY_MORE.search(s)]   # every section
               if m and not _excused(s, m) and not HEADING.match(s)]
     cert = dict(AUDIT)["certainty"]
     issues += [f"CERTAINTY: '{m.group()}' (line {n}) — no guarantee or legal-outcome promise; use hedged wording"

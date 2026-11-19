@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from . import config, places, routing as ROUTING
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
-VERSION = "3.10.0"
+VERSION = "3.11.0"
 SOURCE_URL = "https://github.com/Krish9688/vedic-astrology-consultation"
 SOURCE_NOTICE = ("This service is free software under the GNU Affero General Public License v3 or later, with NO "
                  "WARRANTY. The Corresponding Source of the version running here is available at the 'source' URL. "
@@ -834,7 +834,7 @@ def analyze_question(question: str) -> dict:
     if ROUTING.refuses(question):   # health, illness, surgery, death: the plain refusal, no topic file
         return {"question": question, "topics": ["refuse"], "timing_question": False, "load": [], "refusal": ROUTING.REFUSAL}
     topics = [t for t, rx in TOPICS.items() if re.search(rx, q)]
-    timing = bool(re.search(ROUTING.TIMING_RX, q))
+    timing = ROUTING.is_timing(q)
     return {"question": question, "topics": topics or ["open activation — see question-trees.md §8"],
             "timing_question": timing, "load": ROUTING.load(topics, timing)}
 
@@ -953,6 +953,12 @@ def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = N
     rr = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(rr)
     schema = json.load(open(os.path.join(s.skill_dir, "assets", "report", "report.schema.json")))
+    try:                                # the adult gate (owner decision 2026-11-19) also reads the engine's own birth date
+        adult = rr.adult_errors(model, b.date if b else None) if rr.needs_adult(model) else []
+    except Exception as e:              # fail closed (T11.32): a gate that cannot run never lets an adult-only report through
+        adult = [f"adult gate: it could not run ({type(e).__name__}), so 18 or over is not shown; no report is built"]
+    if adult:
+        return {"ok": False, "errors": adult}
     if time_unknown(model, b):          # #48: refused before anything is rendered; dated windows anywhere count (RC-04)
         try:                            # text and key-point windows; timeline rows are judged as markers
             wins = rr._windows(dict(model, timeline=[])) if model.get("summary") else []

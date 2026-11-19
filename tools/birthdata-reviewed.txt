@@ -370,3 +370,4 @@ c72566d1bfd8deea  synthetic-test-chart
 dabf2752e15e343d  synthetic-bench-S6
 b844f34ad6d0938e  synthetic-bench-S6
 e3a8f44797f2e125  synthetic-test-chart
+1503bcf23f836595  synthetic-test-chart

@@ -439,7 +439,13 @@ REPORT_WORDS = (
     r"(?:your|his|her|their) recovery|heirs?|vision|"
     r"psychiatr\w*|anxiety|trauma\w*|burn(?:s|ed|t)? (?:out|down)|stents?|crutch\w*|allerg\w*|hernia|seizures?|insulin|asthma|migraines?|hospice|"
     r"defects?|bypass\w*|laid to rest|heat ?stroke|sun ?stroke|replacements?|journey on earth|limbs?|casts?(?= (?:on|for|around)\b)|(?:arm|leg|foot|wrist|ankle|hand) cast|braces|(?:walking )?canes?|walkers?(?= (?:for|to help)\b)|impair\w*|mobility (?:issues?|problems?)|"
-    r"hearing devices?|speech therapy|sessions? of therapy|exercises? for (?:your|his|her|their) (?:back|knee|neck|shoulder)|recover(?:y|ing) (?:from|after)"
+    r"hearing devices?|speech therapy|sessions? of therapy|exercises? for (?:your|his|her|their) (?:back|knee|neck|shoulder)|recover(?:y|ing) (?:from|after)|"
+    # batch 3 (T11.30): fertility, pregnancy, birth health, potency and the reproductive body, for the children and intimacy reports.
+    # Known over-blocks (accepted): "fertile ground", "conception" of a project, "give birth to an idea"
+    r"fertil\w*|pregnan\w*|conceiv\w*(?!\s+(?:of|a plan|an idea|the idea|the plan)\b)|conception|child-?birth|(?:give|gives|gave|giving) birth|"
+    r"expectant|expecting (?:a |an |your |the )?(?:baby|child|little|twins|first|second|phase)|in the family way|"
+    r"potency|virility|sperm\w*|ovulat\w*|contracepti\w*|menstru\w*|prenatal|antenatal|postnatal|breast-?feed\w*|lactat\w*|"
+    r"(?:safe|easy|smooth|normal|difficult|hard|complicated) (?:delivery|deliveries|birth|labou?r)"
 )
 
 # ---------------------------------------------------------------------------------------------------------------------
