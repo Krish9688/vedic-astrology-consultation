@@ -96,7 +96,8 @@ def get_divisional_chart(date: dt.date, time: str, lat: float, lon: float, divis
 
 
 @tool("Transits on `on` against the natal chart: houses from the Moon (classical frame) and the lagna, Phaladeepika "
-      "XXVI good houses, vedha, condition, sade sati. Rule lookups, not interpretation.")
+      "XXVI good houses, vedha, condition, sade sati, Kantaka/Ashtama Shani (modern convention, graded Weak). Rule lookups, "
+      "not interpretation.")
 def get_gochara(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None,
                 on: Optional[dt.date] = None, zone: Optional[str] = None, fold: Optional[int] = None,
         ayanamsa: str = "lahiri", calendar: str = "gregorian",
@@ -105,7 +106,8 @@ def get_gochara(date: dt.date, time: str, lat: float, lon: float, tz: Union[floa
 
 
 @tool("Personal outlook facts for a period (day, week, month, quarter, year) from `start`: running dashas, gochara, sade sati, "
-      "sign changes, stations, exact slow-planet contacts and, for day/week, the Moon's transit. Every factor has an id, "
+      "sign changes, stations, exact slow-planet contacts, Kantaka/Ashtama Shani spans (modern convention, graded Weak) and, "
+      "for day/week, the Moon's transit. Every factor has an id, "
       "dates and a source; write the horoscope from these ids only (timing.md §3a). layers: optional comma list of "
       "event, backdrop, texture to shorten the result (ids stay as numbered).")
 def get_outlook(date: dt.date, time: str, lat: float, lon: float, tz: Union[float, str, None] = None, period: str = "month",
@@ -289,14 +291,17 @@ def prepare_consultation(question: str, date: dt.date, time: str, lat: float, lo
 
 @tool("Validate and render a Structured Report Model (skill://assets/report/report.schema.json) "
                       "to HTML and, when WeasyPrint is installed, PDF in the reports folder. Dates are checked against "
-                      "the chart recomputed from the birth input (not printed); a model with dates needs it.")
+                      "the chart recomputed from the birth input (not printed); a model with dates needs it. A match "
+                      "report takes `persons` (exactly two births, Person A then Person B, each {date, time, lat, lon, tz "
+                      "or zone}) and consent=true (both people agreed) instead of the single birth.")
 def create_report(model: dict, name: str = "report", date: Optional[dt.date] = None, time: Optional[str] = None,
                   lat: Optional[float] = None, lon: Optional[float] = None, tz: Union[float, str, None] = None,
                   on: Optional[dt.date] = None, months: int = 24, zone: Optional[str] = None, fold: Optional[int] = None,
                   ayanamsa: str = "lahiri", calendar: str = "gregorian",
-        time_source: Optional[str] = None) -> dict:
+        time_source: Optional[str] = None, persons: Optional[list[dict]] = None, consent: bool = False) -> dict:
     b = None if date is None or time is None or lat is None or lon is None else _b(date, time, tz, lat, lon, zone, fold, calendar, time_source)
-    return S.create_report(model, name, b, _o(on, months, ayanamsa=ayanamsa))
+    ps = None if persons is None else [S.BirthInput(**p) for p in persons]
+    return S.create_report(model, name, b, _o(on, months, ayanamsa=ayanamsa), persons=ps, consent=consent)
 
 
 @tool("Writer's brief for a full consultation report (Lahiri, civil time, never LMT): validates the intake (client, "

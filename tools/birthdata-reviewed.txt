@@ -371,3 +371,10 @@ dabf2752e15e343d  synthetic-bench-S6
 b844f34ad6d0938e  synthetic-bench-S6
 e3a8f44797f2e125  synthetic-test-chart
 1503bcf23f836595  synthetic-test-chart
+# 2026-11-20 (T11.38): invented inputs for the match create_report test and the raj-yoga engine-truth fixture check
+7352312c69d87d1e  invented-test-input
+c4b6ab20e6e190b1  invented-test-input
+1fddf16bdac4420f  invented-test-input
+# 2026-11-21 (T11.40): the invented births of the batch 4, Mangal and raj-yoga fixtures in the engine-truth test
+129b01a28be6a756  invented-test-input
+8d477c425ee1c646  invented-test-input

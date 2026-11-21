@@ -2,7 +2,7 @@
 description: Create a personal astrology report (HTML + PDF) from a birth chart, calculated on this computer. Asks who the chart is for, checks the birth details, then writes the report you choose.
 argument-hint: "[report-type]"
 disable-model-invocation: true
-allowed-tools: AskUserQuestion mcp__plugin_astrology-consultation_astrology__get_engine_info mcp__plugin_astrology-consultation_astrology__find_place mcp__plugin_astrology-consultation_astrology__get_planet_positions mcp__plugin_astrology-consultation_astrology__calculate_birth_chart mcp__plugin_astrology-consultation_astrology__get_birth_time_sensitivity mcp__plugin_astrology-consultation_astrology__get_dasha mcp__plugin_astrology-consultation_astrology__get_transits mcp__plugin_astrology-consultation_astrology__get_outlook mcp__plugin_astrology-consultation_astrology__get_gochara mcp__plugin_astrology-consultation_astrology__get_jaimini_factors mcp__plugin_astrology-consultation_astrology__get_tajika mcp__plugin_astrology-consultation_astrology__prepare_consultation mcp__plugin_astrology-consultation_astrology__create_report mcp__plugin_astrology-consultation_astrology__get_activation mcp__plugin_astrology-consultation_astrology__get_ashtakavarga mcp__plugin_astrology-consultation_astrology__get_divisional_chart mcp__plugin_astrology-consultation_astrology__get_shadbala mcp__plugin_astrology-consultation_astrology__get_topic_network mcp__plugin_astrology-consultation_astrology__get_yogini_dasha
+allowed-tools: AskUserQuestion mcp__plugin_astrology-consultation_astrology__get_engine_info mcp__plugin_astrology-consultation_astrology__find_place mcp__plugin_astrology-consultation_astrology__get_planet_positions mcp__plugin_astrology-consultation_astrology__calculate_birth_chart mcp__plugin_astrology-consultation_astrology__get_birth_time_sensitivity mcp__plugin_astrology-consultation_astrology__get_dasha mcp__plugin_astrology-consultation_astrology__get_transits mcp__plugin_astrology-consultation_astrology__get_outlook mcp__plugin_astrology-consultation_astrology__get_gochara mcp__plugin_astrology-consultation_astrology__get_jaimini_factors mcp__plugin_astrology-consultation_astrology__get_tajika mcp__plugin_astrology-consultation_astrology__prepare_consultation mcp__plugin_astrology-consultation_astrology__create_report mcp__plugin_astrology-consultation_astrology__get_activation mcp__plugin_astrology-consultation_astrology__get_ashtakavarga mcp__plugin_astrology-consultation_astrology__get_divisional_chart mcp__plugin_astrology-consultation_astrology__get_shadbala mcp__plugin_astrology-consultation_astrology__get_topic_network mcp__plugin_astrology-consultation_astrology__get_yogini_dasha mcp__plugin_astrology-consultation_astrology__get_compatibility
 ---
 # /astro-report
 
@@ -24,9 +24,9 @@ Rules that hold throughout:
 
 The types, their aliases, status and one-line descriptions are not listed here. They live in one file, read with
 `skill://assets/report/registry.json` (the `/report` command reads the same file). Each entry has `id`, `name`,
-`aliases`, `charts` (1 or 2), `status` (`built` or `planned`) and `one_line`. The key a person types is an `id` or an
+`aliases`, `charts` (1 or 2), `status` (`built`, `planned` or `folded`) and `one_line`. The key a person types is an `id` or an
 alias, matched only when exact and case-insensitive. Only `built` types can be written; a `planned` type is shown as
-"coming" and never started. `report_type` in the model is the registry `id`. Write the report by following the
+"coming" and never started; a `folded` type has no report of its own (`folded_into` names the report that carries it) and is never started. `report_type` in the model is the registry `id`. Write the report by following the
 entry's `spec` file (read it as `skill://<spec path>`). If the entry lists `depth`, set `depth` in the model to one
 of them (it switches on the spec checks); with more than one, ask once with `AskUserQuestion`, standard first. Older wording below maps to ids: "Consultation summary" = `compact`, "Personal
 outlook" = `outlook`, "Twelve-month forecast" = `12-month`, "Relocation and foreign travel report" = `relocation`.
@@ -101,16 +101,19 @@ this computer, but what you type here is processed like any message in Claude Co
 ### 1. Report type
 Read the registry. Never write the type list from memory.
 - Argument that is an `id` or alias (exact, case-insensitive): if `built`, skip the question and echo "Report type:
-  {name}." If `planned`: "{name} isn't built yet." and offer the `built` types.
+  {name}." If `planned`: "{name} isn't built yet." and offer the `built` types. If `folded`: "{name} is part of the {folded_into} report." and offer that report if it is `built`.
 - No argument: print every entry, one line each: `id`, name, and `one_line`; `built` ones are selectable, `planned`
-  ones end with "(coming)". Then ask "Which report?" as free text (a menu holds only four). A `planned` pick is handled
+  ones end with "(coming)", `folded` ones with "(inside {folded_into})". Then ask "Which report?" as free text (a menu holds only four). A `planned` pick is handled
   as above.
 - Unknown argument (V-TYPE): name the 2 or 3 closest ids, aliases or names, then print the list as above.
 - Personal outlook (`outlook`) needs a window: ask "From which date, and for about how many days (28 to 92)?" Out of
   range or a daily or sun-sign feed: V-OUTLOOK. Never guess a type from birth data typed into the argument; use the
   data, but still run every step.
 - `charts` = 2 (for example `match`): run steps 2 to 7 once for each person, one after the other. Each chart is
-  computed on its own and never merged; the type's `spec` says how the two are compared.
+  computed on its own and never merged; the type's `spec` says how the two are compared. For `match`, ask first, before
+  any birth detail: "Did both people agree to have their charts compared?" Only a plain yes goes on; "no" or no answer
+  stops the report with no calculation. The report names them Person A and Person B (step 3 is skipped) and carries
+  the consent sentence of `references/report-specs/match.md`.
 
 ### 2. Whose chart? (identity gate, before any birth detail)
 Ask: **Mine** / **Someone else's (they know and agree, or I'm their parent or guardian)** / **From a report or chart I already have**.
@@ -298,7 +301,10 @@ first name only. Put the time status in `birth.time_reliability` and `uncertaint
 
 Call `create_report` with the model, `name`, and the birth input (`date`, `time`, `lat`, `lon`, `tz`, `zone`, `fold`,
 `calendar`, `on`) every time, whether or not birth data is printed: a dated model is refused without it, and it is
-used only to check the dates, never printed. File name: `<slug>-<report_type>-<YYYYMMDD>-<HHMM>`, where the slug is the first name
+used only to check the dates, never printed. For `match` (two people) pass `persons` instead of one birth input: exactly two
+births, Person A first, each with the same fields, plus `consent: true` after the person's plain yes. The model's
+`birth.persons` and `consent` must agree with them. Only this MCP tool takes two births; REST and the CLI cannot run a match,
+so never offer them for it. File name: `<slug>-<report_type>-<YYYYMMDD>-<HHMM>`, where the slug is the first name
 lowercased (letters and digits only), the date is the session date and HHMM is the current time if the session gives it,
 otherwise a 4-digit tag you choose and do not reuse in this conversation. Never include birth data in the name.
 

@@ -10,6 +10,7 @@ life-first checks, renders assets/report/template.html.j2 with Jinja2, and write
 installed (otherwise the HTML prints to PDF from any browser). Needs: jinja2; optional: weasyprint.
 """
 import calendar
+import copy
 import datetime as dt
 import json
 import os
@@ -31,7 +32,11 @@ TYPE_NAMES = {"kundli": "Kundli report", "complete-life": "Complete life report"
               "outlook": "Personal outlook", "wealth": "Wealth report", "education": "Education report",
               "reputation": "Reputation report", "spirituality": "Spirituality report", "self": "Self report",
               "family": "Family report", "challenges": "Challenges report", "children": "Children report",
-              "intimacy": "Intimacy report", "affairs": "Affairs and fidelity report (own chart)"}
+              "intimacy": "Intimacy report", "affairs": "Affairs and fidelity report (own chart)",
+              "jupiter-transit": "Jupiter transit report", "rahu-ketu": "Rahu-Ketu transit report",
+              "varshaphal": "Varshaphal (annual chart) report", "sade-sati": "Sade Sati and Saturn report",
+              "mangal-dosha": "Mangal Dosha report", "raj-yoga": "Raj Yoga report", "match": "Couples match report",
+              "lal-kitab": "Lal Kitab report"}
 HOW_TO_READ = ("Each section starts from what a theme means in your life, then how it is likely to show, when, what "
                "argues against it and what to watch for. Confidence words — Strong, Moderate, Weak, Contradictory, "
                "Unknown — describe how much of the chart agrees, not a probability. Dates are periods, never exact days. "
@@ -78,6 +83,14 @@ ANSWERS = {
     "children": "How do I relate to children, what is my parenting style, and where else does the care for the next generation show?",
     "intimacy": "How does closeness show in my chart: comfort, warmth, what steadies it and what holds it back?",
     "affairs": "What do my own tendencies toward ties outside a committed relationship look like, and what steadies them?",
+    "jupiter-transit": "Where is Jupiter moving through my chart, what does each stay open up, and does my running period agree?",
+    "rahu-ketu": "Where does the axis of the nodes fall in my chart, what does it stir and release, and does my running period agree?",
+    "varshaphal": "What does the annual chart for this year show, season by season, and which areas does it confirm?",
+    "sade-sati": "When does Saturn pass over my Moon, what does each phase press on, and how can I meet it?",
+    "mangal-dosha": "Does Mars sit where four named rules count a Mangal dosha, what cancels it under each, and what does it mean in plain terms?",
+    "raj-yoga": "Which kendra-kona combinations does my chart hold, where do the sources disagree about them, and when do their periods run?",
+    "match": "How do two charts compare under the computed kootas and the Prasna Marga counts, what does Mars show in each, and how do the charts fit as tendencies?",
+    "lal-kitab": "What does the Lal Kitab chart show house by house, which debts (rin) does it mark, and what does that system say on its own terms?",
 }
 SENS_LABELS = {"stable": "Birth time: stable", "may_shift": "Birth time: may shift",
                "depends": "Birth time: depends on exact time"}
@@ -288,6 +301,8 @@ def checks(r):
 
 
 # ---- T10 spec reports (references/report-specs/<id>.md): the owner's frame and QC checklist, automated ----------------
+# batch 6 (T11.36): the Lal Kitab report's sections (owner decision 11)
+LK_SECTIONS = ["lk-chart", "lk-houses", "lk-rin"]
 # Body section ids per type and depth, in order. A section may be left out only with a `dropped` entry and its reason.
 SPEC_SECTIONS = {
     "kundli": {"standard": ["foundation", "windows", "self", "strengths", "current"],
@@ -305,7 +320,121 @@ SPEC_SECTIONS = {
     "children": {"standard": ["theme", "parenting", "alternatives"]},
     "intimacy": {"standard": ["comfort", "venus", "bond", "phases", "steadiers"]},
     "affairs": {"standard": ["pulls", "pressures", "private", "steadiers"]},
+    "jupiter-transit": {"standard": ["windows", "moon", "lagna", "fit"]},
+    "rahu-ketu": {"standard": ["windows", "axis", "contacts", "fit"]},
+    "varshaphal": {"standard": ["seasons", "year", "areas"]},
+    "sade-sati": {"standard": ["windows", "areas", "fit", "kantaka", "response"]},
+    "mangal-dosha": {"standard": ["rules", "meaning", "steadiers"]},
+    "raj-yoga": {"standard": ["windows", "lines", "strength"]},
+    "match": {"standard": ["kootas", "counts", "mangal", "fit"]},
+    "lal-kitab": {"standard": LK_SECTIONS},
 }
+# batch 4 (T11.34): the transit and annual types. Each carries one required sentence in `scope`; a window or pressure row
+# must name the running dasha in its basis (a transit or the year chart alone never gives a window)
+TRANSIT_TYPES = ("jupiter-transit", "rahu-ketu", "varshaphal", "sade-sati")
+TRANSIT_SCOPE = {
+    "jupiter-transit": "A transit alone never gives an event: it only confirms what the running period already shows.",
+    "rahu-ketu": "Library support for reading the nodes' transit is thin, so these are tendencies only.",
+    "varshaphal": "The year chart confirms a window the birth chart and its running periods already show; it never creates one.",
+    "sade-sati": "Sade sati is a broad lens, never a verdict: it counts only where the running period agrees.",
+}
+KANTAKA_NOTE = ("Kantaka Shani (Saturn in the 4th, 7th or 10th from the Moon) and Ashtama Shani (Saturn in the 8th from the "
+                "Moon) have no rule text in this library: CRUX p424 and p464 call Saturn in the 8th from the Moon 'Kantaka Sani' "
+                "in case studies only, and the 4th, 7th and 10th convention has no book source here. Both are a modern "
+                "convention, always graded Weak.")
+KANTAKA = re.compile(r"\b(?:kantaka|ashtama)\b", re.I)
+# Node aspects (owner decision 13): a node word and an aspect word in one clause. aspect, drishti and glance count alone; the
+# looser sight words count only with a target after them (a house or sign count, a trine or angle, a planet). A clause that
+# reports the dispute or attributes the view to some writers is not a claim (NODE_META).
+_NODE = r"(?:rahu|ketu|nodes?|nodal)(?:['’]s)?"
+_NV = r"(?:aspect\w*|drishti|glanc\w*)"
+_NV_SOFT = r"(?:looks?|looking|looked|see[sn]?|seeing|saw|sights?|views?|viewing|behold\w*|gaz\w*|cast\w*|influenc\w*|throw\w*|threw|project\w*)"
+_NODE_TARGET = (r"(?:\d{1,2}(?:st|nd|rd|th)|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|"
+                r"trines?|trikonas?|kendras?|angles?|natal|sun|moon|mars|mercury|jupiter|venus|saturn|lagna|ascendant)")
+NODE_ASPECT = re.compile(rf"\b(?:{_NODE}|axis)\b[^.!?;]*\b{_NV}\b|\b{_NV}\b[^.!?;]*\b{_NODE}\b|"
+                         rf"\b{_NODE}\b[^.!?;]*\b{_NV_SOFT}\b[^.!?;]*\b{_NODE_TARGET}\b|"
+                         rf"\b{_NODE}\b[^.!?;]*\b{_NODE_TARGET}\b[^.!?;]*\b(?:its|their|full)\s+(?:full\s+)?(?:sight|gaze|view|look|glance)\b",
+                         re.I)
+NODE_META = re.compile(r"\b(?:disput\w*|debat\w*|contested|not agreed|school-?dependent|omit\w*|not (?:used|counted|read|shown|"
+                       r"computed|applied|given)|no node aspects?|some (?:writers|authors|astrologers|jyotishis|sources|texts|schools|"
+                       r"traditions)|others? (?:do not|don't|disagree|differ|read)|according to some|one view|another view|one side|"
+                       r"either side|whether|the view that|some hold|said by some)\b", re.I)
+NODE_SETTLE = re.compile(r"\b(?:settled|settles(?!\s+neither)|certainly|definitely|surely|undoubtedly|clearly|in fact|proven|proved|"
+                         r"(?:correct|right|true|only) view|is (?:correct|right|true)|does aspect|do aspect|truly|without doubt)\b", re.I)
+# Lal Kitab words outside the lal-kitab report (README §5): the names and editions, the LK houses and debts, the sleeping
+# houses and planets, the year table. next_step.follow_ups may point at the lal-kitab report.
+LK_TERMS = re.compile(r"\b(?:LK\w*|Shrimali|Lal[- ]?Kitab|pakk[ae] ghar|takra+v\w*|takrao|rin|rinas?|"
+                      r"sleep\w*\s+(?:house|planet)s?|(?:house|planet)s?(?:\s+\d+)?\s+(?:is |are )?asleep|sleeps? in|soya (?:ghar|grah)|"
+                      r"kayam grah|andh[ae] grah|mangal badh|(?:varshaphal|annual|year)\s+(?:lal kitab\s+)?table)\b", re.I)
+# Unknown birth time: the sections each spec drops (report-specs/<t>.md, "unknown time"). When every section is dropped one
+# house-free 'note' section stays, since a report needs one section.
+UNKNOWN_DROP = {"jupiter-transit": ("moon", "lagna", "fit"), "rahu-ketu": ("axis", "fit"), "varshaphal": ("seasons", "year", "areas"),
+                "sade-sati": ("windows", "areas", "fit", "kantaka"), "mangal-dosha": ("rules", "meaning"),
+                "raj-yoga": ("windows", "lines", "strength")}
+# batch 5 (T11.35): the two yoga types and the Kaal Sarp unit inside the kundli
+YOGA_TYPES = ("mangal-dosha", "raj-yoga")
+YOGA_SCOPE = {
+    "mangal-dosha": "This reads Mars's placement under four named rules as a tendency toward drive and intensity in close ties; it says nothing about how a marriage will go.",
+    "raj-yoga": "A yoga is a combination in the chart, not a promise: it shows a result only where the strength of its planets and the running period agree.",
+}
+KAAL_NOTE = ("Kaal Sarp is a modern combination: no classical text in this library names it, its effect is not agreed and no "
+             "cancellation is known.")
+KAAL = re.compile(r"\bka(?:a)?l[ -]?sarp\w*|\bkala[ -]?sarp\w*", re.I)
+MANGAL_NAME = re.compile(r"\bmangal(?:ik)?\b|\bmanglik\b|\bkuja[ -]?dosha\b|\bmars dosha\b", re.I)
+# the four engine rules, in this order: a pattern for the unit theme of each (chart_facts KUJA-BPHS80, POPULAR, PD11.3, HJH2)
+MANGAL_RULES = (("classical", re.compile(r"\bclassical\b|\bBPHS\b", re.I)), ("popular", re.compile(r"\bpopular\b", re.I)),
+                ("Phaladeepika", re.compile(r"\bPhaladeepika\b|\bPD\b", re.I)), ("HJH2", re.compile(r"\bHJH2\b|\bRaman\b", re.I)))
+BASE_RATE_RX = re.compile(r"\b(?:about|roughly)\s+\w+\s+(?:random\s+)?(?:charts?\s+)?in\s+(?:10|100)\b|\bbase rate not checked\b", re.I)
+CANCEL_RX = re.compile(r"cancel|exempt|no cancellation|not assessed", re.I)
+# Dual lordship (CR-V22): a planet that owns an angle or trine and also a 6th, 8th or 12th. Read from the engine's lordships
+# (F.<p>.owns) for the planets a unit's RAJA ids or fact ids name; without engine facts, from the lordships its text states
+# ("owns the 9th and the 12th", "lord of the 8th as well as the 9th", "the 6th and 7th lord", "owns H6,7").
+GOOD_HOUSES, DUSTHANAS = {1, 4, 5, 7, 9, 10}, {6, 8, 12}
+_ORDW = ("first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth")
+_ORD1 = rf"(?:\d{{1,2}}(?:st|nd|rd|th)|H\d{{1,2}}(?:,\d{{1,2}})*|{'|'.join(_ORDW)})"
+_ORDS = rf"{_ORD1}(?:\s*(?:,|and|&|as well as|plus)\s*(?:the\s+)?{_ORD1})*"
+LORD_RX = re.compile(rf"\b(?:owns?|owning|owner of|lord(?:ship)?s? of|rules?|ruling)\s+(?:both\s+)?(?:the\s+)?({_ORDS})|"
+                     rf"\b({_ORDS})(?:[- ]house)?\s+lord", re.I)
+RAJA_ID = re.compile(r"\bRAJA-(?:KK|KKP|YK)-((?:[A-Z][a-z]){1,2})\b")
+PLANET_CODE = {"sun": "Su", "moon": "Mo", "mars": "Ma", "mercury": "Me", "jupiter": "Ju", "venus": "Ve", "saturn": "Sa"}
+
+
+def dual_lords(u, fact_ids=None):
+    """Planets (codes) in a unit that own a good house and a dusthana, from the engine's lordships when given, else from
+    the lordships the unit's text states."""
+    text = " ".join(_strings({k: u.get(k) for k in TEXT_KEYS + ("basis", "fact_refs")}))
+    owns = (fact_ids or {}).get("facts", {})
+    if owns:
+        named = {c for m in RAJA_ID.finditer(text) for c in re.findall(r"[A-Z][a-z]", m.group(1))}
+        named |= set(re.findall(r"\bF\.([A-Z][a-z])\.", text)) | {PLANET_CODE[w.lower()] for w in re.findall(
+            r"\b(?:Sun|Moon|Mars|Mercury|Jupiter|Venus|Saturn)\b", str(u.get("theme", "")))}
+        return sorted(p for p in named if set(owns.get(f"F.{p}.owns") or []) & GOOD_HOUSES and set(owns.get(f"F.{p}.owns") or []) & DUSTHANAS)
+    out = []
+    for m in LORD_RX.finditer(text):
+        hs = {int(x) for x in re.findall(r"\d+", m.group(1) or m.group(2))} | {
+            _ORDW.index(w.lower()) + 1 for w in re.findall("|".join(_ORDW), m.group(1) or m.group(2), re.I)}
+        if hs & GOOD_HOUSES and hs & DUSTHANAS:
+            out.append(m.group())
+    return out
+# batch 6 (T11.36). match: consent and neutral names (owner decision 10); four kootas with their exceptions and never a total;
+# Mars per chart under the four engine rules; fit as tendencies. lal-kitab: its own frame and sections (owner decisions 2, 11)
+MATCH_CONSENT = "The person who asked for this report confirmed that both people agreed to have their charts compared."
+MATCH_ROLES = "The koota tables keep the tradition's roles: Person A is read in the bride's place and Person B in the groom's."
+MATCH_NOSUM = "The four kootas are not added up: there is no total out of 36, and vashya, yoni, gana and varna are not computed."
+KOOTAS = (("tara", re.compile(r"\btara\b", re.I)), ("bhakoot", re.compile(r"\bbhak(?:oo|u)t\b", re.I)),
+          ("graha maitri", re.compile(r"\bmaitri\b", re.I)), ("nadi", re.compile(r"\bnadi\b", re.I)))
+EXCEPT_RX = re.compile(r"exception|not evaluated|not assessed", re.I)
+ROLE_WORDS = re.compile(r"\b(?:brides?|(?:bride)?grooms?|girls?|boys?|husbands?|wi(?:fe|ves)|kanya)\b", re.I)
+PERSONS = ("Person A", "Person B")
+MATCH_NAME_OK = {"person", "prasna", "marga", "kashyapa", "garga", "phaladeepika", "mantreswara", "muhurta", "chintamani", "parasara",
+                 "brihat", "hora", "sastra", "narada", "vasishtha", "kuja", "manglik", "mangalik", "dosha", "koota", "kootas", "tara",
+                 "bhakoot", "bhakut", "graha", "maitri", "nadi", "adi", "madhya", "antya", "vashya", "yoni", "gana", "varna",
+                 "lal", "kitab"}
+LK_SCOPE = "This is a Lal Kitab reading, kept apart from the Parashari reports: its houses, debts and remedies are Lal Kitab's own."
+RIN_NOTE = ("A rin (debt) here is traditional family symbolism read from the birth chart only: it names no debt, blames no one "
+            "and is not a curse.")
+PITRI = re.compile(r"\bpit(?:r|ri|ru)\s?rin\b", re.I)
+DASHA_BASIS = re.compile(r"\w*dasha\b|\b(?:periods?|sub-periods?|bhukti|MD|AD)\b", re.I)
 LEDGER = {"fact": "Confirmed", "rule": "Inferred", "interpretation": "Inferred", "prediction": "Hypothesis",
           "speculation": "Hypothesis"}
 PARTNER_CAVEAT = ("This is an archetype derived from the chart. It is not a description of a real person. Appearance "
@@ -385,7 +514,7 @@ _HARM = (_MED + r"|ill|illness\w*|sick\w*|diseas\w*|death|deaths|dies|die|dying|
          r"end is near|downhill|faint\w*|falls? from|gives? out|pain|break(?:s|ing)? (?:her|his|their) \w+|bitten|procedure|pneumonia|tumble|disabled|forever|"
          r"final journey|clinic|stretcher|slip\w* away|use of (?:his|her|their) legs|see the year out|never come back|virus|laid low|"
          r"time (?:may |will |could |might |has )come|next world|called home|ebb\w*|stroke|tragedy|collapse\w*|drown\w*|wheelchair|fever|miscarr\w*|eyesight|blind\w*|memory loss|dement\w*|paraly\w*|come down with|turn for the worse|"
-         r"pass(?:es|ed)? on|rest in peace|icu|emergency|burn(?:ed|t)|crippl\w*|confined|struck down|lose (?:his|her|their) (?:sight|memory|hearing|mind|life)|vitality|(?:her|his|their) end|[’']s condition|(?:her|his|their) condition|(?:hard|difficult|tough|rough|trying)\s+(?:stretch|years?|times?|periods?|phases?|patch|spell)|trouble\w*|suffer\w*|at risk")
+         r"pass(?:es|ed)? on(?!\s+" + medical_words.PASS_ON_OK + r"\b)|rest in peace|icu|emergency|burn(?:ed|t)|crippl\w*|confined|struck down|lose (?:his|her|their) (?:sight|memory|hearing|mind|life)|vitality|(?:her|his|their) end|[’']s condition|(?:her|his|their) condition|(?:hard|difficult|tough|rough|trying)\s+(?:stretch|years?|times?|periods?|phases?|patch|spell)|trouble\w*|suffer\w*|at risk")
 # A relative may be the subject or possessor of a sentence only in one fixed forecast shape (report-specs/family.md);
 # anything else is written from the person's side ("you ..."). Sentences with "you" as the subject stay free, but the
 # relative + harm layer (_PAR/_HARM) still runs on every sentence.
@@ -896,6 +1025,118 @@ def _kid_hits(strings):
     return out
 
 
+# batch 4: a transit, the nodes, the year chart or Saturn's passage is never read as danger, ruin or a curse (medical and
+# death words are refused for every type by the shared list)
+# T11.38: the families below are meaning classes (stems with their inflections), not lists of the words seen so far: fear
+# and catastrophe; partner failure and parting; match rules; remedies; verdicts and totals; promises and certainty. The
+# strings are folded first (you'll, you're going to -> you will). shortcut: stems, not a reading for meaning, so a new
+# synonym outside a class still passes; widen the class through review.
+_FEAR = [(re.compile(r"\b(?:accident\w*|danger\w*|disaster\w*|calamit\w*|catastroph\w*|cataclysm\w*|trag(?:edy|edies|ic)|doom\w*|"
+                     r"ruin\w*|destroy\w*|destruct\w*|devastat\w*|shatter\w*|crush\w*|wreck\w*|wreak\w*|smash\w*|crippl\w*|collaps\w*|"
+                     r"crumbl\w*|(?:falls?|falling|fell) apart|havoc|mayhem|chao(?:s|tic)|turmoil|upheaval\w*|"
+                     r"curse[sd]?|jinx\w*|hexed|misfortunes?|bad luck|ill[- ](?:fated|starred|omened|boding|luck|timed)|inauspicious\w*|"
+                     r"unlucky|omens?|forebod\w*|baleful|sinister|ominous|evil|"
+                     r"terribl\w*|terrif\w*|terror\w*|horri\w*|harrow\w*|fear\w*|frighten\w*|fright|scar(?:y|ed|e)|dread\w*|panic\w*|"
+                     r"alarm\w*|petrif\w*|haunt\w*|demon\w*|malevol\w*|menac\w*|threat\w*|endanger\w*|jeopard\w*|at risk|harm(?:s|ed|ing|ful\w*)?|damag\w*|"
+                     r"peril\w*|hazard\w*|treacher\w*|shock\w*|victim\w*|"
+                     r"grim(?:mer|mest)?|bleak\w*|dire(?:st)?|darkest|(?:dark|black|evil) (?:period|phase|time|days|years?|spell|chapter|stretch)|"
+                     r"miser(?:y|ies|able|ably)|wretch\w*|woe(?:s|ful)?|agon(?:y|ies|i[sz]\w*)|anguish\w*|ordeal\w*|scourge\w*|blight\w*|"
+                     r"hell(?:ish)?|brutal\w*|savage\w*|vicious\w*|merciless\w*|unbearabl\w*|intolerabl\w*|cruel\w*|torment\w*|"
+                     r"suffer\w*|punish\w*|wrath|downfall|bankrupt\w*|nightmar\w*|disgrac\w*|humiliat\w*|scandal\w*|"
+                     r"(?:heavy|huge|great|big|severe|major|massive|terrible|serious|grave) (?:loss|losses|setbacks?|blows?|trouble|crisis|"
+                     r"crises|debts?)|spells? (?:trouble|the end)|lose everything|bad years?|worst (?:time|years?|period|phase))\b", re.I),
+          "danger, ruin, curse or fear framing")]
+# batch 5 (T11.35). Mangal dosha: no marriage-failure or partner-harm wording, no match rule, no remedy (death and illness
+# words are refused by the shared list). Raj yoga: no promise of fame, wealth, rank or certainty.
+_PARTNER = (r"(?:spouses?|partners?|husbands?|wi(?:fe|ves)|marriages?|married life|marital|matrimon\w*|wedlock|relationships?|"
+            r"unions?|couples?|weddings?|engagements?|betroth\w*|alliances?|bonds?)")
+_FAIL = (r"(?:harm|hurt|damag|endanger|threat|afflict|suffer|ruin|doom|destroy|spoil|jeopardi[sz]|fail|break|broke|collaps|unhappy|"
+         r"misfortune|loss|los(?:e|es|t|ing)\b|ends?\b|ended|ending|split|sour|wreck|shatter|crumbl|crack|dissolv|postpon|delay|"
+         r"block|obstruct|prevent|den(?:y|ies|ied)\b|stormy|tempestuous|turbulent|rocky|troubled|bitter|discord|strife|quarrel|"
+         r"fight|feud|(?:falls?|falling|fell|drift\w*|grow\w*|grew|come|came|break|broke|tear|torn) (?:apart|through)|called off|"
+         r"broken off|on the rocks)")
+_MANGAL = [(re.compile(rf"\b(?:divorc\w*|separat(?:ed|ing|ion|ions)\b|separates?\s+(?:from|them|you|the couple)|split(?:s|ting)? up|break-?ups?|breaking up|broke up|"
+                       rf"break up|estrang\w*|desert(?:s|ed|ing|ion)\b|abandon\w*|walk(?:s|ed|ing)? out|part(?:s|ed|ing)? ways|"
+                       rf"leav(?:e|es|ing)\s+(?:you|him|her|them|home|the home|the house|the marriage)|left (?:you|him|her|them)\b|"
+                       rf"widow\w*|bereave\w*|remarr\w*|(?:second|another|two|multiple) marriages?|more than one marriage|"
+                       rf"discord\w*|strife|quarrel\w*|feud\w*|(?:constant|frequent|endless|bitter|violent|full of) "
+                       rf"(?:fights?|fighting|arguments?|rows|clashes|conflicts?)|lonel\w*|alone (?:later )?in life|end (?:up )?alone|"
+                       rf"left alone|single for life|stays? single|remains? (?:single|unmarried)|unmarried|called off|"
+                       rf"(?:falls?|falling|fell) through|unlucky (?:bride|groom|{_PARTNER})|"
+                       rf"{_FAIL}\w*{_S}\b{_PARTNER}|\b{_PARTNER}{_S}\b{_FAIL}\w*|"
+                       rf"\b(?:takes?|took|taking|claims?|removes?|lose|loses|losing|lost)\s+(?:your|the|a|his|her|their)\s+{_PARTNER}|"
+                       rf"(?:fail\w*|break\w*|collaps\w*|trouble\w*|crisis|crises)\s+(?:of\s+)?(?:a |the |your )?{_PARTNER})\b", re.I),
+            "marriage-failure or partner-harm wording"),
+           (re.compile(r"\b(?:(?:must|should|only|never|do not|don't|avoid|can only|ought to|has to|have to|needs? to|is to)\s+"
+                       r"(?:\w+\s+){0,2}?(?:marr(?:y|ies|ied|ying)\b|wed(?:s|ded|ding)?\b|get married|tie the knot)|"
+                       r"(?:marr(?:y|ies|ied|ying)|wed(?:s|ded|ding)?)\s+(?:\w+\s+){0,2}?(?:mang(?:a)?lik|mangli)\w*|"
+                       r"(?:mang(?:a)?lik|mangli)\w*\b[^.!?;]*\b(?:must|should|only|safe|unsafe|required|ought|best|ideal)|"
+                       r"only (?:a |an )?(?:mang(?:a)?lik|mangli)\w*)\b", re.I),
+            "marriage advice or a match rule"),
+           (re.compile(r"\b(?:gem(?:stone)?s?|corals?|pearls?|sapphires?|emeralds?|rub(?:y|ies)|diamonds?|hessonite|gomed|moonga|neelam|"
+                       r"panna|pukhraj|manik\w*|topaz|opals?|cat'?s[- ]eye|rudraksha\w*|mantras?|stotra\w*|chant\w*|recit\w*|jap(?:a|am)\b|"
+                       r"jaap|homa\w*|havan\w*|yagy?as?|yajnas?|pooja|puja\w*|shanti|pacif\w*|propitiat\w*|appeas\w*|rituals?|fasting|"
+                       r"fast on|kumbh|vivah|hanuman|donat\w*|charity|amulets?|yantras?|talisman\w*|temple visits?|visit\w* (?:a |the )?temple|"
+                       r"peepal|pipal|banana tree|(?:tree|pot|banana|plantain|vishnu|idol|statue) (?:marriage|wedding)|"
+                       r"marr(?:y|ies|ied|ying)\s+(?:\w+\s+){0,2}?(?:tree|pot|idol|statue)|"
+                       r"offer(?:ing)?s?\s+(?:of\s+)?(?:water|milk|sweets|red|jaggery|lentils|food)|"
+                       r"wear\w*\s+(?:a |an |the )?(?:\w+\s+){0,2}(?:stone|ring|gem|pendant|thread|bracelet|locket)|remed(?:y|ies)|"
+                       r"(?:remov|neutrali[sz]|nullif|lift|eras|counter|get rid of|ward\w* off)\w*\s+(?:the |this |your |its )?"
+                       r"(?:dosha|mars|mangal|effect|affliction))\b", re.I), "remedies (asked for in their own request, never in this report)")]
+_KSUM = r"(?:9|[1-9]\d)(?:\.\d+)?"          # above the largest one-koota maximum (nadi, 8): only a sum reaches it
+_MATCH = [(re.compile(rf"\b(?:36|thirty-six|totals?|totall?ed|sum(?:s|med|ming)?|summ\w*|add(?:s|ed|ing)? up|aggregate\w*|"
+                      rf"tall(?:y|ies)|cumulative|altogether|all told|grand total|combined (?:score|total|points|kootas)|"
+                      rf"(?:overall|match|compatibility) (?:scores?|points|tally|result)|koota (?:scores?|tally|result)s?|guna milan|gunas?|ashtakoot\w*|compatib\w*|"
+                      rf"cut-?off|threshold|pass mark|minimum (?:score|points)|(?:comes?|came|amounts?|adds?|added) to\s+\d|"
+                      rf"{_KSUM}\s*(?:points?|pts|marks)|(?:of|out of)\s+(?:a possible\s+|the\s+)?{_KSUM}\b"
+                      rf"(?!\s*(?:st|nd|rd|th|signs?|stars?|nakshatras?|from|back)))", re.I),
+           "a koota total or score (the four kootas are never added up)"),
+          (re.compile(r"\b(?:(?:good|bad|poor|perfect|ideal|excellent|great|weak|strong|right|wrong|fine|sound|solid|happy|lucky|"
+                      r"unlucky|blessed|doomed|favou?rable|unfavou?rable|auspicious|inauspicious|promising) (?:match|pair(?:ing)?|couple|"
+                      r"union|marriage|alliance|wedding)|"
+                      r"(?:match|union|marriage|alliance|pairing|pair|couple)\s+(?:is|looks|seems|appears|would be|will be)\s+(?:\w+\s+)?"
+                      r"(?:favou?rable|unfavou?rable|auspicious|inauspicious|promising|good|bad|poor|excellent|ideal|perfect|strong|weak|"
+                      r"approved|blessed|doomed|fine|unsuitable|suitable|right|wrong)|"
+                      r"(?:well|ill|badly|poorly|perfectly|ideally|nicely)[- ](?:suited|matched)|suit(?:s|ed)? (?:each other|one another)|"
+                      r"(?:un)?suitab\w*|mismatch\w*|matched (?:pair|couple)|unwise|(?:in)?advisab\w*|"
+                      r"recommend\w*\s+(?:the |this |that )?(?:match|marriage|union|alliance|proposal|wedding|pair\w*)|"
+                      r"(?:match|marriage|union|alliance|proposal|wedding)\s+(?:is |are |comes )?(?:\w+\s+)?recommended|"
+                      r"advis(?:e|es|ed|ing)\s+(?:\w+\s+){0,3}?(?:to\s+(?:proceed|marry|wed|go ahead)|against)|"
+                      r"favou?r(?:s|ed|ing)?\s+(?:the |this )?(?:match|marriage|union|alliance|wedding)|"
+                      r"(?:approv|reject|accept)\w*\s+(?:the |this )?(?:match|marriage|alliance|proposal|union)|approv\w*|bless\w*|"
+                      r"green light|go(?:es)? ahead|(?:to|should|can|may|must)\s+proceed|proceed with|tie the knot|call\w* off|"
+                      r"rul(?:e|es|ed|ing)\s+(?:\w+\s+){0,3}?out|"
+                      r"(?:right|ideal|perfect|best|wrong|suitable|good|bad) (?:partner|person|one|spouse|husband|wife|bride|groom|choice)|"
+                      r"(?:fine|good|great|perfect|poor|bad|ideal|excellent|strong|weak|right|wrong) fit (?:for|between)|"
+                      r"(?:should|must|can|cannot|can't|ought to)\s+(?:not\s+)?(?:marry|wed|get married)|(?:made|meant) for each other|"
+                      r"soul ?mates?)\b", re.I), "a verdict to marry or not (fit is given as tendencies)", "hard"),
+          (re.compile(r"\b(?:povert\w*|sorrow\w*|quarrel\w*|hidden harm|loss of (?:money|wealth|children|progeny))\b", re.I),
+           "the sources' grave readings of a count (not repeated)")]
+_LK_COSTLY = [(re.compile(r"\b(?:gem(?:stone)?s?|sapphires?|emeralds?|rub(?:y|ies)|diamonds?|cat'?s[- ]eye|hessonite|corals?|"
+                          r"yagy?as?|yajnas?|havans?|homams?|(?:paid|costly|expensive)\s+\w+)\b", re.I),
+               "gems or costly rituals (remedy-safety.md §1)")]
+_GAIN = r"(?:successful|known|renowned|recogni[sz]ed|honou?red|rich|wealthy|famous|powerful|prosperous|celebrated|elevated|promoted|a leader)"
+_RAJ_PROMISE = [(re.compile(
+    r"\b(?:famous|fame|renown\w*|celebrit\w*|celebrated|well-?known|household name|big name|stardom|superstar\w*|"
+    r"known (?:across|throughout|all over|everywhere|worldwide|far and wide|nationwide|globally)|prestig\w*|eminen\w*|illustrious|"
+    r"legendary|elite|VIP|aristocra\w*|high society|rich(?:es)?|wealth\w*|affluen\w*|opulen\w*|prosper\w*|abundan\w*|luxur\w*|"
+    r"lavish\w*|(?:multi)?millionaire\w*|billionaire\w*|fortunes?|kingly|kings?|queens?|royal\w*|rulers?|minist\w+|presidents?|"
+    r"governors?|head of state|throne|high (?:office|rank|post|position|status|standing|authority)|"
+    r"(?:top|highest|lofty) (?:post|rank|position|job|office|seat)|top of (?:your|the|his|her|their) (?:field|profession|career|tree|game|class)|"
+    r"(?:reach\w*|ris(?:e|es|ing)|rose|climb\w*|get|gets|got|make it|end\w* up|go|goes|went)\s+(?:\w+\s+){0,2}?(?:to |at )?the top|"
+    r"(?:great|immense|vast|enormous|huge|real|tremendous) (?:influence|power|authority|wealth|riches|status|success|standing|fame|recognition)|"
+    r"(?:rise|rises|rising|rose) to power|power and (?:prosperity|wealth|status|fame|position)|powerful (?:position|person|figure|leader|post)|"
+    r"wield\w* power|(?:big|major|huge|great|sure|certain|guaranteed) promotion|"
+    r"guarante\w*|destin(?:y|ed)|fated|assur(?:e|es|ed)|a given|in store|on the cards|in the cards|born to|await\w*|lies? ahead|"
+    r"is yours|will be yours|com(?:e|es|ing) your way|"
+    rf"will\s+(?:\w+\s+)?(?:become|rise|achieve|attain|prosper|succeed|be (?:\w+\s+)?{_GAIN})|"
+    rf"(?:make|makes|made|making) you (?:\w+\s+)?{_GAIN}|"
+    r"(?:money|wealth|riches|success|status|recognition|honou?rs?|rank|promotion|power|authority|fame|position|standing|leadership)\s+"
+    r"(?:will|shall)\s+(?:\w+\s+)?(?:come|flow|pour|follow|arrive|be yours|find you|rain))\b|" + _CERTAIN, re.I),
+                 "a promise of fame, wealth, rank or certainty")]
+# the families above read folded strings: you'll -> you will, (you are) going to -> will
+_GOING = re.compile(r"\b(?:am|is|are|was|were)\s+going\s+to\b|\bgonna\b", re.I)
+FOLD_TYPES = (*("jupiter-transit", "rahu-ketu", "varshaphal", "sade-sati"), "mangal-dosha", "raj-yoga", "match", "lal-kitab", "kaal_sarp")
 TYPE_GATES = {
     "wealth": [(re.compile(r"[₹$€£]|\bRs\.?\s?\d|\b(?:lakhs?|crores?|rupees?|dollars?|USD|INR)\b", re.I), "money amounts"),
                (re.compile(rf"\b(?:invest\w*|stocks?|bets?|betting|gambl\w*|lotter(?:y|ies)|tickets?|crypto\w*|mutual funds?|"
@@ -992,6 +1233,12 @@ TYPE_GATES = {
     "intimacy": _INTIMACY_FORMS + _INTIMACY_EXTRA,
     "affairs_forms": _AFFAIRS_FORMS,
     "affairs": _AFFAIRS_FORMS + _AFFAIRS_EXTRA,
+    **{t: _FEAR for t in ("jupiter-transit", "rahu-ketu", "varshaphal", "sade-sati")},
+    "mangal-dosha": _FEAR + _MANGAL,
+    "raj-yoga": _FEAR + _RAJ_PROMISE,
+    "match": _FEAR + _MANGAL + _MATCH,
+    "lal-kitab": _FEAR + _LK_COSTLY,
+    "kaal_sarp": _FEAR,                 # a kundli unit that names Kaal Sarp
 }
 
 
@@ -1028,6 +1275,8 @@ def gate_hits(t, strings):
     out = []
     if t.split("_")[0] in ("children", "intimacy", "affairs"):
         strings = [_fold(x) for x in strings]
+    if t in FOLD_TYPES:
+        strings = [_GOING.sub("will", _fold(x)) for x in strings]
     if t in ("children_kundli", "children_forms"):      # a kundli family section keeps a neutral dated line about a relative's baby (fixed shape)
         strings = [" ".join(x for x in re.split(r"(?<=[.!?])\s+", y) if not _rel_baby(x)) for y in strings]
     for rx, what, *hard in TYPE_GATES.get(t, []):
@@ -1148,7 +1397,8 @@ def adult_errors(r, birth_date=None):
 
 
 AFFAIRISH = re.compile(r"\baffairs?\b|extramarital|infidelit|unfaithful|cheat\w*|outside (?:a |the )?(?:committed relationship|marriage)|ties beyond", re.I)
-NODEPTH_TYPES = ("children", "intimacy", "affairs")      # no legacy models: depth is required
+NODEPTH_TYPES = ("children", "intimacy", "affairs", "jupiter-transit", "rahu-ketu", "varshaphal", "sade-sati", "mangal-dosha", "raj-yoga",
+                 "match", "lal-kitab")   # no legacy models: depth is required
 
 
 def needs_adult(r):
@@ -1164,7 +1414,246 @@ def _agrees(text, need):
             and not re.search(r"disagree|differ|conflict|not agree|only one|one factor|contradict|mixed|unclear", text, re.I))
 
 
-def spec_checks(r):
+_NODE_COUNT = re.compile(r"\b(?:\d{1,2}(?:st|nd|rd|th)|fifth|seventh|ninth|trines?)\b", re.I)
+
+
+def node_claims(strings, strict=False):
+    """Clauses that state a node aspect. A clause that reports the dispute or attributes the view ('some writers hold') is
+    not a claim; with strict (the rahu-ketu report, where the dispute has its labelled unit) an attributed view that names
+    the houses still is."""
+    return [c for s in strings for c in _clauses(_fold(s)) if NODE_ASPECT.search(c)
+            and not (NODE_META.search(c) and not (strict and _NODE_COUNT.search(c)))]
+
+
+def node_dispute(s, u):
+    """The one place a node aspect may be stated: the labelled dispute unit in rahu-ketu 'axis' (owner decision 13)."""
+    return (s["id"] == "axis" and u.get("claim_basis") == "DISPUTED" and u.get("claim_type") != "fact"
+            and grades_of(u) <= {"Weak", "Contradictory"})
+
+
+def transit_errors(r, t, strings):
+    """Batch 4 rules (report-specs/<t>.md): the scope sentence; a window or pressure row names the running dasha;
+    varshaphal creates no window and shows no Patyayini or exact day; rahu-ketu is never Strong and gives node aspects
+    only as a labelled dispute; sade-sati keeps Kantaka and Ashtama Weak with the no-source sentence."""
+    errs = [] if TRANSIT_SCOPE[t] in str(r.get("scope", "")) else [
+        f"{t} report: the scope must carry the sentence '{TRANSIT_SCOPE[t]}' (report-specs/{t}.md)"]
+    errs += [f"timeline row '{x.get('label')}': a {x['kind']} row must name the running dasha in its basis (a transit alone "
+             "never gives a window)" for x in r.get("timeline", [])
+             if x["kind"] in ("window", "pressure") and not DASHA_BASIS.search(str(x.get("basis", "")))]
+    units = [(s, u) for s in r["sections"] for u in s.get("units", [])]
+    grades = lambda u: set((u.get("confidence") or {}).values())
+    kps = (r.get("summary") or {}).get("key_points", [])
+    if t == "varshaphal":
+        if any(x["kind"] in ("window", "pressure") for x in r.get("timeline", [])):
+            errs.append("varshaphal report: Mudda seasons are chapter rows; no window or pressure rows (the year chart never creates one)")
+        if hits := sorted({m.group() for s in strings for m in re.finditer(r"\bpatyayini\b|\bvarsha narayana\b", s, re.I)}):
+            errs.append(f"varshaphal report: Mudda only (owner decision 12), no {', '.join(hits)}")
+        days = sorted({m.group() for s in strings for m in DAY.finditer(s)}) + [x[k] for x in r.get("timeline", [])
+                                                                               for k in ("start", "end") if len(x[k]) > 7]
+        if days:
+            errs.append(f"varshaphal report: Mudda boundaries to the month, no exact days ({', '.join(days[:4])})")
+    if t == "rahu-ketu":
+        if any("Strong" in grades(u) for _, u in units) or any(x.get("support") == "Strong" for x in r.get("ranking", [])) \
+                or any(k.get("confidence") == "Strong" for k in kps):
+            errs.append("rahu-ketu report: library support is thin, so nothing is graded Strong")
+        for s, u in units:
+            utext = _strings({k: u.get(k) for k in TEXT_KEYS + ("basis",)})
+            if node_dispute(s, u) and (hits := [m.group() for x in utext for c in _clauses(x) for m in NODE_SETTLE.finditer(c)
+                                                 if not _excused(c[:m.start()], m.group())]):
+                errs.append(f"[axis] '{u['theme'][:50]}': the node aspect dispute shows both sides and settles neither "
+                            f"({', '.join(hits[:3])}; owner decision 13)")
+            elif not node_dispute(s, u) and node_claims(utext, strict=True):
+                errs.append(f"[{s['id']}] '{u['theme'][:50]}': node aspects only as a labelled dispute in 'axis' "
+                            "(claim_basis DISPUTED, graded Weak or Contradictory; owner decision 13)")
+            if s["id"] == "axis" and grades(u) & {"Moderate", "Strong"} and not DASHA_BASIS.search(str(u.get("basis", ""))):
+                errs.append(f"[axis] '{u['theme'][:50]}': an axis line is Moderate only when the running dasha agrees "
+                            "(name it in basis); otherwise Weak")
+        rows = _strings([r.get(k) for k in ("summary", "ranking", "timeline", "watch_list", "practical_summary")])
+        if node_claims(rows, strict=True):
+            errs.append("rahu-ketu report: node aspects never in the summary, ranking, timeline, watch list or practical lines")
+    if t == "sade-sati":
+        sec = next((s for s in r["sections"] if s["id"] == "kantaka"), None)
+        if sec and KANTAKA_NOTE not in str(sec.get("text", "")):
+            errs.append(f"sade-sati 'kantaka' section needs the sentence '{KANTAKA_NOTE}' in its text (owner decision 4)")
+        errs += [f"[{s['id']}] '{u['theme'][:50]}': Kantaka and Ashtama Shani are graded Weak on every line (owner decision 4)"
+                 for s, u in units if KANTAKA.search(" ".join(_strings({k: u.get(k) for k in TEXT_KEYS + ("basis",)})))
+                 and grades(u) - {"Weak"}]
+        errs += [f"'{x.get('item', x.get('text', ''))[:40]}': Kantaka and Ashtama Shani are graded Weak (owner decision 4)"
+                 for x in r.get("ranking", []) + kps if KANTAKA.search(" ".join(_strings(x)))
+                 and (x.get("support") or x.get("confidence")) != "Weak"]
+        if not sec and any(KANTAKA.search(x) for x in strings) and "kantaka" not in {d["item"] for d in r.get("dropped", [])}:
+            errs.append("sade-sati report: Kantaka or Ashtama named without its 'kantaka' section and the no-source sentence")
+    return errs
+
+
+def yoga_errors(r, t, strings, fact_ids=None):
+    """Batch 5 (report-specs/<t>.md). mangal-dosha: the scope sentence; exactly one unit per engine rule, in order, each with
+    its base rate and its cancellations; no Strong; no timeline and no dates. raj-yoga: the scope sentence; a window row names
+    the running dasha; the base rate in words; no Strong; a dual-lordship line is a labelled dispute showing both readings."""
+    errs = [] if YOGA_SCOPE[t] in str(r.get("scope", "")) else [
+        f"{t} report: the scope must carry the sentence '{YOGA_SCOPE[t]}' (report-specs/{t}.md)"]
+    units = [(s, u) for s in r["sections"] for u in s.get("units", [])]
+    grades = lambda u: set((u.get("confidence") or {}).values())
+    kps = (r.get("summary") or {}).get("key_points", [])
+    if any("Strong" in grades(u) for _, u in units) or any(x.get("support") == "Strong" for x in r.get("ranking", [])) \
+            or any(k.get("confidence") == "Strong" for k in kps):
+        errs.append(f"{t} report: nothing is graded Strong (a convention or a common configuration, never a verdict)")
+    if t == "mangal-dosha":
+        if r.get("timeline"):
+            errs.append("mangal-dosha report: no timeline rows (the dosha is read from the birth chart, not timed)")
+        if hits := sorted({m.group() for s in strings for m in DATEISH.finditer(s)}):
+            errs.append(f"mangal-dosha report: no years, months or dates in the text ({', '.join(hits[:4])})")
+        sec = next((s for s in r["sections"] if s["id"] == "rules"), None)
+        if sec:
+            errs += mangal_rule_errors(sec.get("units", []), "mangal-dosha 'rules'", "rules")
+    if t == "raj-yoga":
+        errs += [f"timeline row '{x.get('label')}': a {x['kind']} row must name the running dasha in its basis (a yoga acts "
+                 "only in its planets' periods)" for x in r.get("timeline", [])
+                 if x["kind"] in ("window", "pressure") and not DASHA_BASIS.search(str(x.get("basis", "")))]
+        sec = next((s for s in r["sections"] if s["id"] == "lines"), None)
+        if sec and not BASE_RATE_RX.search(str(sec.get("text", ""))):
+            errs.append("raj-yoga 'lines': the section text states the base rate in words ('about 2 in 3 charts') or "
+                        "'base rate not checked'")
+        for s, u in units:
+            dual = s["id"] == "lines" and dual_lords(u, fact_ids)
+            refs = " ".join(map(str, u.get("rule_refs", [])))
+            if dual and (u.get("claim_basis") != "DISPUTED" or not grades(u) <= {"Weak", "Contradictory"}
+                         or not (re.search(r"\bBPHS\b", refs) and re.search(r"\bPDK?\b", refs))):
+                errs.append(f"[lines] '{u['theme'][:50]}': a planet that also owns a 6th, 8th or 12th is a labelled dispute showing both "
+                            "readings (claim_basis DISPUTED, graded Weak or Contradictory, rule_refs naming BPHS and PD; owner decision 14)")
+    return errs
+
+
+def mangal_rule_errors(us, where, sid):
+    """One unit per engine Mangal rule, in order, each with its base rate in words and its cancellations (batch 5; batch 6
+    runs it once per person)."""
+    errs, txt = [], lambda u: " ".join(str(u.get(k, "")) for k in TEXT_KEYS + ("basis",))
+    found = [[n for n, rx in MANGAL_RULES if rx.search(u.get("theme", ""))] for u in us]
+    if found != [[n] for n, _ in MANGAL_RULES]:
+        errs.append(f"{where}: exactly one unit per engine rule, in this order: classical (BPHS), popular, "
+                    "Phaladeepika, HJH2, each named in its theme")
+    for u in us:
+        if not BASE_RATE_RX.search(txt(u)):
+            errs.append(f"[{sid}] '{u['theme'][:50]}': state the base rate in words ('about 88 in 100 random charts') "
+                        "or 'base rate not checked'")
+        if not CANCEL_RX.search(str(u.get("counter", ""))):
+            errs.append(f"[{sid}] '{u['theme'][:50]}': list the cancellations (or 'no cancellation') in the counter line")
+    return errs
+
+
+TIME_RANK = {"exact": 0, "approximate": 1, "unknown": 2}
+
+
+def match_errors(r, strings):
+    """Batch 6 (report-specs/match.md): consent; Person A and Person B; the less certain birth time decides; four kootas in
+    order with their exceptions, the role sentence once and the no-total sentence; Mars per person under the four rules and
+    the two-chart cancellation with its source or 'not checked'; nothing Strong; no timeline and no dates."""
+    errs, b = [], r.get("birth") or {}
+    if MATCH_CONSENT not in str(r.get("consent", "")):
+        errs.append(f"match report: no report without consent: 'consent' must carry the sentence '{MATCH_CONSENT}' (owner decision 10)")
+    ps = b.get("persons") or []
+    if tuple(p.get("label") for p in ps) != PERSONS:
+        errs.append("match report: birth.persons holds exactly two people, labelled 'Person A' and 'Person B' in that order (owner decision 10)")
+    if r.get("prepared_for") != " and ".join(PERSONS):
+        errs.append("match report: prepared_for is 'Person A and Person B' (neutral names, owner decision 10)")
+    one = [time_class({"birth": p}) for p in ps]
+    if one and TIME_RANK[time_class(r)] < max(TIME_RANK[x] for x in one):
+        errs.append("match report: birth.time_reliability is the less certain of the two birth times (it decides what is said for both)")
+    if b.get("moon_stable") and not all(p.get("moon_stable") for p, x in zip(ps, one) if x == "unknown"):
+        errs.append("match report: birth.moon_stable needs moon_stable on each person whose birth time is unknown")
+    units = [(s, u) for s in r["sections"] for u in s.get("units", [])]
+    if any(grades_of(u) & {"Strong"} for _, u in units) or any(x.get("support") == "Strong" for x in r.get("ranking", [])) \
+            or any(k.get("confidence") == "Strong" for k in (r.get("summary") or {}).get("key_points", [])):
+        errs.append("match report: nothing is graded Strong (fit is a set of tendencies, never a verdict)")
+    if r.get("timeline"):
+        errs.append("match report: no timeline rows (the match is read from the two birth charts, not timed)")
+    if hits := sorted({m.group() for s in strings for m in DATEISH.finditer(s)}):
+        errs.append(f"match report: no years, months or dates in the text ({', '.join(hits[:4])})")
+    if sum(x.count(MATCH_ROLES) for x in strings) > 1:
+        errs.append("match report: the classical roles are labelled once (the role sentence appears once)")
+    if hits := sorted({m.group().lower() for x in strings for m in ROLE_WORDS.finditer(x.replace(MATCH_ROLES, ""))}):
+        errs.append(f"match report: Person A and Person B everywhere; role words only in the one role sentence ({', '.join(hits[:4])})")
+    # shortcut: the intimacy name helper (a capitalised word that is not a planet, sign, nakshatra or school) less the match
+    # sources' own names; a lower-case or sentence-initial name with no possessive or verb after it still passes
+    if names := sorted({w for _, w in _name_hits(strings)} - MATCH_NAME_OK):
+        errs.append(f"match report: only Person A and Person B name the two people (owner decision 10): {', '.join(names[:4])}")
+    sec = {s["id"]: s for s in r["sections"]}
+    if "kootas" in sec:
+        k = sec["kootas"]
+        errs += [f"match 'kootas': the section text needs the sentence '{x}'" for x in (MATCH_ROLES, MATCH_NOSUM)
+                 if x not in str(k.get("text", ""))]
+        us = k.get("units", [])
+        if [[n for n, rx in KOOTAS if rx.search(u.get("theme", ""))] for u in us] != [[n] for n, _ in KOOTAS]:
+            errs.append("match 'kootas': exactly one unit per computed koota, in this order: tara, bhakoot, graha maitri, nadi")
+        errs += [f"[kootas] '{u['theme'][:50]}': list its exception conditions (or 'no exception listed') in the counter line"
+                 for u in us if not EXCEPT_RX.search(str(u.get("counter", "")))]
+    if "mangal" in sec:
+        us = sec["mangal"].get("units", [])
+        for p in PERSONS:
+            errs += mangal_rule_errors([u for u in us if u.get("theme", "").startswith(p)], f"match 'mangal' ({p})", "mangal")
+        both = [u for u in us if not u.get("theme", "").startswith(PERSONS)]
+        txt = lambda u: " ".join(_strings({k: u.get(k) for k in TEXT_KEYS + ("basis", "rule_refs")}))
+        if len(both) != 1 or not re.search(r"\bboth\b", both[0].get("theme", ""), re.I) or not CANCEL_RX.search(txt(both[0])) \
+                or not (re.search(r"\bBPHS\b", txt(both[0])) or "not checked" in txt(both[0])):
+            errs.append("match 'mangal': one closing unit on both charts shows the 'both have it' cancellation with its source "
+                        "(BPHS) or says 'not checked'")
+    return errs
+
+
+def lk_errors(r, strings):
+    """Batch 6 (report-specs/lal-kitab.md): the scope sentence; Lal Kitab sections and units only (Parashari stays out);
+    no timeline; an unknown birth time gives no report (every section rests on the houses); the rin section names pitri rin
+    with its note, never above Weak."""
+    errs = [] if LK_SCOPE in str(r.get("scope", "")) else [
+        f"lal-kitab report: the scope must carry the sentence '{LK_SCOPE}' (report-specs/lal-kitab.md)"]
+    if bad := [s["id"] for s in r["sections"] if s["id"] not in LK_SECTIONS]:
+        errs.append(f"lal-kitab report: sections are {', '.join(LK_SECTIONS)} only (not {', '.join(bad)}); Parashari readings "
+                    "have their own reports")
+    errs += [f"[{s['id']}] '{u['theme'][:50]}': every unit in this report is a Lal Kitab unit (system lal_kitab); Parashari "
+             "and Lal Kitab stay separate" for s in r["sections"] for u in s.get("units", []) if u.get("system") != "lal_kitab"]
+    if r.get("timeline"):
+        errs.append("lal-kitab report: no timeline rows (no dasha is used; the Lal Kitab timing rules are read in words)")
+    if time_class(r) == "unknown":
+        errs.append("lal-kitab report: every section rests on the Lal Kitab houses, counted from the lagna, so an unknown "
+                    "birth time gives no Lal Kitab report; ask for the time")
+    rin = next((s for s in r["sections"] if s["id"] == "lk-rin"), None)
+    if rin:
+        if RIN_NOTE not in str(rin.get("text", "")):
+            errs.append(f"lal-kitab 'lk-rin': the section text needs the sentence '{RIN_NOTE}'")
+        if not any(PITRI.search(u.get("theme", "")) for u in rin.get("units", [])):
+            errs.append("lal-kitab 'lk-rin': one unit names pitri rin in its theme (Pitra Dosha is read here, owner decision 2)")
+        errs += [f"[lk-rin] '{u['theme'][:50]}': a debt signature is graded Weak, Contradictory or Unknown (no debt is named)"
+                 for u in rin.get("units", []) if grades_of(u) - {"Weak", "Contradictory", "Unknown"}]
+    return errs
+
+
+def kaal_errors(r):
+    """Batch 5 (kundli.md §2): a kundli unit that names Kaal Sarp says its modern status plainly, names the strict form and
+    the axis, and is graded Weak; the pattern never appears in the summary, ranking, timeline, watch list or practical lines."""
+    errs = []
+    for s in r["sections"]:
+        for u in s.get("units", []):
+            text = " ".join(str(u.get(k, "")) for k in TEXT_KEYS + ("basis",))
+            if not KAAL.search(text):
+                continue
+            name = f"[{s['id']}] '{u['theme'][:50]}'"
+            if KAAL_NOTE not in text:
+                errs.append(f"{name}: a Kaal Sarp unit needs the sentence '{KAAL_NOTE}' (owner decision 9, kundli.md §2)")
+            if not (re.search(r"\bstrict\b", text, re.I) and re.search(r"\baxis\b", text, re.I)):
+                errs.append(f"{name}: a Kaal Sarp unit names the strict form and the Rahu-Ketu axis houses")
+            if grades_of(u) - {"Weak"}:          # a calculated fact too: the pattern's effect is not agreed
+                errs.append(f"{name}: Kaal Sarp is graded Weak on every line (no agreed effect)")
+    rows = _strings([r.get(k) for k in ("summary", "ranking", "timeline", "watch_list", "practical_summary")])
+    if any(KAAL.search(x) for x in rows):
+        errs.append("kundli: Kaal Sarp stays in its one foundation unit, never in the summary, ranking, timeline, watch list or practical lines")
+    return errs
+
+
+def grades_of(u):
+    return set((u.get("confidence") or {}).values())
+
+
+def spec_checks(r, fact_ids=None):
     """Errors for a model written to a T10 spec (it carries `depth`); legacy models (no depth) are left alone."""
     t, depth = r.get("report_type"), r.get("depth")
     if t not in SPEC_SECTIONS:
@@ -1188,6 +1677,11 @@ def spec_checks(r):
     want = SPEC_SECTIONS[t][depth]
     errs += [f"section '{x}' is missing: write it or list it in dropped with the reason" for x in want
              if x not in ids and x not in dropped]
+    unknown = time_class(r) == "unknown"
+    if t != "lal-kitab" and (bad := [x for x in ids if x not in want and not (unknown and x == "note")]):
+        errs.append(f"section ids {', '.join(bad)} are not in the {t} spec (report-specs/{t}.md: {', '.join(want)})")
+    if unknown and (bad := [x for x in UNKNOWN_DROP.get(t, ()) if x in ids]):
+        errs.append(f"unknown birth time: report-specs/{t}.md drops {', '.join(bad)} (list it in dropped with the reason)")
     order = [x for x in ids if x in want]
     if order != [x for x in want if x in order]:
         errs.append(f"spec sections out of order: {order}, spec order {want}")
@@ -1244,7 +1738,7 @@ def spec_checks(r):
                   + [x.get("support") for x in r.get("ranking", [])] + [k.get("confidence") for k in kps])
         if "Unknown" in grades and time_class(r) == "exact":
             errs.append(f"{t} report: Unknown is for an approximate or unknown birth time only; grade Weak or Moderate")
-    if r.get("remedies") or any(u.get("system") == "lal_kitab" for s in r["sections"] for u in s.get("units", [])):
+    if t != "lal-kitab" and (r.get("remedies") or any(u.get("system") == "lal_kitab" for s in r["sections"] for u in s.get("units", []))):
         errs.append("Lal Kitab stays out of these Parashari reports (remedies section included); it has its own report")
     for s in r["sections"]:
         if s["id"] == "remedies":
@@ -1261,6 +1755,30 @@ def spec_checks(r):
     strings = _strings(client)
     if hits := sorted({m.group() for s in strings for m in PERCENT.finditer(s)}):
         errs.append(f"percentages in the report ({', '.join(hits)}): grade words only")
+    if t in TRANSIT_TYPES:
+        errs += transit_errors(r, t, strings)
+    if t != "lal-kitab":         # README §5: Lal Kitab words, sources included; a follow-up may point at the lal-kitab report
+        lk = copy.deepcopy({k: v for k, v in r.items() if k not in ("birth", "engine", "prepared_on", "period")})
+        (lk.get("next_step") or {}).pop("follow_ups", None)
+        if hits := sorted({m.group() for x in _strings(lk) for m in LK_TERMS.finditer(x)}):
+            errs.append(f"Lal Kitab stays out of these Parashari reports: no Lal Kitab names, sources, houses, debts or tables "
+                        f"({', '.join(hits[:4])}); it has its own report (README §5)")
+    rest = copy.deepcopy(client)                 # node aspects: never as a fact, in any field of any type (owner decision 13)
+    for x in rest:
+        for s in (x if isinstance(x, list) else []):
+            if isinstance(s, dict) and t == "rahu-ketu" and "units" in s:
+                s["units"] = [u for u in s["units"] if not node_dispute(s, u)]
+    if claims := node_claims(_strings(rest), strict=t == "rahu-ketu"):
+        errs.append(f"{t} report: node aspects only as one side of the labelled dispute in the rahu-ketu 'axis' unit, never as "
+                    f"a fact ('{claims[0].strip()[:60]}'; owner decision 13)")
+    if t in YOGA_TYPES:
+        errs += yoga_errors(r, t, strings, fact_ids)
+    if t == "kundli":
+        errs += kaal_errors(r)
+    if t == "match":
+        errs += match_errors(r, strings)
+    if t == "lal-kitab":
+        errs += lk_errors(r, strings)
     nontl = _strings([v for k, v in r.items() if k not in ("appendix", "birth", "engine", "prepared_on", "period", "timeline")])
     if t == "intimacy" and (hits := sorted({m.group() for s in nontl for m in DATEISH.finditer(s)})):
         errs.append(f"intimacy report: no years, months or dates in the text ({', '.join(hits[:4])}): no dated windows (chapter rows keep their own dates)")
@@ -1300,6 +1818,13 @@ def spec_checks(r):
                 hits += gate_hits("self_outside", _strings(sec))
             if sec["id"] == "self" and any(SELF_LOOKS.search(x) for x in _strings(sec)):
                 errs.append("kundli 'self' describes looks: looks belong in the 'partner' section for another person only")
+        for sec in r["sections"]:      # a unit that names Kaal Sarp or Mangal dosha gets that type's wording gates
+            for u in sec.get("units", []):
+                us = _strings(u)
+                if any(KAAL.search(x) for x in us):
+                    hits += gate_hits("kaal_sarp", us)
+                if any(MANGAL_NAME.search(x) for x in us):
+                    hits += gate_hits("mangal-dosha", us)
         rows = _strings([r.get(k) for k in ("summary", "timeline", "watch_list", "ranking", "practical_summary")])
         for g in ("family", "challenges", "spirituality", "children_forms", "intimacy_forms", "affairs_forms"):
             hits += gate_hits(g, rows)
@@ -1731,7 +2256,7 @@ def html_of(r):
     env.filters["mon"] = month_name
     bases = [dict(theme=u["theme"], basis=u["basis"]) for s in r["sections"] for u in s.get("units", []) if u.get("basis")]
     style = r.get("chart_style", "north")
-    chart = chart_svg.chart((r.get("appendix") or {}).get("positions", []), style)   # P7-1; None without a lagna row
+    chart = None if r["report_type"] == "match" else chart_svg.chart((r.get("appendix") or {}).get("positions", []), style)   # P7-1; None without a lagna row; two people: no single chart
     calc = (r.get("engine") or {}).get("calculation", "")
     extra = {}
     extra["remedy_cards"], extra["remedy_sources"] = lk_remedies.cards_html(r)
@@ -1778,7 +2303,7 @@ def report_checks(r, schema, facts=None, fact_ids=None, outlook=None):
         return errs, []
     e2, warns = checks(r)
     errs += e2
-    extra = [spec_checks(r), citations(r)]
+    extra = [spec_checks(r, fact_ids), citations(r)]
     if facts is not None:
         extra.append(grounding(r, facts))
     else:

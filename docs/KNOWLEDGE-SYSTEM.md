@@ -1,4 +1,4 @@
-# Knowledge system: Graphify knowledge graph over the astrology library (v3.11; 51 books registered, 19 with source maps; graph rebuilt 2026-11-14: 32,213 nodes, 289,498 edges)
+# Knowledge system: Graphify knowledge graph over the astrology library (v3.12; 51 books registered, 19 with source maps; graph: 32,186 nodes, 280,374 edges, graph.json of 2026-11-16)
 
 > **Editions.** This describes the owner's build. The public edition (from 3.7.0) carries the Lal Kitab rules, code and
 > remedies but not the Lal Kitab knowledge base, its audit, the Varshaphal table or any graph. `kg.py` and `search.py`

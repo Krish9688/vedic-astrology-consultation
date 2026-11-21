@@ -52,6 +52,13 @@ checked by `render_report.spec_checks`; a section left out goes in `dropped` wit
 | `relocation` | abroad or distance in the chart · what kind (travel, study, work stint, settling) · when · where it helps and costs | windows for moves |
 | `complete-life` | *a story, not a catalogue:* core pattern → main strengths → the central tension → how these show in each life area (each section names which part of the core pattern it expresses) → the current chapter → what is changing → near/mid-term windows → long-term direction. Life areas: career · current chapter · career · money · relationships/marriage · family (parents, siblings, children) · home and property · travel and foreign links · friends and social life · personal and spiritual development · turning points ahead | chapters for the next 10–15 years; windows only where earned |
 
+Since 3.12.0 the registry lists 28 built types (the ten above are the older hand-written defaults). The spec-driven
+types, each with its own file in [report-specs/](report-specs/README.md), include `jupiter-transit`, `rahu-ketu`,
+`varshaphal`, `sade-sati` (Kantaka and Ashtama Shani, always Weak), `mangal-dosha`, `raj-yoga`, `match` (two people, written
+as Person A and Person B, with a fixed consent sentence; run through the service or MCP `create_report` with `persons` and
+`consent`, never REST or the CLI) and `lal-kitab` (Lal Kitab units only). Kaal
+Sarp is a unit inside the Kundli and Pitra Dosha is pitri rin inside the Lal Kitab report; their registry status is `folded`.
+
 **One timing framework per report.** Reports with more than one window (career, 12-month, dasha, complete-life)
 open the body with a short **Main windows** section: three to five named windows, each with dates, a one-line basis
 and what it activates. Life-area sections then refer to a window by its name ("this is the work-heavy stretch from

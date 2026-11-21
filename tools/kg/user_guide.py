@@ -39,7 +39,8 @@ def stats():
 
 def registry():
     r = json.loads(REG.read_text())["reports"]
-    return [x for x in r if x["status"] == "built"], [x for x in r if x["status"] != "built"]
+    return ([x for x in r if x["status"] == "built"], [x for x in r if x["status"] == "planned"],
+            [x for x in r if x["status"] == "folded"])
 
 
 def quickstart():
@@ -79,10 +80,14 @@ def svg(s):
     return "".join(o) + "</svg>"
 
 
-def pages(s, built, planned):
+def pages(s, built, planned, folded):
     qs = quickstart()
     rows = "".join(f"<li><b>{E(x['name'])}</b> <code>{E(x['id'])}</code> &mdash; {E(x['one_line'])}</li>" for x in built)
     soon = "".join(f"<li>{E(x['name'])}</li>" for x in planned)
+    soon_h = f"<h3>Coming soon</h3><ul class=\"cols\">{soon}</ul>" if planned else ""
+    inside = "".join(f"<li>{E(x['name'])}: part of the {E(x['folded_into'])} report</li>" for x in folded)
+    inside_h = f"<h3>Inside another report</h3><ul>{inside}</ul>" if folded else ""
+    more = f"{len(planned)} more are listed and coming soon. " if planned else ""
     mx = s["communities"][0][1]
     bars = "".join(f'<li><span>{E(n)}</span><b>{c:,}</b><i style="width:{100 * c // mx}%"></i></li>' for n, c in s["communities"])
     P = [("What this skill is", """<p>A Vedic astrology consultation for Claude. It has three parts: a <b>local calculation engine</b>
@@ -101,8 +106,9 @@ Python environment and downloads the ephemeris files. It needs Python 3.11+ or u
 <li>a <b>grade</b> for how clearly the chart agrees</li><li><b>timing</b> as periods</li>
 <li>a <b>counter-factor</b>: what pulls the other way</li><li><b>what to watch</b></li></ul>"""),
          ("Reports", f"""<p>Type <code>/report</code> to see the menu, then pick a type. {len(built)} report types render today;
-{len(planned)} more are listed and coming soon. The list below is read from the report registry.</p>
-<h3>Built</h3><ul>{rows}</ul><h3>Coming soon</h3><ul class="cols">{soon}</ul>"""),
+{more}The list below is read from the report registry.
+A couples match needs both people's consent and runs through the engine's service or MCP tool, not the command line or REST.</p>
+<h3>Built</h3><ul>{rows}</ul>{inside_h}{soon_h}"""),
          ("How to read a report", """<p><b>Grades</b> (Strong, Moderate, Weak) say how clearly the chart agrees with itself on a point.
 They do not say whether the area of life is good or bad.</p>
 <p><b>Windows and phases</b> are stretches of time when a theme is active. Read them as weather, not verdicts.</p>
@@ -130,7 +136,7 @@ so you can read reports with them in mind.</p><ul>
 <li>Western books are in the library but are never used for Vedic readings.</li>
 <li>There is no muhurta (choosing a date) module.</li>
 <li>PDF output needs WeasyPrint; without it, print the HTML report from a browser.</li>
-<li>Some report types are still planned.</li></ul>"""),
+<li>The checks that keep forbidden wording out of a report are word rules. They miss some phrasings and refuse some harmless ones.</li></ul>"""),
          ("What you can learn", """<ul><li>How a careful astrologer moves from <b>computed facts</b> to a <b>graded judgement</b>.</li>
 <li>Reading timing as <b>phases, not verdicts</b>.</li>
 <li>Why <b>counter-factors</b> matter: every claim should say what pulls the other way.</li>

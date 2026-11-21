@@ -187,6 +187,11 @@ dates by hand when a calculated table exists. Periods nest: check containment an
   lagna, Moon and Jupiter, choosing the one with most bindus [PM2 XIX.84].
 - **Sade sati** (Saturn over 12th/1st/2nd from the Moon) is a broad experience lens, needs dasha confluence, and is
   milder the second time [LOL p363–364; HPA p130]. Never a verdict by itself.
+- **Kantaka and Ashtama Shani** (Saturn 4th, 7th or 10th from the Moon; 8th from the Moon): a modern convention with
+  no rule text in this library, computed by `get_gochara` (`kantaka_ashtama`) and `get_outlook` (dated spans, kind
+  `kantaka_ashtama`, layer backdrop) and always graded Weak (owner decision 4, 2026-11-20). CRUX p424 and p464 call
+  Saturn in the 8th from the Moon "Kantaka Sani" in case studies only; the 4th, 7th and 10th convention has no book
+  source here.
 - A transit never produces a major event without natal promise and dasha activation [HJH2 p119–122; HPA p134].
 
 ### 3a. Personal outlook (daily, weekly, monthly, yearly)

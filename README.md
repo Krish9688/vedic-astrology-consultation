@@ -28,7 +28,7 @@ git clone https://github.com/Krish9688/vedic-astrology-consultation && cd vedic-
 
 Platforms: macOS and Linux. On Windows, use WSL 2.
 
-Current version: 3.11.0 (skill v3.11; plugin, engine and skill share one number). Last published release: v3.11.0 (2026-11-19). Changes: [CHANGELOG.md](CHANGELOG.md) and [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md).
+Current version: 3.12.0 (skill v3.12; plugin, engine and skill share one number), released 2026-11-22. Changes: [CHANGELOG.md](CHANGELOG.md) and [docs/VERSION-HISTORY.md](docs/VERSION-HISTORY.md).
 
 ## What it does
 
@@ -38,7 +38,7 @@ Current version: 3.11.0 (skill v3.11; plugin, engine and skill share one number)
 | **Local engine** | Charts, 16 divisional charts, Vimshottari and Yogini dashas, transits, Shadbala, Ashtakavarga, Jaimini factors. |
 | **Birth-time check** | The chart is recomputed at plus and minus 0.5 to 15 minutes. You see which factors survive the error. |
 | **Separate systems** | Parashari is primary. Jaimini and Lal Kitab are argued separately and compared only at the end. |
-| **Reports** | 30 report types are listed: 20 are built and render as HTML or PDF, 10 are planned (see Report types below). |
+| **Reports** | 30 report types are listed: 28 are built and render as HTML or PDF, 2 are folded into another report (see Report types below). |
 | **Three interfaces** | MCP (`astro mcp`), REST (`astro serve`, `/api/v1`) and the `astro` command. All call the same functions. |
 
 ## Example
@@ -60,12 +60,13 @@ Claude calls `calculate_birth_chart`, then `prepare_consultation` and `get_dasha
 
 ## Report types
 
-One registry lists every report type. 20 are built:
+One registry lists every report type. 28 are built:
 
 - **Life areas:** Kundli (birth chart), Relationship, Marriage and spouse, Career, Wealth and money, Family and home, Education, Foreign and relocation, Self and appearance, Spirituality, Reputation and status, Challenges and conflict, Children, Intimacy, Affairs and fidelity (own chart; adults only).
 - **Timing and summaries:** Complete life, Dasha and timing, Consultation summary, Monthly horoscope, Yearly horoscope.
+- **Transits and special reports (new in 3.12.0):** Varshaphal, Jupiter transit, Rahu-Ketu transit, Sade Sati and Saturn (with Kantaka and Ashtama Shani, always graded Weak), Mangal Dosha, Raj Yoga, Couples match (needs both people's consent; Person A and Person B; through the service and MCP, not REST or the CLI) and Lal Kitab (without the year section, which is private-edition only).
 
-10 are planned and listed but not built yet: Varshaphal, Jupiter transit, Rahu-Ketu transit, Sade Sati and Saturn, Mangal Dosha, Kaal Sarp, Couples match, Lal Kitab, Raj Yoga and Pitra Dosha. There is no health report.
+2 are folded into another report: Kaal Sarp is a section inside the Kundli, and Pitra Dosha is read as pitri rin inside the Lal Kitab report. There is no health report.
 
 ## What is not read
 
