@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """The one report catalog: read assets/report/registry.json, list the menu, resolve a name. Standard library only.
 
-  report_catalog.py                  the menu, one line per report (planned ones marked "coming")
-  report_catalog.py resolve NAME     JSON: {"status": "built|planned|unknown", "entry": {...}|null, "close": [...], "built": [...]}
+  report_catalog.py                  the menu, one line per report (planned ones marked "coming", folded ones "inside <report>")
+  report_catalog.py resolve NAME     JSON: {"status": "built|planned|folded|unknown", "entry": {...}|null, "close": [...], "built": [...]}
   report_catalog.py --selftest
 Used by the /report command; the astro-report skill reads the same registry file directly."""
 import difflib
@@ -24,7 +24,7 @@ def keys(entry):
 
 def menu_line(e):
     two = " (two charts)" if e.get("charts") == 2 else ""
-    tag = "coming" if e["status"] != "built" else "ready"
+    tag = {"built": "ready", "folded": f"inside {e.get('folded_into')}"}.get(e["status"], "coming")
     return f"{e['id']} [{tag}] {e['name']}{two}: {e['one_line']}"
 
 
@@ -49,14 +49,15 @@ def resolve(name, reports=None):
 def answer(name, reports=None):
     reports = reports or load()
     entry, close = resolve(name, reports)
-    status = "unknown" if entry is None else ("built" if entry["status"] == "built" else "planned")
+    status = "unknown" if entry is None else (entry["status"] if entry["status"] in ("built", "folded") else "planned")
     return {"status": status, "entry": entry, "close": [{"id": e["id"], "name": e["name"]} for e in close],
             "built": [{"id": e["id"], "name": e["name"]} for e in reports if e["status"] == "built"]}
 
 
 def selftest():
     r = load()
-    assert len(r) >= 1 and all(e["status"] in ("built", "planned") for e in r)
+    assert len(r) >= 1 and all(e["status"] in ("built", "planned", "folded") for e in r)
+    assert all(e.get("folded_into") for e in r if e["status"] == "folded")
     seen = [k for e in r for k in [e["id"], *e.get("aliases", [])]]
     assert len(seen) == len(set(seen)), "id or alias used twice"
     assert all(e["id"] in menu() for e in r)

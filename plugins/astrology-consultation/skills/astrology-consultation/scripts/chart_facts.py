@@ -100,7 +100,7 @@ BASE_RATE = {"ADHI-BPHS37": "45%", "ADHI-PD6": "72%", "AMALA-BPHS36": "21%", "AM
              "KESARI-LOOSE": "34%", "KUJA-BPHS80": "15%", "KUJA-HJH2": "78%", "KUJA-PD11.3": "10%", "KUJA-POPULAR": "88%",
              "LAKSHMI-BPHS36": "5%", "LAKSHMI-PD6": "4%", "NB-ASP": "7%", "NB-D9": "6%", "NB-DISP": "27%", "NB-EXL": "27%",
              "NB-EXP": "24%", "NB-MUT": "16%", "NB-SELF": "26%", "PMP-BPHS": "34%", "PMP-LOL": "48%", "RAJA-KK": "68%",
-             "RAJA-KKP": "61%", "SUNAPHA-BPHS37": "23%", "UBHAYACHARI-BPHS38": "34%", "UBHAYACHARI-PD6": "15%",
+             "RAJA-KKP": "61%", "RAJA-YK": "51%", "SUNAPHA-BPHS37": "23%", "UBHAYACHARI-BPHS38": "34%", "UBHAYACHARI-PD6": "15%",
              "VESI-BPHS38": "26%", "VESI-PD6": "29%", "VIPARITA-CRUX": "15%", "VIPARITA-HJH": "58%", "VIPARITA-LOL": "6%",
              "VOSI-BPHS38": "29%", "VOSI-PD6": "32%"}
 KENDRA, KONA, DUSTHANA = {1, 4, 7, 10}, {1, 5, 9}, {6, 8, 12}
@@ -208,6 +208,12 @@ def candidates(D, show_all=False):
             rows.append((f"RAJA-KKP-{q}", f"{'trinal' if kona_lord else 'angular'} lord {NAME[q]} placed in "
                          f"{'an angle' if kona_lord else 'a trine'} (BPHS 34.11-12)", True,
                          f"{NAME[q]} owns H{','.join(map(str, owns[q]))}, in H{house[q]}" + dispute((q,)), src))
+    for q in sorted(P):         # yogakaraka: one planet owning both a kendra (4/7/10) and a kona (5/9), PDK p191 note
+        if q in lord.values() and {h for h in (4, 7, 10) if lord[h] == q} and {h for h in (5, 9) if lord[h] == q}:
+            rows.append((f"RAJA-YK-{q}", f"yogakaraka: {NAME[q]} owns both an angle and a trine from the lagna", True,
+                         f"{NAME[q]} owns H{','.join(map(str, owns[q]))}, in H{house[q]}; CRUX p27 reads it as an indication only, "
+                         "not as the yoga itself",
+                         "PDK p191 (note to v. 47, page read); CRUX p27; BPHS 34.13 per source map BPHS_part3.md, not page-checked"))
     return rows + _more_candidates(D, benefic, show_all)
 
 

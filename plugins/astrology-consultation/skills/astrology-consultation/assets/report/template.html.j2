@@ -18,6 +18,8 @@
     <dt>Prepared on</dt><dd>{{ r.prepared_on }}</dd>
     {% if r.birth %}{% if r.birth.date %}<dt>Birth data</dt><dd>{{ r.birth.date }}{% if r.birth.time %}, {{ r.birth.time }}{% endif %}{% if r.birth.place %}, {{ r.birth.place }}{% endif %}</dd>{% endif %}
     {% if r.birth.time_reliability or r.birth.time_source %}<dt>Birth time</dt><dd>{% set _src = r.birth.time_source or "" %}{% set _rel = r.birth.time_reliability or "" %}{% if _rel and (not _src or _src.lower() in _rel.lower()) %}{{ _rel }}{% else %}{{ _src }}{% if _rel %} ({{ _rel }}){% endif %}{% endif %}</dd>{% endif %}{% endif %}
+    {% for p in (r.birth or {}).persons or [] %}<dt>{{ p.label }}</dt><dd>{{ p.date or "" }}{% if p.time %}, {{ p.time }}{% endif %}{% if p.place %}, {{ p.place }}{% endif %}{% if p.time_reliability %} (birth time: {{ p.time_reliability }}){% endif %}</dd>{% endfor %}
+    {% if r.consent %}<dt>Consent</dt><dd>{{ r.consent }}</dd>{% endif %}
     {% if r.engine and r.engine.calculation %}<dt>Calculated with</dt><dd>{{ r.engine.calculation }}{% if r.engine.cross_check and not r.engine.cross_check.strip().lower().startswith(('none', 'no ', 'not')) %}; checked against {{ r.engine.cross_check }}{% endif %}</dd>{% endif %}
   </dl>
   <p class="foot">A traditional Vedic astrological interpretation using documented methods. It describes tendencies{% if r.report_type not in ("children", "affairs") %} and

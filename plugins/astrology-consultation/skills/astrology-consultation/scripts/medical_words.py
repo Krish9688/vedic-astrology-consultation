@@ -29,6 +29,9 @@ question, "mad house" or "madhouse" as a party word, "defect" in a plain sense (
 Round 7 over-blocks (accepted): "be around for" a meeting, "put down" a pet or a thing, "get better soon" about a person or "I", "dirgha", "ayu",
 "replacement" and "implant" in any sense, "collision", "stabbed" or "shot at" in a film sense, "Gujarat" is kept, a nukta-less Devanagari
 spelling is read the same as the nukta one, and "kms" after a want word, "will" or "to" is read as self-harm (plain "5 kms" stays neutral).
+Round 9 over-blocks (T11.42, accepted): "heavenly abode" or "final abode" in a story or a place name, "guzar sakte" in a "pass by" sense,
+"antim yatra" for a last trip, "no more" or "slip away" or "depart" with a kin word anywhere in the same sentence ("Your uncle says the
+phase is no more by June"), and "depart" without "for", "from", "to" or "with".
 """
 import os
 import re
@@ -190,9 +193,44 @@ _HINGLISH = (
     r"marne|marna|mar(?:enge|ega|egi|unga|ungi)|mar (?:jaunga|jaungi|jayenge|jayega|jayegi|gaya|gayi|gaye)|"
     r"kab tak (?:jiy\w*|jee\w*|zinda)|jiyenge|jeeyenge|jiyega|jiyegi|jiyunga|jeeunga|jeeungi|zinda nahi|jaan (?:ka|ko) khatra|"
     r"garbhpa\w*|atmahatya|aatmahatya|khudkushi|khudkhushi|"
-    r"nahi+n? rah(?:enge|egi|unga|ungi|ega)"
+    r"nahi+n? rah(?:enge|engi|egi|unga|ungi|ega)"
 )
-STRONG = _ENGLISH_CORE + "|" + _ENGLISH_MORE + "|" + _ROUND5 + "|" + _ROUND6 + "|" + _ROUND7 + "|" + _HINGLISH
+_NUM = r"(?:(?:sixty|seventy|eighty|ninety)(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?|hundred|\d{2,3})"
+_KIN8 = (r"elders?|elderly|loved ones?|relatives?|grand(?:parent|mother|father|ma|pa|dad|mum|mom)s?|parents?|mother|father|mum|mom|dad|mama|papa|"
+         r"uncle|aunt|auntie|in-laws?|family members?|older (?:persons?|people|members?|relatives?)|seniors?|someone (?:close|dear)")
+_ROUND8 = (
+    # T11.40: death said by meaning, not by one word: lifespan and expectancy, an age at the end, "not be with us", a life ended or left
+    r"life[- ]?expectanc\w*|expectancy of life|years on earth|end[- ]of[- ]life|twilight years|"
+    rf"(?:live|lives|living|lived|survive|survives)\s+(?:to|past|beyond|till|until|up to|upto)\s+(?:about |around |nearly |almost |roughly |the age of )*{_NUM}\b|"
+    rf"life\W+(?:\w+\W+){{0,5}}?(?:about|around|close to|nearly|almost|roughly|up to)\s+{_NUM}\s+years|"
+    r"\b(?:end|ending|close)\b[^.;!?]{0,15}?\b(?:around|near|about|by|at|before|after)\s+(?:the\s+)?age\b|"
+    r"(?:not|no longer|never|n['’]t)\s+(?:be|stay|remain)\s+(?:\w+\s+){0,2}with us(?:\s+(?:by|for|beyond|past|after|much|long\w*|next|this|till|until|through|any)\b|\s*(?:$|[.,;!?]))|"
+    r"(?:not|n['’]t)\s+(?:be|stay|remain)\s+(?:around|here|alive)\s+(?:by|for|beyond|past|after|much|long\w*|next|this|till|until|through|any)\b|"
+    r"(?:not|n['’]t|unlikely to)\s+(?:make it|see)\s+(?:through|out|in|the)\s+(?:the |this |next |new )?(?:\w+ )?(?:year|winter|summer|season|monsoon)|"
+    r"(?:leave|leaves|leaving) us (?:soon|before|young|too soon|this year|next year|by (?:year|\d))|"
+    r"(?:clos|end|complet|conclud|finish|terminat)\w* (?:\w+['’]?s? ){0,3}?(?:life|lives)(?:\s+journey|\s+here|\s+on earth|\s*(?:$|[.,;!?]))|"
+    r"(?:remaining|closing|declining|golden|autumn|last|final) (?:years|days|chapter) of (?:\w+['’]?s? ){0,3}?(?:life|lives|" + _KIN8 + r")"
+)
+_ROUND9 = (
+    # T11.42: a death said by a place or a leaving, not one word: the heavenly or eternal abode, Hinglish "guzar sakna", leaving the
+    # world, going to the Lord, last rites. Known over-blocks (accepted): "heavenly abode" of a god in a story, "guzar sakte" in a
+    # "pass by" sense, "antim yatra" for a last trip
+    r"(?:heavenly|eternal|celestial|final|last) abode|guzar sak\w*|gujar sak\w*|"
+    r"(?:duniya|sansar|sansaar) (?:se )?(?:chal|chhod|chod|vida)\w*|(?:ram|bhagwan|bhagvan|prabhu) (?:ji )?(?:ko|ke) (?:pyar|charan)\w*|"
+    r"antim (?:sanskar|yatra|saans)|brahm ?lee?n|swarg(?:\s+(?:ko\s+)?(?:ja\w*|sidhar\w*|pahunch\w*|prapt\w*)|vasi)|kooch kar\w*|pran tyag\w*"
+)
+STRONG = _ENGLISH_CORE + "|" + _ENGLISH_MORE + "|" + _ROUND5 + "|" + _ROUND6 + "|" + _ROUND7 + "|" + _ROUND8 + "|" + _ROUND9 + "|" + _HINGLISH
+# the words after "pass on" that keep it a hand-over (a recipe, advice, a thing), not a death. The one list: the family gate in
+# render_report.py reads it too, so the two cannot drift.
+# T11.44: not when a time expression follows ("pass on the night of Diwali", "this winter", "the coming year", "the 5th of May"): that is a death.
+_PASS_ON_TIME = (r"(?:(?:the|a|an|this|that|these|its|your|their|his|her|our|my|next|last|coming|upcoming|following|first|second|third|"
+                 r"fourth|fifth|final|every|each)\s+)+(?:\d\w*|nights?|days?|mornings?|evenings?|afternoons?|weeks?|weekends?|months?|"
+                 r"years?|seasons?|winters?|summers?|springs?|autumns?|monsoons?|diwali|holi|dussehra|navratri|eid|christmas|new year|"
+                 r"festivals?|(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*|(?:mon|tues|wednes|thurs|fri|satur|sun)day)\b")
+PASS_ON_OK = (r"(?!" + _PASS_ON_TIME + r")(?:to|through|the|a|an|this|that|these|it|its|your|their|his|her|our|my|what|knowledge|skills?|"
+              r"traditions?|values?|lessons?|work|news|messages?|advice|wisdom|stories)")
+# a person who is kin or an elder or a loved one: the subject of the T11.42 leaving and ending patterns below
+_KIN9 = (_KIN8 + r"|dada\w*|dadi\w*|nana\w*|nani\w*|papa ?ji|mataji|pitaji|buzurg\w*|dear ones?|senior (?:members?|relatives?)")
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Devanagari (Hindi): every entry may carry a suffix (inflection, matra) after the stem
@@ -440,12 +478,32 @@ REPORT_WORDS = (
     r"psychiatr\w*|anxiety|trauma\w*|burn(?:s|ed|t)? (?:out|down)|stents?|crutch\w*|allerg\w*|hernia|seizures?|insulin|asthma|migraines?|hospice|"
     r"defects?|bypass\w*|laid to rest|heat ?stroke|sun ?stroke|replacements?|journey on earth|limbs?|casts?(?= (?:on|for|around)\b)|(?:arm|leg|foot|wrist|ankle|hand) cast|braces|(?:walking )?canes?|walkers?(?= (?:for|to help)\b)|impair\w*|mobility (?:issues?|problems?)|"
     r"hearing devices?|speech therapy|sessions? of therapy|exercises? for (?:your|his|her|their) (?:back|knee|neck|shoulder)|recover(?:y|ing) (?:from|after)|"
+    # T11.38: the end of a life said without a death word (risk to life, a life cut short, passed on, days numbered)
+    r"(?:risk|threat|danger|peril|fear)s? (?:of|to) (?:\w+ ){0,2}?li(?:fe|ves)|li(?:fe|ves) (?:\w+ ){0,2}?(?:cut )?short|cut short|"
+    r"(?:end|ending|close) (?:of|to) (?:\w+['’]?s? ){0,3}?life|"
+    r"(?:los(?:e|es|ing|t)|loss of) (?:a |his |her |their |your |one['’]?s |the )?li(?:fe|ves)|"
+    r"(?:tak(?:e|es|ing)|took|claim\w*) (?:a |his |her |their |one['’]?s |the )li(?:fe|ves)|"
+    r"pass(?:es|ed)? on(?!\s+" + PASS_ON_OK + r"\b)|(?:not|never|won['’]t|fail\w* to|unable to) survive|"
+    r"days (?:\w+ ){0,2}?numbered|leaves? (?:this|the) (?:earth|life|world)|left this (?:earth|life|world)|"
     # batch 3 (T11.30): fertility, pregnancy, birth health, potency and the reproductive body, for the children and intimacy reports.
     # Known over-blocks (accepted): "fertile ground", "conception" of a project, "give birth to an idea"
     r"fertil\w*|pregnan\w*|conceiv\w*(?!\s+(?:of|a plan|an idea|the idea|the plan)\b)|conception|child-?birth|(?:give|gives|gave|giving) birth|"
     r"expectant|expecting (?:a |an |your |the )?(?:baby|child|little|twins|first|second|phase)|in the family way|"
     r"potency|virility|sperm\w*|ovulat\w*|contracepti\w*|menstru\w*|prenatal|antenatal|postnatal|breast-?feed\w*|lactat\w*|"
-    r"(?:safe|easy|smooth|normal|difficult|hard|complicated) (?:delivery|deliveries|birth|labou?r)"
+    r"(?:safe|easy|smooth|normal|difficult|hard|complicated) (?:delivery|deliveries|birth|labou?r)|"
+    # T11.40: a person who may "pass", or a loved one or elder lost, taken or leaving. "pass" with an exam, a place, a phase or a thing stays free
+    rf"(?:{_KIN8})\w*[^.;!?]{{0,60}}?\bpass(?:es|ed)?\b(?!\s+(?:through|into|over|by|the|an?|to|on|from|along|around|between|down|up|off|out|"
+    r"your|his|her|their|my|our|its|that|these|those|it|this (?:stage|test|exam|hurdle|point|milestone|inspection))\b)|"
+    r"\b(?:he|she|they)\s+(?:may|might|could|will|would|can|shall)\s+(?:also\s+)?pass(?:es)?\s+(?:before|during|this (?:year|phase|month|period)|"
+    r"next (?:year|month)|within|soon|early|young|around|after|by (?:the|year)|peacefully|quietly)\b|"
+    # T11.42: a person (kin, an elder, a loved one) with "no more", a journey that ends, "slip away", "fade away", "depart"
+    rf"(?:{_KIN9})\w*[^.;!?]{{0,40}}?\bno more(?=\s*(?:$|[.,;!?])|\s+(?:by|after|before|next|this|in|from|soon|within|during|beyond|past|till|until|once|then|and|when)\b)|"
+    rf"(?:{_KIN9})\w*(?:\s+ji)?['’]?s?\s+(?:(?:life|earthly|final|last|worldly)\s+)?journey\s+(?:\w+\s+){{0,2}}?(?:ends?|comes? to an end|is over|closes|concludes|finishes)\b|"
+    rf"\bjourney of (?:an? |the |your |his |her |their )?(?:{_KIN9})\w*\s+(?:\w+\s+){{0,2}}?(?:ends?|comes? to an end|is over|closes|concludes|finishes)\b|"
+    rf"(?:{_KIN9})\w*[^.;!?]{{0,40}}?\b(?:slip\w*|fad(?:e|es|ed|ing))\s+away\b(?!\s+(?:from|to|into|for|with|early|late|on|at)\b)|"
+    rf"(?:{_KIN9})\w*[^.;!?]{{0,40}}?\b(?:may|might|could|will|would|shall)\s+(?:\w+ly\s+)?depart\b(?!\s+(?:for|from|to|with)\b)|"
+    rf"(?:los(?:e|es|ing|t)|loss of)\s+(?:a |an |the |your |one of your )?(?:{_KIN8})\b|"
+    rf"(?:{_KIN8})\w*[^.;!?]{{0,40}}?\b(?:be|is|are|get|gets|got|been)\s+(?:lost\b(?!\s+(?:in|on|for|to|at|without|among))|taken away|taken from|called away)"
 )
 
 # ---------------------------------------------------------------------------------------------------------------------

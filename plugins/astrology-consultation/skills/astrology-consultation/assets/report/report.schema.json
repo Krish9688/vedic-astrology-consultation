@@ -33,7 +33,15 @@
         "challenges",
         "children",
         "intimacy",
-        "affairs"
+        "affairs",
+        "jupiter-transit",
+        "rahu-ketu",
+        "varshaphal",
+        "sade-sati",
+        "mangal-dosha",
+        "raj-yoga",
+        "match",
+        "lal-kitab"
       ]
     },
     "title": {
@@ -165,8 +173,54 @@
             false
           ],
           "description": "unknown birth time: true only when the Moon's sign and nakshatra are the same across the whole birth day (inputs.md); create_report verifies it"
+        },
+        "persons": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "match only: the two people, Person A then Person B (owner decision 10); the outer time_reliability is the less certain of the two",
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "time_reliability"
+            ],
+            "properties": {
+              "label": {
+                "enum": [
+                  "Person A",
+                  "Person B"
+                ]
+              },
+              "date": {
+                "type": "string"
+              },
+              "time": {
+                "type": "string"
+              },
+              "place": {
+                "type": "string"
+              },
+              "time_source": {
+                "type": "string"
+              },
+              "time_reliability": {
+                "type": "string"
+              },
+              "moon_stable": {
+                "enum": [
+                  true,
+                  false
+                ]
+              }
+            }
+          }
         }
       }
+    },
+    "consent": {
+      "type": "string",
+      "description": "match only: the requester's confirmation that both people agreed to the comparison (report-specs/match.md); no match report without it"
     },
     "engine": {
       "type": "object",

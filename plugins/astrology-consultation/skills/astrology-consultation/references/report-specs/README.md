@@ -4,7 +4,10 @@ One spec per report type in [`assets/report/registry.json`](../../assets/report/
 [kundli](kundli.md), [relationship](relationship.md), [career](career.md), [wealth](wealth.md),
 [education](education.md), [reputation](reputation.md), [spirituality](spirituality.md), [self](self.md),
 [family](family.md), [challenges](challenges.md), [children](children.md), [intimacy](intimacy.md),
-[affairs](affairs.md). Each spec lists the body sections in order,
+[affairs](affairs.md), [jupiter-transit](jupiter-transit.md), [rahu-ketu](rahu-ketu.md), [varshaphal](varshaphal.md),
+[sade-sati](sade-sati.md), [mangal-dosha](mangal-dosha.md), [raj-yoga](raj-yoga.md), [match](match.md) (two people),
+[lal-kitab](lal-kitab.md) (its own system). Kaal Sarp is a unit inside the
+[kundli](kundli.md) §2a (no report of its own); Pitra Dosha is read as pitri rin in the [Lal Kitab](lal-kitab.md) report. Each spec lists the body sections in order,
 every computed field with the engine tool that gives it, the conventions, the caveats and what to drop when data is
 missing. The frame below is the same for all of them. It comes from the owner's report template (shared frame, tone
 guide, QC checklist) and is **DESIGN** (the skill's own rules), not classical doctrine.
@@ -87,8 +90,9 @@ recalled; the same dates and periods in every section (`checks` warns on restate
 ## 5. Lal Kitab stays out
 
 These reports are Parashari (with Jaimini karakas and arudhas). Lal Kitab readings and remedies, LK remedy cards included,
-never appear in them, the `remedies` section included; Lal Kitab has its own report. `spec_checks` refuses a
-`lal_kitab` unit or a `remedies` card block in a spec report.
+never appear in them, the `remedies` section included; Lal Kitab has its own report ([lal-kitab](lal-kitab.md)).
+`spec_checks` refuses a `lal_kitab` unit or a `remedies` card block in every spec report except `lal-kitab`, and the
+`lal-kitab` report refuses any unit that is not a Lal Kitab unit: the two systems stay apart both ways.
 
 ## 6. Tone (owner's guide, kept)
 

@@ -6,6 +6,62 @@ problem was observed, what exposed it, what changed, why that solution, and how 
 
 ## [Unreleased]
 
+## [3.12.0] - 2026-11-22
+
+Batches 4 to 6 of the report library, shipped with known limits by owner decision (2026-11-21:
+"Ship as known limits"). Owner decisions on the content are in `notes/t11/batch4-6/DECISIONS.md` (2026-11-20).
+
+### Added
+- **Eight report types:** jupiter-transit, rahu-ketu, varshaphal, sade-sati, mangal-dosha, raj-yoga, match and
+  lal-kitab. Each has a spec, a schema entry, `SPEC_SECTIONS` and `ANSWERS`, a registry row and gates with tests.
+  Varshaphal shows Mudda periods as seasons (no Patyayini). Rahu-Ketu states axis and conjunctions as facts and shows the
+  5th, 7th and 9th aspect view as one side of a labelled dispute. Mangal Dosha gives one unit per engine rule with
+  cancellations and the base rate, and no timeline or dates. Raj Yoga shows dual lordship (CR-V22) as a dispute with both
+  readings and promises no fame, wealth or rank.
+- **Kantaka and Ashtama Shani** in `get_gochara`, `get_outlook` and the Sade Sati report (new engine output key
+  `kantaka_ashtama`, dated spans). It is a modern convention with no rule text in this library: CRUX p424 and p464 name
+  "Kantaka Sani" for Saturn in the 8th from the Moon in case studies only. Always graded Weak, and the report says so.
+- **Yogakaraka line** (`RAJA-YK-*`) in `chart_facts` candidates, with its base rate and a row in `yoga-definitions.md`.
+- **Kaal Sarp inside the Kundli** (strict form, section 2a, always Weak, no fear wording). **Pitra Dosha inside Lal
+  Kitab** as pitri rin, never above Weak.
+- **Registry status `folded`** (with `folded_into`) for kaal-sarp and pitra-dosha. The registry now lists 30 types:
+  28 built, 2 folded, none planned. `/report`, the astro-report skill, the report catalog and the user guide know the
+  status.
+- **Match with consent and two people.** The report needs a fixed consent sentence and two births, written as Person A
+  and Person B; it shows four kootas in order with their exceptions, no 36 total, Mars per person under the four rules and
+  the both-charts cancellation. `create_report` takes `persons` and `consent` through the service and the MCP tool. REST
+  and the CLI cannot run a match.
+- **Lal Kitab year section, private edition only.** It drops when the annual table is absent, so the public edition has
+  three sections.
+- **Test guard for the reports folder.** `tests/conftest.py` redirects the configured reports folder to a temporary one
+  in every test and fails a test that writes into the real folder.
+
+### Changed
+- Report wording gates were rebuilt as meaning classes (fear, partner failure, match rules, remedies, match verdicts and
+  totals, raj promises, node aspects, Lal Kitab words outside lal-kitab) and `medical_words.py` was widened for death and
+  lifespan phrasings. Review pages and fixtures were rebuilt from engine runs on invented births.
+- `references/timing.md` section 3 gained the Kantaka line.
+
+### Known limits
+Shipped with these by owner decision. Exact counts are from `notes/t11/batch4-6/REVIEW.md`.
+- **The per-family wording gates are word rules and leak.** Re-check 1 (2026-11-20): 51 of 127 fresh must-refuse
+  sentences were refused; the fear gate refused 0 of 19. Fixes were made after it, but the review rounds stopped with
+  these gates still open (fear, Mangal, match, raj promises, node aspects, Lal Kitab words); more stems will not close them.
+- **Death and lifespan phrasings still leak.** Re-check 3 (2026-11-21): 124 of 256 fresh death sentences were refused
+  (15 of 32 per field in kundli, sade-sati and varshaphal; 17 of 32 in family); 17 sentences passed in every type other than
+  family (16 after fix round 4) (for example "leaving the body", "final breath", "go to God"). "Pass on" with a time after it is refused only
+  when a listed time word follows a determiner directly ("pass on the night of Diwali" is refused); in Re-check 4,
+  13 of 20 fresh time phrasings still passed the death rules (for example "pass on the eve of Diwali", "pass on this
+  very winter"), and 11 of 16 hand-over sentences were refused (for example "pass on business wisdom to your son").
+- **Over-blocks.** The bare word "Cancer" is refused by the shared list, so a sentence such as "Jupiter is exalted in
+  Cancer." fails (specs write "the Cancer sign"). In Re-check 3, 116 of 160 neutral sentences passed (26 refused by the
+  death rules), for example "Your father may depart early on Monday for the meeting."; "ruler of" is refused in raj-yoga.
+- **REST and the CLI cannot run a match.** `create_report` over REST and the CLI take one birth; a two-person match goes
+  through the service or the MCP tool only.
+- **Interpretation-only claims are not compared with the engine.** The engine-truth checks cover dates and counts the
+  engine gives (muntha house, vedha, Mangal rule counts, dual lordship); a claim that is only interpretation is not checked.
+- Last test parts: test parts on 5 cores, 2026-11-21/22: reports 2209 passed, 5 skipped; safety 1205 passed, 20 skipped; skill 151 passed, 1 skipped; engine 502 passed; privacy 308 passed, 2 skipped; knowledge 159 passed, 8 skipped after the `test_lal_kitab.py` fix (one failure before it).
+
 ## [3.11.0] - 2026-11-19
 
 ### Added

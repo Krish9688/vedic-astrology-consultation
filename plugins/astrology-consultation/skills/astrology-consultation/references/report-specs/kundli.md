@@ -33,7 +33,7 @@ Every number comes from the tool named; the writer interprets it. "F.*" ids are 
 
 | Section | Content (owner template) | Computed fields → engine tool |
 |---|---|---|
-| `foundation` | the planet table in words: lagna, Moon sign and nakshatra, the strongest and weakest planets; in full depth also one yoga unit (the yogas the engine names, each with what it does in life) | positions, nakshatra, houses → `calculate_birth_chart`; strength → `get_shadbala` (total, required, ratio); `get_ashtakavarga` (SAV by house); yogas → `prepare_consultation` (F.yoga.*) |
+| `foundation` | the planet table in words: lagna, Moon sign and nakshatra, the strongest and weakest planets; in full depth also one yoga unit (the yogas the engine names, each with what it does in life); one Kaal Sarp unit when the engine reports the strict pattern (§2a) | positions, nakshatra, houses → `calculate_birth_chart`; strength → `get_shadbala` (total, required, ratio); `get_ashtakavarga` (SAV by house); yogas → `prepare_consultation` (F.yoga.*) |
 | `windows` | three to five named windows, each with dates, a one-line basis and what it activates | Vimshottari MD/AD → `get_dasha`; ingresses and slow contacts → `get_transits`; Yogini as a second view → `get_yogini_dasha` (optional) |
 | `self` | core self (T18a, T9): identity, mind, the soul lesson, recurring patterns | lagna and lord, Sun, Moon → `calculate_birth_chart`; Atmakaraka → `get_jaimini_factors` |
 | `strengths` (standard) | strengths and yogas, each with what it does in life | yogas, dosha checks → `prepare_consultation` (F.yoga.*); Shadbala ratio → `get_shadbala` |
@@ -52,6 +52,26 @@ Every number comes from the tool named; the writer interprets it. "F.*" ids are 
 | `challenges` | T15 + T18e: top challenges and opportunities, each with its window by name | 6th, 8th, 12th, weak planets → `calculate_birth_chart`, `get_shadbala` |
 | `remedies` | T17, only on request; Parashari only (no Lal Kitab, see README §5) | none computed; remedy-safety.md and the books |
 
+### 2a. Kaal Sarp (folded into the Kundli, owner decision 9, 2026-11-20)
+
+There is no standalone Kaal Sarp report. When the engine reports the strict pattern (`DOSHA.kala_sarpa` from
+`prepare_consultation`: all seven planets from the Sun to Saturn on one side of the Rahu-Ketu axis by longitude), one unit
+in `foundation` says so; when it does not occur, nothing is written unless the person asked, and then one fact unit says
+the strict pattern does not occur. The unit:
+
+- names the **strict form** only (all seven planets on one side by longitude, nothing looser; the direction types and the
+  "near" forms are not computed and not named);
+- names the **axis houses**: the houses Rahu and Ketu occupy from the lagna (`calculate_birth_chart`);
+- says its **modern status plainly**, in the sentence "Kaal Sarp is a modern combination: no classical text in this
+  library names it, its effect is not agreed and no cancellation is known." (LOL p331-332: not mentioned in any
+  classical work; the Dravidian treatises disagree on its effect and on its formation). The report never repeats the
+  sources' dire effects and reads no effect from the pattern;
+- is a fact unit for the pattern and, if interpreted, an interpretation unit graded Weak on every line;
+- never appears in the summary, ranking, timeline, watch list or practical lines (the engine shows it "for completeness,
+  not used as evidence"), and has no fear framing (the batch 4 wording gate runs on it).
+
+`spec_checks` enforces the sentence, the words "strict" and "axis", the Weak grade, the gate and the rows rule.
+
 Every section's dates refer to a window by its name in `windows`; a section adds only what is specific to its area.
 Birth-time sensitivity for every unit and window: `get_birth_time_sensitivity`.
 
@@ -67,6 +87,7 @@ Birth-time sensitivity for every unit and window: `get_birth_time_sensitivity`.
 | Chara karakas: Atmakaraka the highest longitude, Amatyakaraka the second, Darakaraka the least | JSR p292, p295 |
 | Yogas raise the degree of success; they do not show the type of work | HJH2 p288 |
 | Ashtakavarga bindus weigh a transit | HPA p134; PVR p343 |
+| Kaal Sarp (all seven planets on one side of the nodes) is in no classical work; no agreed effect, formation or cancellation | LOL p331-332 |
 | One timing framework; windows named once; snapshot under the short version | the skill's own rule (reports.md §2, owner) |
 
 Cite them in `appendix.sources` as "BPHS: Parasara, tr. R. Santhanam, *Brihat Parasara Hora Sastra*, p104", and in
@@ -84,6 +105,7 @@ is shorthand for its parts, not more evidence.
 - Intimacy: tendency-level, tasteful; full depth counts as asking for it; at standard depth drop it unless asked or the chart says something specific.
 - Affairs: the person's own tendencies only, never a verdict on a partner.
 - Remedies: practical actions first; traditional remedies optional and only on request (full depth is that request); each remedy unit carries "no efficacy established".
+- Kaal Sarp: one strict-form unit in `foundation`, its modern status said plainly, no fear framing (§2a).
 - No gemstones, lucky numbers or percentages.
 
 ## 6. What to drop
@@ -91,7 +113,7 @@ is shorthand for its parts, not more evidence.
 | Data | Drop |
 |---|---|
 | approximate time | sections whose key factor `get_birth_time_sensitivity` classes `high` or `very high` (often `partner`, `career` D10, `education` D24, `inner` D20); D4, D20, D24 are dropped by default unless the class is robust |
-| unknown time | `foundation` keeps planets by sign only, and the Moon's sign and nakshatra only when they are the same across the whole birth day (else dropped with that reason); `windows` becomes labelled monthly markers of slow planets to time-independent natal planets; drop `career`, `relationship`, `partner`, `wealth`, `home`, `education`, `inner`, `challenges`, `current` (all house- or dasha-based); keep `self` from planets by sign (the Moon only under the same rule) |
+| unknown time | the Kaal Sarp unit is dropped (its axis houses need the lagna); `foundation` keeps planets by sign only, and the Moon's sign and nakshatra only when they are the same across the whole birth day (else dropped with that reason); `windows` becomes labelled monthly markers of slow planets to time-independent natal planets; drop `career`, `relationship`, `partner`, `wealth`, `home`, `education`, `inner`, `challenges`, `current` (all house- or dasha-based); keep `self` from planets by sign (the Moon only under the same rule) |
 | any time | intimacy and remedies unless asked (full depth counts as asked); any field with no engine tool (below) |
 
 Not calculated, so dropped and named: the partner's height range, build and age gap (no computation exists; the

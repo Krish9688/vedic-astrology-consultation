@@ -1,5 +1,5 @@
 {
- "about": "One registry of report types. The skill, the astro-report flow and the /report command read this file; the list shown to the user comes from here. status: built (renders and is tested), planned (listed, not built yet). Owner-approved list 2026-11-14 (T10 Job C, R1). The nine renderer types that existed before T10 are built (they render and have tests); report ids equal the renderer report_type keys.",
+ "about": "One registry of report types. The skill, the astro-report flow and the /report command read this file; the list shown to the user comes from here. status: built (renders and is tested), planned (listed, not built yet), folded (no report of its own: its content is part of another report, named in folded_into). Owner-approved list 2026-11-14 (T10 Job C, R1). The nine renderer types that existed before T10 are built (they render and have tests); report ids equal the renderer report_type keys.",
  "fields": {
   "id": "key used by /report and report_type in the model",
   "name": "display name",
@@ -10,8 +10,9 @@
   "spec": "section spec (sections in order, fields, conventions, caveats, what to drop)",
   "template": "Jinja template under assets/report/",
   "depth": "depth options",
-  "status": "built | planned",
-  "one_line": "the line shown in the menu"
+  "status": "built | planned | folded",
+  "one_line": "the line shown in the menu",
+  "folded_into": "only for status folded: the id of the report that carries this topic"
  },
  "reports": [
   {
@@ -200,7 +201,22 @@
     "solar-return"
    ],
    "charts": 1,
-   "status": "planned",
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "get_activation",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_tajika",
+    "get_topic_network"
+   ],
+   "spec": "references/report-specs/varshaphal.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
    "one_line": "The Tajika annual chart for your year, season by season."
   },
   {
@@ -210,7 +226,25 @@
     "guru-gochar"
    ],
    "charts": 1,
-   "status": "planned",
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "get_ashtakavarga",
+    "get_activation",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_gochara",
+    "get_outlook",
+    "get_topic_network",
+    "get_transits"
+   ],
+   "spec": "references/report-specs/jupiter-transit.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
    "one_line": "What Jupiter's movement through your chart opens up."
   },
   {
@@ -221,7 +255,22 @@
     "rahu-ketu-transit"
    ],
    "charts": 1,
-   "status": "planned",
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_gochara",
+    "get_outlook",
+    "get_transits"
+   ],
+   "spec": "references/report-specs/rahu-ketu.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
    "one_line": "The nodes' axis through your chart: where restlessness and release show."
   },
   {
@@ -232,7 +281,22 @@
     "saturn"
    ],
    "charts": 1,
-   "status": "planned",
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "get_ashtakavarga",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_gochara",
+    "get_outlook"
+   ],
+   "spec": "references/report-specs/sade-sati.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
    "one_line": "Saturn's passage over your Moon: phases, pressure areas and what helps."
   },
   {
@@ -243,8 +307,21 @@
     "kuja"
    ],
    "charts": 1,
-   "status": "planned",
-   "one_line": "Whether Mars forms the dosha under each named rule, and its cancellations."
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_birth_time_sensitivity",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/mangal-dosha.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "Where Mars sits under four named rules, what cancels it under each, and what it means in plain terms."
   },
   {
    "id": "kaal-sarp",
@@ -253,8 +330,9 @@
     "kala-sarpa"
    ],
    "charts": 1,
-   "status": "planned",
-   "one_line": "Whether all planets sit on one side of the nodes, and what that means."
+   "status": "folded",
+   "folded_into": "kundli",
+   "one_line": "Part of the Kundli report: the strict Kaal Sarp pattern, its axis houses and its modern status, stated plainly."
   },
   {
    "id": "match",
@@ -266,8 +344,24 @@
     "couples"
    ],
    "charts": 2,
-   "status": "planned",
-   "one_line": "Two charts compared: the computed kootas, blocks, Mangal check and how the charts fit."
+   "inputs": [
+    "birth (Person A)",
+    "birth (Person B)",
+    "consent (both people agreed)"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_birth_time_sensitivity",
+    "get_compatibility",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/match.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "Two charts compared, with both people's consent: the four computed kootas (no total), the Prasna Marga counts, Mars in each chart, and how the charts fit as tendencies."
   },
   {
    "id": "lal-kitab",
@@ -276,8 +370,21 @@
     "lk"
    ],
    "charts": 1,
-   "status": "planned",
-   "one_line": "The Lal Kitab reading of your chart and its own remedies, kept apart from Parashari."
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_birth_time_sensitivity",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/lal-kitab.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "The Lal Kitab reading of your chart: houses, debts (rin, pitri rin included) and remedies only if you ask, kept apart from Parashari."
   },
   {
    "id": "wealth",
@@ -560,8 +667,23 @@
     "raja-yoga"
    ],
    "charts": 1,
-   "status": "planned",
-   "one_line": "The kendra-kona combinations in your chart and when they activate."
+   "inputs": [
+    "birth"
+   ],
+   "engine_tools": [
+    "calculate_birth_chart",
+    "get_birth_time_sensitivity",
+    "get_dasha",
+    "get_shadbala",
+    "prepare_consultation"
+   ],
+   "spec": "references/report-specs/raj-yoga.md",
+   "template": "template.html.j2",
+   "depth": [
+    "standard"
+   ],
+   "status": "built",
+   "one_line": "The kendra-kona combinations in your chart, where the sources disagree about them, and when their periods run."
   },
   {
    "id": "pitra-dosha",
@@ -571,8 +693,9 @@
     "pitri"
    ],
    "charts": 1,
-   "status": "planned",
-   "one_line": "No classical definition in the library; to be decided after the pilot."
+   "status": "folded",
+   "folded_into": "lal-kitab",
+   "one_line": "Part of the Lal Kitab report (pitri rin); no standalone report."
   }
  ]
 }

@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from . import config, places, routing as ROUTING
 from .calc import compute_full, engine, jaimini, sensitivity, strength
 
-VERSION = "3.11.0"
+VERSION = "3.12.0"
 SOURCE_URL = "https://github.com/Krish9688/vedic-astrology-consultation"
 SOURCE_NOTICE = ("This service is free software under the GNU Affero General Public License v3 or later, with NO "
                  "WARRANTY. The Corresponding Source of the version running here is available at the 'source' URL. "
@@ -391,7 +391,7 @@ def panchang(date, lat: float, lon: float, tz=None, zone: Optional[str] = None, 
 @_calc
 def gochara(b: BirthInput, o: Options = DEFAULTS) -> dict:
     """Transits on `on` against the natal chart: PD XXVI gochara from the Moon with vedha and condition, lagna frame
-    separate, sade sati."""
+    separate, sade sati, Kantaka and Ashtama Shani (a modern convention, graded Weak)."""
     from .calc import transit as TR
     c = _compute(b, o, extras=False)
     on = c["meta"]["transit_date"]
@@ -399,7 +399,8 @@ def gochara(b: BirthInput, o: Options = DEFAULTS) -> dict:
     moon, asc = int(c["bodies"]["Mo"]["lon"] // 30), int(c["bodies"]["Asc"]["lon"] // 30)
     sat = int(engine.positions(jd, o.node)["Sa"]["lon"] // 30)
     return _with_meta(c, {"on": on, "time": "12:00 local (birth UTC offset)", "rows": TR.gochara(jd, moon, asc, o.node, strength.ashtakavarga(c)),
-                          "sade_sati": TR.sade_sati(sat, moon), "sources": TR.SOURCES})
+                          "sade_sati": TR.sade_sati(sat, moon), "kantaka_ashtama": TR.kantaka_ashtama(sat, moon),
+                          "sources": TR.SOURCES})
 
 
 @_calc
@@ -940,10 +941,31 @@ def is_marker(x: dict) -> bool:
             and "marker" in str(x.get("label", "")).lower())
 
 
+def match_input_problems(model: dict, single: Optional[BirthInput], persons: Optional[list], consent: bool, rr) -> list:
+    """The two-person boundary (match, owner decision 10): both people's consent, exactly two births, and each birth date
+    the same day as the model's Person A and Person B. A match takes no single birth input."""
+    if model.get("report_type") != "match":
+        return ["persons and consent are for a match report only; give one birth input for every other type"]
+    errs = [] if consent is True else ["match report: no report without consent: pass consent=true once the person who "
+                                        "asked confirms that both people agreed to have their charts compared"]
+    if single is not None:
+        errs.append("match report: give the two births as persons (Person A, then Person B), not one birth input")
+    if not isinstance(persons, list) or len(persons) != 2:
+        return errs + ["match report: exactly two births are needed (Person A, then Person B)"]
+    told = (model.get("birth") or {}).get("persons") or []
+    for i, (p, label) in enumerate(zip(persons, ("Person A", "Person B"))):
+        said = rr._date(told[i].get("date")) if i < len(told) else None
+        if said != p.date:
+            errs.append(f"match report: {label}'s birth date in the model is not the date of birth input {i + 1}")
+    return errs
+
+
 @_calc   # audit F-04: the grounding recompute runs under the requested ayanamsa and the process lock
-def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = None, o: Options = DEFAULTS) -> dict:
+def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = None, o: Options = DEFAULTS,
+                  persons: Optional[list] = None, consent: bool = False) -> dict:
     """Validate and render a Structured Report Model (assets/report/report.schema.json) to HTML (+PDF). Dates are checked
-    against facts recomputed here from the birth input `b` (never client-supplied, never printed); a dated model needs it."""
+    against facts recomputed here from the birth input `b` (never client-supplied, never printed); a dated model needs it.
+    A match report takes `persons` (exactly two BirthInput, Person A then Person B) and `consent=True` instead of `b`."""
     s = config.load()
     if not SAFE_NAME.match(name):
         raise ValueError("report name: letters, digits, dot, dash, underscore; ≤ 64 characters")
@@ -953,6 +975,9 @@ def create_report(model: dict, name: str = "report", b: Optional[BirthInput] = N
     rr = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(rr)
     schema = json.load(open(os.path.join(s.skill_dir, "assets", "report", "report.schema.json")))
+    if (model.get("report_type") == "match" or persons is not None or consent) and (
+            bad := match_input_problems(model, b, persons, consent, rr)):
+        return {"ok": False, "errors": bad}     # refused at the boundary, before any check or calculation
     try:                                # the adult gate (owner decision 2026-11-19) also reads the engine's own birth date
         adult = rr.adult_errors(model, b.date if b else None) if rr.needs_adult(model) else []
     except Exception as e:              # fail closed (T11.32): a gate that cannot run never lets an adult-only report through

@@ -78,6 +78,13 @@ MCP: `astro/mcp_server.py` defines 28 tools (for example `prepare_consultation`,
 skill files) and one prompt. The plugin starts it through `plugin/.mcp.json` → `plugin/scripts/astro mcp`; the server key there
 is `astrology`.
 
+Changes in 3.12.0 (report batches 4-6, 2026-11-21): `get_gochara` and `get_outlook` carry a new key `kantaka_ashtama`
+(from `astro/calc/transit.py`: Saturn in the 4th, 7th, 10th or 8th from the Moon, dated spans, always graded Weak).
+`create_report` in `astro/service.py` and the MCP tool accept `persons` (exactly two births) and `consent` for the `match`
+type only; REST and the CLI take one birth and cannot run a match. The registry (`assets/report/registry.json`) has a
+third status, `folded` (with `folded_into`), next to `built` and `planned`: kaal-sarp is a Kundli section and pitra-dosha
+sits inside lal-kitab. `chart_facts.py` adds the yogakaraka line `RAJA-YK-*`.
+
 `tools/calc/` (`local_chart`, `adapters`, `compare`, `schema`, `yoga_baserates`) is a compatibility layer: its own header
 says the engine now lives in `astro/calc/engine.py`. `tests/test_regressions.py` and `tools/bench_db.py` mention it.
 The old text of this file named `tools/calc/` as the calculation layer; that is out of date.

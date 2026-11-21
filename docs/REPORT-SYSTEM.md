@@ -1,7 +1,7 @@
 # Report system
 
 > **What:** the report types and how a report is built and rendered. **Read it when:** you add or change a report.
-> **Last checked:** not checked.
+> **Last checked:** 2026-11-21 (T11.45: sections 2a and 4a added for report batches 4-6; the rest not checked).
 > **Related:** REPORT-DESIGN-SPEC.md, CONSULTATION-REASONING.md.
 
 Professional personalised reports (output mode C). The design rests on research into how practitioners and report
@@ -32,7 +32,7 @@ HTML  ──► WeasyPrint ──► PDF          (without WeasyPrint the HTML p
 
 | Field | Content |
 |---|---|
-| `report_type` | compact (consultation summary, 2–4 pages) · career · relationship · marriage · dasha · 12-month · relocation · complete-life |
+| `report_type` | the `built` ids in the registry (section 2a): compact (consultation summary, 2–4 pages), kundli, career, relationship, marriage, dasha, 12-month, relocation, complete-life and the spec-driven types |
 | `summary` | headline + at most seven key points, each with a confidence word, optional window and the section that argues it |
 | `sections[]` | `units[]` of the life-first unit (theme, meaning, manifestation, timing, nuance, counter, watch, confidence per event/timing/form, basis) or free `text` |
 | `timeline[]` | start, end, label, kind (chapter · window · pressure · watch), basis |
@@ -43,6 +43,26 @@ HTML  ──► WeasyPrint ──► PDF          (without WeasyPrint the HTML p
 
 Each unit's `basis` (its chart relationships) is moved by the renderer into an appendix table "Why each
 conclusion", so technical traceability is kept without chart facts in the client text.
+
+## 2a. Report types and the registry (updated 2026-11-21)
+
+`assets/report/registry.json` lists 30 types: 28 `built` and 2 `folded` (counted 2026-11-21; none `planned`). The status
+`folded` carries `folded_into`: kaal-sarp is a strict-form unit inside the Kundli (`kundli.md` §2a) and pitra-dosha is
+read as pitri rin inside the lal-kitab report. A folded type has no spec of its own and cannot be written; the `/report`
+menu says which report holds it. The eight types added in 3.12.0, each with a spec in `references/report-specs/`:
+jupiter-transit, rahu-ketu, varshaphal, sade-sati, mangal-dosha, raj-yoga, match and lal-kitab.
+
+- **Match is a two-person model.** `birth.persons` holds exactly two births (written as Person A and Person B; the outer
+  birth time is the less certain one) and `consent` holds the fixed consent sentence. The cover prints one line per person
+  and no rasi chart is drawn. `render_report.match_errors` checks consent, neutral names, four kootas in order with their
+  exceptions, no 36 total, Mars per person under the four rules and the both-charts cancellation. Only the service and the
+  MCP `create_report` accept `persons` and `consent`; REST and the CLI take one birth and cannot run a match.
+- **Lal Kitab** has its own sections and gate (`lk_errors`): Lal Kitab units only, no timeline, no report on an unknown
+  time, a pitri rin unit, rin never above Weak. The `lk-year` section sits inside private-edition markers and drops
+  when the annual table is absent, so the public edition has three sections.
+- **Kantaka and Ashtama Shani** appear in the sade-sati report as a fixed sentence (`KANTAKA_NOTE`), always graded Weak.
+- **Wording gates** are word and clause rules in `render_report.py` and `medical_words.py`. They are a backstop with
+  known leaks and over-blocks (CHANGELOG 3.12.0, PENDING L15).
 
 ## 3. Visual design
 
@@ -73,6 +93,11 @@ Personal reports are saved where the person asks; never inside the skill or the 
 Unknown birth time: `create_report` refuses house, lagna, varga and dasha claims by a word and fact-id guard
 (`render_report.unknown_time_errors`). That guard is a backstop, not proof; the skill's rules and an independent
 checker are the main safety.
+
+## 4a. Review pages
+
+Owner review pages for each batch are in `notes/t11/batch*/` (synthetic charts built from invented births; each page
+describes the birth it prints, and `tests/test_report_specs.py` has an engine-truth test for the facts it can compare).
 
 ## 5. Tests
 

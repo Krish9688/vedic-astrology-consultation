@@ -29,6 +29,11 @@ SOURCES = {"gochara": "PD XXVI.1-2 (p312): from the natal Moon's sign; good hous
            "lagna_frame": "LOL p362: some count transits from the lagna; shown separately, never added to the Moon frame",
            "sade_sati": "LOL p363-364, HPA p130: Saturn in the 12th, 1st or 2nd from the natal Moon; a broad lens that "
                         "needs dasha confluence, never a verdict by itself",
+           "kantaka_ashtama": "Modern convention, no rule text in this library (owner decision 4): Kantaka Shani is Saturn "
+                              "in the 4th, 7th or 10th from the natal Moon, Ashtama Shani in the 8th. CRUX p424 and p464 "
+                              "call Saturn in the 8th from the Moon 'Kantaka Sani' in case studies only; the 4th, 7th and "
+                              "10th convention has no book source here. Always graded Weak, a lens only, never a verdict; "
+                              "begin, pause, resume and end as for sade sati (F04)",
            "vedha_intervals": "PD XXVI.3-8 table as in 'vedha', sampled at the sign changes of Sun, Mars, Mercury, Jupiter, "
                               "Venus and Saturn (engine sky(), local dates): an obstruction holds from the obstructor's or "
                               "the planet's ingress until the next change of either. Moon vedha omitted (the Moon changes "
@@ -90,6 +95,43 @@ def sade_sati(saturn_sign, moon_sign):
     h = (saturn_sign - moon_sign) % 12 + 1
     return {12: "first phase (Saturn 12th from the Moon)", 1: "peak (Saturn over the natal Moon sign)",
             2: "last phase (Saturn 2nd from the Moon)"}.get(h)
+
+
+SHANI_ZONES = {4: "kantaka", 7: "kantaka", 10: "kantaka", 8: "ashtama"}
+
+
+def kantaka_ashtama(saturn_sign, moon_sign):
+    h = (saturn_sign - moon_sign) % 12 + 1
+    if h in SHANI_ZONES:
+        return f"{SHANI_ZONES[h].capitalize()} Shani (Saturn {_ord(h)} from the Moon; modern convention, graded Weak)"
+    return None
+
+
+def kantaka_ashtama_spans(sign0, changes, moon_sign, s0, s1):
+    """Spans of Saturn in the 4th, 7th or 10th (Kantaka) or the 8th (Ashtama) from the natal Moon that overlap s0..s1.
+    `sign0`: Saturn's sign index before the first of `changes` (Saturn sign changes {date, from, to}, date-sorted, from
+    about a year before s0 to a year after s1). F04 logic: leaving a sign Saturn re-enters within a year is a pause,
+    entering a sign it left within the past year a resumption. A start or end outside the changes is None."""
+    day = dt.date.fromisoformat
+    segs, sg, prev = [], sign0, None
+    for c in changes + [None]:
+        end = c and c["date"]
+        segs.append((prev, end, sg))
+        if c:
+            prev, sg = end, E.SIGNS.index(c["to"])
+    out = []
+    for i, (a, b, sg) in enumerate(segs):
+        h = (sg - moon_sign) % 12 + 1
+        if h not in SHANI_ZONES or (a and a >= s1) or (b and b <= s0):
+            continue
+        back = a and any(x[2] == sg and x[1] and (day(a) - day(x[1])).days <= 365 for x in segs[:i])
+        again = b and any(x[2] == sg and x[0] and (day(x[0]) - day(b)).days <= 365 for x in segs[i + 1:])
+        out.append({"zone": SHANI_ZONES[h], "house_from_moon": h, "sign": E.SIGNS[sg],
+                    "label": kantaka_ashtama(sg, moon_sign), "start": a, "end": b,
+                    "start_kind": "in progress" if not a else "resumes" if back else "begins",
+                    "end_kind": "continues" if not b else "pauses" if again else "ends",
+                    "grade": "Weak", "source": SOURCES["kantaka_ashtama"]})
+    return out
 
 
 def _ord(n):
@@ -281,6 +323,16 @@ def outlook(c, start, period, tz, yogini_rows=None, node="mean"):
             t += dt.timedelta(hours=2)
     else:                                                           # texture for a month or longer (P7-2)
         texture(add, t0, t1, tz, node, moon_sign, c["bodies"]["Mo"]["lon"])
+    # Kantaka and Ashtama Shani (owner decision 4), added last so the earlier factor ids stay as they were; a year of
+    # sign changes either side tells a pause from an end
+    pad = dt.timedelta(days=366)
+    sat = [x for x in E.ingresses(t0 - pad, (t1 - t0 + 2 * pad).days / 30.44, node, tz) if x["planet"] == "Sa"]
+    sign0 = E.SIGNS.index(sat[0]["from"]) if sat else int(E.positions(E.jd_of(t0), node)["Sa"]["lon"] // 30)
+    for sp in kantaka_ashtama_spans(sign0, sat, moon_sign, s0, s1):
+        add("kantaka_ashtama", f"{sp['label']}: {sp['start_kind']}{' ' + sp['start'] if sp['start'] else ''}; "
+            f"{sp['end_kind']}{' ' + sp['end'] if sp['end'] else ''}",
+            f"{sp['start'] or 'before ' + s0} to {sp['end'] or 'after ' + s1}", SOURCES["kantaka_ashtama"],
+            **{k: v for k, v in sp.items() if k != "source"})
     return {"period": period, "from": s0, "to": s1, "factors": factors, "sources": SOURCES,
             "note": "Chart-specific calculated facts and rule lookups only. " + SOURCES["trigger"] + ". A written horoscope must name the factor "
                     "ids it uses; a period with few factors is a quiet period, not a reason for generic text."}
